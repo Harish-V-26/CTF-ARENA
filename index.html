@@ -2,63 +2,284 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="CTF LABS — Web cybersecurity learning platform. Start with the SQL Injection Lab." />
-  <title>CTF LABS — Home</title>
-  <link rel="stylesheet" href="css/global.css" />
-  <link rel="stylesheet" href="css/home.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CTF Platform Demo</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      background:#0d1117;
+      color:white;
+    }
+
+    /* NAVBAR */
+    .navbar{
+      width:100%;
+      height:70px;
+      background:#161b22;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 40px;
+      border-bottom:2px solid #00ff99;
+    }
+
+    .logo{
+      font-size:28px;
+      font-weight:bold;
+      color:#00ff99;
+      letter-spacing:2px;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:40px;
+      align-items:center;
+    }
+
+    .nav-links a{
+      text-decoration:none;
+      color:white;
+      font-size:18px;
+      transition:0.3s;
+    }
+
+    .nav-links a:hover{
+      color:#00ff99;
+    }
+
+    /* DROPDOWN */
+    .dropdown{
+      position:relative;
+    }
+
+    .dropdown-content{
+      display:none;
+      position:absolute;
+      top:40px;
+      right:0;
+      background:#1f2937;
+      min-width:180px;
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .dropdown-content a{
+      display:block;
+      padding:15px;
+      border-bottom:1px solid #333;
+    }
+
+    .dropdown-content a:hover{
+      background:#00ff99;
+      color:black;
+    }
+
+    .dropdown:hover .dropdown-content{
+      display:block;
+    }
+
+    /* HERO SECTION */
+    .hero{
+      height:90vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      text-align:center;
+      padding:20px;
+    }
+
+    .hero h1{
+      font-size:60px;
+      color:#00ff99;
+      margin-bottom:20px;
+    }
+
+    .hero p{
+      font-size:22px;
+      max-width:800px;
+      line-height:1.6;
+      color:#c9d1d9;
+    }
+
+    .hero button{
+      margin-top:30px;
+      padding:15px 35px;
+      border:none;
+      border-radius:10px;
+      background:#00ff99;
+      color:black;
+      font-size:18px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .hero button:hover{
+      background:#00cc77;
+      transform:scale(1.05);
+    }
+
+    /* FEATURES */
+    .features{
+      padding:60px 40px;
+    }
+
+    .features h2{
+      text-align:center;
+      margin-bottom:50px;
+      font-size:40px;
+      color:#00ff99;
+    }
+
+    .feature-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:30px;
+    }
+
+    .card{
+      background:#161b22;
+      padding:25px;
+      border-radius:15px;
+      border:1px solid #30363d;
+      transition:0.3s;
+    }
+
+    .card:hover{
+      transform:translateY(-8px);
+      border-color:#00ff99;
+    }
+
+    .card h3{
+      margin-bottom:15px;
+      color:#00ff99;
+    }
+
+    .card p{
+      color:#c9d1d9;
+      line-height:1.5;
+    }
+
+    /* FOOTER */
+    footer{
+      background:#161b22;
+      text-align:center;
+      padding:20px;
+      border-top:1px solid #30363d;
+      color:#999;
+    }
+
+  </style>
 </head>
+
 <body>
 
-  <!-- ═══ NAVBAR ═══ -->
-  <nav class="navbar" aria-label="Main navigation">
-    <a href="index.html" class="logo">CTF<span>LABS</span></a>
+  <!-- NAVBAR -->
+  <div class="navbar">
+
+    <div class="logo">
+      CTF LABS
+    </div>
 
     <div class="nav-links">
-      <a href="index.html" class="active">Home</a>
-      <a href="challenges.html">Challenges</a>
       <a href="rules.html">Rules</a>
+      <a href="#">Guide</a>
+      <a href="challenges.html">Challenges</a>
+      <a href="#">Group</a>
 
-      <div class="dropdown" role="navigation" aria-label="Profile menu">
-        <a href="#" id="profile-toggle" aria-haspopup="true" aria-expanded="false">Profile ▾</a>
-        <div class="dropdown-content" role="menu">
-          <a href="#" role="menuitem">Dashboard</a>
-          <a href="#" role="menuitem">Settings</a>
-          <a href="#" role="menuitem">Logout</a>
+      <div class="dropdown">
+        <a href="#">Profile ▾</a>
+
+        <div class="dropdown-content">
+          <a href="#">Dashboard</a>
+          <a href="#">Settings</a>
+          <a href="#">Logout</a>
         </div>
       </div>
     </div>
-  </nav>
 
-  <!-- ═══ HERO ═══ -->
-  <section class="hero" id="hero">
-    <div class="hero-content">
+  </div>
 
-      <div class="hero-tag">
-        <span class="badge">🔐 Beginner Friendly</span>
+  <!-- HERO -->
+  <section class="hero">
+
+    <h1>Interactive CTF Training Platform</h1>
+
+    <p>
+      Practice real-world cybersecurity challenges in isolated Docker labs.
+      Learn Web Exploitation, Cryptography, Linux, Reverse Engineering,
+      and Team-based hacking through guided beginner-friendly missions.
+    </p>
+
+    <button onclick="window.location.href='challenges.html'">Start Hacking</button>
+
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+
+    <h2>Platform Features</h2>
+
+    <div class="feature-grid">
+
+      <div class="card">
+        <h3>Docker Labs</h3>
+        <p>
+          Launch isolated challenge environments instantly using Docker containers.
+        </p>
       </div>
 
-      <h1>
-        Learn <span class="accent">Web Security</span><br />
-        the Hacker Way
-      </h1>
+      <div class="card">
+        <h3>Hint System</h3>
+        <p>
+          Progressive learning hints help beginners solve challenges step-by-step.
+        </p>
+      </div>
 
-      <p class="hero-sub">
-        Step-by-step cybersecurity labs for beginners. Start with SQL Injection,
-        understand how attacks work, and build real defensive skills.
-      </p>
+      <div class="card">
+        <h3>Group Challenges</h3>
+        <p>
+          Collaborate with friends and solve shared multiplayer lab instances.
+        </p>
+      </div>
 
-      <div class="hero-actions">
-        <a href="challenges.html" class="btn btn-primary" id="start-hacking-btn">Start Learning →</a>
-        <a href="rules.html" class="btn btn-outline" id="view-rules-btn">View Rules</a>
+      <div class="card">
+        <h3>Performance Dashboard</h3>
+        <p>
+          Track skills, completion rates, strengths, and weaknesses visually.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Write-up Reports</h3>
+        <p>
+          Submit markdown reports and export professional PDF documentation.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Beginner Friendly</h3>
+        <p>
+          Learn concepts with guided explanations, tooltips, and tutorials.
+        </p>
       </div>
 
     </div>
+
   </section>
 
-  <!-- ═══ FOOTER ═══ -->
+  <!-- FOOTER -->
   <footer>
-    <p>© 2026 <a href="index.html">CTF LABS</a> · Internship Project Demo</p>
+    © 2026 CTF LABS | Internship Project Demo
   </footer>
 
 </body>
