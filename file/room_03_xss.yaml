@@ -1,0 +1,91 @@
+id: 3
+title: "XSS Playground"
+slug: "xss-playground"
+difficulty: "easy"
+description: "Understand Cross-Site Scripting — reflected, stored, and DOM-based XSS attacks."
+order: 3
+
+challenges:
+  - id: xss-qa-1
+    type: qa
+    title: "What is XSS?"
+    points: 10
+    content: |
+      Cross-Site Scripting (XSS) is a vulnerability that allows attackers to inject
+      malicious JavaScript code into web pages viewed by other users.
+
+      XSS happens when a website displays user input without properly escaping it.
+      For example, a comment section that shows your comment text directly:
+
+        Your comment: <script>alert('XSS')</script>
+
+      If not sanitized, the browser executes the script when anyone views that page.
+
+      XSS is dangerous because JavaScript can:
+      - Steal cookies (document.cookie)
+      - Redirect users to phishing sites
+      - Modify page content (defacement)
+      - Capture keystrokes (keylogging)
+      - Perform actions as the victim (CSRF-style attacks)
+
+      Cookies marked with the "HttpOnly" flag cannot be accessed by JavaScript,
+      which prevents cookie theft via XSS. However, XSS can still do many other
+      harmful things.
+    questions:
+      - q: "What does XSS stand for?"
+        a: "Cross-Site Scripting"
+      - q: "What HTML tag is most commonly used to execute JavaScript in XSS attacks?"
+        a: "<script>"
+      - q: "What cookie flag prevents JavaScript from accessing a cookie?"
+        a: "HttpOnly"
+
+  - id: xss-qa-2
+    type: qa
+    title: "Types of XSS"
+    points: 10
+    content: |
+      There are three main types of XSS:
+
+      1. Reflected XSS (Non-Persistent):
+         The injected script is part of the request (usually in the URL).
+         The victim must click a crafted link.
+         Example: http://site.com/search?q=<script>alert(1)</script>
+         Most common in search bars, error messages, and form validation.
+
+      2. Stored XSS (Persistent):
+         The injected script is saved on the server (in a database, comment, profile).
+         Every visitor who views the page gets attacked.
+         Much more dangerous than reflected XSS.
+         Common in: comment sections, forum posts, user bios, reviews.
+
+      3. DOM-Based XSS:
+         The vulnerability is entirely in client-side JavaScript code.
+         The server is not involved — the malicious payload modifies the DOM
+         (Document Object Model) directly.
+         Example: A script reads from window.location.hash and writes it to innerHTML.
+
+      The classic test payload for XSS:
+        <script>alert(1)</script>
+
+      If a popup shows "1", the site is vulnerable to XSS.
+    questions:
+      - q: "What type of XSS is stored on the server and affects all visitors?"
+        a: "Stored XSS"
+      - q: "What type of XSS requires the victim to click a specially crafted link?"
+        a: "Reflected XSS"
+      - q: "What type of XSS exists entirely in client-side JavaScript without server involvement?"
+        a: "DOM-Based XSS"
+
+  - id: xss-flag-1
+    type: flag
+    title: "Stored XSS Attack"
+    points: 50
+    content: |
+      A guestbook website stores visitor messages and displays them to everyone.
+      The input is not sanitized. You need to inject a script that reads the
+      flag from a hidden div with id="flag" and displays it.
+
+      The hidden div content: CTF{xss_15_4_d4ng3r}
+
+      You can test with: <script>alert(document.getElementById('flag').innerText)</script>
+    flag: "CTF{xss_15_4_d4ng3r}"

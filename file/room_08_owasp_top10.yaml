@@ -1,0 +1,119 @@
+id: 8
+title: "OWASP Top 10 Overview"
+slug: "owasp-top-10-overview"
+difficulty: "medium"
+description: "An overview of the OWASP Top 10 (2021) web application security risks."
+order: 8
+
+challenges:
+  - id: owasp-qa-1
+    type: qa
+    title: "OWASP Top 10 (2021)"
+    points: 10
+    content: |
+      The OWASP (Open Web Application Security Project) Top 10 is a standard
+      awareness document for web application security. Updated every 3-4 years,
+      it represents a broad consensus on the most critical security risks.
+
+      2021 OWASP Top 10:
+
+      A01: Broken Access Control
+        - Users accessing resources they shouldn't (e.g., viewing another user's
+          private data by changing an ID in the URL)
+
+      A02: Cryptographic Failures
+        - Weak encryption, transmitting data over HTTP (not HTTPS), hardcoded keys
+
+      A03: Injection
+        - SQL, NoSQL, OS Command, LDAP injection — untrusted data sent to an
+          interpreter
+
+      A04: Insecure Design
+        - Architecture-level flaws: missing rate limits, no access control checks
+
+      A05: Security Misconfiguration
+        - Default passwords, unnecessary features enabled, verbose error messages,
+          cloud storage left open
+
+      A06: Vulnerable and Outdated Components
+        - Using old libraries/frameworks with known vulnerabilities (e.g.,
+          outdated jQuery, old OpenSSL)
+
+      A07: Identification and Authentication Failures
+        - Weak passwords, no MFA, session fixation, predictable session IDs
+
+      A08: Software and Data Integrity Failures
+        - Using untrusted libraries, insecure CI/CD pipelines, unsigned updates
+
+      A09: Security Logging and Monitoring Failures
+        - No logging of attacks, no alerting on suspicious activity
+
+      A10: Server-Side Request Forgery (SSRF)
+        - Server makes requests to internal resources based on user input
+    questions:
+      - q: "What does OWASP stand for?"
+        a: "Open Web Application Security Project"
+      - q: "Which OWASP category is about users accessing resources they shouldn't?"
+        a: "A01: Broken Access Control"
+      - q: "Which category covers SQL, NoSQL, and Command Injection?"
+        a: "A03: Injection"
+
+  - id: owasp-qa-2
+    type: qa
+    title: "SSRF and Insecure Design"
+    points: 10
+    content: |
+      Server-Side Request Forgery (SSRF) — A10 in the 2021 OWASP Top 10 —
+      occurs when a server makes HTTP requests based on user input without
+      proper validation.
+
+      Example — a website that fetches remote images:
+        http://site.com/fetch?url=http://example.com/image.jpg
+
+      An attacker changes the URL to target internal resources:
+        http://site.com/fetch?url=http://169.254.169.254/latest/meta-data/
+        This reads AWS cloud instance metadata (contains temporary credentials)
+
+      Common SSRF targets:
+      - 127.0.0.1 (localhost) — services on the same machine
+      - 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 — private networks
+      - file:///etc/passwd — read local files (if protocol is supported)
+
+      Insecure Design (A04) refers to flaws that exist because the application
+      was designed without security in mind. Examples:
+      - No rate limiting on password reset
+      - Using sequential IDs (user=1, user=2, user=3)
+      - Trusting all client-side validation
+      - No access control checks on API endpoints
+
+      The key difference: Insecure Design is about "we didn't think of it"
+      while Security Misconfiguration is about "we set it up wrong".
+    questions:
+      - q: "What vulnerability is A10 in the OWASP Top 10 (2021)?"
+        a: "Server-Side Request Forgery (SSRF)"
+      - q: "What IP address represents localhost?"
+        a: "127.0.0.1"
+      - q: "What is the key difference between Insecure Design and Security Misconfiguration?"
+        a: "Insecure Design is about design flaws, Misconfiguration is about setup errors"
+
+  - id: owasp-flag-1
+    type: flag
+    title: "OWASP Knowledge"
+    points: 50
+    content: |
+      You've completed all the reading! The final flag is proof of your knowledge.
+      Combine the first letter of each OWASP category (A01-A10) to form the flag:
+
+      Broken Access Control -> B
+      Cryptographic Failures -> C
+      Injection -> I
+      Insecure Design -> I
+      Security Misconfiguration -> S
+      Vulnerable Components -> V
+      Auth Failures -> A
+      Integrity Failures -> I
+      Logging Failures -> L
+      SSRF -> S
+
+      Flag format: CTF{BCIISVAILS}
+    flag: "CTF{BCIISVAILS}"

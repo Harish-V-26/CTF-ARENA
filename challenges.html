@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF LABS Web Challenges — Start with the SQL Injection Lab." />
+  <title>CTF LABS — Challenges</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/challenges.css" />
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="index.html" class="logo">CTF<span>LABS</span></a>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="challenges.html" class="active">Challenges</a>
+      <a href="rules.html">Rules</a>
+
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile ▾</a>
+        <div class="dropdown-content" role="menu">
+          <a href="#" role="menuitem">Dashboard</a>
+          <a href="#" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ PAGE HERO ═══ -->
+  <div class="page-hero" id="challenges-hero">
+    <div class="page-hero-content">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;">🌐 Web Category</span>
+      <h1><span class="accent">Web.</span></h1>
+      <p>Master web security fundamentals — one lab at a time. Pick a challenge below to get started.</p>
+    </div>
+  </div>
+
+  <!-- ═══ CHALLENGES SECTION ═══ -->
+  <section class="challenges-section">
+    <div class="container">
+
+      <div class="challenges-grid" id="challenges-grid">
+
+        <!-- SQL Injection Lab -->
+        <div class="challenge-card" data-category="web" id="card-sqli-lab">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">SQL Injection Lab</div>
+            <div class="challenge-desc">
+              Learn how SQL injection works — from basic theory to UNION-based extraction.
+              Understand how attackers bypass authentication and retrieve hidden data from databases.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">20 pts</span>
+            <span class="solve-count">📖 2 lessons</span>
+            <a href="challenges/sqli-lab.html" class="start-btn" id="start-sqli-lab">Start →</a>
+          </div>
+        </div>
+
+      </div><!-- /challenges-grid -->
+
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <p>© 2026 <a href="index.html">CTF LABS</a> · Internship Project Demo</p>
+  </footer>
+
+</body>
+</html>

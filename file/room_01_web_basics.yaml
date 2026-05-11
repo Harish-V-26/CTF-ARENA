@@ -1,0 +1,87 @@
+id: 1
+title: "Web Fundamentals"
+slug: "web-fundamentals"
+difficulty: "easy"
+description: "Learn how the web works — HTTP methods, status codes, headers, and cookies."
+order: 1
+
+challenges:
+  - id: web-qa-1
+    type: qa
+    title: "How the Web Works"
+    points: 10
+    content: |
+      When you visit a website, your browser (the client) sends a request to a server.
+      This request uses a protocol called HTTP (HyperText Transfer Protocol).
+      The server then sends back a response containing the website data.
+
+      HTTP has different methods (also called verbs) that tell the server what action to perform:
+      - GET: Retrieve data (view a webpage)
+      - POST: Send data to the server (submit a form)
+      - PUT: Update existing data
+      - DELETE: Remove data
+
+      Every HTTP response includes a status code that tells the client what happened:
+      - 200 OK: The request was successful
+      - 301/302: Redirect to another page
+      - 404 Not Found: The page doesn't exist
+      - 500 Internal Server Error: Something broke on the server
+
+      HTTP headers are key-value pairs sent with requests and responses. Common headers include:
+      - Content-Type: What type of data is being sent (text/html, application/json)
+      - User-Agent: What browser/device is making the request
+      - Cookie: Small data stored by the browser for sessions
+      - Set-Cookie: Server asks the browser to store a cookie
+    questions:
+      - q: "What does HTTP stand for?"
+        a: "HyperText Transfer Protocol"
+      - q: "Which HTTP method is used to retrieve a webpage?"
+        a: "GET"
+      - q: "What HTTP status code means 'page not found'?"
+        a: "404"
+
+  - id: web-qa-2
+    type: qa
+    title: "HTTP Headers and Cookies"
+    points: 10
+    content: |
+      HTTP headers are like envelopes for web data. They carry important information
+      that both the client and server need to communicate properly.
+
+      Request headers are sent by the browser:
+      - Host: The website you want to visit (e.g., example.com)
+      - User-Agent: Identifies your browser (e.g., Chrome 120, Firefox 115)
+      - Referer: The page you came from
+      - Authorization: Credentials for protected pages
+
+      Response headers are sent by the server:
+      - Set-Cookie: Stores a cookie in your browser
+      - Cache-Control: How long to cache (save) the response
+      - Location: Where to redirect the browser (used with 301/302)
+
+      Cookies are small pieces of data (max 4KB) stored by your browser. They are used for:
+      - Session management (keeping you logged in)
+      - Personalization (saving your preferences)
+      - Tracking (following your browsing habits)
+
+      A session cookie is temporary and deleted when you close your browser.
+      A persistent cookie has an expiration date and stays on your computer.
+      Cookies can be marked as "HttpOnly" (can't be read by JavaScript) or "Secure"
+      (only sent over HTTPS) to improve security.
+    questions:
+      - q: "What header tells the server what browser you are using?"
+        a: "User-Agent"
+      - q: "What type of cookie is deleted when you close your browser?"
+        a: "Session cookie"
+      - q: "What flag makes a cookie only sent over encrypted connections?"
+        a: "Secure"
+
+  - id: web-flag-1
+    type: flag
+    title: "Hidden Header Flag"
+    points: 50
+    content: |
+      A secret flag is hidden in the response headers of a webpage.
+      When you visit /secret, the server responds with a custom header called "X-Flag".
+      Flag format: CTF{...}
+    flag: "CTF{h34d3rs_ar3_imp0rt4nt}"

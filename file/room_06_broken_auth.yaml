@@ -1,0 +1,100 @@
+id: 6
+title: "Broken Authentication"
+slug: "broken-authentication"
+difficulty: "easy"
+description: "Explore authentication weaknesses — weak passwords, brute force, session hijacking."
+order: 6
+
+challenges:
+  - id: auth-qa-1
+    type: qa
+    title: "Authentication Weaknesses"
+    points: 10
+    content: |
+      Authentication verifies who you are. Broken authentication happens when
+      this verification process has flaws that attackers can exploit.
+
+      Common authentication weaknesses:
+
+      1. Weak Password Policies:
+         - No minimum length requirements
+         - No complexity rules (uppercase, numbers, symbols)
+         - Common passwords allowed (password123, admin)
+
+      2. Brute Force Protection Missing:
+         - No rate limiting on login attempts
+         - No account lockout after failed attempts
+         - CAPTCHA not implemented
+
+      3. Verbose Error Messages:
+         - "Username not found" vs "Invalid password"
+         - This lets attackers enumerate valid usernames
+         - Better: always say "Invalid credentials"
+
+      4. Insecure Password Storage:
+         - Storing passwords in plain text
+         - Using weak hashes (MD5, SHA1 without salt)
+         - Best practice: bcrypt, Argon2, or PBKDF2
+
+      5. No Multi-Factor Authentication (MFA):
+         - Only a single password required
+         - No second factor (TOTP, SMS, email code)
+    questions:
+      - q: "What is it called when there are no limits on login attempts?"
+        a: "No brute force protection"
+      - q: "What type of error message helps attackers find valid usernames?"
+        a: "Verbose error messages"
+      - q: "What is the recommended algorithm for storing passwords?"
+        a: "bcrypt"
+
+  - id: auth-qa-2
+    type: qa
+    title: "Session Hijacking"
+    points: 10
+    content: |
+      After you log in, the server gives you a session token (usually a cookie)
+      that proves you are authenticated. If an attacker steals this token,
+      they can impersonate you without needing your password.
+
+      Session hijacking methods:
+
+      1. Session Fixation:
+         - Attacker gives you a known session ID
+         - You log in, binding your account to that ID
+         - Attacker uses the same ID to access your account
+         - Prevention: regenerate session ID after login
+
+      2. Session Sniffing:
+         - Capturing session cookies over unencrypted HTTP
+         - Prevention: use HTTPS and Secure flag on cookies
+
+      3. Cross-Site Scripting (XSS):
+         - Using JavaScript to read document.cookie
+         - Prevention: HttpOnly flag on cookies
+
+      4. Predictable Session Tokens:
+         - If tokens are sequential (1, 2, 3) or based on timestamps
+         - Attacker can guess another user's session
+         - Prevention: use cryptographically random tokens
+
+      Session timeout is important — sessions should expire after:
+      - A period of inactivity (e.g., 30 minutes)
+      - A fixed maximum lifetime (e.g., 24 hours)
+      - When the user logs out
+    questions:
+      - q: "What attack uses a known session ID given to the victim before login?"
+        a: "Session fixation"
+      - q: "What cookie flag prevents transmission over unencrypted HTTP?"
+        a: "Secure"
+      - q: "Should session IDs be predictable or random?"
+        a: "Random"
+
+  - id: auth-flag-1
+    type: flag
+    title: "Session Theft"
+    points: 50
+    content: |
+      A website stores the admin's session cookie in a JavaScript variable:
+        var adminSession = "CTF{s3ss10n_wh4ts_y0ur_s3cr3t}";
+      You found an XSS vulnerability. Craft a payload to steal this session.
+    flag: "CTF{s3ss10n_wh4ts_y0ur_s3cr3t}"

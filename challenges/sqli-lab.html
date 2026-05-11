@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF LABS — SQL Injection Lab. Learn SQL injection from basics to UNION-based extraction." />
+  <title>CTF LABS — SQL Injection Lab</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/web-room.css" />
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="../index.html" class="logo">CTF<span>LABS</span></a>
+
+    <div class="nav-links">
+      <a href="../index.html">Home</a>
+      <a href="../challenges.html" class="active">Challenges</a>
+      <a href="../rules.html">Rules</a>
+
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile ▾</a>
+        <div class="dropdown-content" role="menu">
+          <a href="#" role="menuitem">Dashboard</a>
+          <a href="#" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ ROOM WRAPPER ═══ -->
+  <div class="room-wrapper">
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="room-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">SQL Injection Lab</div>
+        <div class="overall-progress-wrap">
+          <div class="overall-progress-bar">
+            <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
+          </div>
+          <div class="overall-progress-pct" id="overall-pct">0%</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Lesson navigation">
+
+        <div class="module-group">
+          <div class="module-label" id="mod-label-1">
+            <span class="mod-num">01</span> What is SQL Injection?
+          </div>
+          <div class="nav-item active" id="nav-0" onclick="goTo(0)">
+            <div class="nav-dot"></div>
+            <span class="nav-label">What is SQL Injection?</span>
+            <span class="nav-pts">10 pts</span>
+          </div>
+        </div>
+
+        <div class="module-group">
+          <div class="module-label" id="mod-label-2">
+            <span class="mod-num">02</span> UNION-Based SQLi
+          </div>
+          <div class="nav-item" id="nav-1" onclick="goTo(1)">
+            <div class="nav-dot"></div>
+            <span class="nav-label">UNION-Based SQL Injection</span>
+            <span class="nav-pts">10 pts</span>
+          </div>
+        </div>
+
+      </nav>
+    </aside>
+
+    <!-- ── MAIN ── -->
+    <div class="room-main">
+
+      <!-- Challenge Header -->
+      <div class="challenge-header">
+        <div class="ch-breadcrumb">
+          Web Challenges › SQL Injection Lab › <span id="ch-breadcrumb-title">Lesson 1</span>
+        </div>
+        <div class="ch-meta">
+          <span class="ch-title" id="ch-title">What is SQL Injection?</span>
+          <span class="ch-pts" id="ch-pts">10 pts</span>
+          <div class="step-dots" id="step-dots" aria-label="Lesson progress">
+            <div class="step-dot current" id="dot-0"></div>
+            <div class="step-dot"         id="dot-1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="room-body" id="room-body">
+
+        <!-- ══ LESSON 0: What is SQL Injection? ══ -->
+        <div id="lesson-0">
+
+          <div class="reading-panel">
+            <div class="reading-label"><span>📖</span> Reading — Learn the concept first</div>
+            <div class="reading-text">SQL (Structured Query Language) is used to communicate with databases.
+Websites use SQL to store and retrieve data like usernames, passwords, and articles.
+
+A typical login query looks like this:
+  SELECT * FROM users WHERE username = 'john' AND password = 'secret123';
+
+SQL Injection (SQLi) is a vulnerability that occurs when user input is
+directly inserted into a SQL query without proper sanitisation. An attacker
+can inject SQL commands to manipulate the query's behaviour.
+
+The most basic SQLi test uses a single quote (') to break out of the string.
+If the application returns an error, it might be vulnerable.
+
+Example:
+  Username: admin' --
+  Password: anything
+
+The -- is a SQL comment. Everything after it is ignored.
+The resulting query becomes:
+  SELECT * FROM users WHERE username = 'admin' -- ' AND password = 'anything'
+
+This bypasses the password check and logs in as admin.
+
+Common SQL comment symbols:
+  --   (double dash) → SQL comment in most databases
+  #    (hash)        → MySQL comment
+  /**/ (slash-star)  → Multi-line comment</div>
+          </div>
+
+          <div class="qa-section">
+            <div class="qa-heading">✏️ Check Your Understanding</div>
+
+            <!-- Q1 -->
+            <div class="question-card" id="qc-0-0">
+              <div class="question-text">
+                <span class="q-num">Q1</span>What does SQL stand for?
+              </div>
+              <div class="answer-row">
+                <input class="answer-input" id="ans-0-0" type="text" placeholder="Type your answer…" autocomplete="off" />
+                <button class="check-btn" id="btn-0-0" onclick="checkAnswer(0,0,'Structured Query Language')">Check</button>
+              </div>
+              <div class="feedback" id="fb-0-0"></div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="question-card" id="qc-0-1">
+              <div class="question-text">
+                <span class="q-num">Q2</span>What symbol breaks out of a string in a SQL query for injection testing?
+              </div>
+              <div class="answer-row">
+                <input class="answer-input" id="ans-0-1" type="text" placeholder="Type your answer…" autocomplete="off" />
+                <button class="check-btn" id="btn-0-1" onclick="checkAnswer(0,1,&quot;'&quot;)">Check</button>
+              </div>
+              <div class="feedback" id="fb-0-1"></div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="question-card" id="qc-0-2">
+              <div class="question-text">
+                <span class="q-num">Q3</span>What does -- do in a SQL query?
+              </div>
+              <div class="answer-row">
+                <input class="answer-input" id="ans-0-2" type="text" placeholder="Type your answer…" autocomplete="off" />
+                <button class="check-btn" id="btn-0-2" onclick="checkAnswer(0,2,'Comments out the rest of the query')">Check</button>
+              </div>
+              <div class="feedback" id="fb-0-2"></div>
+            </div>
+
+          </div>
+        </div><!-- /lesson-0 -->
+
+        <!-- ══ LESSON 1: UNION-Based SQLi ══ -->
+        <div id="lesson-1" style="display:none;">
+
+          <div class="reading-panel">
+            <div class="reading-label"><span>📖</span> Reading — Learn the concept first</div>
+            <div class="reading-text">The UNION operator in SQL combines results from two or more SELECT queries.
+Attackers use UNION to extract data from other tables in the database.
+
+UNION syntax:
+  SELECT column1, column2 FROM table1
+  UNION
+  SELECT column1, column2 FROM table2
+
+For UNION to work, both SELECT statements must return the same number of columns.
+Attackers find the column count using ORDER BY or GROUP BY:
+  ' ORDER BY 1 --   (works)
+  ' ORDER BY 2 --   (works)
+  ' ORDER BY 3 --   (error → only 2 columns)
+
+Once the column count is known, the attacker extracts data:
+  ' UNION SELECT username, password FROM users --
+
+Common tables to target:
+  - users     → usernames and passwords
+  - admins    → admin credentials
+  - sessions  → active session tokens
+
+Passwords are sometimes stored as hashes (not plain text). Common hash types:
+  - MD5     → 32 hex characters
+  - SHA1    → 40 hex characters
+  - SHA256  → 64 hex characters
+  - bcrypt  → starts with $2y$</div>
+          </div>
+
+          <div class="qa-section">
+            <div class="qa-heading">✏️ Check Your Understanding</div>
+
+            <!-- Q1 -->
+            <div class="question-card" id="qc-1-0">
+              <div class="question-text">
+                <span class="q-num">Q1</span>What SQL keyword combines results from multiple SELECT queries?
+              </div>
+              <div class="answer-row">
+                <input class="answer-input" id="ans-1-0" type="text" placeholder="Type your answer…" autocomplete="off" />
+                <button class="check-btn" id="btn-1-0" onclick="checkAnswer(1,0,'UNION')">Check</button>
+              </div>
+              <div class="feedback" id="fb-1-0"></div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="question-card" id="qc-1-1">
+              <div class="question-text">
+                <span class="q-num">Q2</span>What technique is used to find how many columns a query returns?
+              </div>
+              <div class="answer-row">
+                <input class="answer-input" id="ans-1-1" type="text" placeholder="Type your answer…" autocomplete="off" />
+                <button class="check-btn" id="btn-1-1" onclick="checkAnswer(1,1,'ORDER BY')">Check</button>
+              </div>
+              <div class="feedback" id="fb-1-1"></div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="question-card" id="qc-1-2">
+              <div class="question-text">
+                <span class="q-num">Q3</span>What string do bcrypt hashes typically start with?
+              </div>
+              <div class="answer-row">
+                <input class="answer-input" id="ans-1-2" type="text" placeholder="Type your answer…" autocomplete="off" />
+                <button class="check-btn" id="btn-1-2" onclick="checkAnswer(1,2,'$2y$')">Check</button>
+              </div>
+              <div class="feedback" id="fb-1-2"></div>
+            </div>
+
+          </div>
+        </div><!-- /lesson-1 -->
+
+        <!-- ══ COMPLETION ══ -->
+        <div class="completion-card" id="completion-card">
+          <div class="trophy-icon">🏆</div>
+          <h2>Lab Complete!</h2>
+          <p>You've finished the SQL Injection Lab. You now understand how SQLi works and how UNION-based attacks extract data from databases.</p>
+          <div class="score-pill" id="score-pill">20 / 20 pts</div>
+          <a href="../challenges.html" class="btn btn-primary">← Back to Challenges</a>
+        </div>
+
+      </div><!-- /room-body -->
+
+      <!-- Footer Nav -->
+      <div class="room-footer-nav">
+        <div class="challenge-counter">
+          Lesson <span id="cur-num">1</span> of <span id="tot-num">2</span>
+        </div>
+        <div class="nav-btns">
+          <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Previous</button>
+          <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
+        </div>
+      </div>
+
+    </div><!-- /room-main -->
+  </div><!-- /room-wrapper -->
+
+  <script>
+    /* ─── State ─── */
+    const TOTAL_LESSONS = 2;
+    let current = 0;
+
+    // answered[lessonIdx][qIdx] = true/false
+    const answered = [
+      [false, false, false],
+      [false, false, false]
+    ];
+
+    const titles = [
+      'What is SQL Injection?',
+      'UNION-Based SQL Injection'
+    ];
+
+    /* ─── Answer check ─── */
+    function normalise(s) {
+      return s.trim().toLowerCase().replace(/\s+/g, ' ');
+    }
+
+    function checkAnswer(lesson, q, correct) {
+      if (answered[lesson][q]) return;
+
+      const input = document.getElementById(`ans-${lesson}-${q}`);
+      const card  = document.getElementById(`qc-${lesson}-${q}`);
+      const fb    = document.getElementById(`fb-${lesson}-${q}`);
+      const btn   = document.getElementById(`btn-${lesson}-${q}`);
+
+      const userVal = input.value;
+
+      // Accept any answer that contains key words (case-insensitive)
+      const correctNorm = normalise(correct);
+      const userNorm    = normalise(userVal);
+
+      // Flexible match: user answer must contain at least the core keyword
+      const isCorrect = userNorm === correctNorm ||
+                        correctNorm.includes(userNorm) ||
+                        userNorm.includes(correctNorm.split(' ')[0]);
+
+      if (isCorrect) {
+        answered[lesson][q] = true;
+        card.classList.add('correct');
+        fb.className = 'feedback correct-msg show';
+        fb.innerHTML = '✅ Correct! ' + correct;
+        input.disabled = true;
+        btn.disabled   = true;
+      } else {
+        card.classList.add('wrong');
+        fb.className = 'feedback wrong-msg show';
+        fb.innerHTML = '❌ Not quite — try again.';
+        setTimeout(() => {
+          card.classList.remove('wrong');
+          fb.classList.remove('show');
+        }, 2000);
+      }
+
+      updateProgress();
+    }
+
+    /* ─── Progress ─── */
+    function totalAnswered() {
+      return answered.flat().filter(Boolean).length;
+    }
+
+    function lessonAnswered(idx) {
+      return answered[idx].every(Boolean);
+    }
+
+    function updateProgress() {
+      const done = totalAnswered();
+      const total = answered.flat().length; // 6
+      const pct = Math.round((done / total) * 100);
+      document.getElementById('overall-fill').style.width = pct + '%';
+      document.getElementById('overall-pct').textContent  = pct + '%';
+
+      // Sidebar nav dots
+      for (let i = 0; i < TOTAL_LESSONS; i++) {
+        const nav = document.getElementById(`nav-${i}`);
+        if (lessonAnswered(i)) {
+          nav.classList.add('completed');
+          document.getElementById(`mod-label-${i+1}`).classList.add('completed');
+        }
+      }
+
+      // If all done, show completion
+      if (done === total) {
+        showCompletion();
+      }
+    }
+
+    /* ─── Navigation ─── */
+    function goTo(idx) {
+      if (idx < 0 || idx >= TOTAL_LESSONS) return;
+
+      // Hide current lesson
+      document.getElementById(`lesson-${current}`).style.display = 'none';
+      document.getElementById(`nav-${current}`).classList.remove('active');
+      document.getElementById(`dot-${current}`).classList.remove('current');
+      document.getElementById(`dot-${current}`).classList.toggle('done', lessonAnswered(current));
+
+      current = idx;
+
+      // Show new lesson
+      document.getElementById(`lesson-${current}`).style.display = '';
+      document.getElementById(`nav-${current}`).classList.add('active');
+      document.getElementById(`dot-${current}`).classList.add('current');
+
+      // Update header
+      document.getElementById('ch-title').textContent = titles[current];
+      document.getElementById('ch-breadcrumb-title').textContent = `Lesson ${current + 1}`;
+      document.getElementById('ch-pts').textContent = '10 pts';
+      document.getElementById('cur-num').textContent = current + 1;
+
+      // Prev/Next buttons
+      document.getElementById('btn-prev').disabled = current === 0;
+      const isLast = current === TOTAL_LESSONS - 1;
+      document.getElementById('btn-next').textContent = isLast ? 'Finish →' : 'Next →';
+      document.getElementById('btn-next').disabled = false;
+
+      // Scroll top
+      document.querySelector('.room-body').scrollTop = 0;
+    }
+
+    function navigate(dir) {
+      const next = current + dir;
+      if (next >= 0 && next < TOTAL_LESSONS) {
+        goTo(next);
+      } else if (dir === 1 && current === TOTAL_LESSONS - 1) {
+        // Final next = show completion
+        showCompletion();
+      }
+    }
+
+    /* ─── Completion ─── */
+    function showCompletion() {
+      for (let i = 0; i < TOTAL_LESSONS; i++) {
+        document.getElementById(`lesson-${i}`).style.display = 'none';
+        document.getElementById(`nav-${i}`).classList.remove('active');
+      }
+
+      const done  = totalAnswered();
+      const total = answered.flat().length;
+      const pts   = done * (20 / total); // scaled out of 20
+      document.getElementById('score-pill').textContent = `${Math.round(pts)} / 20 pts`;
+      document.getElementById('completion-card').classList.add('show');
+
+      document.getElementById('btn-next').disabled = true;
+      document.getElementById('btn-prev').disabled = true;
+      document.getElementById('cur-num').textContent = '✓';
+      document.getElementById('overall-fill').style.width = '100%';
+      document.getElementById('overall-pct').textContent = '100%';
+
+      document.querySelector('.room-body').scrollTop = 0;
+    }
+
+    /* ─── Allow Enter key to check ─── */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        const focused = document.activeElement;
+        if (focused && focused.classList.contains('answer-input')) {
+          const id  = focused.id; // "ans-L-Q"
+          const [,l,q] = id.split('-');
+          focused.nextElementSibling.click();
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
