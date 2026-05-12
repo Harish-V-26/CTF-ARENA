@@ -1,0 +1,132 @@
+id: 14
+title: "Public Key Infrastructure (PKI)"
+slug: "pki-certificates"
+difficulty: "medium"
+description: "Understand digital certificates, Certificate Authorities, trust chains, and how the web stays secure through HTTPS."
+order: 14
+
+challenges:
+  - id: pki-qa-1
+    type: qa
+    title: "Introduction to PKI"
+    points: 60
+    content: |
+      Public Key Infrastructure (PKI) manages digital certificates and public-key encryption.
+      
+      KEY COMPONENTS:
+      1. Digital Certificate: Electronic document proving public key ownership.
+      2. Certificate Authority (CA): Trusted third party issuing certificates.
+      3. Registration Authority (RA): Verifies identity before the CA issues certificates.
+      4. Certificate Revocation List (CRL): List of prematurely revoked certificates.
+    questions:
+      - q: "What does PKI stand for?"
+        a: "Public Key Infrastructure"
+      - q: "What is the name of the trusted entity that issues digital certificates?"
+        a: "Certificate Authority"
+      - q: "What component verifies an entity's identity before a certificate is issued?"
+        a: "Registration Authority"
+      - q: "What list contains certificates that are no longer trusted before expiration?"
+        a: "Certificate Revocation List"
+      - q: "What document is used to mathematically prove ownership of a public key?"
+        a: "Digital Certificate"
+
+  - id: pki-qa-2
+    type: qa
+    title: "X.509 Certificates"
+    points: 60
+    content: |
+      X.509 is the standard format for public key certificates. It contains essential fields:
+      - Subject: The entity the certificate belongs to (e.g., www.example.com).
+      - Issuer: The CA that issued the certificate.
+      - Public Key: The public key of the subject.
+      - Validity Period: "Not Before" and "Not After" dates.
+      - Signature: The digital signature of the issuer verifying the certificate.
+    questions:
+      - q: "What is the industry standard format for digital certificates?"
+        a: "X.509"
+      - q: "Which field specifies the entity the certificate was issued to?"
+        a: "Subject"
+      - q: "Which field identifies the Certificate Authority that generated the certificate?"
+        a: "Issuer"
+      - q: "What dates define the lifespan of a certificate?"
+        a: "Validity Period"
+      - q: "What ensures the certificate has not been tampered with by an attacker?"
+        a: "Signature"
+
+  - id: pki-qa-3
+    type: qa
+    title: "The Chain of Trust"
+    points: 60
+    content: |
+      Trust in PKI is hierarchical, establishing a "Chain of Trust".
+      - Root CA: The highest level of trust. Its certificate is self-signed and pre-installed in browsers.
+      - Intermediate CA: Issued by the Root CA to isolate and protect the Root CA from compromise.
+      - End-Entity (Leaf) Certificate: The final certificate issued to a domain or server.
+      If any link in the chain breaks or expires, the browser will display a security warning.
+    questions:
+      - q: "What is the highest and most trusted authority in a PKI hierarchy?"
+        a: "Root CA"
+      - q: "What type of CA sits between the Root CA and the final certificate to protect the root?"
+        a: "Intermediate CA"
+      - q: "What is the final certificate issued to a website often called?"
+        a: "Leaf Certificate"
+      - q: "A Root CA's certificate is unique because it is signed by itself. What is this called?"
+        a: "Self-signed"
+      - q: "What will a browser do if it cannot verify the entire chain of trust?"
+        a: "Display a warning"
+
+  - id: pki-qa-4
+    type: qa
+    title: "Certificate Revocation (CRL vs OCSP)"
+    points: 60
+    content: |
+      Certificates might need revocation if a private key is leaked.
+      - CRL (Certificate Revocation List): The browser downloads a large, static list of revoked certificates. It can be slow and outdated.
+      - OCSP (Online Certificate Status Protocol): The browser queries the CA in real-time to check the status of a specific certificate. Faster, but introduces privacy concerns.
+      - OCSP Stapling: The web server periodically fetches its own OCSP status and "staples" it to the TLS handshake, improving privacy and speed.
+    questions:
+      - q: "Which protocol allows a browser to check a specific certificate's status in real-time?"
+        a: "OCSP"
+      - q: "What mechanism involves the web server providing the OCSP response to the client?"
+        a: "OCSP Stapling"
+      - q: "What does CRL stand for?"
+        a: "Certificate Revocation List"
+      - q: "Which revocation method requires downloading an entire list of revoked keys?"
+        a: "CRL"
+      - q: "Why might a certificate need to be revoked before it expires?"
+        a: "Key compromise"
+
+  - id: pki-qa-5
+    type: qa
+    title: "SSL/TLS Handshake"
+    points: 60
+    content: |
+      When you visit an HTTPS site, a TLS Handshake occurs:
+      1. ClientHello: Browser sends supported cipher suites.
+      2. ServerHello: Server chooses a cipher and sends its Digital Certificate.
+      3. Key Exchange: They use asymmetric crypto (like RSA or Diffie-Hellman) to safely agree on a shared symmetric "Session Key".
+      4. Secure Communication: Data is now encrypted using the fast symmetric Session Key.
+    questions:
+      - q: "What is the initial message sent by the browser in a TLS handshake?"
+        a: "ClientHello"
+      - q: "During the handshake, what does the server send to prove its identity?"
+        a: "Digital Certificate"
+      - q: "What type of cryptography is used to agree on the shared secret key?"
+        a: "Asymmetric"
+      - q: "What type of key is used for the actual data encryption after the handshake?"
+        a: "Session Key"
+      - q: "Is the Session Key symmetric or asymmetric?"
+        a: "Symmetric"
+
+  - id: pki-flag-1
+    type: flag
+    title: "Investigating the Certificate"
+    points: 60
+    content: |
+      You've intercepted a Base64-encoded X.509 certificate file (`cert.pem`). Using OpenSSL, you run:
+      `openssl x509 -in cert.pem -text -noout`
+      
+      In the output, you notice a strange entry in the "Subject Alternative Name" (SAN) extension. It reveals an internal sub-domain: `flag-internal.crypto-labs.local`.
+      
+      What is the flag based on the hidden internal sub-domain?
+    flag: "CTF{flag-internal.crypto-labs.local}"

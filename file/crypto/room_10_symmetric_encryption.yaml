@@ -1,0 +1,59 @@
+id: 10
+title: "Symmetric Encryption"
+slug: "symmetric-encryption"
+difficulty: "medium"
+description: "Understand block ciphers, stream ciphers, modes of operation, and AES."
+order: 10
+
+challenges:
+  - id: sym-qa-1
+    type: qa
+    title: "Stream vs. Block Ciphers"
+    points: 10
+    content: |
+      Symmetric encryption uses a single shared secret key to both encrypt and decrypt data. It is highly efficient and used for bulk data encryption.
+      
+      STREAM VS. BLOCK CIPHERS:
+      1. Stream Ciphers: Encrypt data one bit or byte at a time. Fast and suitable for real-time communication (e.g., RC4, ChaCha20).
+      2. Block Ciphers: Encrypt data in fixed-size blocks (e.g., 64-bit or 128-bit). Padding is added if the data doesn't fit perfectly into a block.
+      
+      COMMON SYMMETRIC ALGORITHMS:
+      - DES (Data Encryption Standard): Obsolete. Uses a 56-bit key, which is easily brute-forced today.
+      - 3DES (Triple DES): Applies DES three times. Better than DES, but slow and largely deprecated.
+      - AES (Advanced Encryption Standard): The modern standard. Supports 128, 192, and 256-bit keys. Fast, secure, and used globally.
+      
+      THE KEY DISTRIBUTION PROBLEM:
+      Symmetric encryption's biggest weakness is how to securely share the secret key between parties over an insecure channel. This is where asymmetric encryption comes in.
+    questions:
+      - q: "Which modern symmetric algorithm is the global standard and supports key sizes of 128, 192, and 256 bits?"
+        a: "AES"
+      - q: "What type of cipher encrypts data one continuous bit or byte at a time?"
+        a: "Stream Cipher"
+
+  - id: sym-qa-2
+    type: qa
+    title: "Modes of Operation"
+    points: 10
+    content: |
+      MODES OF OPERATION (For Block Ciphers):
+      - ECB (Electronic Codebook): The simplest mode. Identical plaintext blocks produce identical ciphertext blocks. HIGHLY INSECURE for patterns (e.g., the famous ECB Penguin image).
+      - CBC (Cipher Block Chaining): Each plaintext block is XORed with the previous ciphertext block before encryption. Requires an Initialization Vector (IV) to randomize the first block.
+      - GCM (Galois/Counter Mode): Combines encryption with data authentication (integrity). Widely used in modern protocols like TLS.
+    questions:
+      - q: "Which block cipher mode of operation is considered highly insecure because identical plaintext blocks produce identical ciphertext blocks?"
+        a: "ECB"
+      - q: "What is added to the first block in CBC mode to ensure identical plaintexts produce different ciphertexts?"
+        a: "Initialization Vector (IV)"
+
+  - id: sym-flag-1
+    type: flag
+    title: "XOR Operator"
+    points: 50
+    content: |
+      At the heart of many symmetric ciphers is the bitwise XOR operation.
+      If A XOR B = C, then C XOR B = A.
+      The flag format is CTF{...}. 
+      We XOR'd the string "secret" with the key "key", obtaining a result, and then encoded it in base64. 
+      Wait, we'll give you a simpler challenge: XORing a value with itself results in 0. What is 1010 XOR 1100 in binary?
+      Format the flag as CTF{binary_result}.
+    flag: "CTF{0110}"

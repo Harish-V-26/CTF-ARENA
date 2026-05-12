@@ -1,0 +1,121 @@
+id: 15
+title: "Encoding & Steganography"
+slug: "encoding-steganography"
+difficulty: "easy"
+description: "Learn the difference between encoding, encryption, and how attackers hide data in plain sight using steganography."
+order: 15
+
+challenges:
+  - id: stego-qa-1
+    type: qa
+    title: "Encoding vs Encryption"
+    points: 60
+    content: |
+      Do not confuse encoding with encryption!
+      - Encryption: Transforms data to keep it secret. Requires a key to reverse. Provides confidentiality.
+      - Encoding: Transforms data into a new format so it can be safely transmitted across different systems (e.g., URLs, emails). Requires NO KEY to reverse. Anyone can decode it.
+      - Hashing: A one-way mathematical function. Cannot be reversed.
+    questions:
+      - q: "Which process transforms data into a universally readable format for transmission?"
+        a: "Encoding"
+      - q: "Which process requires a cryptographic key to reverse?"
+        a: "Encryption"
+      - q: "True or False: Base64 encoding is a secure way to store passwords."
+        a: "False"
+      - q: "Which process is strictly a one-way mathematical function?"
+        a: "Hashing"
+      - q: "If data needs to be safely sent in a URL, should it be encoded or hashed?"
+        a: "Encoded"
+
+  - id: stego-qa-2
+    type: qa
+    title: "Common Encodings"
+    points: 60
+    content: |
+      Cybersecurity professionals must recognize common encoding schemes:
+      - Base64: Uses A-Z, a-z, 0-9, +, and /. Often ends with padding characters (= or ==).
+      - Hexadecimal (Hex): Base-16. Uses 0-9 and A-F. (e.g., 41 = 'A' in ASCII).
+      - URL Encoding: Uses % followed by two hex digits (e.g., %20 represents a space).
+      - Binary: Base-2. Only 0s and 1s.
+    questions:
+      - q: "Which encoding scheme frequently uses '=' for padding at the end?"
+        a: "Base64"
+      - q: "Which encoding scheme uses letters A through F and numbers 0 through 9?"
+        a: "Hexadecimal"
+      - q: "What does '%20' represent in URL Encoding?"
+        a: "Space"
+      - q: "What base system is strictly composed of 0s and 1s?"
+        a: "Binary"
+      - q: "If you see a string like 'SGVsbG8=', what encoding is likely used?"
+        a: "Base64"
+
+  - id: stego-qa-3
+    type: qa
+    title: "Introduction to Steganography"
+    points: 60
+    content: |
+      Steganography is the practice of concealing a file, message, image, or video within another file, message, image, or video.
+      - While cryptography hides the *meaning* of a message, steganography hides the *existence* of the message entirely.
+      - Carriers: The file used to hide the data (e.g., a normal-looking JPEG image).
+      - Payload: The secret data being hidden.
+    questions:
+      - q: "What technique hides the actual existence of a secret message?"
+        a: "Steganography"
+      - q: "What is the term for the normal-looking file used to conceal the secret?"
+        a: "Carrier"
+      - q: "What is the term for the secret data hidden inside the carrier?"
+        a: "Payload"
+      - q: "Does cryptography hide the meaning or the existence of a message?"
+        a: "Meaning"
+      - q: "Can steganography and cryptography be used together?"
+        a: "Yes"
+
+  - id: stego-qa-4
+    type: qa
+    title: "LSB Steganography"
+    points: 60
+    content: |
+      Least Significant Bit (LSB) substitution is the most common image steganography technique.
+      In an RGB image, every pixel has 3 bytes (Red, Green, Blue). LSB steganography modifies the very last bit (the 8th bit) of each byte to embed the secret message.
+      Because it only changes the least significant bit, the color change in the image is invisible to the human eye. Tools like `steghide` or `zsteg` are used to extract this data.
+    questions:
+      - q: "What does LSB stand for in steganography?"
+        a: "Least Significant Bit"
+      - q: "Does changing the LSB dramatically alter the appearance of an image?"
+        a: "No"
+      - q: "In a standard RGB image, how many color channels are present per pixel?"
+        a: "3"
+      - q: "Name a common Linux tool used to extract LSB stego payloads from images."
+        a: "zsteg"
+      - q: "Which bit of a byte is modified in LSB steganography?"
+        a: "The last bit"
+
+  - id: stego-qa-5
+    type: qa
+    title: "File Signatures (Magic Bytes)"
+    points: 60
+    content: |
+      Steganography isn't always about pixels. Sometimes attackers hide data by manipulating file structures or appending data to the end of a file.
+      - Magic Bytes (File Signatures): The first few bytes of a file that identify its true format, regardless of the extension. (e.g., JPEGs start with `FF D8 FF E0`).
+      - Appended Data: Attackers can simply append a zip file to the bottom of an image file. The image still opens normally, but tools like `binwalk` can detect the hidden zip.
+    questions:
+      - q: "What term describes the starting bytes that uniquely identify a file type?"
+        a: "Magic Bytes"
+      - q: "Does the file extension (like .txt or .jpg) guarantee the true format of the file?"
+        a: "No"
+      - q: "What tool is commonly used to extract appended zip files hidden inside images?"
+        a: "binwalk"
+      - q: "If you append data to the end of a JPEG file, does it usually corrupt the image?"
+        a: "No"
+      - q: "What hex values typically start a JPEG image?"
+        a: "FF D8"
+
+  - id: stego-flag-1
+    type: flag
+    title: "Decoding the Magic"
+    points: 60
+    content: |
+      You found a text file containing the following string: `Q1RGe2hpZGRlbl9pbl9wbGFpbl9zaWdodH0=`
+      
+      Recognizing the `=` at the end, you realize it is encoded. Decode this string to reveal the flag!
+    flag: "CTF{hidden_in_plain_sight}"

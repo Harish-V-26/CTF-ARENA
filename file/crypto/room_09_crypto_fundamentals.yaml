@@ -1,0 +1,58 @@
+id: 9
+title: "Cryptography Fundamentals"
+slug: "crypto-fundamentals"
+difficulty: "easy"
+description: "Learn the core concepts of cryptography, the CIA triad, and basic ciphers."
+order: 9
+
+challenges:
+  - id: crypto-qa-1
+    type: qa
+    title: "The CIA Triad and Basics"
+    points: 10
+    content: |
+      Cryptography is the practice and study of techniques for secure communication in the presence of adversarial behavior. It forms the foundation of modern cybersecurity.
+      
+      THE CIA TRIAD:
+      1. Confidentiality: Ensuring that information is accessible only to those authorized to have access. Encryption is the primary tool for this.
+      2. Integrity: Safeguarding the accuracy and completeness of information. Hashing and digital signatures provide this.
+      3. Availability: Ensuring that authorized users have access to information and associated assets when required.
+      
+      BASIC CONCEPTS:
+      - Plaintext: The original, readable message or data.
+      - Ciphertext: The scrambled, unreadable output of the encryption process.
+      - Cipher: The algorithm used to perform encryption or decryption.
+      - Key: A piece of information that determines the functional output of a cryptographic algorithm.
+    questions:
+      - q: "Which component of the CIA triad ensures that data has not been altered in transit?"
+        a: "Integrity"
+      - q: "What is the term for the original, readable message before it is encrypted?"
+        a: "Plaintext"
+
+  - id: crypto-qa-2
+    type: qa
+    title: "Types and Principles"
+    points: 10
+    content: |
+      TYPES OF CRYPTOGRAPHY:
+      1. Symmetric Cryptography: Uses the same key for both encryption and decryption. Fast and efficient for large amounts of data.
+      2. Asymmetric Cryptography: Uses a pair of mathematically related keys (public and private). Slower, but solves the key distribution problem.
+      3. Hashing: A one-way function that maps data of any size to a fixed-size output. Used for integrity verification and password storage.
+      
+      KERCKHOFFS'S PRINCIPLE:
+      A cryptographic system should be secure even if everything about the system, except the key, is public knowledge. Security through obscurity is highly dangerous and not reliable.
+    questions:
+      - q: "What principle states that a cryptographic system's security should rely solely on the secrecy of the key?"
+        a: "Kerckhoffs's Principle"
+      - q: "Which type of cryptography uses the exact same key for both encryption and decryption?"
+        a: "Symmetric Cryptography"
+
+  - id: crypto-flag-1
+    type: flag
+    title: "Caesar's Secret"
+    points: 50
+    content: |
+      One of the oldest known ciphers is the Caesar Cipher, a substitution cipher where each letter in the plaintext is shifted a certain number of places down the alphabet.
+      We intercepted this message that was shifted by 3 (A becomes D): "FWI{edvlf_flskhu}".
+      Can you decrypt it to find the flag?
+    flag: "CTF{basic_cipher}"
