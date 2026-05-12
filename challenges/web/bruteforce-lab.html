@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CTF LABS — Web Security Fundamentals</title>
-  <link rel="stylesheet" href="../css/global.css"/>
-  <link rel="stylesheet" href="../css/web-room.css"/>
+  <title>CTF LABS — Brute Force Attacks</title>
+  <link rel="stylesheet" href="../../css/global.css"/>
+  <link rel="stylesheet" href="../../css/web-room.css"/>
 </head>
 <body>
 
 <nav class="navbar" aria-label="Main navigation">
-  <a href="../index.html" class="logo">CTF<span>LABS</span></a>
+  <a href="../../index.html" class="logo">CTF<span>LABS</span></a>
   <div class="nav-links">
-    <a href="../index.html">Home</a>
-    <a href="../challenges.html" class="active">Challenges</a>
-    <a href="../rules.html">Rules</a>
+    <a href="../../index.html">Home</a>
+    <a href="../../challenges.html" class="active">Challenges</a>
+    <a href="../../rules.html">Rules</a>
     <div class="dropdown">
       <a href="#" aria-haspopup="true">Profile ▾</a>
       <div class="dropdown-content">
@@ -31,7 +31,7 @@
   <!-- SIDEBAR -->
   <aside class="room-sidebar">
     <div class="sidebar-header">
-      <div class="sidebar-title">Web Security Fundamentals</div>
+      <div class="sidebar-title">Brute Force Attacks</div>
       <div class="overall-progress-wrap">
         <div class="overall-progress-bar">
           <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
@@ -46,7 +46,7 @@
   <div class="room-main">
 
     <div class="challenge-header">
-      <div class="ch-breadcrumb">Web Challenges › Web Security Fundamentals › <span id="ch-crumb">Lesson 1</span></div>
+      <div class="ch-breadcrumb">Web Challenges › Brute Force Attacks › <span id="ch-crumb">Lesson 1</span></div>
       <div class="ch-meta">
         <span class="ch-title" id="ch-title"></span>
         <span class="ch-pts" id="ch-pts"></span>
@@ -71,9 +71,9 @@
       <div class="completion-card" id="completion-card">
         <div class="trophy-icon">🏆</div>
         <h2>Lab Complete!</h2>
-        <p>You've mastered the fundamentals of Web Security — from the CIA Triad and HTTP basics to understanding common attacks like SQLi, XSS, and brute force, and using tools like Burp Suite.</p>
-        <div class="score-pill" id="score-pill">0 / 100 pts</div>
-        <a href="../challenges.html" class="btn btn-primary">← Back to Challenges</a>
+        <p>You've mastered Brute Force Attacks — from understanding dictionary lists and credential stuffing to preventing them using MFA, lockouts, and CAPTCHA!</p>
+        <div class="score-pill" id="score-pill">0 / 60 pts</div>
+        <a href="../../challenges.html" class="btn btn-primary">← Back to Challenges</a>
       </div>
     </div>
 
@@ -88,7 +88,7 @@
   </div>
 </div>
 
-<script src="web-security-data.js"></script>
+<script src="bruteforce-data.js"></script>
 <script>
   let cur = 0;
   const TOTAL = LESSONS.length;
@@ -230,8 +230,8 @@
   /* ── Completion ── */
   function showCompletion() {
     document.getElementById('lesson-panel').style.display = 'none';
-    const pts = Math.round(totalDone() / totalQs() * 100);
-    document.getElementById('score-pill').textContent = `${pts} / 100 pts`;
+    const pts = totalDone() * 2; // ~2pts each
+    document.getElementById('score-pill').textContent = `${pts} / 60 pts`;
     document.getElementById('completion-card').classList.add('show');
     document.getElementById('btn-next').disabled = true;
     document.getElementById('btn-prev').disabled = true;
