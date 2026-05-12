@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CTF LABS — Cross-Site Scripting (XSS)</title>
-  <link rel="stylesheet" href="../../css/global.css"/>
-  <link rel="stylesheet" href="../../css/web-room.css"/>
+  <meta name="description" content="CTF LABS Command Injection — Learn OS command injection attacks and how to exploit vulnerable shell calls."/>
+  <title>CTF LABS — Command Injection</title>
+  <link rel="stylesheet" href="../../../css/global.css"/>
+  <link rel="stylesheet" href="../../../css/web-room.css"/>
 </head>
 <body>
 
 <nav class="navbar" aria-label="Main navigation">
-  <a href="../../index.html" class="logo">CTF<span>LABS</span></a>
+  <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
   <div class="nav-links">
-    <a href="../../index.html">Home</a>
-    <a href="../../challenges.html" class="active">Challenges</a>
-    <a href="../../rules.html">Rules</a>
+    <a href="../../../index.html">Home</a>
+    <a href="../../../challenges.html" class="active">Challenges</a>
+    <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
       <a href="#" aria-haspopup="true">Profile ▾</a>
       <div class="dropdown-content">
@@ -31,7 +32,7 @@
   <!-- SIDEBAR -->
   <aside class="room-sidebar">
     <div class="sidebar-header">
-      <div class="sidebar-title">Cross-Site Scripting (XSS)</div>
+      <div class="sidebar-title">Command Injection</div>
       <div class="overall-progress-wrap">
         <div class="overall-progress-bar">
           <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
@@ -46,7 +47,7 @@
   <div class="room-main">
 
     <div class="challenge-header">
-      <div class="ch-breadcrumb">Web Challenges › Cross-Site Scripting (XSS) › <span id="ch-crumb">Lesson 1</span></div>
+      <div class="ch-breadcrumb">Web Challenges › Command Injection › <span id="ch-crumb">Lesson 1</span></div>
       <div class="ch-meta">
         <span class="ch-title" id="ch-title"></span>
         <span class="ch-pts" id="ch-pts"></span>
@@ -71,14 +72,14 @@
       <div class="completion-card" id="completion-card">
         <div class="trophy-icon">🏆</div>
         <h2>Lab Complete!</h2>
-        <p>You've mastered Cross-Site Scripting (XSS) — from understanding the core vulnerabilities to exploiting and preventing them!</p>
+        <p>You've mastered Command Injection — from exploiting shell operators and blind injection techniques to preventing RCE with safe APIs and input validation!</p>
         <div class="score-pill" id="score-pill">0 / 60 pts</div>
-        <a href="../../challenges.html" class="btn btn-primary">← Back to Challenges</a>
+        <a href="../../../challenges.html" class="btn btn-primary">← Back to Challenges</a>
       </div>
     </div>
 
     <div class="room-footer-nav">
-      <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">9</span></div>
+      <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">3</span></div>
       <div class="nav-btns">
         <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Previous</button>
         <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
@@ -88,14 +89,12 @@
   </div>
 </div>
 
-<script src="xss-data.js"></script>
+<script src="command-injection-data.js"></script>
 <script>
   let cur = 0;
   const TOTAL = LESSONS.length;
-  // answered[lessonIdx] = array of booleans per question
   const answered = LESSONS.map(l => l.questions.map(() => false));
 
-  /* ── Build sidebar ── */
   function buildSidebar() {
     const nav = document.getElementById('sidebar-nav');
     nav.innerHTML = LESSONS.map((l, i) => `
@@ -111,14 +110,12 @@
       </div>`).join('');
   }
 
-  /* ── Build step dots ── */
   function buildDots() {
     document.getElementById('step-dots').innerHTML =
       LESSONS.map((_,i) => `<div class="step-dot${i===0?' current':''}" id="dot-${i}"></div>`).join('');
     document.getElementById('tot-num').textContent = TOTAL;
   }
 
-  /* ── Render lesson ── */
   function renderLesson(idx) {
     const l = LESSONS[idx];
     document.getElementById('ch-title').textContent = l.title;
@@ -145,19 +142,16 @@
       </div>`).join('');
   }
 
-  /* ── Update sidebar & dots ── */
   function updateNav(from, to) {
     const fromEl = document.getElementById(`nav-${from}`);
     fromEl.classList.remove('active');
     document.getElementById(`dot-${from}`).classList.remove('current');
     document.getElementById(`dot-${from}`).classList.toggle('done', lessonDone(from));
     if (lessonDone(from)) fromEl.classList.add('completed');
-
     document.getElementById(`nav-${to}`).classList.add('active');
     document.getElementById(`dot-${to}`).classList.add('current');
   }
 
-  /* ── Check answer ── */
   function normalise(s) { return s.trim().toLowerCase().replace(/\s+/g,' '); }
 
   function checkAnswer(lesson, qi) {
@@ -166,13 +160,9 @@
     const correct = LESSONS[lesson].questions[qi].a;
     const cn = normalise(correct);
     const un = normalise(input.value);
-
-    // Flexible: exact match OR user answer contained in correct (or vice-versa for key word)
     const ok = un === cn || cn.includes(un) || un.includes(cn.split(' ')[0]);
-
     const fb  = document.getElementById(`fb-${lesson}-${qi}`);
     const qc  = document.getElementById(`qc-${lesson}-${qi}`);
-
     if (ok) {
       answered[lesson][qi] = true;
       qc.classList.add('correct');
@@ -193,7 +183,6 @@
     if (e.key === 'Enter') checkAnswer(lesson, qi);
   }
 
-  /* ── Progress ── */
   function lessonDone(idx) { return answered[idx].every(Boolean); }
   function totalDone()     { return answered.flat().filter(Boolean).length; }
   function totalQs()       { return answered.flat().length; }
@@ -211,7 +200,6 @@
     if (totalDone() === totalQs()) showCompletion();
   }
 
-  /* ── Navigation ── */
   function goTo(idx) {
     updateNav(cur, idx);
     cur = idx;
@@ -227,10 +215,9 @@
     else if (dir === 1)            { showCompletion(); }
   }
 
-  /* ── Completion ── */
   function showCompletion() {
     document.getElementById('lesson-panel').style.display = 'none';
-    const pts = totalDone() * 2; // ~2pts each
+    const pts = totalDone() * 2;
     document.getElementById('score-pill').textContent = `${pts} / 60 pts`;
     document.getElementById('completion-card').classList.add('show');
     document.getElementById('btn-next').disabled = true;
@@ -240,7 +227,6 @@
     document.querySelector('.room-body').scrollTop = 0;
   }
 
-  /* ── Init ── */
   buildSidebar();
   buildDots();
   renderLesson(0);
