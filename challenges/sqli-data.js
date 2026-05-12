@@ -74,8 +74,7 @@ KEY MYSQL FUNCTIONS:
       { q: "What technique increments until an error to find column count?", a: "ORDER BY" },
       { q: "In MySQL, what function shows the current database name?", a: "database()" },
       { q: "What schema contains metadata about all tables and columns in MySQL?", a: "information_schema" },
-      { q: "In MySQL, what function reads files from the filesystem?", a: "LOAD_FILE()" },
-      { q: "Why is NULL better than numbers in UNION SELECT NULL enumeration?", a: "NULL is compatible with any data type" }
+      { q: "In MySQL, what function reads files from the filesystem?", a: "LOAD_FILE()" }
     ]
   },
   {
