@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DevTools Gauntlet — Guided Practice</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-base:      #0d1117;
+      --bg-surface:   #161b22;
+      --bg-elevated:  #1f2937;
+      --accent:       #ff4d6d;
+      --accent-dim:   #e0364d;
+      --accent-glow:  rgba(255, 77, 109, 0.15);
+      --text-primary: #e6edf3;
+      --text-muted:   #8b949e;
+      --border:       #30363d;
+      --danger:       #ff4d6d;
+      --warning:      #ffc947;
+      --info:         #58a6ff;
+      --font-main:    'Inter', Arial, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: var(--accent-dim); border-radius: 3px; }
+
+    /* ── Header ── */
+    .lab-header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .lab-header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .lab-header h1 span { color: var(--accent); }
+
+    .lab-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: var(--accent-glow);
+      color: var(--accent);
+      border: 1px solid rgba(255,77,109,0.3);
+    }
+
+    /* ── Container ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .intro h2 {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .intro h2 span { color: var(--accent); }
+
+    .intro p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Challenge Card ── */
+    .challenge {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 32px;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .challenge:hover { border-color: rgba(255,77,109,0.3); }
+
+    .challenge-top {
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .challenge-top h3 {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ch-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+
+    .ch-status {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      transition: all 0.3s;
+    }
+
+    .ch-status.solved {
+      background: var(--accent-glow);
+      color: var(--accent);
+      border-color: rgba(255,77,109,0.3);
+    }
+
+    .challenge-body { padding: 28px; }
+
+    .scenario {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+
+    .scenario-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .scenario p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .scenario code {
+      font-family: var(--font-mono);
+      background: rgba(255,77,109,0.08);
+      color: var(--accent);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    /* Sandbox area */
+    .sandbox {
+      background: var(--bg-base);
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 20px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    .sandbox-label {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    /* Locked button */
+    #flagBtn {
+      padding: 14px 36px;
+      border: none;
+      border-radius: 10px;
+      font-family: var(--font-main);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #flagBtn:disabled {
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      border: 1px solid var(--border);
+    }
+
+    #flagBtn:not(:disabled) {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 20px rgba(255,77,109,0.3);
+    }
+
+    #flagBtn:not(:disabled):hover {
+      background: var(--accent-dim);
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(255,77,109,0.5);
+    }
+
+    /* Hidden div for Inspector challenge */
+    #hidden-flag-div {
+      display: none;
+    }
+
+    /* Nothing to see message */
+    .nothing-msg {
+      color: var(--text-muted);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    /* Instructions */
+    .instructions {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+    }
+
+    .instructions-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 2;
+    }
+
+    .instructions code {
+      font-family: var(--font-mono);
+      background: var(--bg-elevated);
+      color: var(--accent);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    /* Flag submission */
+    .flag-submit {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .flag-input {
+      flex: 1;
+      background: var(--bg-base);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: var(--font-mono);
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .flag-input:focus { border-color: var(--accent); }
+    .flag-input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .submit-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #000;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: var(--font-main);
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .submit-btn:hover { background: var(--accent-dim); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .flag-feedback {
+      display: none;
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 16px;
+      border-radius: 8px;
+    }
+
+    .flag-feedback.show { display: block; }
+
+    .flag-feedback.correct {
+      background: rgba(255,77,109,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(255,77,109,0.25);
+    }
+
+    .flag-feedback.wrong {
+      background: rgba(255,77,109,0.08);
+      color: #f87171;
+      border: 1px solid rgba(255,77,109,0.25);
+    }
+
+    /* Scoreboard */
+    .scoreboard {
+      background: var(--bg-surface);
+      border: 1px solid rgba(255,77,109,0.3);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(255,77,109,0.05);
+    }
+
+    .scoreboard h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .scoreboard .score {
+      font-family: var(--font-mono);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 16px 0;
+    }
+
+    .scoreboard p { color: var(--text-muted); font-size: 14px; }
+
+    /* Hint toggle */
+    .hint-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-main);
+      transition: all 0.3s;
+      margin-top: 12px;
+    }
+
+    .hint-toggle:hover {
+      border-color: var(--warning);
+      color: var(--warning);
+    }
+
+    .hint-box {
+      display: none;
+      margin-top: 12px;
+      padding: 14px 18px;
+      background: rgba(255,201,71,0.06);
+      border: 1px solid rgba(255,201,71,0.2);
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--warning);
+      line-height: 1.6;
+    }
+
+    .hint-box.show { display: block; }
+
+    .hint-box code {
+      font-family: var(--font-mono);
+      background: rgba(255,201,71,0.1);
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .container { padding: 20px 16px 60px; }
+      .lab-header { padding: 16px 20px; flex-wrap: wrap; gap: 8px; }
+      .challenge-body { padding: 20px; }
+      .sandbox { padding: 30px 20px; }
+      .flag-submit { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="lab-header">
+  <h1>🛠️ DevTools <span>Gauntlet</span> — Phase 1</h1>
+  <span class="lab-badge">Guided Practice</span>
+</header>
+
+<!-- Hidden flag comment for curious inspectors! -->
+<!-- Psst... this isn't a challenge flag, but good instinct checking HTML comments! Keep going. -->
+
+<div class="container">
+
+  <div class="intro">
+    <h2>🧪 The <span>Training Wheels</span></h2>
+    <p>Three live sandbox challenges. Each one teaches you a real browser exploitation technique. Use your DevTools to break in, find the flag, and submit it below.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- CHALLENGE 1: The Console Trick              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="challenge" id="challenge-1">
+    <div class="challenge-top">
+      <h3><span class="ch-num">01</span> The Console Trick</h3>
+      <span class="ch-status" id="status-1">🔒 Locked</span>
+    </div>
+    <div class="challenge-body">
+      <div class="scenario">
+        <div class="scenario-label">📋 Scenario</div>
+        <p>The button below is <strong>disabled</strong> — it's grayed out and you can't click it. But front-end restrictions are just suggestions. Your mission: <strong>use the Console to enable the button and click it to reveal the flag.</strong></p>
+      </div>
+
+      <div class="sandbox">
+        <span class="sandbox-label">▸ Live Sandbox</span>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 8px;">This button is locked by JavaScript. Can you unlock it?</p>
+        <button id="flagBtn" disabled onclick="revealFlag1()">🔒 Locked — Click to Reveal Flag</button>
+        <p id="flag1-display" style="display:none; font-family: var(--font-mono); font-size: 18px; color: var(--accent); margin-top: 12px;"></p>
+      </div>
+
+      <div class="instructions">
+        <div class="instructions-label">📝 Step-by-Step Guide</div>
+        <ol>
+          <li>Right-click the "Locked" button above and select <strong>Inspect</strong>.</li>
+          <li>Look at the button's code: <code>&lt;button id="flagBtn" disabled&gt;</code></li>
+          <li>Switch to the <strong>Console</strong> tab (Ctrl+Shift+J).</li>
+          <li>Type: <code>document.getElementById('flagBtn').disabled = false</code> and press Enter.</li>
+          <li>The button is now active! Click it to reveal the flag.</li>
+        </ol>
+        <button class="hint-toggle" onclick="toggleHint('hint-1')">💡 Need a Hint?</button>
+        <div class="hint-box" id="hint-1">
+          You can also do it directly in the Inspector: find the word <code>disabled</code> in the HTML tag and simply delete it!
+        </div>
+      </div>
+
+      <div class="flag-submit">
+        <input type="text" class="flag-input" id="flag-input-1" placeholder="Enter the flag you found…" autocomplete="off"/>
+        <button class="submit-btn" id="submit-1" onclick="submitFlag(1)">Submit</button>
+      </div>
+      <div class="flag-feedback" id="feedback-1"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- CHALLENGE 2: The Hidden Element              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="challenge" id="challenge-2">
+    <div class="challenge-top">
+      <h3><span class="ch-num">02</span> The Hidden Element</h3>
+      <span class="ch-status" id="status-2">🔒 Locked</span>
+    </div>
+    <div class="challenge-body">
+      <div class="scenario">
+        <div class="scenario-label">📋 Scenario</div>
+        <p>This sandbox looks empty — just a boring message. But there's a <strong>hidden HTML element</strong> on this page containing a flag. Your mission: <strong>use the Inspector to find the hidden element and reveal it.</strong></p>
+      </div>
+
+      <div class="sandbox">
+        <span class="sandbox-label">▸ Live Sandbox</span>
+        <p class="nothing-msg">🤷 Nothing to see here... or is there?</p>
+        <div id="hidden-flag-div">flag{inspector_dom_master}</div>
+        <!-- The real flag is in the hidden div above. Can you find it? -->
+        <p id="flag2-display" style="display:none; font-family: var(--font-mono); font-size: 18px; color: var(--accent); margin-top: 12px;"></p>
+      </div>
+
+      <div class="instructions">
+        <div class="instructions-label">📝 Step-by-Step Guide</div>
+        <ol>
+          <li>Open DevTools (F12) and go to the <strong>Inspector / Elements</strong> tab.</li>
+          <li>Press <strong>Ctrl+F</strong> inside the Inspector and search for <code>flag</code>.</li>
+          <li>You'll find: <code>&lt;div id="hidden-flag-div" style="display:none"&gt;</code></li>
+          <li>The flag text is inside that div! Copy it.</li>
+          <li><strong>Bonus:</strong> Change <code>display: none</code> to <code>display: block</code> to see it on the page.</li>
+        </ol>
+        <button class="hint-toggle" onclick="toggleHint('hint-2')">💡 Need a Hint?</button>
+        <div class="hint-box" id="hint-2">
+          Try typing this in the Console: <code>document.getElementById('hidden-flag-div').textContent</code>
+        </div>
+      </div>
+
+      <div class="flag-submit">
+        <input type="text" class="flag-input" id="flag-input-2" placeholder="Enter the flag you found…" autocomplete="off"/>
+        <button class="submit-btn" id="submit-2" onclick="submitFlag(2)">Submit</button>
+      </div>
+      <div class="flag-feedback" id="feedback-2"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- CHALLENGE 3: The Storage Secret              -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="challenge" id="challenge-3">
+    <div class="challenge-top">
+      <h3><span class="ch-num">03</span> The Storage Secret</h3>
+      <span class="ch-status" id="status-3">🔒 Locked</span>
+    </div>
+    <div class="challenge-body">
+      <div class="scenario">
+        <div class="scenario-label">📋 Scenario</div>
+        <p>This page stored a secret in the browser's memory when it loaded. The page doesn't display it anywhere. Your mission: <strong>use the Storage / Application panel to find the hidden flag in LocalStorage.</strong></p>
+      </div>
+
+      <div class="sandbox">
+        <span class="sandbox-label">▸ Live Sandbox</span>
+        <p class="nothing-msg">📦 Data has been stored... somewhere.</p>
+        <p style="color: var(--text-muted); font-size: 13px;">The flag was silently written to your browser when this page loaded. Can you find where?</p>
+      </div>
+
+      <div class="instructions">
+        <div class="instructions-label">📝 Step-by-Step Guide</div>
+        <ol>
+          <li>Open DevTools (F12) and go to the <strong>Application</strong> (Chrome) or <strong>Storage</strong> (Firefox) tab.</li>
+          <li>Expand <strong>Local Storage</strong> in the left sidebar.</li>
+          <li>Click on the current domain to view stored key-value pairs.</li>
+          <li>Find the key named <code>secret_flag</code> — the value is your flag!</li>
+          <li><strong>Alternative:</strong> In the Console, type <code>localStorage.getItem('secret_flag')</code>.</li>
+        </ol>
+        <button class="hint-toggle" onclick="toggleHint('hint-3')">💡 Need a Hint?</button>
+        <div class="hint-box" id="hint-3">
+          Also check <code>document.cookie</code> — there might be bonus data in cookies too. But the main flag is in LocalStorage under the key <code>secret_flag</code>.
+        </div>
+      </div>
+
+      <div class="flag-submit">
+        <input type="text" class="flag-input" id="flag-input-3" placeholder="Enter the flag you found…" autocomplete="off"/>
+        <button class="submit-btn" id="submit-3" onclick="submitFlag(3)">Submit</button>
+      </div>
+      <div class="flag-feedback" id="feedback-3"></div>
+    </div>
+  </div>
+
+  <!-- ═══ SCOREBOARD ═══ -->
+  <div class="scoreboard">
+    <h3>🏆 Your Progress</h3>
+    <div class="score" id="score-display">0 / 3</div>
+    <p id="score-msg">Complete all three challenges to master Phase 1!</p>
+  </div>
+
+</div>
+
+<script>
+  // ── Store flag in LocalStorage for Challenge 3 ──
+  localStorage.setItem('secret_flag', 'flag{storage_explorer_pro}');
+  document.cookie = "bonus_hint=check_localStorage; path=/";
+
+  // ── Flag answers ──
+  const FLAGS = {
+    1: 'flag{console_is_powerful}',
+    2: 'flag{inspector_dom_master}',
+    3: 'flag{storage_explorer_pro}'
+  };
+
+  let solved = { 1: false, 2: false, 3: false };
+
+  // ── Reveal flag when locked button is clicked ──
+  function revealFlag1() {
+    const display = document.getElementById('flag1-display');
+    display.textContent = FLAGS[1];
+    display.style.display = 'block';
+    document.getElementById('flagBtn').textContent = '🔓 Unlocked!';
+  }
+
+  // ── Toggle hint ──
+  function toggleHint(id) {
+    document.getElementById(id).classList.toggle('show');
+  }
+
+  // ── Submit flag ──
+  function submitFlag(num) {
+    const input = document.getElementById(`flag-input-${num}`);
+    const fb = document.getElementById(`feedback-${num}`);
+    const userAnswer = input.value.trim().toLowerCase();
+    const correct = FLAGS[num].toLowerCase();
+
+    if (userAnswer === correct) {
+      solved[num] = true;
+      fb.className = 'flag-feedback correct show';
+      fb.textContent = '✅ Correct! Flag captured!';
+      input.disabled = true;
+      document.getElementById(`submit-${num}`).disabled = true;
+      document.getElementById(`status-${num}`).textContent = '✅ Solved';
+      document.getElementById(`status-${num}`).classList.add('solved');
+      updateScore();
+    } else {
+      fb.className = 'flag-feedback wrong show';
+      fb.textContent = '❌ Wrong flag — try again.';
+      setTimeout(() => { fb.classList.remove('show'); }, 2500);
+    }
+  }
+
+  // ── Update scoreboard ──
+  function updateScore() {
+    const count = Object.values(solved).filter(Boolean).length;
+    document.getElementById('score-display').textContent = `${count} / 3`;
+    if (count === 3) {
+      document.getElementById('score-msg').textContent = '🎉 All challenges complete! You\'ve mastered Phase 1!';
+      document.getElementById('score-msg').style.color = '#ff4d6d';
+    }
+  }
+</script>
+
+</body>
+</html>

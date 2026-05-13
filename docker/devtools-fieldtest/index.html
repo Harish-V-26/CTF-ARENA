@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SecureCorp™ — Employee Portal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-base:      #0a0e14;
+      --bg-surface:   #12171f;
+      --bg-elevated:  #1a2230;
+      --accent:       #ff6b35;
+      --accent-dim:   #e05a2b;
+      --text-primary: #e6edf3;
+      --text-muted:   #6b7a8d;
+      --border:       #243040;
+      --font-main:    'Inter', Arial, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-base); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+    /* ── Corporate Header ── */
+    .corp-header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .corp-logo {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 2px;
+    }
+
+    .corp-logo span { color: var(--text-primary); font-weight: 400; }
+
+    .corp-nav {
+      display: flex;
+      gap: 24px;
+    }
+
+    .corp-nav a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .corp-nav a:hover { color: var(--text-primary); }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      display: inline-block;
+      margin-right: 6px;
+      transition: background 0.5s;
+    }
+
+    .status-dot.online { background: #ff4d6d; box-shadow: 0 0 8px rgba(255,77,109,0.5); }
+
+    /* ── Main Content ── */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 24px 100px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span { color: var(--accent); }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 16px;
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Mission Briefing ── */
+    .briefing {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .briefing h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+
+    .briefing p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+
+    .briefing strong { color: var(--text-primary); }
+
+    .flag-format {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 18px;
+      color: var(--accent);
+      text-align: center;
+      margin: 20px 0;
+      letter-spacing: 1px;
+    }
+
+    .location-hints {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .location-hint {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .location-hint .icon { font-size: 24px; margin-bottom: 8px; }
+
+    .location-hint .label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .location-hint .tool {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* ── Corporate Content (Decoy) ── */
+    .corp-content {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .corp-content h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .corp-content p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .corp-content .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: var(--bg-elevated);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-card .num {
+      font-family: var(--font-mono);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-card .label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ── Flag Submission ── */
+    .submit-section {
+      background: var(--bg-surface);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .submit-section h3 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .submit-section p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .submit-row {
+      display: flex;
+      gap: 10px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .submit-input {
+      flex: 1;
+      background: var(--bg-base);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: var(--text-primary);
+      font-size: 14px;
+      font-family: var(--font-mono);
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .submit-input:focus { border-color: var(--accent); }
+    .submit-input:disabled { opacity: 0.5; }
+
+    .submit-btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: var(--font-main);
+      transition: all 0.3s;
+    }
+
+    .submit-btn:hover { background: var(--accent-dim); transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .result {
+      display: none;
+      margin-top: 20px;
+      padding: 16px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .result.show { display: block; }
+
+    .result.correct {
+      background: rgba(255,77,109,0.1);
+      color: #ff4d6d;
+      border: 1px solid rgba(255,77,109,0.3);
+    }
+
+    .result.wrong {
+      background: rgba(255,107,53,0.1);
+      color: var(--accent);
+      border: 1px solid rgba(255,107,53,0.3);
+    }
+
+    .result.partial {
+      background: rgba(255,201,71,0.1);
+      color: #ffc947;
+      border: 1px solid rgba(255,201,71,0.3);
+    }
+
+    .victory {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .victory.show { display: block; }
+    .victory .trophy { font-size: 72px; margin-bottom: 16px; }
+    .victory h2 { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+    .victory h2 span { color: #ff4d6d; }
+    .victory p { color: var(--text-muted); font-size: 15px; }
+
+    /* ── Fake image (for Network challenge) ── */
+    .corp-banner {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--bg-elevated), var(--bg-surface));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .container { padding: 30px 16px 60px; }
+      .location-hints { grid-template-columns: 1fr; }
+      .corp-content .stats { grid-template-columns: 1fr; }
+      .submit-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!-- FLAG PART 1: Hidden in this HTML comment            -->
+<!-- flag_part1{dev_tools_                              -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<header class="corp-header">
+  <div class="corp-logo">SECURE<span>CORP™</span></div>
+  <nav class="corp-nav">
+    <a href="#">Dashboard</a>
+    <a href="#">Reports</a>
+    <a href="#">Settings</a>
+    <a href="#"><span class="status-dot" id="status-indicator"></span>System</a>
+  </nav>
+</header>
+
+<div class="container">
+
+  <div class="hero">
+    <h1>🎯 The <span>Field Test</span></h1>
+    <p>No hand-holding this time. A complete flag is hidden across this page, split into <strong>three parts</strong>. Use your DevTools skills to find them all.</p>
+  </div>
+
+  <!-- Mission Briefing -->
+  <div class="briefing">
+    <h2>📋 Mission Briefing</h2>
+    <p>SecureCorp™ left a secret flag scattered across their employee portal. The flag is split into <strong>three pieces</strong>, each hidden using a different technique. You must find all three parts and combine them in order to submit the complete flag.</p>
+    <div class="flag-format">FLAG FORMAT: flag_part1{_____________________}</div>
+    <p>Each piece was hidden using a <strong>different DevTools panel</strong>. Here's where to look:</p>
+    <div class="location-hints">
+      <div class="location-hint">
+        <div class="icon">🔍</div>
+        <div class="label">Part 1</div>
+        <div class="tool">Inspector</div>
+      </div>
+      <div class="location-hint">
+        <div class="icon">🌐</div>
+        <div class="label">Part 2</div>
+        <div class="tool">Network</div>
+      </div>
+      <div class="location-hint">
+        <div class="icon">🐛</div>
+        <div class="label">Part 3</div>
+        <div class="tool">Debugger / Sources</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Corporate Content (Decoy) -->
+  <div class="corp-content">
+    <h3>📊 Q2 2026 Performance Dashboard</h3>
+    <p>SecureCorp continues to lead the cybersecurity market with record growth. Our security audit pipeline has doubled, and our threat detection accuracy now exceeds industry benchmarks.</p>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num">2,847</div>
+        <div class="label">Audits Complete</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">99.7%</div>
+        <div class="label">Detection Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">$4.2M</div>
+        <div class="label">Bounties Paid</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner image that will 404 — flag in headers -->
+  <div class="corp-banner">
+    <span>📷 Banner image failed to load — try checking the Network tab...</span>
+  </div>
+  <img src="/assets/banner-q2-2026.png" alt="Q2 Banner" style="display:none;" id="fake-banner"/>
+
+  <!-- Flag Submission -->
+  <div class="submit-section" id="submit-section">
+    <h3>🚩 Submit Your Flag</h3>
+    <p>Combine all three parts and submit the complete flag below.</p>
+    <div class="submit-row">
+      <input type="text" class="submit-input" id="final-flag-input" placeholder="flag_part1{...}" autocomplete="off"/>
+      <button class="submit-btn" id="final-submit" onclick="submitFinalFlag()">Submit Flag</button>
+    </div>
+    <div class="result" id="result"></div>
+  </div>
+
+  <div class="victory" id="victory">
+    <div class="trophy">🏆</div>
+    <h2>Mission <span>Complete!</span></h2>
+    <p>You've proven you can find hidden data across Inspector, Network, and Debugger. You are now a certified DevTools operator.</p>
+  </div>
+
+</div>
+
+<script src="app.js"></script>
+<script>
+  // The full flag: flag_part1{dev_tools_power_user}
+  // Part 1: "flag_part1{dev_tools_"  — in HTML comment above
+  // Part 2: "power_"                 — in the X-Flag-Part2 response header (served by nginx)
+  // Part 3: "user}"                  — in the 'finalPiece' variable in app.js
+
+  const FULL_FLAG = 'flag_part1{dev_tools_power_user}';
+
+  function submitFinalFlag() {
+    const input = document.getElementById('final-flag-input');
+    const result = document.getElementById('result');
+    const userAnswer = input.value.trim().toLowerCase();
+    const correct = FULL_FLAG.toLowerCase();
+
+    if (userAnswer === correct) {
+      result.className = 'result correct show';
+      result.textContent = '✅ FLAG CAPTURED! You found all three parts! 🎉';
+      input.disabled = true;
+      document.getElementById('final-submit').disabled = true;
+      document.getElementById('submit-section').style.borderColor = '#ff4d6d';
+
+      // Show victory screen
+      setTimeout(() => {
+        document.getElementById('victory').classList.add('show');
+      }, 1500);
+    } else {
+      // Check partial matches
+      const parts = ['flag_part1{dev_tools_', 'power_', 'user}'];
+      const found = parts.filter(p => userAnswer.includes(p.toLowerCase()));
+
+      if (found.length > 0 && found.length < 3) {
+        result.className = 'result partial show';
+        result.textContent = `⚠️ You found ${found.length}/3 parts. Keep searching!`;
+      } else {
+        result.className = 'result wrong show';
+        result.textContent = '❌ Incorrect. Check all three locations and combine the parts.';
+      }
+      setTimeout(() => { result.classList.remove('show'); }, 3000);
+    }
+  }
+
+  // Allow Enter key submission
+  document.getElementById('final-flag-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submitFinalFlag();
+  });
+</script>
+
+</body>
+</html>

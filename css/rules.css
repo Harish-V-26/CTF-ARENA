@@ -71,7 +71,7 @@
   scroll-margin-top: 90px;
 }
 
-.rules-block:hover { border-color: rgba(0,255,153,0.3); }
+.rules-block:hover { border-color: rgba(255,77,109,0.3); }
 
 .rules-block-header {
   display: flex;
@@ -178,7 +178,7 @@
 
 .point-table tr:last-child td { border-bottom: none; }
 
-.point-table tr:hover td { background: rgba(0,255,153,0.03); }
+.point-table tr:hover td { background: rgba(255,77,109,0.03); }
 
 .point-table td:first-child { color: var(--text-primary); font-weight: 600; }
 .point-table td.pts { color: var(--accent); font-family: var(--font-mono); font-weight: 700; }
