@@ -42,3 +42,4 @@ def stop_kali(container_id):
         return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+

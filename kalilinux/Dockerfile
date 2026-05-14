@@ -14,7 +14,11 @@ RUN apt update && apt upgrade -y && \
     sqlmap \
     john \
     hydra \
-    hashcat
+    hashcat \
+    ffuf \
+    whatweb \
+    dirb \
+    wordlists
 
 # Set working directory
 WORKDIR /workspace
