@@ -62,6 +62,7 @@
           <li><a href="#intro" class="active" id="nav-intro">🎯 Introduction</a></li>
           <li><a href="#dvwa" id="nav-dvwa">🐳 DVWA Walkthrough</a></li>
           <li><a href="#brute" id="nav-brute">🐉 Brute Force Walkthrough</a></li>
+          <li><a href="#auth-basics" id="nav-auth-basics">🔐 Auth Basics Walkthrough</a></li>
           <li><a href="#faq" id="nav-faq">❓ FAQ</a></li>
         </ul>
       </aside>
@@ -154,6 +155,38 @@
             <li class="rule-item">
               <span class="rule-num">Step 5</span>
               <span class="rule-text"><strong>Capture the Flag.</strong> Hydra will test thousands of passwords. Within seconds, it will find the correct password (<code>qwerty</code>). Go back to the Target Page in your browser, login with <code>admin / qwerty</code>, and the screen will reveal the flag: <strong>CTF{brut3_f0rc3_m4st3r}</strong>.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── Auth Basics ── -->
+        <div class="rules-block" id="auth-basics">
+          <div class="rules-block-header">
+            <div class="block-icon">🔐</div>
+            <div>
+              <h2>Authentication Basics</h2>
+              <p>Analyzing Login Flows & Decoding JWTs</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Analyze Login Flow.</strong> Click "Open Login Portal". In the new tab, open DevTools (F12) and go to the <strong>Network</strong> tab. Submit the form with incorrect credentials (e.g. test / test). Look at the Network request and notice it returns a <strong>401 Unauthorized</strong> status code.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Successful Login.</strong> Clear the Network log. Now log in using the correct credentials provided in the lab (Username: <code>admin</code> | Password: <code>admin123</code>). Observe the Network tab again; the request now returns a <strong>200 OK</strong> status code.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text"><strong>Locate Session Cookies.</strong> Now that you are logged in, navigate to the <strong>Application</strong> tab (Chrome) or <strong>Storage</strong> tab (Firefox) in your DevTools. Expand "Cookies" and click your domain. You will see two cookies set by the server: <code>session_id</code> and <code>auth_token</code>.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 4</span>
+              <span class="rule-text">
+                <strong>Decode the JWT Token.</strong> Double-click the value of the <code>auth_token</code> cookie and copy the long string. It has three parts separated by dots. Go to <a href="https://jwt.io" target="_blank" style="color: #f39c12; text-decoration: underline;">jwt.io</a> and paste the token. Look at the decoded JSON payload section—you will clearly see your user data and the secret flag: <strong>flag{jwt_m4st3r_decoded}</strong>.
+              </span>
             </li>
           </ul>
         </div>
