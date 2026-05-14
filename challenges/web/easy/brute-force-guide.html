@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF LABS Guide — Official walkthrough for Brute Force Target Challenge." />
+  <title>CTF LABS — Brute Force Guide</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #1a252f;
+      color: #2ecc71;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+    <div class="nav-links">
+      <a href="../../../index.html">Home</a>
+      <a href="../../../challenges.html" class="active">Challenges</a>
+      <a href="../../../rules.html">Rules</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile ▾</a>
+        <div class="dropdown-content" role="menu">
+          <a href="#" role="menuitem">Dashboard</a>
+          <a href="#" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ PAGE INTRO ═══ -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;">📖 Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        Brute Force <span style="color:var(--accent);">Guide.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
+        A complete step-by-step walkthrough to help you approach, attack, and solve the Brute Force Docker challenge.
+      </p>
+    </div>
+
+    <!-- ═══ TWO-COLUMN LAYOUT ═══ -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro" class="active" id="nav-intro">🎯 Introduction</a></li>
+          <li><a href="#brute" id="nav-brute">🐉 Brute Force Walkthrough</a></li>
+          <li><a href="#faq" id="nav-faq">❓ FAQ</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!-- ── Intro ── -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon">🎯</div>
+            <div>
+              <h2>Introduction</h2>
+              <p>How the practical labs work</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Welcome to the practical side of CTF LABS! Unlike the beginner quizzes, the <strong>Easy Level</strong> challenges require you to attack real, running servers. 
+            To do this safely, our platform uses Docker to instantly spin up isolated, private lab environments specifically for you.
+          </p>
+        </div>
+
+        <!-- ── Brute Force ── -->
+        <div class="rules-block" id="brute">
+          <div class="rules-block-header">
+            <div class="block-icon">🐉</div>
+            <div>
+              <h2>Brute Force Target</h2>
+              <p>Using Kali Linux & Hydra</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Start the Target.</strong> Go to the Brute Force Lab page and click the "Open Target Page" button. You'll see a dark Admin Portal login screen.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Start the Kali Attack Box.</strong> Go back to the lab page and click "Start Kali Container". Our system will launch a private Kali Linux instance for you and display a connection command.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text"><strong>Connect to Kali.</strong> Copy the displayed command (e.g., <code>docker exec -it [id] bash</code>) and paste it into your local computer's terminal. You are now inside Kali!</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 4</span>
+              <span class="rule-text">
+                <strong>Run the Hydra Attack.</strong> Since you are attacking the host server from inside a Docker container, you must target <code>host.docker.internal</code>. Run this exact command inside your Kali terminal:
+                <div class="code-block">hydra -l admin -P /usr/share/wordlists/rockyou.txt -f host.docker.internal http-post-form "/api/brute-force-target:username=^USER^&password=^PASS^:Invalid username or password" -s 5000</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 5</span>
+              <span class="rule-text"><strong>Capture the Flag.</strong> Hydra will test thousands of passwords. Within seconds, it will find the correct password (<code>qwerty</code>). Go back to the Target Page in your browser, login with <code>admin / qwerty</code>, and the screen will reveal the flag: <strong>CTF{brut3_f0rc3_m4st3r}</strong>.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── FAQ ── -->
+        <div class="rules-block" id="faq">
+          <div class="rules-block-header">
+            <div class="block-icon">❓</div>
+            <div>
+              <h2>Frequently Asked Questions</h2>
+            </div>
+          </div>
+
+          <div class="penalty-box" style="margin-top:24px;">
+            <span class="penalty-icon">💡</span>
+            <p><strong>Why isn't host.docker.internal working?</strong><br>
+              If you are on Linux, <code>host.docker.internal</code> might not resolve by default. You can try replacing it with your actual computer's local IP address (e.g., <code>192.168.1.50</code>).
+            </p>
+          </div>
+          <div class="penalty-box" style="margin-top:24px; background: rgba(231, 76, 60, 0.1); border-color: rgba(231, 76, 60, 0.3);">
+            <span class="penalty-icon">🛑</span>
+            <p><strong>Do I need to stop my containers?</strong><br>
+              Our backend automatically shuts down your Docker containers when you click the "Stop" buttons or simply close your browser tab! This ensures your computer doesn't run out of memory.
+            </p>
+          </div>
+        </div>
+
+      </main>
+    </div><!-- /rules-section -->
+  </div><!-- /container -->
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <p>© 2026 <a href="../../../index.html">CTF LABS</a> · Internship Project Demo</p>
+  </footer>
+
+  <!-- Active sidebar highlighting on scroll -->
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>

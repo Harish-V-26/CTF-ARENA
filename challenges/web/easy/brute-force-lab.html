@@ -95,14 +95,15 @@
         <h3>🎯 Brute Force Target</h3>
         <p>Click the button below to open the target login page. Attack it using Kali Linux tools like Hydra or Burp Suite Intruder.</p>
         <button id="launch-btn" class="btn-launch" onclick="launchLab()">Open Target Page ⇗</button>
+        <a href="brute-force-guide.html" class="btn-launch" style="margin-left: 10px;" target="_blank">📖 Read Walkthrough</a>
       </div>
 
-      <div class="docker-launch" style="border-left-color: #3498db; background: #2c3e50;">
+      <div class="docker-launch">
         <h3>🐉 Kali Linux Environment</h3>
         <p>Need a Kali machine? Spin up a private container loaded with tools (Hydra, SQLMap, Nmap).</p>
-        <button id="kali-launch-btn" class="btn-launch" style="background: #3498db;" onclick="launchKali()">Start Kali Container ⇗</button>
+        <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Start Kali Container ⇗</button>
         <button id="kali-stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopKali()">Stop Kali 🛑</button>
-        <p id="kali-msg" style="display:none; color: #3498db; font-weight: bold; margin-top: 15px;"></p>
+        <p id="kali-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;"></p>
         <div id="kali-terminal-info" style="display: none; margin-top: 15px; background: #1a252f; padding: 15px; border-radius: 4px; text-align: left;">
             <p style="color: #ecf0f1; margin-top:0;">Your Kali container is running! To access it, run this command in your host terminal:</p>
             <code id="kali-command" style="display:block; background: #000; color: #0f0; padding: 10px; margin-top: 10px; user-select: all;"></code>
