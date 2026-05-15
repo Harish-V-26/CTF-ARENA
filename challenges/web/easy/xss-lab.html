@@ -3,9 +3,42 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CTF LABS — Cross-Site Scripting (XSS)</title>
+  <title>CTF LABS — XSS Practical Lab</title>
   <link rel="stylesheet" href="../../../css/global.css"/>
   <link rel="stylesheet" href="../../../css/web-room.css"/>
+  <style>
+    .docker-launch {
+      background: #2c3e50;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      color: #ecf0f1;
+      text-align: center;
+      border-left: 4px solid #e67e22;
+    }
+    .docker-launch h3 { margin-top: 0; color: #fff; }
+    .docker-launch code {
+      background: #1a252f;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 1.1em;
+      color: #e67e22;
+      display: inline-block;
+      margin: 10px 0;
+    }
+    .btn-launch {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #e67e22;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .btn-launch:hover { background: #d35400; }
+  </style>
 </head>
 <body>
 
@@ -31,7 +64,7 @@
   <!-- SIDEBAR -->
   <aside class="room-sidebar">
     <div class="sidebar-header">
-      <div class="sidebar-title">Cross-Site Scripting (XSS)</div>
+      <div class="sidebar-title">XSS Docker Lab</div>
       <div class="overall-progress-wrap">
         <div class="overall-progress-bar">
           <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
@@ -46,7 +79,7 @@
   <div class="room-main">
 
     <div class="challenge-header">
-      <div class="ch-breadcrumb">Web Challenges › Cross-Site Scripting (XSS) › <span id="ch-crumb">Lesson 1</span></div>
+      <div class="ch-breadcrumb">Web Challenges › Easy Level › <span id="ch-crumb">Lesson 1</span></div>
       <div class="ch-meta">
         <span class="ch-title" id="ch-title"></span>
         <span class="ch-pts" id="ch-pts"></span>
@@ -55,11 +88,21 @@
     </div>
 
     <div class="room-body" id="room-body">
+      
+      <div class="docker-launch">
+        <h3>🐳 Docker Lab Environment</h3>
+        <p>Click the button below to dynamically spin up your private DVWA lab instance.</p>
+        <button id="launch-btn" class="btn-launch" onclick="launchLab()">Launch DVWA Instance ⇗</button>
+        <button id="stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopLab()">Stop Lab 🛑</button>
+        <a href="xss-guide.html" class="btn-launch" style="margin-left: 10px;" target="_blank">📖 Read Walkthrough</a>
+        <p id="loading-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;">Spinning up your private lab...</p>
+      </div>
+
       <!-- Lesson panel (rendered by JS) -->
       <div id="lesson-panel">
         <div class="reading-panel">
-          <div class="reading-label"><span>📖</span> Reading — Study before answering</div>
-          <div class="reading-text" id="reading-text"></div>
+          <div class="reading-label"><span>📖</span> Instructions & Tasks</div>
+          <div class="reading-text" id="reading-text" style="white-space: pre-wrap;"></div>
         </div>
         <div class="qa-section" id="qa-section">
           <div class="qa-heading">✏️ Check Your Understanding</div>
@@ -71,14 +114,14 @@
       <div class="completion-card" id="completion-card">
         <div class="trophy-icon">🏆</div>
         <h2>Lab Complete!</h2>
-        <p>You've mastered Cross-Site Scripting (XSS) — from understanding the core vulnerabilities to exploiting and preventing them!</p>
-        <div class="score-pill" id="score-pill">0 / 60 pts</div>
+        <p>You've successfully explored XSS vulnerabilities!</p>
+        <div class="score-pill" id="score-pill">0 / 140 pts</div>
         <a href="../../../challenges.html" class="btn btn-primary">← Back to Challenges</a>
       </div>
     </div>
 
     <div class="room-footer-nav">
-      <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">9</span></div>
+      <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">5</span></div>
       <div class="nav-btns">
         <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Previous</button>
         <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
@@ -88,14 +131,87 @@
   </div>
 </div>
 
+<script>
+let currentContainerId = null;
+
+async function launchLab() {
+    const btn = document.getElementById('launch-btn');
+    const msg = document.getElementById('loading-msg');
+    const stopBtn = document.getElementById('stop-btn');
+    
+    btn.style.display = 'none';
+    stopBtn.style.display = 'none';
+    msg.style.display = 'block';
+
+    try {
+        const host = window.location.hostname || "localhost";
+        const backendUrl = `http://${host}:5000/api/start-dvwa`;
+
+        const response = await fetch(backendUrl, {
+            method: 'POST'
+        });
+        const data = await response.json();
+
+        if(data.status === 'success') {
+            currentContainerId = data.container_id;
+            msg.style.color = '#2ecc71';
+            msg.textContent = 'Lab started successfully! Opening...';
+            const labUrl = `http://${host}:${data.port}`;
+            
+            stopBtn.style.display = 'inline-block';
+            
+            setTimeout(() => {
+                window.open(labUrl, '_blank');
+                msg.textContent = 'Lab is running at ' + labUrl;
+            }, 1500);
+        } else {
+            msg.style.color = '#e74c3c';
+            msg.textContent = 'Error starting lab: ' + data.message;
+            btn.style.display = 'inline-block';
+        }
+    } catch (err) {
+        msg.style.color = '#e74c3c';
+        msg.textContent = 'Failed to reach Python backend.';
+        btn.style.display = 'inline-block';
+    }
+}
+
+async function stopLab() {
+    if(!currentContainerId) return;
+    const host = window.location.hostname || "localhost";
+    const msg = document.getElementById('loading-msg');
+    
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Stopping and deleting lab...';
+    
+    try {
+        await fetch(`http://${host}:5000/api/stop-dvwa/${currentContainerId}`, { method: 'POST' });
+        msg.style.color = '#e74c3c';
+        msg.textContent = 'Lab stopped and destroyed safely.';
+        document.getElementById('stop-btn').style.display = 'none';
+        
+        const launchBtn = document.getElementById('launch-btn');
+        launchBtn.style.display = 'inline-block';
+        launchBtn.textContent = 'Relaunch Instance ⇗';
+        currentContainerId = null;
+    } catch (e) {
+        msg.textContent = 'Error stopping lab.';
+    }
+}
+
+window.addEventListener('beforeunload', function () {
+    if (currentContainerId) {
+        const host = window.location.hostname || "localhost";
+        navigator.sendBeacon(`http://${host}:5000/api/stop-dvwa/${currentContainerId}`);
+    }
+});
+</script>
 <script src="xss-data.js"></script>
 <script>
   let cur = 0;
   const TOTAL = LESSONS.length;
-  // answered[lessonIdx] = array of booleans per question
   const answered = LESSONS.map(l => l.questions.map(() => false));
 
-  /* ── Build sidebar ── */
   function buildSidebar() {
     const nav = document.getElementById('sidebar-nav');
     nav.innerHTML = LESSONS.map((l, i) => `
@@ -111,14 +227,12 @@
       </div>`).join('');
   }
 
-  /* ── Build step dots ── */
   function buildDots() {
     document.getElementById('step-dots').innerHTML =
       LESSONS.map((_,i) => `<div class="step-dot${i===0?' current':''}" id="dot-${i}"></div>`).join('');
     document.getElementById('tot-num').textContent = TOTAL;
   }
 
-  /* ── Render lesson ── */
   function renderLesson(idx) {
     const l = LESSONS[idx];
     document.getElementById('ch-title').textContent = l.title;
@@ -145,7 +259,6 @@
       </div>`).join('');
   }
 
-  /* ── Update sidebar & dots ── */
   function updateNav(from, to) {
     const fromEl = document.getElementById(`nav-${from}`);
     fromEl.classList.remove('active');
@@ -157,7 +270,6 @@
     document.getElementById(`dot-${to}`).classList.add('current');
   }
 
-  /* ── Check answer ── */
   function normalise(s) { return s.trim().toLowerCase().replace(/\s+/g,' '); }
 
   function checkAnswer(lesson, qi) {
@@ -167,7 +279,6 @@
     const cn = normalise(correct);
     const un = normalise(input.value);
 
-    // Flexible: exact match OR user answer contained in correct (or vice-versa for key word)
     const ok = un === cn || cn.includes(un) || un.includes(cn.split(' ')[0]);
 
     const fb  = document.getElementById(`fb-${lesson}-${qi}`);
@@ -193,7 +304,6 @@
     if (e.key === 'Enter') checkAnswer(lesson, qi);
   }
 
-  /* ── Progress ── */
   function lessonDone(idx) { return answered[idx].every(Boolean); }
   function totalDone()     { return answered.flat().filter(Boolean).length; }
   function totalQs()       { return answered.flat().length; }
@@ -211,7 +321,6 @@
     if (totalDone() === totalQs()) showCompletion();
   }
 
-  /* ── Navigation ── */
   function goTo(idx) {
     updateNav(cur, idx);
     cur = idx;
@@ -227,11 +336,11 @@
     else if (dir === 1)            { showCompletion(); }
   }
 
-  /* ── Completion ── */
   function showCompletion() {
     document.getElementById('lesson-panel').style.display = 'none';
-    const pts = totalDone() * 2; // ~2pts each
-    document.getElementById('score-pill').textContent = `${pts} / 60 pts`;
+    document.querySelector('.docker-launch').style.display = 'none';
+    const pts = 140;
+    document.getElementById('score-pill').textContent = `${pts} / 140 pts`;
     document.getElementById('completion-card').classList.add('show');
     document.getElementById('btn-next').disabled = true;
     document.getElementById('btn-prev').disabled = true;
@@ -240,7 +349,6 @@
     document.querySelector('.room-body').scrollTop = 0;
   }
 
-  /* ── Init ── */
   buildSidebar();
   buildDots();
   renderLesson(0);

@@ -92,27 +92,7 @@
           </div>
         </div>
 
-        <!-- Cross-Site Scripting (XSS) Lab -->
-        <div class="challenge-card" data-category="web" id="card-xss-lab"
-          onclick="window.location.href='challenges/web/beginner/xss-lab.html'" style="cursor: pointer;">
-          <div class="card-top"></div>
-          <div class="card-body">
-            <div class="card-meta">
-              <span class="category-tag">Web</span>
-              <span class="difficulty-tag diff-easy">Easy</span>
-            </div>
-            <div class="challenge-title">Cross-Site Scripting (XSS)</div>
-            <div class="challenge-desc">
-              Understand XSS vulnerabilities, the differences between Reflected, Stored, and DOM-based attacks, and how
-              to exploit and prevent them.
-            </div>
-          </div>
-          <div class="card-footer">
-            <span class="points">60 pts</span>
-            <span class="solve-count">📖 6 lessons</span>
-            <a href="challenges/web/beginner/xss-lab.html" class="start-btn" id="start-xss-lab">Start →</a>
-          </div>
-        </div>
+
 
         <!-- Brute Force Attacks Lab -->
         <div class="challenge-card" data-category="web" id="card-bruteforce-lab"
@@ -320,6 +300,26 @@
             <a href="challenges/web/easy/dvwa-lab.html" class="start-btn" id="start-dvwa-lab">Start Lab →</a>
           </div>
         </div>
+        <!-- XSS Practical Lab -->
+        <div class="challenge-card" data-category="web" id="card-xss-practical-lab"
+          onclick="window.location.href='challenges/web/easy/xss-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e67e22, #d35400);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Cross-Site Scripting (XSS) Lab</div>
+            <div class="challenge-desc">
+              A practical lab to understand XSS. Spin up a DVWA instance and explore Reflected, Stored, and DOM-based XSS vulnerabilities and their fixes.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">140 pts</span>
+            <span class="solve-count">🐳 Docker Lab</span>
+            <a href="challenges/web/easy/xss-lab.html" class="start-btn" id="start-xss-practical-lab">Start Lab →</a>
+          </div>
+        </div>
         <!-- Brute Force Target Lab -->
         <div class="challenge-card" data-category="web" id="card-brute-force-target-lab"
           onclick="window.location.href='challenges/web/easy/brute-force-lab.html'" style="cursor: pointer;">
@@ -492,6 +492,158 @@
     <p>© 2026 <a href="index.html">CTF LABS</a> · Internship Project Demo</p>
   </footer>
 
-</body>
+  <!-- ═══ CHALLENGE DETAILS MODAL ═══ -->
+  <div id="challenge-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close modal">×</button>
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="category-tag" id="modal-category">Web</span>
+          <span class="difficulty-tag" id="modal-difficulty">Easy</span>
+        </div>
+        <h2 id="modal-title">Challenge Title</h2>
+      </div>
+      <div class="modal-body">
+        <p id="modal-desc" class="modal-desc">Detailed description goes here.</p>
+        
+        <div class="modal-section">
+          <h3>🎯 What You Will Learn</h3>
+          <ul id="modal-learn-list" class="modal-list">
+          </ul>
+        </div>
+        
+        <div class="modal-section">
+          <h3>💻 Environment & Expected Result</h3>
+          <div class="env-preview">
+            <div class="env-icon" id="modal-env-icon">🐳</div>
+            <div class="env-text">
+              <strong id="modal-env-title">Docker Lab</strong>
+              <p id="modal-env-desc">You will be dropped into a private container...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span class="points" id="modal-points">200 pts</span>
+        <a href="#" class="start-btn-large" id="modal-start-btn">Start Challenge →</a>
+      </div>
+    </div>
+  </div>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const cards = document.querySelectorAll(".challenge-card");
+      
+      cards.forEach(card => {
+        // Extract the URL from onclick
+        const onclickStr = card.getAttribute("onclick");
+        let url = "";
+        if (onclickStr) {
+          const match = onclickStr.match(/window\.location\.href='([^']+)'/);
+          if (match) url = match[1];
+          // Remove the default onclick to prevent immediate navigation
+          card.removeAttribute("onclick");
+        }
+        
+        // Add click event for opening modal
+        card.addEventListener("click", function(e) {
+          // Don't trigger modal if they explicitly clicked the start button (let it navigate)
+          if (e.target.closest('.start-btn')) {
+            window.location.href = url;
+            return;
+          }
+          openModal(card, url);
+        });
+      });
+    });
+
+    function openModal(card, url) {
+      const title = card.querySelector(".challenge-title").textContent;
+      const desc = card.querySelector(".challenge-desc").textContent;
+      const cat = card.querySelector(".category-tag").textContent;
+      const diff = card.querySelector(".difficulty-tag").textContent;
+      const pts = card.querySelector(".points").textContent;
+      
+      let solveCountEl = card.querySelector(".solve-count");
+      const solveCount = solveCountEl ? solveCountEl.textContent : "";
+      
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-desc').textContent = desc.trim();
+      document.getElementById('modal-category').textContent = cat;
+      document.getElementById('modal-difficulty').textContent = diff;
+      document.getElementById('modal-difficulty').className = card.querySelector(".difficulty-tag").className;
+      
+      document.getElementById('modal-points').textContent = pts;
+      document.getElementById('modal-start-btn').href = url || '#';
+      
+      // Infer Environment and "What you will learn" dynamically
+      let envIcon = "📖";
+      let envTitle = "Theory & Reading Lab";
+      let envDesc = "You will read through a set of lessons and answer knowledge check questions.";
+      let learnList = ["Vulnerability Identification", "Exploitation Techniques", "Mitigation Strategies"];
+      
+      if (diff.includes("Practical") || solveCount.includes("Docker") || title.includes("Gauntlet") || title.includes("Target") || title.includes("DVWA")) {
+          envIcon = "🐳";
+          envTitle = "Live Docker Environment";
+          envDesc = "You will launch a private, isolated Docker container running a vulnerable application target. You'll interact with it like a real-world server.";
+      } else if (desc.includes("guided") || title.includes("Auth") || title.includes("DevTools")) {
+          envIcon = "💻";
+          envTitle = "Interactive Guided Lab";
+          envDesc = "A split-screen environment with step-by-step instructions on the left and an interactive target/browser view on the right.";
+      } else if (solveCount.includes("Recon")) {
+          envIcon = "🔍";
+          envTitle = "Recon Target";
+          envDesc = "Perform reconnaissance on a simulated infrastructure target using industry standard tools to map the attack surface.";
+      }
+      
+      if (title.includes("SQL")) {
+          learnList = ["SQL Syntax & Payloads", "Authentication Bypass", "UNION-Based Data Extraction", "Error/Blind Injection Techniques"];
+      } else if (title.includes("XSS")) {
+          learnList = ["Reflected XSS Execution", "Stored XSS Persistence", "DOM-based vulnerabilities", "JavaScript Payload Development"];
+      } else if (title.includes("DevTools") || title.includes("Mastering DevTools")) {
+          learnList = ["Inspector DOM Manipulation", "Console JavaScript Execution", "Network Request Interception", "Cookie/LocalStorage Management"];
+      } else if (title.includes("Auth") || title.includes("Broken Auth")) {
+          learnList = ["Session Cookies Analysis", "JWT Token Decoding & Forgery", "Login Flow Verification", "Brute Force Concepts"];
+      } else if (title.includes("Crypto") || title.includes("Encryption")) {
+          learnList = ["Encryption vs Hashing", "Block vs Stream Ciphers", "Public Key Infrastructure (PKI)", "Key Exchange Protocols"];
+      } else if (title.includes("Directory Traversal")) {
+          learnList = ["Path Traversal Vectors", "Filter Bypassing", "Reading Arbitrary OS Files"];
+      } else if (title.includes("Command Injection")) {
+          learnList = ["OS Command Injection", "Shell Operators chaining", "Input Sanitization failures"];
+      } else if (title.includes("File Upload")) {
+          learnList = ["Web Shell Execution", "Content-Type Bypassing", "Extension Blacklist/Whitelist filters"];
+      } else if (title.includes("Reconnaissance")) {
+          learnList = ["Directory Fuzzing (ffuf)", "Tech Stack Discovery (Wappalyzer)", "Attack Surface Mapping"];
+      } else if (title.includes("Brute Force")) {
+          learnList = ["Dictionary Attacks", "Credential Stuffing", "Rate Limiting Bypass", "Using Hydra & Burp Suite"];
+      } else if (title.includes("OWASP")) {
+          learnList = ["Broken Access Control", "Cryptographic Failures", "Injection Attacks", "Insecure Design Principles"];
+      } else if (title.includes("Web Security")) {
+          learnList = ["CIA Triad in Web", "HTTP Protocol Basics", "Common Vulnerabilities", "Defensive Strategies"];
+      }
+      
+      const ul = document.getElementById('modal-learn-list');
+      ul.innerHTML = learnList.map(item => `<li>${item}</li>`).join('');
+      
+      document.getElementById('modal-env-icon').textContent = envIcon;
+      document.getElementById('modal-env-title').textContent = envTitle;
+      document.getElementById('modal-env-desc').textContent = envDesc;
+      
+      document.getElementById('challenge-modal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('challenge-modal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    window.addEventListener('click', function(e) {
+      const modal = document.getElementById('challenge-modal');
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
 </html>

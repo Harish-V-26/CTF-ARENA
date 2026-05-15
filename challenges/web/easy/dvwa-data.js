@@ -1,50 +1,50 @@
 const LESSONS = [
   {
-    title: "Setting Up DVWA",
+    title: "1. Open the Magic Box",
     points: 20,
-    content: "Welcome to your first practical lab! DVWA (Damn Vulnerable Web App) is a PHP/MySQL web application that is intentionally vulnerable. \n\n1. Click the red 'Launch DVWA Instance' button above.\n2. Wait for the server to spin up your private Docker container.\n3. A new tab will automatically open with your unique lab URL.\n4. Log in using the default credentials: Username: admin | Password: password\n5. Go to 'Setup / Reset DB' and click 'Create / Reset Database'.\n\nOnce you have logged in, answer the questions below.",
+    content: "Welcome to your first real hacking lab! \n\n1. Click the red 'Launch DVWA Instance' button. This is like turning on a tiny, private computer just for you.\n2. When the new tab opens, it asks for a name and password. Type Username: admin and Password: password.\n3. Scroll down and click 'Create / Reset Database'. This sets up the game for us to play!\n\nOnce you are in, answer the questions below.",
     questions: [
-      { q: "What is the default username for DVWA?", a: "admin" },
-      { q: "What is the default password for DVWA?", a: "password" },
-      { q: "Is your lab environment running in an isolated Docker container? (yes/no)", a: "yes" },
-      { q: "Which button do you need to click first after logging in to initialize the app?", a: "Create / Reset Database" },
-      { q: "What does DVWA stand for?", a: "Damn Vulnerable Web App" }
+      { q: "What is the secret username to log in?", a: "admin" },
+      { q: "What is the secret password to log in?", a: "password" },
+      { q: "Is this lab running inside your own tiny, private box? (yes/no)", a: "yes" },
+      { q: "Which button do you click to set up the game after logging in?", a: "Create / Reset Database" },
+      { q: "What does DVWA stand for? (Hint: Damn Vulnerable...)", a: "Damn Vulnerable Web App" }
     ]
   },
   {
-    title: "SQL Injection Practice",
+    title: "2. The SQL Magic Trick",
     points: 60,
-    content: "Now that you have DVWA running, navigate to the 'SQL Injection' tab on the left menu. Ensure the security level is set to 'Low' (you can check this in the 'DVWA Security' tab).\n\nYour goal is to extract the database version and the database user.\n\nTry inputting `' OR 1=1 #` to see all users. Then try a UNION-based injection to extract the version: `' UNION SELECT null, version() #`.",
+    content: "Time for your first trick! Go to 'SQL Injection' on the left menu. \n\nImagine the website is asking a database guard: 'Is this user allowed in?'. We are going to trick the guard by saying: 'My name is nothing, OR 1 equals 1!'. Since 1 always equals 1, the guard gets confused and says 'Yes, come in!'.\n\nTry typing this exact magic spell into the box: `' OR 1=1 #`",
     questions: [
-      { q: "What SQL character is commonly used to close a string and start an injection?", a: "'" },
-      { q: "What SQL symbol is used to comment out the rest of the query in MySQL?", a: "#" },
-      { q: "Execute the UNION injection payload to find the MySQL version. What is the major version number? (e.g., 5 or 8)", a: "10" },
-      { q: "Execute a payload to find the current user: `' UNION SELECT null, user() #`. What is the user?", a: "root@localhost" },
-      { q: "How many users are displayed when you bypass authentication using `' OR 1=1 #`?", a: "5" }
+      { q: "What tiny character is used to start our magic trick? (It looks like a floating comma)", a: "'" },
+      { q: "What symbol do we use to ignore the rest of the guard's rules? (It looks like a hashtag)", a: "#" },
+      { q: "When you cast the `' OR 1=1 #` spell, how many users magically appear on the screen?", a: "5" },
+      { q: "Who is the first user on the list?", a: "admin" },
+      { q: "Did the website get confused because 1 always equals 1? (yes/no)", a: "yes" }
     ]
   },
   {
-    title: "Command Injection Practice",
+    title: "3. The Hidden Command Spell",
     points: 60,
-    content: "Navigate to the 'Command Injection' tab in DVWA.\n\nThis application pings an IP address you provide. However, it does not sanitize your input, allowing you to chain commands using `;` or `&&`.\n\nExample: `127.0.0.1; whoami`",
+    content: "Let's try another trick. Go to the 'Command Injection' tab.\n\nThis page lets you 'ping' an IP address. But we can sneak in a hidden command! If we type a semicolon `;`, we can tell the computer: 'Ping this IP, AND THEN do my secret command!'\n\nTry typing: `127.0.0.1; whoami`",
     questions: [
-      { q: "What character can be used in Linux to execute a second command regardless of the first command's success?", a: ";" },
-      { q: "Execute `127.0.0.1; whoami`. What user is the web server running as?", a: "www-data" },
-      { q: "Execute `127.0.0.1; uname -a`. What is the underlying OS kernel?", a: "Linux" },
-      { q: "Try to read the passwd file: `127.0.0.1; cat /etc/passwd`. Which user has UID 0?", a: "root" },
-      { q: "What PHP function is typically responsible for this vulnerability if used carelessly?", a: "shell_exec" }
+      { q: "What character do we use to sneak in our second hidden command? (It looks like a dot over a comma)", a: ";" },
+      { q: "When you type `127.0.0.1; whoami`, what is the name of the user the computer says you are?", a: "www-data" },
+      { q: "Now try `127.0.0.1; ls`. This means 'list all files'. What file ends in .php?", a: "index.php" },
+      { q: "Now try `127.0.0.1; cat /etc/passwd`. Did it show you a long, scary list of users? (yes/no)", a: "yes" },
+      { q: "Are you officially hacking the computer? (yes/no)", a: "yes" }
     ]
   },
   {
-    title: "Capture the Flag",
+    title: "4. The Impossible Level",
     points: 60,
-    content: "Let's put it all together. There is a hidden file in the web root containing a flag. \n\nUse the Command Injection vulnerability to list the files in the current directory (`ls -la`), or traverse directories to find it. \nLook for a file named something like 'flag.txt' or similar. Read its contents to get the flag.",
+    content: "Now let's see why hacking doesn't always work. \n\nGo to the 'DVWA Security' tab on the left menu. Change the difficulty from 'Low' to 'Impossible' and click Submit.\n\nNow go back to 'Command Injection' and try our sneaky spell again: `127.0.0.1; whoami`.\n\nWhat happened? The website is acting like a strict bouncer. It checks exactly what you typed and says: 'Hey, semicolons are not allowed here!' This is called Input Validation.",
     questions: [
-      { q: "What command is used to list all files, including hidden ones, in Linux?", a: "ls -la" },
-      { q: "What command is used to output the contents of a file to the terminal?", a: "cat" },
-      { q: "Using command injection, find the hostname of the Docker container using the `hostname` command. What does it start with? (Type 'container')", a: "container" },
-      { q: "When you close the tab, does the backend automatically delete your container? (yes/no)", a: "yes" },
-      { q: "Are you ready to move on to the next challenge?", a: "yes" }
+      { q: "Did our sneaky command work on Impossible mode? (yes/no)", a: "no" },
+      { q: "What error message does it show when you try? (An invalid...)", a: "IP address" },
+      { q: "What is the name of the strict bouncer technique that stops bad characters? (Input...)", a: "Input Validation" },
+      { q: "When you close this tab, does our system clean up your private box for you? (yes/no)", a: "yes" },
+      { q: "Are you ready to become a cyber superhero? (yes/no)", a: "yes" }
     ]
   }
 ];
