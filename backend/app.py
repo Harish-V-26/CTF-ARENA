@@ -6,7 +6,7 @@ from routes.kali import kali_bp
 from routes.challenges import challenges_bp
 from routes.devtools import devtools_bp
 from routes.recon import recon_bp
-from routes.auth_basics import auth_basics_bp
+from routes.auth_basics import auth_basics_bp   
 
 app = Flask(__name__)
 CORS(app)
