@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF LABS Guide — Official walkthrough for XSS Challenge." />
+  <title>CTF LABS — XSS Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #1a252f;
+      color: #2ecc71;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAVBAR ═══ -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+    <div class="nav-links">
+      <a href="../../../index.html">Home</a>
+      <a href="../../../challenges.html" class="active">Challenges</a>
+      <a href="../../../rules.html">Rules</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile ▾</a>
+        <div class="dropdown-content" role="menu">
+          <a href="#" role="menuitem">Dashboard</a>
+          <a href="#" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ PAGE INTRO ═══ -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;">📖 Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        XSS <span style="color:var(--accent);">Guide.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
+        A clean guide to understand each DVWA XSS level, how the weakness works, how to verify it safely in your own local lab, and how to fix it properly.
+      </p>
+    </div>
+
+    <!-- ═══ TWO-COLUMN LAYOUT ═══ -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#levels" class="active" id="nav-levels">📊 Security Levels</a></li>
+          <li><a href="#reflected" id="nav-reflected">🪞 Reflected XSS</a></li>
+          <li><a href="#stored" id="nav-stored">💾 Stored XSS</a></li>
+          <li><a href="#dom" id="nav-dom">🌐 DOM XSS</a></li>
+          <li><a href="#manual" id="nav-manual">🎯 Manual Exploits</a></li>
+          <li><a href="#automated" id="nav-automated">🤖 Auto Tools</a></li>
+          <li><a href="#fixes" id="nav-fixes">🛠️ Fixes</a></li>
+          <li><a href="#conclusion" id="nav-conclusion">🏁 Conclusion</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!-- ── Levels ── -->
+        <div class="rules-block" id="levels">
+          <div class="rules-block-header">
+            <div class="block-icon">📊</div>
+            <div>
+              <h2>How each level works</h2>
+              <p>Understanding DVWA Security Levels</p>
+            </div>
+          </div>
+          <table style="width:100%; border-collapse: collapse; margin-top: 15px;">
+            <tr style="background: rgba(255,255,255,0.05);">
+              <th style="padding: 10px; border: 1px solid var(--border); text-align:left;">Level</th>
+              <th style="padding: 10px; border: 1px solid var(--border); text-align:left;">What DVWA usually changes</th>
+              <th style="padding: 10px; border: 1px solid var(--border); text-align:left;">What to look for</th>
+              <th style="padding: 10px; border: 1px solid var(--border); text-align:left;">Defensive lesson</th>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--border);">Low</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Little or no filtering</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">User input appears in the page unsafely</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Untrusted input must never be inserted into HTML without encoding</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--border);">Medium</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Partial filtering or weak blacklist checks</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Simple tags or patterns may be altered, but context is still unsafe</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Blacklists are unreliable and easy to bypass conceptually</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--border);">High</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Stronger filtering or encoding attempts</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Some vectors fail because of better escaping</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Correct context-aware output encoding is the real control</td>
+            </tr>
+            <tr>
+              <td style="padding: 10px; border: 1px solid var(--border);">Impossible</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Proper escaping/sanitization and safer handling</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">Input should render as text, not executable code</td>
+              <td style="padding: 10px; border: 1px solid var(--border);">This is the target design you should aim for</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- ── Reflected ── -->
+        <div class="rules-block" id="reflected">
+          <div class="rules-block-header">
+            <div class="block-icon">🪞</div>
+            <div>
+              <h2>Reflected XSS</h2>
+              <p>Immediate reflection without encoding</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Reflected XSS happens when the page takes input from the request and immediately echoes it back into the response without safe output encoding. In DVWA, the lesson is that the application should treat the input as data, not HTML or script.
+          </p>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">1</span>
+              <span class="rule-text">Identify the input source, usually a form field or URL parameter.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">2</span>
+              <span class="rule-text">Check whether the input is reflected back into the page.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">3</span>
+              <span class="rule-text">If the output is not encoded, the browser may interpret it as executable content.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">4</span>
+              <span class="rule-text">The correct fix is context-aware escaping before rendering, especially HTML entity encoding in page content and proper encoding for attribute or script contexts.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">5</span>
+              <span class="rule-text">A safe validation step is to enter harmless text and confirm how it is displayed, then document whether the application encodes special characters or not.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── Stored ── -->
+        <div class="rules-block" id="stored">
+          <div class="rules-block-header">
+            <div class="block-icon">💾</div>
+            <div>
+              <h2>Stored XSS</h2>
+              <p>Unsafe persistence</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Stored XSS happens when the application saves untrusted input in a database or other storage and later displays it to users without proper escaping. The key idea is persistence: once the value is stored, every future page view can be affected.
+          </p>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">1</span>
+              <span class="rule-text">Find a field that saves content, such as a guestbook or comment form.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">2</span>
+              <span class="rule-text">Submit a normal test string first and see whether it appears later exactly as entered.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">3</span>
+              <span class="rule-text">If the page later displays stored content without encoding, that is the weakness.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">4</span>
+              <span class="rule-text">The fix is to sanitize only if rich text is required, but most importantly to escape output when rendering stored data back into HTML.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">5</span>
+              <span class="rule-text">Use safe rendering rules everywhere the stored value is displayed, not just at the time of input.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── DOM ── -->
+        <div class="rules-block" id="dom">
+          <div class="rules-block-header">
+            <div class="block-icon">🌐</div>
+            <div>
+              <h2>DOM XSS</h2>
+              <p>Unsafe client-side manipulation</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            DOM XSS happens entirely inside the browser. The server never sees the attack! It happens when the website's JavaScript takes your text and blindly runs it.
+          </p>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">1</span>
+              <span class="rule-text">Check if the website's code reads from the URL (like a parameter `?name=...` or a hash `#...`).</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">2</span>
+              <span class="rule-text">See if the code takes that text and passes it to a dangerous tool like <code>innerHTML</code>.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">3</span>
+              <span class="rule-text"><strong>Why is innerHTML bad?</strong> Imagine <code>innerHTML</code> is a very gullible robot. If you hand it a piece of paper that says "Build a bomb", it will actually try to build the bomb! It executes whatever code you give it.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">4</span>
+              <span class="rule-text"><strong>The Fix: Use textContent!</strong> Imagine <code>textContent</code> is a smart, safe robot. If you hand it the same paper that says "Build a bomb", it just tapes the paper to the wall. It refuses to execute the instructions; it just displays them safely as text.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">5</span>
+              <span class="rule-text">To defend against DOM XSS, always use safe tools like <code>textContent</code> or <code>innerText</code> instead of <code>innerHTML</code>.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── Manual Exploits ── -->
+        <div class="rules-block" id="manual">
+          <div class="rules-block-header">
+            <div class="block-icon">🎯</div>
+            <div>
+              <h2>Manual Exploitation Methods</h2>
+              <p>Step-by-step payloads for all DVWA levels</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Here are practical manual methods to solve the DVWA XSS challenges at various security levels.
+          </p>
+          
+          <h3 style="margin-top: 15px; color: var(--accent);">Reflected XSS</h3>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Low</span>
+              <span class="rule-text">No filtering. Payload: <code>&lt;script&gt;alert(1)&lt;/script&gt;</code></span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Med</span>
+              <span class="rule-text">Strips lowercase <code>&lt;script&gt;</code> tags. Bypass using mixed case: <code>&lt;SCRIPT&gt;alert(1)&lt;/SCRIPT&gt;</code> or nested tags: <code>&lt;scr&lt;script&gt;ipt&gt;alert(1)&lt;/script&gt;</code></span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">High</span>
+              <span class="rule-text">Strict regex filtering of script tags. Bypass by using event handlers on other elements: <code>&lt;img src=x onerror=alert(1)&gt;</code></span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Imp</span>
+              <span class="rule-text"><strong>Impossible:</strong> The server uses a translator (<code>htmlspecialchars</code>) to turn dangerous brackets into safe HTML entities (like <code>&amp;lt;</code>). The payload just renders as boring text!</span>
+            </li>
+          </ul>
+
+          <h3 style="margin-top: 15px; color: var(--accent);">Stored XSS</h3>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Low</span>
+              <span class="rule-text">Submit <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> in the "Message" field.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Med</span>
+              <span class="rule-text">The Message field filters tags, but the Name field does not. However, the Name field has a max-length in the HTML. Use DevTools to change <code>maxlength="10"</code> to <code>"100"</code>, then submit the payload in the Name field.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">High</span>
+              <span class="rule-text">Similar to Medium, use DevTools to expand the Name field limit and inject a non-script payload: <code>&lt;img src=x onerror=alert(1)&gt;</code>.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Imp</span>
+              <span class="rule-text"><strong>Impossible:</strong> Just like Reflected XSS, the server uses the <code>htmlspecialchars</code> translator on BOTH the Name and Message fields before storing/rendering them. The magic is completely broken before it even reaches the database.</span>
+            </li>
+          </ul>
+
+          <h3 style="margin-top: 15px; color: var(--accent);">DOM XSS</h3>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Low</span>
+              <span class="rule-text">Append payload to URL parameter: <code>?default=&lt;script&gt;alert(1)&lt;/script&gt;</code></span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Med</span>
+              <span class="rule-text">Closes the select dropdown before injecting: <code>?default=&lt;/option&gt;&lt;/select&gt;&lt;img src=x onerror=alert(1)&gt;</code></span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">High</span>
+              <span class="rule-text">Server enforces strict allowed words ("English", "French"). Bypass using the URL hash fragment (#) since it's never sent to the server: <code>?default=English#&lt;script&gt;alert(1)&lt;/script&gt;</code></span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Imp</span>
+              <span class="rule-text"><strong>Impossible:</strong> The JavaScript uses the safe, smart robot <code>textContent</code> instead of the dangerous, gullible robot <code>innerHTML</code>. It safely displays the text without executing it!</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── Automated Tools ── -->
+        <div class="rules-block" id="automated">
+          <div class="rules-block-header">
+            <div class="block-icon">🤖</div>
+            <div>
+              <h2>Automated Testing Methods</h2>
+              <p>Tools to find XSS faster</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            While manual testing is crucial for understanding, real-world bug bounty hunting and pentesting rely on automated tools to scale up the search.
+          </p>
+          
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">1</span>
+              <span class="rule-text">
+                <strong>Burp Suite (Intruder)</strong><br>
+                Intercept the request in Burp Suite, send it to Intruder. Highlight the input parameter (e.g., <code>name=§test§</code>) and load a payload list (like SecLists XSS polyglots). Start the attack and sort the results by length or use Burp's "Grep - Match" feature to see which payloads successfully reflected back safely in the response HTML without being sanitized.
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">2</span>
+              <span class="rule-text">
+                <strong>XSStrike</strong><br>
+                XSStrike is a powerful XSS detection suite. Instead of just injecting a giant list of payloads, it analyzes the context and dynamically generates custom payloads that bypass filters.<br><br>
+                Run the command in your terminal (remember to grab your DVWA session cookie):<br>
+                <code style="background: #1a252f; padding: 5px; color: #2ecc71; border-radius: 4px; display: inline-block; margin-top: 5px;">python3 xsstrike.py -u "http://[IP]:[PORT]/vulnerabilities/xss_r/?name=test" --headers "Cookie: security=low; PHPSESSID=your_id"</code>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">3</span>
+              <span class="rule-text">
+                <strong>OWASP ZAP (Zed Attack Proxy)</strong><br>
+                Use the Active Scan feature. Right-click the vulnerable DVWA node in the Sites tree and select "Attack &gt; Active Scan". ZAP will automatically fuzz all input fields and URL parameters with XSS vectors and alert you if it detects a successful execution sink.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── Fixes ── -->
+        <div class="rules-block" id="fixes">
+          <div class="rules-block-header">
+            <div class="block-icon">🛠️</div>
+            <div>
+              <h2>Fixes to include</h2>
+            </div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">✓</span>
+              <span class="rule-text">Context-aware output encoding for HTML, attributes, URLs, and JavaScript contexts.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">✓</span>
+              <span class="rule-text">Input validation to reject obviously invalid data, but not as the only defense.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">✓</span>
+              <span class="rule-text">HTML sanitization only when rich text is truly required.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">✓</span>
+              <span class="rule-text">Safe DOM APIs such as <code>textContent</code> and <code>innerText</code> instead of <code>innerHTML</code>.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">✓</span>
+              <span class="rule-text">Content Security Policy as an additional layer, not a primary fix.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── Conclusion ── -->
+        <div class="rules-block" id="conclusion">
+          <div class="rules-block-header">
+            <div class="block-icon">🏁</div>
+            <div>
+              <h2>Conclusion</h2>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            “DVWA shows that XSS is not just about user input, but about how the application processes and outputs that input. The secure design is to encode output correctly, avoid dangerous JavaScript sinks, and never trust browser or server input by default.”
+          </p>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem; margin-top: 10px;">
+            “DVWA demonstrates how XSS arises when untrusted input is inserted into a page without correct context-aware escaping. Low security shows the flaw directly, medium and high show partial filtering, and impossible represents secure handling. Reflected XSS affects immediate responses, stored XSS persists in server data, and DOM XSS occurs in client-side code. The correct defense is context-aware output encoding, safe DOM methods, and sanitization only where HTML is intentionally allowed.”
+          </p>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <p>© 2026 <a href="../../../index.html">CTF LABS</a> · Internship Project Demo</p>
+  </footer>
+
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>
