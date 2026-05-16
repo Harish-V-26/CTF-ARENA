@@ -219,12 +219,7 @@ async function stopLab() {
 }
 
 // Auto-cleanup if the user closes the tab
-window.addEventListener('beforeunload', function () {
-    if (currentContainerId) {
-        const host = window.location.hostname || "localhost";
-        navigator.sendBeacon(`http://${host}:5000/api/stop-devtools-guided/${currentContainerId}`);
-    }
-});
+// Auto-cleanup removed: user must manually close the lab.
 </script>
 <script src="devtools-guided-data.js"></script>
 <script>
@@ -259,7 +254,7 @@ window.addEventListener('beforeunload', function () {
     document.getElementById('ch-pts').textContent = l.points + ' pts';
     document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
     document.getElementById('cur-num').textContent = idx+1;
-    document.getElementById('reading-text').textContent = l.content;
+    document.getElementById('reading-text').innerText = l.content;
 
     const qc = document.getElementById('questions-container');
     qc.innerHTML = l.questions.map((q, qi) => `

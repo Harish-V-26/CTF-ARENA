@@ -95,6 +95,11 @@
         <button id="launch-btn" class="btn-launch" onclick="launchLab()">Launch DVWA Instance ⇗</button>
         <button id="stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopLab()">Stop Lab 🛑</button>
         <p id="loading-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;">Spinning up your private lab...</p>
+        <div id="port-banner" style="display:none; margin-top:12px; background:#1a252f; border-radius:6px; padding:10px 16px; text-align:left;">
+          <span style="color:#aaa; font-size:0.9em;">Your DVWA Port:</span>
+          <code id="port-display" style="color:#2ecc71; font-size:1.1em; margin-left:8px;"></code>
+          <span style="color:#aaa; font-size:0.85em; margin-left:12px;">— the guide commands below are pre-filled with this port ✅</span>
+        </div>
       </div>
 
       <div class="docker-launch">
@@ -145,6 +150,7 @@
 <script>
 let currentContainerId = null;
 let currentKaliId = null;
+let currentPort = null;
 
 async function launchLab() {
     const btn = document.getElementById('launch-btn');
@@ -167,11 +173,15 @@ async function launchLab() {
 
         if(data.status === 'success') {
             currentContainerId = data.container_id;
+            currentPort = data.port;
             msg.style.color = '#2ecc71';
             msg.textContent = 'Lab started successfully! Opening...';
             const labUrl = `http://${host}:${data.port}`;
             
             stopBtn.style.display = 'inline-block';
+            document.getElementById('port-banner').style.display = 'block';
+            document.getElementById('port-display').textContent = data.port;
+            renderLesson(cur);
             
             setTimeout(() => {
                 window.open(labUrl, '_blank');
@@ -275,16 +285,7 @@ async function stopKali() {
     }
 }
 
-// Auto-cleanup if the user closes the tab!
-window.addEventListener('beforeunload', function () {
-    const host = window.location.hostname || "localhost";
-    if (currentContainerId) {
-        navigator.sendBeacon(`http://${host}:5000/api/stop-dvwa/${currentContainerId}`);
-    }
-    if (currentKaliId) {
-        navigator.sendBeacon(`http://${host}:5000/api/stop-kali/${currentKaliId}`);
-    }
-});
+// Auto-cleanup removed: user must manually close the lab.
 </script>
 <script src="sqli-dvwa-data.js"></script>
 <script>
@@ -319,7 +320,8 @@ window.addEventListener('beforeunload', function () {
     document.getElementById('ch-pts').textContent = l.points + ' pts';
     document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
     document.getElementById('cur-num').textContent = idx+1;
-    document.getElementById('reading-text').textContent = l.content;
+    const portVal = currentPort ? String(currentPort) : '[PORT]';
+    document.getElementById('reading-text').innerText = l.content.replace(/\[PORT\]/g, portVal);
 
     const qc = document.getElementById('questions-container');
     qc.innerHTML = l.questions.map((q, qi) => `

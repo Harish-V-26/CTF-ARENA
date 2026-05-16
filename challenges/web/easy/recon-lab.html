@@ -327,7 +327,7 @@ window.addEventListener('beforeunload', () => {
     document.getElementById('ch-pts').textContent   = l.points + ' pts';
     document.getElementById('ch-crumb').textContent = `Lesson ${idx + 1}`;
     document.getElementById('cur-num').textContent  = idx + 1;
-    document.getElementById('reading-text').textContent = l.content;
+    document.getElementById('reading-text').innerText = l.content;
 
     const qa = document.getElementById('qa-section');
     if (l.questions.length === 0) {
