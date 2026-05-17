@@ -94,19 +94,8 @@
         <p>Click the button below to dynamically spin up your private lab instance on our Python backend.</p>
         <button id="launch-btn" class="btn-launch" onclick="launchLab()">Launch DVWA Instance ⇗</button>
         <button id="stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopLab()">Stop Lab 🛑</button>
+        <a href="sqli-dvwa-guide.html" class="btn-launch" style="margin-left: 10px;" target="_blank">📖 Read Walkthrough</a>
         <p id="loading-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;">Spinning up your private lab...</p>
-      </div>
-
-      <div class="docker-launch">
-        <h3>🐉 Kali Linux Environment</h3>
-        <p>Need a terminal? Spin up a private Kali container loaded with sqlmap and curl to execute the commands below.</p>
-        <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Start Kali Container ⇗</button>
-        <button id="kali-stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopKali()">Stop Kali 🛑</button>
-        <p id="kali-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;"></p>
-        <div id="kali-terminal-info" style="display: none; margin-top: 15px; background: #1a252f; padding: 15px; border-radius: 4px; text-align: left;">
-            <p style="color: #ecf0f1; margin-top:0;">Your Kali container is running! To access it, run this command in your host terminal:</p>
-            <code id="kali-command" style="display:block; background: #000; color: #0f0; padding: 10px; margin-top: 10px; user-select: all;"></code>
-        </div>
       </div>
 
       <!-- Lesson panel (rendered by JS) -->
@@ -126,13 +115,13 @@
         <div class="trophy-icon">🏆</div>
         <h2>Lab Complete!</h2>
         <p>You've successfully solved all SQL Injection levels in DVWA!</p>
-        <div class="score-pill" id="score-pill">0 / 240 pts</div>
+        <div class="score-pill" id="score-pill">0 / 140 pts</div>
         <a href="../../../challenges.html" class="btn btn-primary">← Back to Challenges</a>
       </div>
     </div>
 
     <div class="room-footer-nav">
-      <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">4</span></div>
+      <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">5</span></div>
       <div class="nav-btns">
         <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Previous</button>
         <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
@@ -212,77 +201,11 @@ async function stopLab() {
     }
 }
 
-async function launchKali() {
-    const btn = document.getElementById('kali-launch-btn');
-    const stopBtn = document.getElementById('kali-stop-btn');
-    const msg = document.getElementById('kali-msg');
-    const info = document.getElementById('kali-terminal-info');
-    
-    btn.style.display = 'none';
-    stopBtn.style.display = 'none';
-    info.style.display = 'none';
-    msg.style.display = 'block';
-    msg.style.color = '#e67e22';
-    msg.textContent = 'Spinning up Kali container...';
-
-    try {
-        const host = window.location.hostname || "localhost";
-        const response = await fetch(`http://${host}:5000/api/start-kali`, { method: 'POST' });
-        const data = await response.json();
-
-        if(data.status === 'success') {
-            currentKaliId = data.container_id;
-            msg.style.color = '#2ecc71';
-            msg.textContent = 'Kali Linux container is ready!';
-            stopBtn.style.display = 'inline-block';
-            
-            // Show terminal info
-            info.style.display = 'block';
-            document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
-        } else {
-            msg.style.color = '#e74c3c';
-            msg.textContent = 'Error: ' + data.message;
-            btn.style.display = 'inline-block';
-        }
-    } catch (err) {
-        msg.style.color = '#e74c3c';
-        msg.textContent = 'Failed to reach backend.';
-        btn.style.display = 'inline-block';
-    }
-}
-
-async function stopKali() {
-    if(!currentKaliId) return;
-    const msg = document.getElementById('kali-msg');
-    msg.style.color = '#e67e22';
-    msg.textContent = 'Stopping Kali...';
-    
-    try {
-        const host = window.location.hostname || "localhost";
-        await fetch(`http://${host}:5000/api/stop-kali/${currentKaliId}`, { method: 'POST' });
-        
-        msg.style.color = '#e74c3c';
-        msg.textContent = 'Kali stopped safely.';
-        document.getElementById('kali-stop-btn').style.display = 'none';
-        document.getElementById('kali-terminal-info').style.display = 'none';
-        
-        const launchBtn = document.getElementById('kali-launch-btn');
-        launchBtn.style.display = 'inline-block';
-        launchBtn.textContent = 'Restart Kali ⇗';
-        currentKaliId = null;
-    } catch (e) {
-        msg.textContent = 'Error stopping Kali.';
-    }
-}
-
 // Auto-cleanup if the user closes the tab!
 window.addEventListener('beforeunload', function () {
     const host = window.location.hostname || "localhost";
     if (currentContainerId) {
         navigator.sendBeacon(`http://${host}:5000/api/stop-dvwa/${currentContainerId}`);
-    }
-    if (currentKaliId) {
-        navigator.sendBeacon(`http://${host}:5000/api/stop-kali/${currentKaliId}`);
     }
 });
 </script>
@@ -419,8 +342,8 @@ window.addEventListener('beforeunload', function () {
   function showCompletion() {
     document.getElementById('lesson-panel').style.display = 'none';
     document.querySelector('.docker-launch').style.display = 'none';
-    const pts = totalDone() * 12; // Adjusted per points
-    document.getElementById('score-pill').textContent = `240 / 240 pts`;
+    const pts = 140;
+    document.getElementById('score-pill').textContent = `${pts} / 140 pts`;
     document.getElementById('completion-card').classList.add('show');
     document.getElementById('btn-next').disabled = true;
     document.getElementById('btn-prev').disabled = true;

