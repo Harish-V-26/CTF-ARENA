@@ -32,10 +32,47 @@ def start_kali():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+import threading
+
+cleanup_timers = {}
+
+@kali_bp.route('/api/stop-kali-delayed/<container_id>', methods=['POST'])
+def stop_kali_delayed(container_id):
+    if not client:
+        return jsonify({"status": "error"})
+    
+    if container_id in cleanup_timers:
+        cleanup_timers[container_id].cancel()
+
+    def kill_container():
+        try:
+            container = client.containers.get(container_id)
+            container.stop()
+        except Exception:
+            pass
+        cleanup_timers.pop(container_id, None)
+
+    t = threading.Timer(5.0, kill_container)
+    t.start()
+    cleanup_timers[container_id] = t
+    return jsonify({"status": "success"})
+
+@kali_bp.route('/api/cancel-stop-kali/<container_id>', methods=['POST'])
+def cancel_stop_kali(container_id):
+    if container_id in cleanup_timers:
+        cleanup_timers[container_id].cancel()
+        cleanup_timers.pop(container_id, None)
+    return jsonify({"status": "success"})
+
 @kali_bp.route('/api/stop-kali/<container_id>', methods=['POST'])
 def stop_kali(container_id):
     if not client:
         return jsonify({"status": "error", "message": "Docker not available"}), 500
+
+    if container_id in cleanup_timers:
+        cleanup_timers[container_id].cancel()
+        cleanup_timers.pop(container_id, None)
+
     try:
         container = client.containers.get(container_id)
         container.stop()

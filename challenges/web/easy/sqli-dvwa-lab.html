@@ -96,6 +96,11 @@
         <button id="stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopLab()">Stop Lab 🛑</button>
         <a href="sqli-dvwa-guide.html" class="btn-launch" style="margin-left: 10px;" target="_blank">📖 Read Walkthrough</a>
         <p id="loading-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;">Spinning up your private lab...</p>
+        <div id="port-banner" style="display:none; margin-top:12px; background:#1a252f; border-radius:6px; padding:10px 16px; text-align:left;">
+          <span style="color:#aaa; font-size:0.9em;">Your DVWA Port:</span>
+          <code id="port-display" style="color:#2ecc71; font-size:1.1em; margin-left:8px;"></code>
+          <span style="color:#aaa; font-size:0.85em; margin-left:12px;">— the guide commands below are pre-filled with this port ✅</span>
+        </div>
       </div>
 
       <!-- Lesson panel (rendered by JS) -->
@@ -134,6 +139,7 @@
 <script>
 let currentContainerId = null;
 let currentKaliId = null;
+let currentPort = null;
 
 async function launchLab() {
     const btn = document.getElementById('launch-btn');
@@ -156,11 +162,15 @@ async function launchLab() {
 
         if(data.status === 'success') {
             currentContainerId = data.container_id;
+            currentPort = data.port;
             msg.style.color = '#2ecc71';
             msg.textContent = 'Lab started successfully! Opening...';
             const labUrl = `http://${host}:${data.port}`;
             
             stopBtn.style.display = 'inline-block';
+            document.getElementById('port-banner').style.display = 'block';
+            document.getElementById('port-display').textContent = data.port;
+            renderLesson(cur);
             
             setTimeout(() => {
                 window.open(labUrl, '_blank');
@@ -201,6 +211,7 @@ async function stopLab() {
     }
 }
 
+<<<<<<< HEAD
 // Auto-cleanup if the user closes the tab!
 window.addEventListener('beforeunload', function () {
     const host = window.location.hostname || "localhost";
@@ -208,6 +219,72 @@ window.addEventListener('beforeunload', function () {
         navigator.sendBeacon(`http://${host}:5000/api/stop-dvwa/${currentContainerId}`);
     }
 });
+=======
+async function launchKali() {
+    const btn = document.getElementById('kali-launch-btn');
+    const stopBtn = document.getElementById('kali-stop-btn');
+    const msg = document.getElementById('kali-msg');
+    const info = document.getElementById('kali-terminal-info');
+    
+    btn.style.display = 'none';
+    stopBtn.style.display = 'none';
+    info.style.display = 'none';
+    msg.style.display = 'block';
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Spinning up Kali container...';
+
+    try {
+        const host = window.location.hostname || "localhost";
+        const response = await fetch(`http://${host}:5000/api/start-kali`, { method: 'POST' });
+        const data = await response.json();
+
+        if(data.status === 'success') {
+            currentKaliId = data.container_id;
+            msg.style.color = '#2ecc71';
+            msg.textContent = 'Kali Linux container is ready!';
+            stopBtn.style.display = 'inline-block';
+            
+            // Show terminal info
+            info.style.display = 'block';
+            document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
+        } else {
+            msg.style.color = '#e74c3c';
+            msg.textContent = 'Error: ' + data.message;
+            btn.style.display = 'inline-block';
+        }
+    } catch (err) {
+        msg.style.color = '#e74c3c';
+        msg.textContent = 'Failed to reach backend.';
+        btn.style.display = 'inline-block';
+    }
+}
+
+async function stopKali() {
+    if(!currentKaliId) return;
+    const msg = document.getElementById('kali-msg');
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Stopping Kali...';
+    
+    try {
+        const host = window.location.hostname || "localhost";
+        await fetch(`http://${host}:5000/api/stop-kali/${currentKaliId}`, { method: 'POST' });
+        
+        msg.style.color = '#e74c3c';
+        msg.textContent = 'Kali stopped safely.';
+        document.getElementById('kali-stop-btn').style.display = 'none';
+        document.getElementById('kali-terminal-info').style.display = 'none';
+        
+        const launchBtn = document.getElementById('kali-launch-btn');
+        launchBtn.style.display = 'inline-block';
+        launchBtn.textContent = 'Restart Kali ⇗';
+        currentKaliId = null;
+    } catch (e) {
+        msg.textContent = 'Error stopping Kali.';
+    }
+}
+
+// Auto-cleanup removed: user must manually close the lab.
+>>>>>>> refs/remotes/origin/main
 </script>
 <script src="sqli-dvwa-data.js"></script>
 <script>
@@ -242,7 +319,8 @@ window.addEventListener('beforeunload', function () {
     document.getElementById('ch-pts').textContent = l.points + ' pts';
     document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
     document.getElementById('cur-num').textContent = idx+1;
-    document.getElementById('reading-text').textContent = l.content;
+    const portVal = currentPort ? String(currentPort) : '[PORT]';
+    document.getElementById('reading-text').innerText = l.content.replace(/\[PORT\]/g, portVal);
 
     const qc = document.getElementById('questions-container');
     qc.innerHTML = l.questions.map((q, qi) => `

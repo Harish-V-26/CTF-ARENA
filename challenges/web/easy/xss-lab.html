@@ -147,13 +147,14 @@ async function launchLab() {
         const host = window.location.hostname || "localhost";
         const backendUrl = `http://${host}:5000/api/start-dvwa`;
 
-        const response = await fetch(backendUrl, {
-            method: 'POST'
-        });
+        const response = await fetch(backendUrl, { method: 'POST' });
         const data = await response.json();
 
         if(data.status === 'success') {
             currentContainerId = data.container_id;
+            sessionStorage.setItem('dvwa_container', data.container_id);
+            sessionStorage.setItem('dvwa_port', data.port);
+            
             msg.style.color = '#2ecc71';
             msg.textContent = 'Lab started successfully! Opening...';
             const labUrl = `http://${host}:${data.port}`;
@@ -190,6 +191,9 @@ async function stopLab() {
         msg.textContent = 'Lab stopped and destroyed safely.';
         document.getElementById('stop-btn').style.display = 'none';
         
+        sessionStorage.removeItem('dvwa_container');
+        sessionStorage.removeItem('dvwa_port');
+        
         const launchBtn = document.getElementById('launch-btn');
         launchBtn.style.display = 'inline-block';
         launchBtn.textContent = 'Relaunch Instance ⇗';
@@ -199,10 +203,34 @@ async function stopLab() {
     }
 }
 
+// Restore from sessionStorage on load
+window.addEventListener('load', function() {
+    const host = window.location.hostname || "localhost";
+    const savedDvwa = sessionStorage.getItem('dvwa_container');
+    const savedDvwaPort = sessionStorage.getItem('dvwa_port');
+    
+    if (savedDvwa) {
+        currentContainerId = savedDvwa;
+        // Tell backend to CANCEL the delayed stop since we refreshed
+        fetch(`http://${host}:5000/api/cancel-stop-dvwa/${savedDvwa}`, {method: 'POST'}).catch(()=>{});
+        
+        const launchBtn = document.getElementById('launch-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const msg = document.getElementById('loading-msg');
+        
+        launchBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+        msg.style.display = 'block';
+        msg.style.color = '#2ecc71';
+        msg.textContent = `Lab is already running at http://${host}:${savedDvwaPort} (Restored)`;
+    }
+});
+
+// Auto-cleanup on tab close (delayed to survive refreshes)
 window.addEventListener('beforeunload', function () {
+    const host = window.location.hostname || "localhost";
     if (currentContainerId) {
-        const host = window.location.hostname || "localhost";
-        navigator.sendBeacon(`http://${host}:5000/api/stop-dvwa/${currentContainerId}`);
+        navigator.sendBeacon(`http://${host}:5000/api/stop-dvwa-delayed/${currentContainerId}`);
     }
 });
 </script>
@@ -239,7 +267,7 @@ window.addEventListener('beforeunload', function () {
     document.getElementById('ch-pts').textContent = l.points + ' pts';
     document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
     document.getElementById('cur-num').textContent = idx+1;
-    document.getElementById('reading-text').textContent = l.content;
+    document.getElementById('reading-text').innerText = l.content;
 
     const qc = document.getElementById('questions-container');
     qc.innerHTML = l.questions.map((q, qi) => `

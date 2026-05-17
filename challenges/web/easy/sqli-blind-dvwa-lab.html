@@ -201,6 +201,7 @@ async function stopLab() {
     }
 }
 
+<<<<<<< HEAD
 // Auto-cleanup if the user closes the tab!
 window.addEventListener('beforeunload', function () {
     const host = window.location.hostname || "localhost";
@@ -208,6 +209,72 @@ window.addEventListener('beforeunload', function () {
         navigator.sendBeacon(`http://${host}:5000/api/stop-dvwa/${currentContainerId}`);
     }
 });
+=======
+async function launchKali() {
+    const btn = document.getElementById('kali-launch-btn');
+    const stopBtn = document.getElementById('kali-stop-btn');
+    const msg = document.getElementById('kali-msg');
+    const info = document.getElementById('kali-terminal-info');
+    
+    btn.style.display = 'none';
+    stopBtn.style.display = 'none';
+    info.style.display = 'none';
+    msg.style.display = 'block';
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Spinning up Kali container...';
+
+    try {
+        const host = window.location.hostname || "localhost";
+        const response = await fetch(`http://${host}:5000/api/start-kali`, { method: 'POST' });
+        const data = await response.json();
+
+        if(data.status === 'success') {
+            currentKaliId = data.container_id;
+            msg.style.color = '#2ecc71';
+            msg.textContent = 'Kali Linux container is ready!';
+            stopBtn.style.display = 'inline-block';
+            
+            // Show terminal info
+            info.style.display = 'block';
+            document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
+        } else {
+            msg.style.color = '#e74c3c';
+            msg.textContent = 'Error: ' + data.message;
+            btn.style.display = 'inline-block';
+        }
+    } catch (err) {
+        msg.style.color = '#e74c3c';
+        msg.textContent = 'Failed to reach backend.';
+        btn.style.display = 'inline-block';
+    }
+}
+
+async function stopKali() {
+    if(!currentKaliId) return;
+    const msg = document.getElementById('kali-msg');
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Stopping Kali...';
+    
+    try {
+        const host = window.location.hostname || "localhost";
+        await fetch(`http://${host}:5000/api/stop-kali/${currentKaliId}`, { method: 'POST' });
+        
+        msg.style.color = '#e74c3c';
+        msg.textContent = 'Kali stopped safely.';
+        document.getElementById('kali-stop-btn').style.display = 'none';
+        document.getElementById('kali-terminal-info').style.display = 'none';
+        
+        const launchBtn = document.getElementById('kali-launch-btn');
+        launchBtn.style.display = 'inline-block';
+        launchBtn.textContent = 'Restart Kali ⇗';
+        currentKaliId = null;
+    } catch (e) {
+        msg.textContent = 'Error stopping Kali.';
+    }
+}
+
+// Auto-cleanup removed: user must manually close the lab.
+>>>>>>> refs/remotes/origin/main
 </script>
 <script src="sqli-blind-dvwa-data.js"></script>
 <script>
@@ -242,7 +309,7 @@ window.addEventListener('beforeunload', function () {
     document.getElementById('ch-pts').textContent = l.points + ' pts';
     document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
     document.getElementById('cur-num').textContent = idx+1;
-    document.getElementById('reading-text').textContent = l.content;
+    document.getElementById('reading-text').innerText = l.content;
 
     const qc = document.getElementById('questions-container');
     qc.innerHTML = l.questions.map((q, qi) => `
