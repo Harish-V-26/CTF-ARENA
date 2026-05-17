@@ -138,7 +138,6 @@
 
 <script>
 let currentContainerId = null;
-let currentKaliId = null;
 let currentPort = null;
 
 async function launchLab() {
@@ -151,18 +150,18 @@ async function launchLab() {
     msg.style.display = 'block';
 
     try {
-        // Automatically use the Server's IP address instead of localhost
         const host = window.location.hostname || "localhost";
         const backendUrl = `http://${host}:5000/api/start-dvwa`;
 
-        const response = await fetch(backendUrl, {
-            method: 'POST'
-        });
+        const response = await fetch(backendUrl, { method: 'POST' });
         const data = await response.json();
 
         if(data.status === 'success') {
             currentContainerId = data.container_id;
             currentPort = data.port;
+            sessionStorage.setItem('sqli_dvwa_container', data.container_id);
+            sessionStorage.setItem('sqli_dvwa_port', data.port);
+            
             msg.style.color = '#2ecc71';
             msg.textContent = 'Lab started successfully! Opening...';
             const labUrl = `http://${host}:${data.port}`;
@@ -201,90 +200,56 @@ async function stopLab() {
         msg.style.color = '#e74c3c';
         msg.textContent = 'Lab stopped and destroyed safely.';
         document.getElementById('stop-btn').style.display = 'none';
+        document.getElementById('port-banner').style.display = 'none';
+        
+        sessionStorage.removeItem('sqli_dvwa_container');
+        sessionStorage.removeItem('sqli_dvwa_port');
         
         const launchBtn = document.getElementById('launch-btn');
         launchBtn.style.display = 'inline-block';
         launchBtn.textContent = 'Relaunch Instance ⇗';
         currentContainerId = null;
+        currentPort = null;
     } catch (e) {
         msg.textContent = 'Error stopping lab.';
     }
 }
 
-<<<<<<< HEAD
-// Auto-cleanup if the user closes the tab!
+// Restore from sessionStorage on load
+window.addEventListener('load', function() {
+    const host = window.location.hostname || "localhost";
+    const savedDvwa = sessionStorage.getItem('sqli_dvwa_container');
+    const savedDvwaPort = sessionStorage.getItem('sqli_dvwa_port');
+    
+    if (savedDvwa) {
+        currentContainerId = savedDvwa;
+        currentPort = savedDvwaPort;
+        // Tell backend to CANCEL the delayed stop since we refreshed
+        fetch(`http://${host}:5000/api/cancel-stop-dvwa/${savedDvwa}`, {method: 'POST'}).catch(()=>{});
+        
+        const launchBtn = document.getElementById('launch-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const msg = document.getElementById('loading-msg');
+        
+        launchBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+        msg.style.display = 'block';
+        msg.style.color = '#2ecc71';
+        msg.textContent = `Lab is already running at http://${host}:${savedDvwaPort} (Restored)`;
+        
+        document.getElementById('port-banner').style.display = 'block';
+        document.getElementById('port-display').textContent = savedDvwaPort;
+        renderLesson(cur);
+    }
+});
+
+// Auto-cleanup on tab close (delayed to survive refreshes)
 window.addEventListener('beforeunload', function () {
     const host = window.location.hostname || "localhost";
     if (currentContainerId) {
-        navigator.sendBeacon(`http://${host}:5000/api/stop-dvwa/${currentContainerId}`);
+        navigator.sendBeacon(`http://${host}:5000/api/stop-dvwa-delayed/${currentContainerId}`);
     }
 });
-=======
-async function launchKali() {
-    const btn = document.getElementById('kali-launch-btn');
-    const stopBtn = document.getElementById('kali-stop-btn');
-    const msg = document.getElementById('kali-msg');
-    const info = document.getElementById('kali-terminal-info');
-    
-    btn.style.display = 'none';
-    stopBtn.style.display = 'none';
-    info.style.display = 'none';
-    msg.style.display = 'block';
-    msg.style.color = '#e67e22';
-    msg.textContent = 'Spinning up Kali container...';
-
-    try {
-        const host = window.location.hostname || "localhost";
-        const response = await fetch(`http://${host}:5000/api/start-kali`, { method: 'POST' });
-        const data = await response.json();
-
-        if(data.status === 'success') {
-            currentKaliId = data.container_id;
-            msg.style.color = '#2ecc71';
-            msg.textContent = 'Kali Linux container is ready!';
-            stopBtn.style.display = 'inline-block';
-            
-            // Show terminal info
-            info.style.display = 'block';
-            document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
-        } else {
-            msg.style.color = '#e74c3c';
-            msg.textContent = 'Error: ' + data.message;
-            btn.style.display = 'inline-block';
-        }
-    } catch (err) {
-        msg.style.color = '#e74c3c';
-        msg.textContent = 'Failed to reach backend.';
-        btn.style.display = 'inline-block';
-    }
-}
-
-async function stopKali() {
-    if(!currentKaliId) return;
-    const msg = document.getElementById('kali-msg');
-    msg.style.color = '#e67e22';
-    msg.textContent = 'Stopping Kali...';
-    
-    try {
-        const host = window.location.hostname || "localhost";
-        await fetch(`http://${host}:5000/api/stop-kali/${currentKaliId}`, { method: 'POST' });
-        
-        msg.style.color = '#e74c3c';
-        msg.textContent = 'Kali stopped safely.';
-        document.getElementById('kali-stop-btn').style.display = 'none';
-        document.getElementById('kali-terminal-info').style.display = 'none';
-        
-        const launchBtn = document.getElementById('kali-launch-btn');
-        launchBtn.style.display = 'inline-block';
-        launchBtn.textContent = 'Restart Kali ⇗';
-        currentKaliId = null;
-    } catch (e) {
-        msg.textContent = 'Error stopping Kali.';
-    }
-}
-
-// Auto-cleanup removed: user must manually close the lab.
->>>>>>> refs/remotes/origin/main
 </script>
 <script src="sqli-dvwa-data.js"></script>
 <script>
