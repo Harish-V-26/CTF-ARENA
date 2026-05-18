@@ -1,12 +1,8 @@
-import docker
 from flask import jsonify, Blueprint
 from . import recon_bp
+from .docker_client import get_docker_client
 
-# Connect to Docker
-try:
-    client = docker.from_env()
-except:
-    client = None
+client = get_docker_client()
 
 @recon_bp.route('/api/start-recon-target', methods=['POST'])
 def start_recon():

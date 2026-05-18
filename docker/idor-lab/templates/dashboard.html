@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard | SecureCorp</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .navbar { background: #2c3e50; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; }
+        .navbar a { color: #fff; text-decoration: none; margin-left: 15px; }
+        .container { background: #fff; max-width: 800px; margin: 30px auto; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #ecf0f1; }
+        .btn { background: #3498db; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>SecureCorp Invoice System</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/admin">Admin Panel</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Welcome, {{ user.username }} (Role: {{ user.role }})</h2>
+        <h3>Your Invoices</h3>
+        <table>
+            <tr>
+                <th>Invoice ID</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            {% for invoice in invoices %}
+            <tr>
+                <td>#{{ invoice.id }}</td>
+                <td>{{ invoice.amount }}</td>
+                <td>{{ invoice.status }}</td>
+                <td><a href="/invoice/{{ invoice.id }}" class="btn">View Details</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

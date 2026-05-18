@@ -26,4 +26,7 @@ services:
     ports:
       - "5050:80"
 
-  
+  idor-lab:
+    build: ./docker/idor-lab
+    ports:
+      - "4040:80"

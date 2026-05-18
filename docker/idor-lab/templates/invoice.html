@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice #{{ invoice.id }} | SecureCorp</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .navbar { background: #2c3e50; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; }
+        .navbar a { color: #fff; text-decoration: none; margin-left: 15px; }
+        .container { background: #fff; max-width: 600px; margin: 30px auto; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .invoice-header { border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 20px; }
+        .invoice-detail { margin-bottom: 10px; font-size: 1.1em; }
+        .back-link { display: inline-block; margin-top: 20px; color: #3498db; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>SecureCorp Invoice System</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/admin">Admin Panel</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="invoice-header">
+            <h2>Invoice #{{ invoice.id }}</h2>
+        </div>
+        <div class="invoice-detail"><strong>Status:</strong> {{ invoice.status }}</div>
+        <div class="invoice-detail"><strong>Amount:</strong> {{ invoice.amount }}</div>
+        <div class="invoice-detail"><strong>Description:</strong> {{ invoice.desc }}</div>
+        
+        <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

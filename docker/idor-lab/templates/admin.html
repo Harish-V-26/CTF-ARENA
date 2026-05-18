@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel | SecureCorp</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #2c3e50; margin: 0; padding: 0; color: #ecf0f1; }
+        .navbar { background: #1a252f; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; }
+        .navbar a { color: #fff; text-decoration: none; margin-left: 15px; }
+        .container { background: #34495e; max-width: 600px; margin: 50px auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-align: center; }
+        .flag { background: #e74c3c; color: #fff; font-family: monospace; font-size: 1.5em; padding: 15px; border-radius: 4px; margin-top: 20px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>SecureCorp Admin System</div>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/admin">Admin Panel</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        <h2>🔒 Admin Portal</h2>
+        <p>Welcome, Administrator.</p>
+        <p>You have successfully escalated your privileges.</p>
+        <div class="flag">{{ flag }}</div>
+    </div>
+</body>
+</html>

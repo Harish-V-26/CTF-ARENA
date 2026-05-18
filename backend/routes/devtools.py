@@ -1,14 +1,10 @@
-import docker
 import random
 from flask import jsonify
 from . import devtools_bp
 
 # Connect to the local Docker daemon
-try:
-    client = docker.from_env()
-except Exception as e:
-    print(f"Warning: Could not connect to Docker daemon: {e}")
-    client = None
+from .docker_client import get_docker_client
+client = get_docker_client()
 
 # ── DevTools Guided Practice Lab ──
 @devtools_bp.route('/api/start-devtools-guided', methods=['POST'])
