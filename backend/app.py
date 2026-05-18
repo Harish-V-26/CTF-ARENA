@@ -1,5 +1,11 @@
 from flask import Flask
 from flask_cors import CORS
+import os
+
+# Fix for Docker Desktop on Linux
+desktop_sock = os.path.expanduser("~/.docker/desktop/docker.sock")
+if not os.environ.get("DOCKER_HOST") and os.path.exists(desktop_sock):
+    os.environ["DOCKER_HOST"] = f"unix://{desktop_sock}"
 
 from routes.dvwa import dvwa_bp
 from routes.kali import kali_bp
