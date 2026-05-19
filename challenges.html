@@ -461,6 +461,48 @@
           </div>
         </div>
 
+        <!-- IDOR Vulnerability Lab -->
+        <div class="challenge-card" data-category="web" id="card-idor-lab"
+          onclick="window.location.href='challenges/web/easy/idor-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #f39c12, #e67e22);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">IDOR (Insecure Direct Object Reference)</div>
+            <div class="challenge-desc">
+              Hack an Invoice Management System. Change object IDs to access another user's data and escalate privileges using mass assignment vulnerabilities.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">120 pts</span>
+            <span class="solve-count">🐳 Docker Lab</span>
+            <a href="challenges/web/easy/idor-lab.html" class="start-btn" id="start-idor-lab">Start Lab →</a>
+          </div>
+        </div>
+
+        <!-- File Upload in DVWA Lab -->
+        <div class="challenge-card" data-category="web" id="card-file-upload-dvwa-lab"
+          onclick="window.location.href='challenges/web/easy/file-upload-dvwa-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">File Upload in DVWA</div>
+            <div class="challenge-desc">
+              Exploit file upload vulnerabilities in DVWA. Upload web shells, bypass filters, and achieve remote code execution across all 4 security levels with Kali Linux tools.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">170 pts</span>
+            <span class="solve-count">🐳 Docker Lab</span>
+            <a href="challenges/web/easy/file-upload-dvwa-lab.html" class="start-btn" id="start-file-upload-dvwa-lab">Start Lab →</a>
+          </div>
+        </div>
+
       </div><!-- /challenges-grid-easy -->
 
     </div>
@@ -662,7 +704,9 @@
       } else if (title.includes("Command Injection")) {
           learnList = ["OS Command Injection", "Shell Operators chaining", "Input Sanitization failures"];
       } else if (title.includes("File Upload")) {
-          learnList = ["Web Shell Execution", "Content-Type Bypassing", "Extension Blacklist/Whitelist filters"];
+          learnList = ["Web Shell Execution", "Content-Type Bypassing", "Extension Blacklist/Whitelist filters", "Remote Code Execution via Upload"];
+      } else if (title.includes("IDOR")) {
+          learnList = ["Insecure Direct Object References", "Horizontal Privilege Escalation", "Mass Assignment Attacks", "Access Control Bypass"];
       } else if (title.includes("Reconnaissance")) {
           learnList = ["Directory Fuzzing (ffuf)", "Tech Stack Discovery (Wappalyzer)", "Attack Surface Mapping"];
       } else if (title.includes("Brute Force")) {
