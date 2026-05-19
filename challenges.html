@@ -503,6 +503,27 @@
           </div>
         </div>
 
+        <!-- Introduction to Nmap Lab -->
+        <div class="challenge-card" data-category="web" id="card-nmap-lab"
+          onclick="window.location.href='challenges/web/easy/nmap-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #00ff41, #00cc33);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Introduction to Nmap</div>
+            <div class="challenge-desc">
+              Master network reconnaissance with Nmap. Discover live hosts, scan open ports, detect services & versions, fingerprint operating systems, and perform stealth scans using Kali Linux.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">320 pts</span>
+            <span class="solve-count">🔍 11 Lessons</span>
+            <a href="challenges/web/easy/nmap-lab.html" class="start-btn" id="start-nmap-lab">Start Lab →</a>
+          </div>
+        </div>
+
       </div><!-- /challenges-grid-easy -->
 
     </div>
@@ -707,6 +728,8 @@
           learnList = ["Web Shell Execution", "Content-Type Bypassing", "Extension Blacklist/Whitelist filters", "Remote Code Execution via Upload"];
       } else if (title.includes("IDOR")) {
           learnList = ["Insecure Direct Object References", "Horizontal Privilege Escalation", "Mass Assignment Attacks", "Access Control Bypass"];
+      } else if (title.includes("Nmap")) {
+          learnList = ["Host Discovery & Ping Scanning", "Port Scanning & Enumeration", "Service Version Detection", "OS Fingerprinting", "Stealth SYN Scanning", "Saving & Exporting Results"];
       } else if (title.includes("Reconnaissance")) {
           learnList = ["Directory Fuzzing (ffuf)", "Tech Stack Discovery (Wappalyzer)", "Attack Surface Mapping"];
       } else if (title.includes("Brute Force")) {
