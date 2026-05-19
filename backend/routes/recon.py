@@ -10,7 +10,7 @@ def start_recon():
         return jsonify({"status": "error", "message": "Docker not available"}), 500
     try:
         container = client.containers.run(
-            "ctflabs/recon-target",
+            "recon-ng:latest",
             detach=True,
             ports={'80/tcp': 80},
             remove=True

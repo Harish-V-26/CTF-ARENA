@@ -92,8 +92,6 @@
           </div>
         </div>
 
-
-
         <!-- Brute Force Attacks Lab -->
         <div class="challenge-card" data-category="web" id="card-bruteforce-lab"
           onclick="window.location.href='challenges/web/beginner/bruteforce-lab.html'" style="cursor: pointer;">
@@ -327,6 +325,27 @@
 
       <h2 style="margin-top: 40px; margin-bottom: 20px;">Easy Level</h2>
       <div class="challenges-grid" id="challenges-grid-easy">
+        <!-- Metasploit Introduction Lab -->
+        <div class="challenge-card" data-category="web" id="card-metasploit-lab"
+          onclick="window.location.href='challenges/web/beginner/metasploit-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #1f2d3d, #3c4f66);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Metasploit Introduction</div>
+            <div class="challenge-desc">
+              Learn the fundamentals of the Metasploit Framework. Spin up a Kali Linux container and practice essential commands (search, use, show options, set, run) inside msfconsole to capture the flag.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">250 pts</span>
+            <span class="solve-count">🐳 Docker Lab</span>
+            <a href="challenges/web/beginner/metasploit-lab.html" class="start-btn" id="start-metasploit-lab">Start →</a>
+          </div>
+        </div>
+
         <!-- DVWA Lab -->
         <div class="challenge-card" data-category="web" id="card-dvwa-lab"
           onclick="window.location.href='challenges/web/easy/dvwa-lab.html'" style="cursor: pointer;">
@@ -715,6 +734,8 @@
           learnList = ["Broken Access Control", "Cryptographic Failures", "Injection Attacks", "Insecure Design Principles"];
       } else if (title.includes("Web Security")) {
           learnList = ["CIA Triad in Web", "HTTP Protocol Basics", "Common Vulnerabilities", "Defensive Strategies"];
+      } else if (title.includes("Metasploit")) {
+          learnList = ["Penetration Testing Frameworks", "Core Metasploit Commands (msfconsole)", "Exploits vs Payloads vs Auxiliary Modules", "Simulated Scanner Execution"];
       }
       
       const ul = document.getElementById('modal-learn-list');

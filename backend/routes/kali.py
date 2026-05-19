@@ -17,7 +17,7 @@ def start_kali():
         return jsonify({"status": "error", "message": "Docker daemon is not running or accessible."}), 500
     try:
         container = client.containers.run(
-            "ctflabs/kali-web",
+            "kali-rolling:latest",
             command="tail -f /dev/null",
             detach=True,
             remove=True
