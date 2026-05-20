@@ -1,5 +1,6 @@
 import random
 import threading
+import docker
 from flask import jsonify, request
 from . import kali_bp
 
@@ -16,12 +17,19 @@ def start_kali():
     if not client:
         return jsonify({"status": "error", "message": "Docker daemon is not running or accessible."}), 500
     try:
+        # Build the custom kali-rolling image if it does not exist locally
+        try:
+            client.images.get("kali-rolling:latest")
+        except docker.errors.ImageNotFound:
+            client.images.build(path="./kalilinux", tag="kali-rolling:latest")
+
         container = client.containers.run(
             "kali-rolling:latest",
             command="tail -f /dev/null",
             detach=True,
             remove=True
         )
+
         return jsonify({
             "status": "success",
             "container_id": container.id,
