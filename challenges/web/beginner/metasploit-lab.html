@@ -7,72 +7,39 @@
   <link rel="stylesheet" href="../../../css/global.css"/>
   <link rel="stylesheet" href="../../../css/web-room.css"/>
   <style>
-    /* Styling for Docker Launch Panel */
     .docker-launch {
-      background: #161b22;
-      border-radius: 10px;
-      padding: 22px 24px;
-      margin-bottom: 25px;
-      color: var(--text-primary);
+      background: #2c3e50;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      color: #ecf0f1;
       text-align: center;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
+      border-left: 4px solid #e74c3c;
     }
-    .docker-launch h3 { 
-      margin-top: 0; 
-      color: var(--text-primary); 
-      font-size: 1.1rem; 
-      letter-spacing: 0.5px; 
-    }
-    .docker-launch p  { 
-      color: var(--text-muted); 
-      font-size: 0.9rem; 
-      margin: 6px 0 14px; 
+    .docker-launch h3 { margin-top: 0; color: #fff; }
+    .docker-launch code {
+      background: #1a252f;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 1.1em;
+      color: #e67e22;
+      display: inline-block;
+      margin: 10px 0;
     }
     .btn-launch {
       display: inline-block;
-      margin-top: 8px;
+      margin-top: 15px;
       padding: 10px 20px;
-      background: var(--accent);
+      background: #e74c3c;
       color: #fff;
       text-decoration: none;
-      border-radius: var(--radius-sm);
+      border-radius: 4px;
       font-weight: bold;
-      font-size: 0.9rem;
-      transition: background var(--transition);
+      transition: background 0.3s;
       border: none;
       cursor: pointer;
     }
-    .btn-launch:hover { 
-      background: var(--accent-dim); 
-    }
-    
-    .kali-terminal-box {
-      display: none;
-      margin-top: 18px;
-      background: #0d1117;
-      border: 1px solid var(--border);
-      padding: 16px;
-      border-radius: 6px;
-      text-align: left;
-    }
-    .kali-terminal-box p {
-      color: var(--text-muted);
-      margin-top: 0;
-      font-size: 0.85rem;
-    }
-    .kali-terminal-box code {
-      display: block;
-      background: #000;
-      color: #00ff66;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 4px;
-      user-select: all;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      border: 1px solid #21262d;
-    }
+    .btn-launch:hover { background: #c0392b; }
   </style>
 </head>
 <body>
@@ -131,9 +98,9 @@
         <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Launch Target Server ⇗</button>
         <button id="target-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopTarget()">Stop Server 🛑</button>
         <p id="target-msg" style="display:none; color:#e67e22; font-weight:bold; margin-top:12px;"></p>
-        <div class="kali-terminal-box" id="target-info" style="display:none; margin-top:14px; background:#0d1117; padding:14px; border-radius:6px; text-align:left; border:1px solid var(--border);">
-          <p style="color:var(--text-muted); margin-top:0; font-size:0.85rem;">Target is up! Set RHOSTS to this IP:</p>
-          <code id="target-ip"></code>
+        <div id="target-info" style="display:none; margin-top:12px; background:#1a252f; border-radius:6px; padding:10px 16px; text-align:left;">
+          <span style="color:#aaa; font-size:0.9em;">Target is up! Set RHOSTS to this IP:</span>
+          <code id="target-ip" style="color:#2ecc71; font-size:1.1em; margin-left:8px;"></code>
         </div>
       </div>
 
@@ -145,9 +112,9 @@
         <button id="kali-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopKali()">Stop Kali 🛑</button>
         <p id="kali-msg" style="display:none; color:#e67e22; font-weight:bold; margin-top:12px;"></p>
         
-        <div class="kali-terminal-box" id="kali-terminal-info">
-          <p>Your Kali container is ready! Connect to it by running this command in your host terminal:</p>
-          <code id="kali-command">docker exec -it [container-id] bash</code>
+        <div id="kali-terminal-info" style="display:none; margin-top:12px; background:#1a252f; border-radius:6px; padding:10px 16px; text-align:left;">
+          <span style="color:#aaa; font-size:0.9em; display:block; margin-bottom:8px;">Your Kali container is ready! Connect to it by running this command in your host terminal:</span>
+          <code id="kali-command" style="display:block; color:#2ecc71; font-size:1em; padding:10px; background:#000; text-align:left; user-select:all;">docker exec -it [container-id] bash</code>
         </div>
       </div>
 

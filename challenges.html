@@ -565,6 +565,27 @@
           </div>
         </div>
 
+        <!-- Nmap Deep Dive Lab -->
+        <div class="challenge-card" data-category="web" id="card-nmap-deepdive-lab"
+          onclick="window.location.href='challenges/web/easy/nmap-deepdive-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #00f0ff, #00b8d4);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Nmap Deep Dive</div>
+            <div class="challenge-desc">
+              Take your Nmap skills to the next level. Learn advanced scan types (Null, FIN, Xmas), firewall evasion techniques (packet fragmentation, custom MTU), decoys, IP spoofing, and Nmap scripts (NSE).
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">180 pts</span>
+            <span class="solve-count">🔍 5 Lessons</span>
+            <a href="challenges/web/easy/nmap-deepdive-lab.html" class="start-btn" id="start-nmap-deepdive-lab">Start Lab →</a>
+          </div>
+        </div>
+
       </div><!-- /challenges-grid-easy -->
 
     </div>
@@ -769,6 +790,8 @@
           learnList = ["Web Shell Execution", "Content-Type Bypassing", "Extension Blacklist/Whitelist filters", "Remote Code Execution via Upload"];
       } else if (title.includes("IDOR")) {
           learnList = ["Insecure Direct Object References", "Horizontal Privilege Escalation", "Mass Assignment Attacks", "Access Control Bypass"];
+      } else if (title.includes("Deep Dive") || title.includes("Nmap Deep Dive")) {
+          learnList = ["Advanced TCP Scans (Null/FIN/Xmas)", "Packet Fragmentation & MTU", "Decoy Scanning & IP Spoofing", "NSE Script Configuration"];
       } else if (title.includes("Nmap")) {
           learnList = ["Host Discovery & Ping Scanning", "Port Scanning & Enumeration", "Service Version Detection", "OS Fingerprinting", "Stealth SYN Scanning", "Saving & Exporting Results"];
       } else if (title.includes("Reconnaissance")) {

@@ -30,3 +30,16 @@ services:
     build: ./docker/idor-lab
     ports:
       - "4040:80"
+
+  nmap-target:
+    build: ./docker/nmap-target
+    ports:
+      - "8880:80"
+      - "31337:31337"
+
+  nmap-deepdive:
+    build: ./docker/nmap-deepdive
+    ports:
+      - "8881:80"
+      - "2121:21"
+      - "54321:54321"
