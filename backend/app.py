@@ -15,6 +15,8 @@ from routes.recon import recon_bp
 from routes.auth_basics import auth_basics_bp   
 from routes.idor import idor_bp
 from routes.metasploit import metasploit_bp
+from routes.nmap import nmap_bp
+from routes.nmap_deepdive import nmap_deepdive_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -27,6 +29,8 @@ app.register_blueprint(recon_bp)
 app.register_blueprint(auth_basics_bp)
 app.register_blueprint(idor_bp)
 app.register_blueprint(metasploit_bp)
+app.register_blueprint(nmap_bp)
+app.register_blueprint(nmap_deepdive_bp)
 
 if __name__ == '__main__':
     # Run the server
