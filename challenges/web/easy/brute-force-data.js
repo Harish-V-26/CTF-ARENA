@@ -24,25 +24,13 @@ const LESSONS = [
     ]
   },
   {
-    title: "Using Burp Suite Intruder",
-    points: 60,
-    content: "Alternatively, you can use Burp Suite to brute force the login page.\n\n1. Open Burp Suite and configure your browser proxy.\n2. Submit a dummy login request on the target page and intercept it in Burp's 'Proxy' tab.\n3. Send the request to 'Intruder' (Ctrl+I).\n4. In Intruder, go to 'Positions', clear the auto-selected payloads, and add a payload marker (`§`) around the password value.\n5. Go to 'Payloads', load your wordlist.\n6. Click 'Start attack'.\n\nLook for a response with a different length or status code (like 200 OK instead of 401 Unauthorized).",
-    questions: [
-      { q: "Which tool within Burp Suite is used to automate customized attacks like brute forcing?", a: "Intruder" },
-      { q: "What character does Burp Suite use to denote a payload marker position?", a: "§" },
-      { q: "When the attack runs, what metric helps you identify a successful login if the HTTP status code doesn't change? (e.g. response ______)", a: "length" },
-      { q: "What tab do you use to configure the list of passwords in Burp Intruder?", a: "Payloads" },
-      { q: "If the login is successful, you will receive the flag. Does this lab require intercepting traffic? (yes/no)", a: "yes" }
-    ]
-  },
-  {
     title: "Capture the Flag",
     points: 60,
-    content: "Now it's time to execute the attack! Use either Hydra or Burp Suite from your Kali Linux machine against the target.\n\nThe password is one of the top commonly used passwords. If you don't want to run a massive dictionary, try a small list like 'password123, admin123, qwerty, letmein'.\n\nOnce you crack the password, log in to the target page to view your flag.",
+    content: "Now it's time to execute the attack! Use Hydra from your Kali Linux machine against the target.\n\nThe password is one of the top commonly used passwords. If you don't want to run a massive dictionary, try a small list like 'password123, admin123, qwerty, letmein'.\n\nOnce you crack the password, log in to the target page to view your flag.",
     questions: [
       { q: "What is the correct password you found for the admin user?", a: "qwerty" },
       { q: "Did the server return a 200 OK status code upon successful login? (yes/no)", a: "yes" },
-      { q: "What tool did you end up using to crack the password? (Hydra or Burp)", a: "Hydra" }, 
+      { q: "What tool did you end up using to crack the password?", a: "Hydra" }, 
       { q: "Enter the first 5 characters of the flag (including CTF{):", a: "CTF{b" },
       { q: "Enter the full flag you found on the successful login page:", a: "CTF{brut3_f0rc3_m4st3r}" }
     ]
