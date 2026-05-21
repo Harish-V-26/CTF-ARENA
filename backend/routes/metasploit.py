@@ -85,7 +85,7 @@ def start_deepdive_target():
         try:
             client.images.get("metasploit-deepdive-target:latest")
         except docker.errors.ImageNotFound:
-            client.images.build(path="./docker/metasploit-deepdive-target", tag="metasploit-deepdive-target:latest")
+            client.images.build(path="./docker/metasploit-deepdive-target", tag="metasploit-deepdive-target:latest", rm=True, forcerm=True)
 
         container = client.containers.run(
             "metasploit-deepdive-target:latest",

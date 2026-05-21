@@ -22,7 +22,7 @@ def start_kali():
         try:
             client.images.get("kali-rolling:latest")
         except docker.errors.ImageNotFound:
-            client.images.build(path="./kalilinux", tag="kali-rolling:latest")
+            client.images.build(path="./kalilinux", tag="kali-rolling:latest", rm=True, forcerm=True)
 
         container = client.containers.run(
             "kali-rolling:latest",

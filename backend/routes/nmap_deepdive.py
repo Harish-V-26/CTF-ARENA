@@ -16,7 +16,7 @@ def start_nmap_deepdive_target():
         try:
             client.images.get("ctflabs/nmap-deepdive-target:latest")
         except docker.errors.ImageNotFound:
-            client.images.build(path="./docker/nmap-deepdive", tag="ctflabs/nmap-deepdive-target:latest")
+            client.images.build(path="./docker/nmap-deepdive", tag="ctflabs/nmap-deepdive-target:latest", rm=True, forcerm=True)
 
         container = client.containers.run(
             "ctflabs/nmap-deepdive-target:latest",

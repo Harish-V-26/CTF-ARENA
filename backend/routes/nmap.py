@@ -17,7 +17,7 @@ def start_nmap_target():
         try:
             client.images.get("ctflabs/nmap-target:latest")
         except docker.errors.ImageNotFound:
-            client.images.build(path="./docker/nmap-target", tag="ctflabs/nmap-target:latest")
+            client.images.build(path="./docker/nmap-target", tag="ctflabs/nmap-target:latest", rm=True, forcerm=True)
 
         container = client.containers.run(
             "ctflabs/nmap-target:latest",
