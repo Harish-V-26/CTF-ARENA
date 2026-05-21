@@ -197,7 +197,7 @@ async function launchTarget() {
     if (data.status === 'success') {
       currentTargetId = data.container_id;
       msg.style.color = '#2ecc71';
-      msg.textContent = `Target is running at http://${host}:${data.port} — opening now...`;
+      msg.textContent = `Target is running! (Attack it using http://host.docker.internal from Kali)`;
       stop.style.display = 'inline-block';
       setTimeout(() => window.open(`http://${host}:${data.port}`, '_blank'), 1200);
     } else {
