@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "Robots.txt & Sitemap.xml",
     points: 40,
-    content: "Every web server can expose hidden information through two special files that are meant for search engine crawlers.\n\n📄 robots.txt\nThis file tells crawlers which pages NOT to index. Ironically, it also tells attackers exactly where the sensitive pages are!\n\nTo check it, navigate to:\n  http://<target>/robots.txt\n\nYou will often find entries like:\n  Disallow: /admin\n  Disallow: /staging\n  Disallow: /backup\n\n📄 sitemap.xml\nThis file lists ALL pages on the site so search engines can index them. For an attacker, it is a complete map of the application.\n\nTo check it, navigate to:\n  http://<target>/sitemap.xml\n\nTASK: On our target server (launch it above), browse to /robots.txt and /sitemap.xml. Answer the questions below using what you find.",
+    content: "Every web server can expose hidden information through two special files that are meant for search engine crawlers.\n\n📄 robots.txt\nThis file tells crawlers which pages NOT to index. Ironically, it also tells attackers exactly where the sensitive pages are!\n\nTo check it, navigate to:\n  http://host.docker.internal/robots.txt\n\nYou will often find entries like:\n  Disallow: /admin\n  Disallow: /staging\n  Disallow: /backup\n\n📄 sitemap.xml\nThis file lists ALL pages on the site so search engines can index them. For an attacker, it is a complete map of the application.\n\nTo check it, navigate to:\n  http://host.docker.internal/sitemap.xml\n\nTASK: On our target server (launch it above), browse to /robots.txt and /sitemap.xml. Answer the questions below using what you find.",
     questions: [
       { q: "What file tells search engine crawlers which paths to avoid indexing?", a: "robots.txt" },
       { q: "What file provides a complete map of all URLs on a website for search engines?", a: "sitemap.xml" },
@@ -14,7 +14,7 @@ const LESSONS = [
   {
     title: "Tech Stack Fingerprinting with WhatWeb",
     points: 50,
-    content: "Before exploiting a web app, you need to know what it's built with. This is called fingerprinting.\n\n🔧 Tool: whatweb\nWhatWeb is a command-line tool that identifies technologies used by a website — web framework, CMS, server type, JavaScript libraries, and more.\n\nInstallation (Kali Linux):\n  whatweb is pre-installed on Kali Linux.\n\nBasic usage:\n  whatweb http://<target-ip>\n\nVerbose output (more detail):\n  whatweb -v http://<target-ip>\n\nVery aggressive scan:\n  whatweb -a 3 http://<target-ip>\n\nTASK: Spin up the Kali container above and run WhatWeb against the target server. Answer the questions below.",
+    content: "Before exploiting a web app, you need to know what it's built with. This is called fingerprinting.\n\n🔧 Tool: whatweb\nWhatWeb is a command-line tool that identifies technologies used by a website — web framework, CMS, server type, JavaScript libraries, and more.\n\nInstallation (Kali Linux):\n  whatweb is pre-installed on Kali Linux.\n\nBasic usage:\n  whatweb http://host.docker.internal\n\nVerbose output (more detail):\n  whatweb -v http://host.docker.internal\n\nVery aggressive scan:\n  whatweb -a 3 http://host.docker.internal\n\nTASK: Spin up the Kali container above and run WhatWeb against the target server. Answer the questions below.",
     questions: [
       { q: "What is the name of the command-line tool used for web technology fingerprinting in this lab?", a: "whatweb" },
       { q: "What flag makes WhatWeb output more detailed information?", a: "-v" },
