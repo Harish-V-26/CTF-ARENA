@@ -16,7 +16,7 @@
     <a href="../../../challenges.html" class="active">Challenges</a>
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile ▾</a>
+      <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content">
         <a href="#">Dashboard</a>
         <a href="#">Settings</a>
@@ -58,18 +58,18 @@
       <!-- Lesson panel (rendered by JS) -->
       <div id="lesson-panel">
         <div class="reading-panel">
-          <div class="reading-label"><span>📖</span> Reading — Study before answering</div>
+          <div class="reading-label"><span></span> Reading — Study before answering</div>
           <div class="reading-text" id="reading-text"></div>
         </div>
         <div class="qa-section" id="qa-section">
-          <div class="qa-heading">✏️ Check Your Understanding</div>
+          <div class="qa-heading"> Check Your Understanding</div>
           <div id="questions-container"></div>
         </div>
       </div>
 
       <!-- Completion -->
       <div class="completion-card" id="completion-card">
-        <div class="trophy-icon">🏆</div>
+        <div class="trophy-icon"></div>
         <h2>Lab Complete!</h2>
         <p>You've mastered SQL Injection — from basic auth bypass to advanced techniques, filter evasion, and prevention strategies.</p>
         <div class="score-pill" id="score-pill">0 / 90 pts</div>
@@ -95,7 +95,7 @@
   // answered[lessonIdx] = array of booleans per question
   const answered = LESSONS.map(l => l.questions.map(() => false));
 
-  /* ── Build sidebar ── */
+  /*  Build sidebar  */
   function buildSidebar() {
     const nav = document.getElementById('sidebar-nav');
     nav.innerHTML = LESSONS.map((l, i) => `
@@ -111,14 +111,14 @@
       </div>`).join('');
   }
 
-  /* ── Build step dots ── */
+  /*  Build step dots  */
   function buildDots() {
     document.getElementById('step-dots').innerHTML =
       LESSONS.map((_,i) => `<div class="step-dot${i===0?' current':''}" id="dot-${i}"></div>`).join('');
     document.getElementById('tot-num').textContent = TOTAL;
   }
 
-  /* ── Render lesson ── */
+  /*  Render lesson  */
   function renderLesson(idx) {
     const l = LESSONS[idx];
     document.getElementById('ch-title').textContent = l.title;
@@ -140,12 +140,12 @@
             ${answered[idx][qi]?'disabled':''}>Check</button>
         </div>
         <div class="feedback${answered[idx][qi]?' correct-msg show':''}" id="fb-${idx}-${qi}">
-          ${answered[idx][qi]?'✅ Correct! '+l.questions[qi].a:''}
+          ${answered[idx][qi]?' Correct! '+l.questions[qi].a:''}
         </div>
       </div>`).join('');
   }
 
-  /* ── Update sidebar & dots ── */
+  /*  Update sidebar & dots  */
   function updateNav(from, to) {
     const fromEl = document.getElementById(`nav-${from}`);
     fromEl.classList.remove('active');
@@ -157,7 +157,7 @@
     document.getElementById(`dot-${to}`).classList.add('current');
   }
 
-  /* ── Check answer ── */
+  /*  Check answer  */
   function normalise(s) { return s.trim().toLowerCase().replace(/\s+/g,' '); }
 
   function checkAnswer(lesson, qi) {
@@ -177,14 +177,14 @@
       answered[lesson][qi] = true;
       qc.classList.add('correct');
       fb.className = 'feedback correct-msg show';
-      fb.textContent = '✅ Correct! ' + correct;
+      fb.textContent = ' Correct! ' + correct;
       input.disabled = true;
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
       qc.classList.add('wrong');
       fb.className = 'feedback wrong-msg show';
-      fb.textContent = '❌ Not quite — try again.';
+      fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
     }
   }
@@ -193,7 +193,7 @@
     if (e.key === 'Enter') checkAnswer(lesson, qi);
   }
 
-  /* ── Progress ── */
+  /*  Progress  */
   function lessonDone(idx) { return answered[idx].every(Boolean); }
   function totalDone()     { return answered.flat().filter(Boolean).length; }
   function totalQs()       { return answered.flat().length; }
@@ -211,7 +211,7 @@
     if (totalDone() === totalQs()) showCompletion();
   }
 
-  /* ── Navigation ── */
+  /*  Navigation  */
   function goTo(idx) {
     updateNav(cur, idx);
     cur = idx;
@@ -227,7 +227,7 @@
     else if (dir === 1)            { showCompletion(); }
   }
 
-  /* ── Completion ── */
+  /*  Completion  */
   function showCompletion() {
     document.getElementById('lesson-panel').style.display = 'none';
     const pts = totalDone() * 2; // 46 max Qs × ~2pts each ≈ 90
@@ -240,7 +240,7 @@
     document.querySelector('.room-body').scrollTop = 0;
   }
 
-  /* ── Init ── */
+  /*  Init  */
   buildSidebar();
   buildDots();
   renderLesson(0);

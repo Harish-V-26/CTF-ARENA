@@ -17,7 +17,7 @@
     <a href="../../../challenges.html" class="active">Challenges</a>
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile ▾</a>
+      <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content">
         <a href="#">Dashboard</a>
         <a href="#">Settings</a>
@@ -59,18 +59,18 @@
       <!-- Lesson panel (rendered by JS) -->
       <div id="lesson-panel">
         <div class="reading-panel">
-          <div class="reading-label"><span>📖</span> Reading — Study before answering</div>
+          <div class="reading-label"><span></span> Reading — Study before answering</div>
           <div class="reading-text" id="reading-text"></div>
         </div>
         <div class="qa-section" id="qa-section">
-          <div class="qa-heading">✏️ Check Your Understanding</div>
+          <div class="qa-heading"> Check Your Understanding</div>
           <div id="questions-container"></div>
         </div>
       </div>
 
       <!-- Completion -->
       <div class="completion-card" id="completion-card">
-        <div class="trophy-icon">🏆</div>
+        <div class="trophy-icon"></div>
         <h2>Lab Complete!</h2>
         <p>You've mastered Command Injection — from exploiting shell operators and blind injection techniques to preventing RCE with safe APIs and input validation!</p>
         <div class="score-pill" id="score-pill">0 / 60 pts</div>
@@ -137,7 +137,7 @@
             ${answered[idx][qi]?'disabled':''}>Check</button>
         </div>
         <div class="feedback${answered[idx][qi]?' correct-msg show':''}" id="fb-${idx}-${qi}">
-          ${answered[idx][qi]?'✅ Correct! '+l.questions[qi].a:''}
+          ${answered[idx][qi]?' Correct! '+l.questions[qi].a:''}
         </div>
       </div>`).join('');
   }
@@ -167,14 +167,14 @@
       answered[lesson][qi] = true;
       qc.classList.add('correct');
       fb.className = 'feedback correct-msg show';
-      fb.textContent = '✅ Correct! ' + correct;
+      fb.textContent = ' Correct! ' + correct;
       input.disabled = true;
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
       qc.classList.add('wrong');
       fb.className = 'feedback wrong-msg show';
-      fb.textContent = '❌ Not quite — try again.';
+      fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
     }
   }

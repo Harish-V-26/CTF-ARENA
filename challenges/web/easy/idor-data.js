@@ -3,23 +3,28 @@ const LESSONS = [
     title: "1. What is IDOR?",
     points: 30,
     html: `
-      <h3>🔍 What is IDOR?</h3>
-      <p><strong>IDOR</strong> stands for <strong>Insecure Direct Object Reference</strong>. It happens when an application gives direct access to objects (like database records, files, or accounts) based on user‑supplied input <em>without checking if the user is authorized</em>.</p>
-      <div class="analogy-box">💡 <strong>Analogy:</strong> Imagine a valet who hands you any car just because you gave them a random ticket number — without verifying it's yours!</div>
+      <h3>INSECURE DIRECT OBJECT REFERENCE (IDOR)</h3>
 
-      <h3>🚀 Getting Started</h3>
+      <h3>What is IDOR?</h3>
+      <p>Imagine a giant hotel with hundreds of locked rooms. When you check in at the front desk, the receptionist hands you a keycard with "Room 101" written on it. You go upstairs, slide the card, and your door opens. But out of curiosity, you walk over to Room 102, slide your card, and the door opens there too! Then you try Room 103, and it opens as well! The hotel's locking system has a massive flaw: it knows you are a checked-in guest, but it forgets to check if the card in your hand matches the specific room door you are trying to open. In the computer world, this lock mistake is called an Insecure Direct Object Reference, or IDOR for short.</p>
+
+      <p>When you use a website, every item in the database—like your user profile, your private chat messages, your photos, or your shopping invoices—is stored on a shelf with a unique ID number. For example, your invoice might be number 1001, and another user's invoice is 1002. When you click "View Invoice," the website asks the server for the file: "/invoice/1001." An IDOR vulnerability happens when the website server fetches record 1001 and hands it to you, but if you change the address number in your browser bar to "/invoice/1002," the server blindly fetches that invoice too, completely forgetting to verify if you are the rightful owner of record 1002!</p>
+
+      <p>This is one of the most common and dangerous bugs on the internet because it is incredibly easy for hackers to exploit. They do not need any special terminal programs or hacking software; they just click their web browser's address bar and change a single number! By writing a simple loop script that changes the ID number from 1 to 100,000 in a fraction of a second, an attacker can automatically download the entire company database, exposing private medical files, credit card numbers, or chat histories. It is very hard for defenders to spot because from the server's view, the hacker's requests look identical to normal, healthy traffic.</p>
+
+      <h3>Getting Started with the Lab</h3>
       <div class="step-block">
         <div class="step-num">Step 1</div>
         <div class="step-body">
           <strong>Launch the Lab</strong><br>
-          Click the <span class="badge orange">Launch Field Test ⇗</span> button above. Wait a few seconds for the Docker container to spin up. A new tab will open with the <strong>SecureCorp Invoice System</strong>.
+          Click the Launch Field Test button above. Wait a few seconds for the Docker container to start up. A new tab will open with the SecureCorp Invoice System, which is a simulated company website.
         </div>
       </div>
       <div class="step-block">
         <div class="step-num">Step 2</div>
         <div class="step-body">
-          <strong>Log In</strong><br>
-          Use these credentials on the login page:<br>
+          <strong>Log In as a Normal Employee</strong><br>
+          Use these credentials on the login page. You are playing the role of a regular employee with limited access:<br>
           <code>Username: employee_john</code><br>
           <code>Password: password123</code>
         </div>
@@ -34,32 +39,35 @@ const LESSONS = [
     title: "2. The Leaked Invoice",
     points: 40,
     html: `
-      <h3>📄 Exploiting IDOR via URL Tampering</h3>
-      <p>You are logged in as <code>employee_john</code>. The dashboard shows your own invoices. Let's see if we can access <em>someone else's</em> invoices.</p>
+      <h3>Exploiting IDOR by Changing the URL</h3>
+
+      <p>Now that you are logged in as employee_john, you can see your personal dashboard containing your own invoices. Your objective is to find a secret flag that is hidden inside another employee's private invoice. To do this, you will practice a technique called URL Tampering, which simply means editing the address path in your browser's navigation bar to ask the server for files you are not supposed to see.</p>
+
+      <p>When you click the "View Details" button on Invoice #1001, the browser loads the invoice and showing a URL path like "/invoice/1001." The number 1001 at the end is the unique database ID key. Because the developers forgot to write an ownership check in the server code, the server will fetch whatever ID number you type. If you click your browser's address bar and change 1001 to 1002, 1003, or 1004, the server will fetch those files and display them on your screen, allowing you to read other users' private details!</p>
+
+      <p>One of these numbers belongs to another employee and contains the secret flag. Once you find the correct invoice page, look closely at the description text to copy the flag and paste it in the box below. This shows how a missing condition in the database query (like forgetting to verify if the user's ID matches the invoice's owner ID) allows unauthorized access to private data.</p>
 
       <div class="step-block">
         <div class="step-num">Step 1</div>
         <div class="step-body">
-          Click <strong>"View Details"</strong> on <strong>Invoice #1001</strong>. The page will open and the URL will look like:<br>
-          <code>http://localhost:PORT/invoice/1001</code>
+          <strong>View Your Own Invoice</strong><br>
+          Click "View Details" on Invoice #1001. Look at the address bar to see the invoice number.
         </div>
       </div>
       <div class="step-block">
         <div class="step-num">Step 2</div>
         <div class="step-body">
-          <strong>Tamper the URL</strong> — click the address bar and change <code>1001</code> to <code>1002</code>, then <code>1003</code>.<br>
-          Press <strong>Enter</strong> after each change and observe what the server returns.
+          <strong>Tamper the URL</strong><br>
+          Manually change the number at the end of the URL to 1002, 1003, and 1004, pressing Enter each time.
         </div>
       </div>
       <div class="step-block">
         <div class="step-num">Step 3</div>
         <div class="step-body">
-          One of those invoices belongs to <strong>another user</strong> and contains a hidden flag. Find it!<br>
-          <span class="hint-text">💡 Hint: The flag looks like <code>CTF{...}</code> and is inside the invoice description.</span>
+          <strong>Find the Hidden Flag</strong><br>
+          Locate the flag inside the description of the leaked invoice page and write it down.
         </div>
       </div>
-
-      <div class="analogy-box">🐛 <strong>Why does this work?</strong> The server only checks if you are <em>logged in</em>, not if the invoice <em>belongs to you</em>. That is the IDOR vulnerability.</div>
     `,
     questions: [
       { q: "What is the flag found in the hidden invoice?", a: "CTF{ID0R_1nv0ic3_l34k}" },
@@ -67,58 +75,36 @@ const LESSONS = [
     ]
   },
   {
-    title: "3. Privilege Escalation",
+    title: "3. Privilege Escalation via Mass Assignment",
     points: 50,
     html: `
-      <h3>⚡ Mass Assignment — Become Admin</h3>
-      <p>IDOR is not just about <em>reading</em> other users' data. It can also be used to <em>write</em> data you shouldn't control. This is called <strong>Mass Assignment</strong>.</p>
-      <p>The profile‑update API blindly accepts any JSON field — including <code>role</code>. We will use this to grant ourselves admin privileges.</p>
+      <h3>From Regular Employee to Administrator</h3>
+
+      <p>IDOR vulnerabilities do not just let you read other people's files; they can also let you rewrite database files to steal administrator privileges! This advanced form of IDOR is called "Mass Assignment." When you save changes on your user profile page, your browser packages up the form details (like your email address) into a structured text format called JSON, and sends it to the server in a POST request. The server reads this block of data and saves it directly to your profile row in the database.</p>
+
+      <p>A vulnerable server blindly accepts and saves every single field it receives in the JSON block, even if it is a field that does not appear on your screen! For example, the database has a column called "role" which decides if you are a regular user or an admin. The form on the webpage only lets you edit your email, sending a block like: '{"user_id": "1", "email": "john@test.com"}'. But if you use your browser's Developer Tools Console, you can intercept the message and manually add a secret field: '{"user_id": "1", "email": "john@test.com", "role": "admin"}'. When the server reads the message, it blindly updates your role column to admin!</p>
+
+      <p>To perform this attack, go to the Profile page, open your Developer Tools Console (F12), and paste the special fetch script that sends the profile update request with the extra "role: admin" parameter included. After running the script, refresh the page and you will see your role has magically changed to admin! A new "Admin Panel" button will appear in the navigation bar, giving you access to the administrator-only dashboard where the final CTF flag is stored. This shows why servers must use a "Whitelist" to only accept specific user-editable fields rather than blindly saving everything they receive.</p>
 
       <div class="step-block">
         <div class="step-num">Step 1</div>
         <div class="step-body">
-          <strong>Open the Profile page</strong><br>
-          Click <strong>Profile</strong> in the SecureCorp navigation bar. You will see a form with your email address and a <strong>Save Changes</strong> button.
+          <strong>Open Profile Page</strong><br>
+          Click Profile in the navigation bar to see your email form.
         </div>
       </div>
-
       <div class="step-block">
         <div class="step-num">Step 2</div>
         <div class="step-body">
-          <strong>Open Developer Tools &amp; Network tab</strong><br>
-          Press <kbd>F12</kbd> (or right‑click → <strong>Inspect</strong>).<br>
-          Click the <strong>Network</strong> tab. Tick <strong>"Preserve log"</strong> so requests are not lost on reload.
+          <strong>Open Console</strong><br>
+          Press F12 and click the Console tab.
         </div>
       </div>
-
       <div class="step-block">
         <div class="step-num">Step 3</div>
         <div class="step-body">
-          <strong>Trigger the profile update</strong><br>
-          Type any new email in the field, e.g. <code>hacker@securecorp.com</code>, then click <strong>Save Changes</strong>.<br>
-          In the Network tab you will see a new <code>POST</code> request named <strong>update_profile</strong>. Click it.<br>
-          In the right panel open the <strong>Payload</strong> tab — you will see:
-          <pre>{"user_id":"1","email":"hacker@securecorp.com"}</pre>
-          The server trusts whatever JSON you send!
-        </div>
-      </div>
-
-      <div class="step-block">
-        <div class="step-num">Step 4</div>
-        <div class="step-body">
-          <strong>⚠️ Do NOT use "Copy as fetch" from the Network tab</strong><br>
-          The snippet Chrome copies has two problems that will break the attack:<br>
-          &nbsp;&nbsp;• <code>credentials: "omit"</code> → session cookie is not sent → you get <strong>401 Unauthorized</strong><br>
-          &nbsp;&nbsp;• <code>body: "{\"user_id\":...}"</code> raw string → unescaped quotes cause a <strong>SyntaxError</strong><br><br>
-          Instead, go directly to the <strong>Console</strong> tab in DevTools and type or paste the snippet from Step 5 below.
-        </div>
-      </div>
-
-      <div class="step-block">
-        <div class="step-num">Step 5</div>
-        <div class="step-body">
-          <strong>Paste this exact snippet into the Console and press <kbd>Enter</kbd></strong><br>
-          This uses <code>JSON.stringify()</code> (no quoting issues) and <code>credentials: "include"</code> (sends your session cookie):
+          <strong>Paste and Run the Script</strong><br>
+          Paste this fetch command into the Console box and press Enter:<br>
           <pre>fetch("/api/update_profile", {
   method: "POST",
   credentials: "include",
@@ -129,27 +115,18 @@ const LESSONS = [
     role: "admin"
   })
 }).then(r => r.json()).then(d => { console.log(d); alert("Done! Refresh the page."); });</pre>
-          <strong>Why the last line matters:</strong><br>
-          &nbsp;&nbsp;• <code>.then(r =&gt; r.json())</code> — reads the JSON response from the server<br>
-          &nbsp;&nbsp;• <code>.then(d =&gt; { console.log(d); alert("Done!..."); })</code> — logs the result and shows a popup so you <em>know</em> the request succeeded before refreshing<br>
-          &nbsp;&nbsp;• Without this, the Promise runs silently — you'd have no way to confirm it worked<br><br>
-          After pressing <kbd>Enter</kbd> you should see an alert popup saying <strong>"Done! Refresh the page."</strong>
         </div>
       </div>
-
       <div class="step-block">
-        <div class="step-num">Step 6</div>
+        <div class="step-num">Step 4</div>
         <div class="step-body">
-          <strong>Verify &amp; Claim the Flag</strong><br>
-          Refresh the Profile page (<kbd>F5</kbd>). The <strong>Role</strong> field should now show <strong>admin</strong>.<br>
-          Click <strong>Admin Panel</strong> in the navigation bar — the flag will be displayed on that page!
+          <strong>Claim the Flag</strong><br>
+          Refresh the page, check your profile role, click the Admin Panel menu, and copy the flag.
         </div>
       </div>
-
-      <div class="analogy-box">🐛 <strong>Why does this work?</strong> The server does not whitelist which fields can be updated. An attacker can inject any field — like <code>role</code> — into the JSON payload and the server will blindly write it to the database.</div>
     `,
     questions: [
-      { q: "What vulnerability allows you to modify fields you shouldn't? (Mass...)", a: "Mass Assignment" },
+      { q: "What vulnerability allows you to modify database fields you should not have access to? (Mass...)", a: "Mass Assignment" },
       { q: "What is the flag found in the Admin Panel?", a: "CTF{ID0R_pr1v_3sc_4dm1n}" }
     ]
   }

@@ -40,7 +40,7 @@
     ::-webkit-scrollbar-track { background: var(--bg-base); }
     ::-webkit-scrollbar-thumb { background: var(--accent-dim); border-radius: 3px; }
 
-    /* ── Header ── */
+    /*  Header  */
     .lab-header {
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border);
@@ -71,7 +71,7 @@
       border: 1px solid rgba(255,77,109,0.3);
     }
 
-    /* ── Container ── */
+    /*  Container  */
     .container {
       max-width: 900px;
       margin: 0 auto;
@@ -99,7 +99,7 @@
       line-height: 1.7;
     }
 
-    /* ── Challenge Card ── */
+    /*  Challenge Card  */
     .challenge {
       background: var(--bg-surface);
       border: 1px solid var(--border);
@@ -441,9 +441,9 @@
 </head>
 <body>
 
-<!-- ═══ HEADER ═══ -->
+<!--  HEADER  -->
 <header class="lab-header">
-  <h1>🛠️ DevTools <span>Gauntlet</span> — Phase 1</h1>
+  <h1> DevTools <span>Gauntlet</span> — Phase 1</h1>
   <span class="lab-badge">Guided Practice</span>
 </header>
 
@@ -453,33 +453,33 @@
 <div class="container">
 
   <div class="intro">
-    <h2>🧪 The <span>Training Wheels</span></h2>
+    <h2> The <span>Training Wheels</span></h2>
     <p>Three live sandbox challenges. Each one teaches you a real browser exploitation technique. Use your DevTools to break in, find the flag, and submit it below.</p>
   </div>
 
-  <!-- ═══════════════════════════════════════════ -->
+  <!--  -->
   <!-- CHALLENGE 1: The Console Trick              -->
-  <!-- ═══════════════════════════════════════════ -->
+  <!--  -->
   <div class="challenge" id="challenge-1">
     <div class="challenge-top">
       <h3><span class="ch-num">01</span> The Console Trick</h3>
-      <span class="ch-status" id="status-1">🔒 Locked</span>
+      <span class="ch-status" id="status-1"> Locked</span>
     </div>
     <div class="challenge-body">
       <div class="scenario">
-        <div class="scenario-label">📋 Scenario</div>
+        <div class="scenario-label"> Scenario</div>
         <p>The button below is <strong>disabled</strong> — it's grayed out and you can't click it. But front-end restrictions are just suggestions. Your mission: <strong>use the Console to enable the button and click it to reveal the flag.</strong></p>
       </div>
 
       <div class="sandbox">
-        <span class="sandbox-label">▸ Live Sandbox</span>
+        <span class="sandbox-label"> Live Sandbox</span>
         <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 8px;">This button is locked by JavaScript. Can you unlock it?</p>
-        <button id="flagBtn" disabled onclick="revealFlag1()">🔒 Locked — Click to Reveal Flag</button>
+        <button id="flagBtn" disabled onclick="revealFlag1()"> Locked — Click to Reveal Flag</button>
         <p id="flag1-display" style="display:none; font-family: var(--font-mono); font-size: 18px; color: var(--accent); margin-top: 12px;"></p>
       </div>
 
       <div class="instructions">
-        <div class="instructions-label">📝 Step-by-Step Guide</div>
+        <div class="instructions-label"> Step-by-Step Guide</div>
         <ol>
           <li>Right-click the "Locked" button above and select <strong>Inspect</strong>.</li>
           <li>Look at the button's code: <code>&lt;button id="flagBtn" disabled&gt;</code></li>
@@ -487,7 +487,7 @@
           <li>Type: <code>document.getElementById('flagBtn').disabled = false</code> and press Enter.</li>
           <li>The button is now active! Click it to reveal the flag.</li>
         </ol>
-        <button class="hint-toggle" onclick="toggleHint('hint-1')">💡 Need a Hint?</button>
+        <button class="hint-toggle" onclick="toggleHint('hint-1')"> Need a Hint?</button>
         <div class="hint-box" id="hint-1">
           You can also do it directly in the Inspector: find the word <code>disabled</code> in the HTML tag and simply delete it!
         </div>
@@ -501,30 +501,30 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════ -->
+  <!--  -->
   <!-- CHALLENGE 2: The Hidden Element              -->
-  <!-- ═══════════════════════════════════════════ -->
+  <!--  -->
   <div class="challenge" id="challenge-2">
     <div class="challenge-top">
       <h3><span class="ch-num">02</span> The Hidden Element</h3>
-      <span class="ch-status" id="status-2">🔒 Locked</span>
+      <span class="ch-status" id="status-2"> Locked</span>
     </div>
     <div class="challenge-body">
       <div class="scenario">
-        <div class="scenario-label">📋 Scenario</div>
+        <div class="scenario-label"> Scenario</div>
         <p>This sandbox looks empty — just a boring message. But there's a <strong>hidden HTML element</strong> on this page containing a flag. Your mission: <strong>use the Inspector to find the hidden element and reveal it.</strong></p>
       </div>
 
       <div class="sandbox">
-        <span class="sandbox-label">▸ Live Sandbox</span>
-        <p class="nothing-msg">🤷 Nothing to see here... or is there?</p>
+        <span class="sandbox-label"> Live Sandbox</span>
+        <p class="nothing-msg"> Nothing to see here... or is there?</p>
         <div id="hidden-flag-div">flag{inspector_dom_master}</div>
         <!-- The real flag is in the hidden div above. Can you find it? -->
         <p id="flag2-display" style="display:none; font-family: var(--font-mono); font-size: 18px; color: var(--accent); margin-top: 12px;"></p>
       </div>
 
       <div class="instructions">
-        <div class="instructions-label">📝 Step-by-Step Guide</div>
+        <div class="instructions-label"> Step-by-Step Guide</div>
         <ol>
           <li>Open DevTools (F12) and go to the <strong>Inspector / Elements</strong> tab.</li>
           <li>Press <strong>Ctrl+F</strong> inside the Inspector and search for <code>flag</code>.</li>
@@ -532,7 +532,7 @@
           <li>The flag text is inside that div! Copy it.</li>
           <li><strong>Bonus:</strong> Change <code>display: none</code> to <code>display: block</code> to see it on the page.</li>
         </ol>
-        <button class="hint-toggle" onclick="toggleHint('hint-2')">💡 Need a Hint?</button>
+        <button class="hint-toggle" onclick="toggleHint('hint-2')"> Need a Hint?</button>
         <div class="hint-box" id="hint-2">
           Try typing this in the Console: <code>document.getElementById('hidden-flag-div').textContent</code>
         </div>
@@ -546,28 +546,28 @@
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════ -->
+  <!--  -->
   <!-- CHALLENGE 3: The Storage Secret              -->
-  <!-- ═══════════════════════════════════════════ -->
+  <!--  -->
   <div class="challenge" id="challenge-3">
     <div class="challenge-top">
       <h3><span class="ch-num">03</span> The Storage Secret</h3>
-      <span class="ch-status" id="status-3">🔒 Locked</span>
+      <span class="ch-status" id="status-3"> Locked</span>
     </div>
     <div class="challenge-body">
       <div class="scenario">
-        <div class="scenario-label">📋 Scenario</div>
+        <div class="scenario-label"> Scenario</div>
         <p>This page stored a secret in the browser's memory when it loaded. The page doesn't display it anywhere. Your mission: <strong>use the Storage / Application panel to find the hidden flag in LocalStorage.</strong></p>
       </div>
 
       <div class="sandbox">
-        <span class="sandbox-label">▸ Live Sandbox</span>
-        <p class="nothing-msg">📦 Data has been stored... somewhere.</p>
+        <span class="sandbox-label"> Live Sandbox</span>
+        <p class="nothing-msg"> Data has been stored... somewhere.</p>
         <p style="color: var(--text-muted); font-size: 13px;">The flag was silently written to your browser when this page loaded. Can you find where?</p>
       </div>
 
       <div class="instructions">
-        <div class="instructions-label">📝 Step-by-Step Guide</div>
+        <div class="instructions-label"> Step-by-Step Guide</div>
         <ol>
           <li>Open DevTools (F12) and go to the <strong>Application</strong> (Chrome) or <strong>Storage</strong> (Firefox) tab.</li>
           <li>Expand <strong>Local Storage</strong> in the left sidebar.</li>
@@ -575,7 +575,7 @@
           <li>Find the key named <code>secret_flag</code> — the value is your flag!</li>
           <li><strong>Alternative:</strong> In the Console, type <code>localStorage.getItem('secret_flag')</code>.</li>
         </ol>
-        <button class="hint-toggle" onclick="toggleHint('hint-3')">💡 Need a Hint?</button>
+        <button class="hint-toggle" onclick="toggleHint('hint-3')"> Need a Hint?</button>
         <div class="hint-box" id="hint-3">
           Also check <code>document.cookie</code> — there might be bonus data in cookies too. But the main flag is in LocalStorage under the key <code>secret_flag</code>.
         </div>
@@ -589,9 +589,9 @@
     </div>
   </div>
 
-  <!-- ═══ SCOREBOARD ═══ -->
+  <!--  SCOREBOARD  -->
   <div class="scoreboard">
-    <h3>🏆 Your Progress</h3>
+    <h3> Your Progress</h3>
     <div class="score" id="score-display">0 / 3</div>
     <p id="score-msg">Complete all three challenges to master Phase 1!</p>
   </div>
@@ -599,11 +599,11 @@
 </div>
 
 <script>
-  // ── Store flag in LocalStorage for Challenge 3 ──
+  //  Store flag in LocalStorage for Challenge 3 
   localStorage.setItem('secret_flag', 'flag{storage_explorer_pro}');
   document.cookie = "bonus_hint=check_localStorage; path=/";
 
-  // ── Flag answers ──
+  //  Flag answers 
   const FLAGS = {
     1: 'flag{console_is_powerful}',
     2: 'flag{inspector_dom_master}',
@@ -612,20 +612,20 @@
 
   let solved = { 1: false, 2: false, 3: false };
 
-  // ── Reveal flag when locked button is clicked ──
+  //  Reveal flag when locked button is clicked 
   function revealFlag1() {
     const display = document.getElementById('flag1-display');
     display.textContent = FLAGS[1];
     display.style.display = 'block';
-    document.getElementById('flagBtn').textContent = '🔓 Unlocked!';
+    document.getElementById('flagBtn').textContent = ' Unlocked!';
   }
 
-  // ── Toggle hint ──
+  //  Toggle hint 
   function toggleHint(id) {
     document.getElementById(id).classList.toggle('show');
   }
 
-  // ── Submit flag ──
+  //  Submit flag 
   function submitFlag(num) {
     const input = document.getElementById(`flag-input-${num}`);
     const fb = document.getElementById(`feedback-${num}`);
@@ -635,25 +635,25 @@
     if (userAnswer === correct) {
       solved[num] = true;
       fb.className = 'flag-feedback correct show';
-      fb.textContent = '✅ Correct! Flag captured!';
+      fb.textContent = ' Correct! Flag captured!';
       input.disabled = true;
       document.getElementById(`submit-${num}`).disabled = true;
-      document.getElementById(`status-${num}`).textContent = '✅ Solved';
+      document.getElementById(`status-${num}`).textContent = ' Solved';
       document.getElementById(`status-${num}`).classList.add('solved');
       updateScore();
     } else {
       fb.className = 'flag-feedback wrong show';
-      fb.textContent = '❌ Wrong flag — try again.';
+      fb.textContent = ' Wrong flag — try again.';
       setTimeout(() => { fb.classList.remove('show'); }, 2500);
     }
   }
 
-  // ── Update scoreboard ──
+  //  Update scoreboard 
   function updateScore() {
     const count = Object.values(solved).filter(Boolean).length;
     document.getElementById('score-display').textContent = `${count} / 3`;
     if (count === 3) {
-      document.getElementById('score-msg').textContent = '🎉 All challenges complete! You\'ve mastered Phase 1!';
+      document.getElementById('score-msg').textContent = ' All challenges complete! You\'ve mastered Phase 1!';
       document.getElementById('score-msg').style.color = '#ff4d6d';
     }
   }

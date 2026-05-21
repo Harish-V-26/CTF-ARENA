@@ -51,7 +51,7 @@
     <a href="../../../challenges.html" class="active">Challenges</a>
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile ▾</a>
+      <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content">
         <a href="#">Dashboard</a>
         <a href="#">Settings</a>
@@ -92,17 +92,17 @@
     <div class="room-body" id="room-body">
       
       <div class="docker-launch">
-        <h3>🎯 Brute Force Target</h3>
+        <h3> Brute Force Target</h3>
         <p>Click the button below to open the target login page. Attack it using Kali Linux tools like Hydra.</p>
         <button id="launch-btn" class="btn-launch" onclick="launchLab()">Open Target Page ⇗</button>
-        <a href="brute-force-guide.html" class="btn-launch" style="margin-left: 10px;" target="_blank">📖 Read Walkthrough</a>
+        <a href="brute-force-guide.html" class="btn-launch" style="margin-left: 10px;" target="_blank"> Read Walkthrough</a>
       </div>
 
       <div class="docker-launch">
-        <h3>🐉 Kali Linux Environment</h3>
+        <h3> Kali Linux Environment</h3>
         <p>Need a Kali machine? Spin up a private container loaded with tools (Hydra, SQLMap, Nmap).</p>
         <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Start Kali Container ⇗</button>
-        <button id="kali-stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopKali()">Stop Kali 🛑</button>
+        <button id="kali-stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopKali()">Stop Kali </button>
         <p id="kali-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;"></p>
         <div id="kali-terminal-info" style="display: none; margin-top: 15px; background: #1a252f; padding: 15px; border-radius: 4px; text-align: left;">
             <p style="color: #ecf0f1; margin-top:0;">Your Kali container is running! To access it, run this command in your host terminal:</p>
@@ -113,18 +113,18 @@
       <!-- Lesson panel (rendered by JS) -->
       <div id="lesson-panel">
         <div class="reading-panel">
-          <div class="reading-label"><span>📖</span> Instructions & Tasks</div>
+          <div class="reading-label"><span></span> Instructions & Tasks</div>
           <div class="reading-text" id="reading-text" style="white-space: pre-wrap;"></div>
         </div>
         <div class="qa-section" id="qa-section">
-          <div class="qa-heading">✏️ Check Your Understanding</div>
+          <div class="qa-heading"> Check Your Understanding</div>
           <div id="questions-container"></div>
         </div>
       </div>
 
       <!-- Completion -->
       <div class="completion-card" id="completion-card">
-        <div class="trophy-icon">🏆</div>
+        <div class="trophy-icon"></div>
         <h2>Lab Complete!</h2>
         <p>You've successfully cracked the login page and logged in!</p>
         <div class="score-pill" id="score-pill">0 / 130 pts</div>
@@ -265,7 +265,7 @@ async function stopKali() {
             ${answered[idx][qi]?'disabled':''}>Check</button>
         </div>
         <div class="feedback${answered[idx][qi]?' correct-msg show':''}" id="fb-${idx}-${qi}">
-          ${answered[idx][qi]?'✅ Correct! '+l.questions[qi].a:''}
+          ${answered[idx][qi]?' Correct! '+l.questions[qi].a:''}
         </div>
       </div>`).join('');
   }
@@ -301,14 +301,14 @@ async function stopKali() {
       answered[lesson][qi] = true;
       qc.classList.add('correct');
       fb.className = 'feedback correct-msg show';
-      fb.textContent = '✅ Correct! ' + correct;
+      fb.textContent = ' Correct! ' + correct;
       input.disabled = true;
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
       qc.classList.add('wrong');
       fb.className = 'feedback wrong-msg show';
-      fb.textContent = '❌ Not quite — try again.';
+      fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
     }
   }

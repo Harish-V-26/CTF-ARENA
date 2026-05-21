@@ -71,7 +71,7 @@
     <a href="../../../challenges.html" class="active">Challenges</a>
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile ▾</a>
+      <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content">
         <a href="#">Dashboard</a>
         <a href="#">Settings</a>
@@ -112,28 +112,28 @@
     <div class="room-body" id="room-body">
 
       <div class="docker-launch">
-        <h3>🎯 DevTools Field Test — The Final Boss</h3>
+        <h3> DevTools Field Test — The Final Boss</h3>
         <p>A "SecureCorp™" employee portal with a flag split across 3 locations. No instructions inside — just you and your DevTools.</p>
         <button id="launch-btn" class="btn-launch" onclick="launchLab()">Launch Field Test ⇗</button>
-        <button id="stop-btn" class="btn-stop" onclick="stopLab()">Stop Lab 🛑</button>
+        <button id="stop-btn" class="btn-stop" onclick="stopLab()">Stop Lab </button>
         <p id="loading-msg" style="display:none; color: #ff6b35; font-weight: bold; margin-top: 15px;">Spinning up SecureCorp™ portal...</p>
       </div>
 
       <!-- Lesson panel (rendered by JS) -->
       <div id="lesson-panel">
         <div class="reading-panel">
-          <div class="reading-label"><span>📖</span> Mission Intel</div>
+          <div class="reading-label"><span></span> Mission Intel</div>
           <div class="reading-text" id="reading-text" style="white-space: pre-wrap;"></div>
         </div>
         <div class="qa-section" id="qa-section">
-          <div class="qa-heading">✏️ Report Your Findings</div>
+          <div class="qa-heading"> Report Your Findings</div>
           <div id="questions-container"></div>
         </div>
       </div>
 
       <!-- Completion -->
       <div class="completion-card" id="completion-card">
-        <div class="trophy-icon">🏆</div>
+        <div class="trophy-icon"></div>
         <h2>Mission Complete!</h2>
         <p>You've proven you can independently find hidden data across Inspector, Network headers, and JavaScript source code. You are now a certified DevTools operator!</p>
         <div class="score-pill" id="score-pill">0 / 250 pts</div>
@@ -269,7 +269,7 @@ async function stopLab() {
             ${answered[idx][qi]?'disabled':''}>Check</button>
         </div>
         <div class="feedback${answered[idx][qi]?' correct-msg show':''}" id="fb-${idx}-${qi}">
-          ${answered[idx][qi]?'✅ Correct! '+l.questions[qi].a:''}
+          ${answered[idx][qi]?' Correct! '+l.questions[qi].a:''}
         </div>
       </div>`).join('');
   }
@@ -303,14 +303,14 @@ async function stopLab() {
       answered[lesson][qi] = true;
       qc.classList.add('correct');
       fb.className = 'feedback correct-msg show';
-      fb.textContent = '✅ Correct! ' + correct;
+      fb.textContent = ' Correct! ' + correct;
       input.disabled = true;
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
       qc.classList.add('wrong');
       fb.className = 'feedback wrong-msg show';
-      fb.textContent = '❌ Not quite — try again.';
+      fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
     }
   }

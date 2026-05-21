@@ -2,7 +2,7 @@
    CTF LABS — Rules Page Styles
    ================================================ */
 
-/* ─── RULES LAYOUT ─── */
+/*  RULES LAYOUT  */
 .rules-section {
   padding: 80px 0 100px;
   display: grid;
@@ -11,7 +11,7 @@
   align-items: start;
 }
 
-/* ─── SIDEBAR NAV ─── */
+/*  SIDEBAR NAV  */
 .rules-nav {
   position: sticky;
   top: 90px;
@@ -55,7 +55,7 @@
   border-left-color: var(--accent);
 }
 
-/* ─── RULES CONTENT ─── */
+/*  RULES CONTENT  */
 .rules-content {
   display: flex;
   flex-direction: column;
@@ -106,7 +106,7 @@
   margin-top: 3px;
 }
 
-/* ─── RULE LIST ─── */
+/*  RULE LIST  */
 .rule-list {
   list-style: none;
   display: flex;
@@ -152,7 +152,7 @@
 
 .rule-text strong { color: var(--text-primary); }
 
-/* ─── POINT TABLE ─── */
+/*  POINT TABLE  */
 .point-table {
   width: 100%;
   border-collapse: collapse;
@@ -183,7 +183,7 @@
 .point-table td:first-child { color: var(--text-primary); font-weight: 600; }
 .point-table td.pts { color: var(--accent); font-family: var(--font-mono); font-weight: 700; }
 
-/* ─── PENALTY BOX ─── */
+/*  PENALTY BOX  */
 .penalty-box {
   background: rgba(255,77,109,0.07);
   border: 1px solid rgba(255,77,109,0.25);
@@ -204,7 +204,7 @@
 
 .penalty-box strong { color: #f87171; }
 
-/* ─── RESPONSIVE ─── */
+/*  RESPONSIVE  */
 @media (max-width: 900px) {
   .rules-section {
     grid-template-columns: 1fr;

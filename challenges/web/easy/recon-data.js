@@ -1,62 +1,110 @@
 const LESSONS = [
   {
-    title: "Robots.txt & Sitemap.xml",
+    title: "1. Robots.txt & Sitemap.xml",
     points: 40,
-    content: "Every web server can expose hidden information through two special files that are meant for search engine crawlers.\n\n📄 robots.txt\nThis file tells crawlers which pages NOT to index. Ironically, it also tells attackers exactly where the sensitive pages are!\n\nTo check it, navigate to:\n  http://host.docker.internal/robots.txt\n\nYou will often find entries like:\n  Disallow: /admin\n  Disallow: /staging\n  Disallow: /backup\n\n📄 sitemap.xml\nThis file lists ALL pages on the site so search engines can index them. For an attacker, it is a complete map of the application.\n\nTo check it, navigate to:\n  http://host.docker.internal/sitemap.xml\n\nTASK: On our target server (launch it above), browse to /robots.txt and /sitemap.xml. Answer the questions below using what you find.",
+    content: `FINDING HIDDEN MAPS ON THE INTERNET
+
+WHAT IS ROBOTS.TXT?
+Imagine a giant library where a busy robot librarian is constantly running around taking notes on every single book so people can find them later. This robot is like the search engines (like Google). Now, imagine the library has a secret back room where the staff keeps their private notes. They put a sign on the door that says "Robot Librarian: Do Not Enter!" This sign is exactly what the robots.txt file is! It is a simple text file that websites use to tell search engines which pages they are NOT allowed to look at or share with the world. But here is the funny part: hackers can read this sign too! By looking at the robots.txt file, hackers can see exactly where the website owners are hiding their secret pages. It's like putting a giant neon sign pointing to your secret hiding spot. You can see it yourself by typing "/robots.txt" at the end of almost any website address.
+
+WHAT IS SITEMAP.XML?
+If robots.txt is the list of places NOT to go, then sitemap.xml is the ultimate treasure map of places TO go. When a website is very big, the owners want to make sure the robot librarian doesn't miss any important pages. So, they create a special file called sitemap.xml that lists every single public page on their entire website. It's literally a map of the website! For a hacker, this is like finding a blueprint of a castle. Instead of wandering around guessing where the doors and windows are, the hacker just reads the sitemap and instantly knows every single page that exists on the website. They can look at this map to find old, forgotten pages that might not be protected very well.
+
+TASK: On our target server, browse to /robots.txt and /sitemap.xml. Answer the questions below using what you find.`,
     questions: [
-      { q: "What file tells search engine crawlers which paths to avoid indexing?", a: "robots.txt" },
-      { q: "What file provides a complete map of all URLs on a website for search engines?", a: "sitemap.xml" },
-      { q: "In robots.txt, what directive is used to block a path from crawlers?", a: "Disallow" },
-      { q: "In our target's robots.txt, what hidden path is listed as Disallow? (e.g. /admin)", a: "/staging" },
-      { q: "Why is robots.txt useful to a penetration tester? (Type: reveals hidden paths)", a: "reveals hidden paths" }
+      { q: "What file acts like a 'Do Not Enter' sign for search engine robots?", a: "robots.txt" },
+      { q: "What file acts like a treasure map listing every page on the website?", a: "sitemap.xml" },
+      { q: "In robots.txt, what word is used to tell robots they cannot enter a path?", a: "Disallow" },
+      { q: "In our target's robots.txt, what hidden path is listed? (e.g. /admin)", a: "/staging" },
+      { q: "Why do hackers like looking at robots.txt? (Type: reveals hidden paths)", a: "reveals hidden paths" }
     ]
   },
   {
-    title: "Tech Stack Fingerprinting with WhatWeb",
+    title: "2. Finding What Things Are Made Of",
     points: 50,
-    content: "Before exploiting a web app, you need to know what it's built with. This is called fingerprinting.\n\n🔧 Tool: whatweb\nWhatWeb is a command-line tool that identifies technologies used by a website — web framework, CMS, server type, JavaScript libraries, and more.\n\nInstallation (Kali Linux):\n  whatweb is pre-installed on Kali Linux.\n\nBasic usage:\n  whatweb http://host.docker.internal\n\nVerbose output (more detail):\n  whatweb -v http://host.docker.internal\n\nVery aggressive scan:\n  whatweb -a 3 http://host.docker.internal\n\nTASK: Spin up the Kali container above and run WhatWeb against the target server. Answer the questions below.",
+    content: `DISCOVERING HOW A WEBSITE WAS BUILT
+
+WHAT IS FINGERPRINTING?
+Imagine you are a master chef tasting a delicious cake for the first time. Even without seeing the recipe, you can taste the vanilla, the type of flour, and the chocolate chips. You are figuring out what the cake is made of just by observing it. In cybersecurity, this is called "fingerprinting." When hackers look at a website, they don't just see pictures and text. They want to know exactly what kind of computer code was used to build it. They want to know if it was built with a program called WordPress, or if it uses a language called PHP, or what kind of web server is hosting it. Knowing what ingredients were used to build the website is super important because if a hacker knows the website uses an old, broken ingredient, they know exactly how to break into it!
+
+HOW TO USE WHATWEB:
+Hackers use special tools that act like super-tasters to figure out the ingredients of a website. One of the most famous tools is called WhatWeb. It is a tool that runs in the command line (the black screen where you type commands). When you point WhatWeb at a website, it quickly scans the site and prints out a list of all the technologies it can recognize. It's like a magical scanner that tells you everything about how the website was constructed. You just type "whatweb" followed by the website address, and it does all the hard work for you. If you want it to look really, really closely and tell you every tiny detail, you can use the "-v" flag, which stands for "verbose" (meaning it uses a lot of words to explain things).
+
+TASK: Spin up the Kali container above and run WhatWeb against the target server. Answer the questions below.`,
     questions: [
-      { q: "What is the name of the command-line tool used for web technology fingerprinting in this lab?", a: "whatweb" },
-      { q: "What flag makes WhatWeb output more detailed information?", a: "-v" },
-      { q: "What browser extension can identify web technologies without using the terminal?", a: "Wappalyzer" },
-      { q: "Run: whatweb http://host.docker.internal. What web server does it detect? (type: nginx)", a: "nginx" },
-      { q: "What HTTP header often reveals the server software (e.g., Apache, nginx, Python)? (type the header name)", a: "Server" }
+      { q: "What is the process of figuring out what technologies a website uses called?", a: "fingerprinting" },
+      { q: "What command-line tool did we use to scan the website's ingredients?", a: "whatweb" },
+      { q: "What flag makes WhatWeb talk a lot and give more detailed information?", a: "-v" },
+      { q: "Run whatweb on the target. What web server does it say it is using? (type: nginx)", a: "nginx" },
+      { q: "What HTTP header often gives away the server's secret software name?", a: "Server" }
     ]
   },
   {
-    title: "Instruction: Wappalyzer",
+    title: "3. Wappalyzer — The Browser Detective",
     points: 0,
-    content: "🔧 Tool: Wappalyzer\n\nWappalyzer is a free browser extension (Chrome/Firefox) that identifies web technologies visually. Unlike command-line tools, it runs directly in your browser and displays detected stacks in a clean popup.\n\nKey Features:\n• Instantly detects CMS, frameworks, and analytics\n• Works as you browse the target site\n• Perfect for quick surface mapping\n\nNote: For this specific lab environment, we focus on terminal-based reconnaissance (WhatWeb), but Wappalyzer is an essential tool for any web penetration tester's toolkit.",
+    content: `THE EASIEST WAY TO FINGERPRINT A WEBSITE
+
+WHAT IS WAPPALYZER?
+In the last lesson, we learned about WhatWeb, which is a tool you have to type into a command line. But what if you could figure out what a website is made of just by visiting it in your normal web browser? That is exactly what Wappalyzer does! Wappalyzer is a special add-on (like a mini-app) that you can install directly into browsers like Google Chrome or Mozilla Firefox. Once you install it, it sits quietly in the corner of your browser. Every time you visit a new website, Wappalyzer automatically looks at the code behind the scenes and figures out all the technologies the website is using. 
+
+HOW IT HELPS:
+Instead of having to open a complicated terminal and type commands, you just click the little Wappalyzer icon at the top of your screen. A neat little menu pops down showing you everything: what kind of database they use, what programming language they wrote it in, and even what kind of analytics tools they use to track visitors. It is like having X-ray glasses for websites! While hackers often use command-line tools because they can automate them, many security professionals and web developers use Wappalyzer every single day because it is so fast and easy to use while just browsing the web normally.
+
+Note: We don't have questions for this lesson, but it's a great tool to remember!`,
     questions: []
   },
   {
-    title: "Directory & Path Fuzzing with ffuf",
+    title: "4. Guessing Hidden Folders (Fuzzing)",
     points: 60,
-    content: "Web servers often have hidden directories and files that are not linked from the main page. Fuzzing means automatically trying thousands of possible paths to discover them.\n\n🔧 Tool: ffuf (Fuzz Faster U Fool)\nffuf is a blazing-fast web fuzzer that uses wordlists to brute-force paths.\n\nInstallation (Kali Linux):\n  ffuf is pre-installed on Kali.\n\nBasic directory fuzzing command:\n  ffuf -u http://host.docker.internal/FUZZ -w /usr/share/wordlists/dirb/common.txt\n\n  -u    = Target URL (FUZZ is the placeholder for the wordlist word)\n  -w    = Path to the wordlist file\n\nFilter out 404 responses to reduce noise:\n  ffuf -u http://host.docker.internal/FUZZ -w /usr/share/wordlists/dirb/common.txt -fc 404\n\nTASK: Run ffuf against the target server. Find the hidden paths that are NOT linked from the homepage.",
+    content: `FINDING SECRET DOORS BY GUESSING
+
+WHAT IS DIRECTORY FUZZING?
+Imagine you are in a giant house with thousands of blank doors. Most of the doors lead to empty closets, but a few of them lead to rooms full of treasure. None of the doors have labels. How do you find the treasure rooms? You could try opening every single door one by one, but that would take forever! Instead, you use a super-fast robot that can try opening thousands of doors every second. In cybersecurity, websites often have secret folders (directories) that they don't link to anywhere on the main page. They might have a secret folder called "/admin" or "/backup". If you don't know the exact name, you can't visit it. "Fuzzing" is the process of using a computer program to rapidly guess thousands of different folder names to see if any of them exist. 
+
+HOW TO USE FFUF:
+One of the fastest guessing robots in the world is a tool called "ffuf" (which stands for Fuzz Faster U Fool). To use it, you give it a giant list of words (like a dictionary). Ffuf will take the website's address, add a word from the dictionary to the end of it, and check if a page loads. It does this over and over again, thousands of times a second. For example, it will try website.com/apple, website.com/admin, website.com/backup, and so on. If the website says "404 Not Found", ffuf knows the folder doesn't exist and moves on. If the website actually loads a page, ffuf shouts "I found a secret door!" and shows you the path. We use the placeholder "FUZZ" in our command to tell the tool exactly where to put the dictionary words.
+
+TASK: Run ffuf against the target server using the common.txt wordlist. Find the hidden path.`,
     questions: [
-      { q: "What does 'FUZZ' represent in an ffuf command?", a: "the placeholder for the wordlist word" },
-      { q: "What flag in ffuf specifies the wordlist to use?", a: "-w" },
-      { q: "What flag filters out responses with a specific HTTP status code?", a: "-fc" },
-      { q: "Run ffuf against the target. What hidden path responds with HTTP 200? (type the path, e.g. /admin)", a: "/staging" },
-      { q: "What HTTP status code means 'Not Found'?", a: "404" }
+      { q: "What is the process of rapidly guessing folder names to find hidden ones called?", a: "fuzzing" },
+      { q: "What super-fast tool do we use to guess these secret paths?", a: "ffuf" },
+      { q: "What special word do we use as a placeholder to tell the tool where to guess?", a: "FUZZ" },
+      { q: "What flag in the tool tells it to ignore pages that say 'Not Found'?", a: "-fc" },
+      { q: "What number code does a website send when a page is 'Not Found'?", a: "404" }
     ]
   },
   {
-    title: "Subdomain Enumeration",
+    title: "5. Finding Secret Subdomains",
     points: 50,
-    content: "Large web applications often have multiple subdomains (e.g., staging.example.com, api.example.com, admin.example.com). Discovering these is a key part of attack surface mapping.\n\n🔧 Technique: Virtual Host Fuzzing with ffuf\nSince our lab is local, we fuzz virtual hosts using the Host header rather than DNS.\n\nCommand:\n  ffuf -u http://host.docker.internal -H 'Host: FUZZ.target.local' -w /usr/share/wordlists/dirb/common.txt -fw 1\n\n  -H    = Sets a custom HTTP header\n  -fw   = Filters results by number of words in the response (to remove identical 'not found' pages)\n\n🔎 Real-world subdomain tools:\n  - subfinder   = passive subdomain discovery\n  - amass       = active/passive OSINT subdomain enumeration\n  - dnsx        = DNS resolution and validation\n\nTASK: Answer the knowledge-check questions about subdomain enumeration concepts and techniques.",
+    content: `DISCOVERING HIDDEN WEBSITES WITHIN A WEBSITE
+
+WHAT IS SUBDOMAIN ENUMERATION?
+Think of a big company like a giant shopping mall. The main mall address might be "shoppingmall.com". But inside the mall, there are many different stores. A company's website is often like that. They have their main website at "company.com", but they might also have a special site just for their employees at "staff.company.com", or a site where they test new features at "test.company.com". These extra parts attached to the front of the main name are called "subdomains". Finding all these subdomains is super important for hackers. The main website is usually guarded very heavily, like the front door of a bank. But a forgotten testing subdomain might be guarded very poorly, like a flimsy back door that was left unlocked.
+
+HOW TO FIND THEM:
+Hackers use a process called "Subdomain Enumeration" (enumeration just means finding and listing everything). They use tools similar to the guessing robot we learned about in the last lesson. Instead of guessing folders at the end of the website name, the tools guess words at the BEGINNING of the website name. The tool will try guessing "admin.target.com", "dev.target.com", "backup.target.com", and so on. When doing this on a local testing lab like ours, we use a special trick. We use our fuzzing tool (ffuf) to guess the "Host header". The Host header is like the name tag you wear to a party so the server knows which specific website you want to talk to. By rapidly changing the name tag, we can trick the server into revealing its hidden subdomains!
+
+TASK: Answer the questions below about subdomains.`,
     questions: [
-      { q: "What part of a URL like 'admin.example.com' is the subdomain?", a: "admin" },
-      { q: "What HTTP header can be fuzzed to discover virtual hosts on a shared server?", a: "Host" },
-      { q: "What ffuf flag filters results by the number of words in the response body?", a: "-fw" },
-      { q: "What is the process of mapping all entry points and exposed surfaces of a target called?", a: "attack surface mapping" },
-      { q: "What subdomain is commonly used for a pre-production test environment?", a: "staging" }
+      { q: "In the address 'admin.example.com', what do we call the 'admin' part?", a: "subdomain" },
+      { q: "What is the word for finding and listing all the entry points of a target?", a: "enumeration" },
+      { q: "What part of the web request acts like a 'name tag' that we can fuzz to find subdomains?", a: "Host header" },
+      { q: "Why do hackers look for subdomains? (To find hidden...)", a: "entry points" },
+      { q: "What subdomain name is often used by companies to test new things before they are public?", a: "staging" }
     ]
   },
   {
-    title: "Capture the Flag — Recon Challenge",
+    title: "6. Capture the Flag — Recon Challenge",
     points: 60,
-    content: "Time to put everything together! The target server has a hidden flag waiting to be found using only the recon skills from this lab.\n\n🎯 Challenge:\nThe flag is hidden somewhere on the target server. Use the following steps to find it:\n\nStep 1: Check robots.txt — is there a path that is deliberately hidden?\nStep 2: Use ffuf to confirm the hidden path exists.\nStep 3: Browse to the discovered path in your browser while the target is running.\nStep 4: The page will display the flag — enter it below to complete the challenge.\n\n💡 Tip:\nThe flag follows the format: CTF{...} — you must discover the exact value yourself!",
+    content: `THE FINAL RECON TEST
+
+PUTTING YOUR DETECTIVE SKILLS TO WORK
+You have learned how to read secret maps (robots.txt), how to identify what a website is made of (fingerprinting), and how to use super-fast robots to guess hidden doors (fuzzing). Now it is time to put all those detective skills together to solve a puzzle! The target server we have set up for you has a secret flag hidden inside it. A flag is just a special piece of text that proves you successfully hacked into the right place. It will look something like this: CTF{some_secret_words}.
+
+YOUR MISSION:
+Your goal is to find that hidden flag without anyone telling you exactly where it is. You will need to use your tools. First, you should act like a search engine robot and check if the website owners left any "Do Not Enter" signs lying around that might give you a hint. Then, you should use your fuzzing tool (ffuf) to blast the website with guesses to see if you can uncover any secret folders that aren't linked anywhere. Once your tool finds a secret folder, you can open your web browser and navigate to that exact secret address. If you did everything right, the web page will load and the secret flag will be sitting right there on the screen waiting for you! 
+
+Good luck, detective!`,
     questions: [
       { q: "What tool did you use to discover the hidden directory? (ffuf / WhatWeb / Wappalyzer)", a: "ffuf" },
       { q: "What path on the server contains the flag? (e.g. /admin)", a: "/staging" },

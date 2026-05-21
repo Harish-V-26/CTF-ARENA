@@ -1,131 +1,173 @@
 const LESSONS = [
   {
-    title: "What is Nmap?",
+    title: "1. What is Nmap?",
     points: 20,
-    content: "Welcome to your first reconnaissance tool! Before you can hack anything, you need to know what's out there. That's where Nmap comes in.\n\n🔍 What is Nmap?\nNmap stands for \"Network Mapper\". It is a free, open-source tool that lets you scan networks to find:\n• Which computers (hosts) are turned on and connected\n• Which doors (ports) are open on those computers\n• What programs (services) are running behind those doors\n• What operating system the computer is using\n\nThink of it like this:\nImagine you're a security guard checking a building. You walk through every hallway (the network), check which rooms exist (hosts), try every door handle (ports), peek inside to see what's happening (services), and note what type of lock each door has (versions).\n\nThat's exactly what Nmap does — but for computer networks!\n\n👤 Who Created Nmap?\nNmap was created by Gordon \"Fyodor\" Lyon in 1997. It has been maintained and improved by the open-source community for over 25 years. It is THE most widely used network scanning tool in the world.\n\n🎬 Fun Fact:\nNmap has appeared in over 20 Hollywood movies, including The Matrix Reloaded, Die Hard 4, and The Bourne Ultimatum. When you see a \"hacker\" scanning a network on screen — they're usually using Nmap!\n\nTASK: Answer the questions below to confirm you understand what Nmap is.",
+    content: `WHAT IS THE NETWORK MAPPER?
+Imagine you are a brave explorer looking for hidden treasure in a giant, dark castle. The castle has thousands of doors, and you need to know which ones are open, which ones are locked, and what is hiding behind them. In the computer world, networks are like that giant castle, and hackers use a magical flashlight called "Nmap" to explore it. Nmap stands for Network Mapper. It is a free tool that you can type into your computer, and it acts like an incredibly fast robot explorer. You tell the robot to run down the digital hallways, jiggle every single door handle, and report back to you. It tells you exactly which computers are turned on, which digital doors (called ports) are wide open, and even tries to peek inside the rooms to see what kind of software is running in there.
+
+A FAMOUS HOLLYWOOD HACKER TOOL
+Nmap isn't just some random toy; it is the most famous and widely used network scanning tool in the entire world! It was created way back in 1997 by a very smart programmer named Gordon "Fyodor" Lyon, and thousands of people have helped make it better over the last 25 years. Because it is the real tool that actual hackers and cybersecurity experts use every single day, it has become incredibly famous in Hollywood movies. Have you ever watched a movie like The Matrix Reloaded, Die Hard 4, or The Bourne Ultimatum, and seen a hacker typing crazy green text on a black screen to break into a system? If you look closely at the screen in those movies, they are almost always using real Nmap commands! When you learn to use Nmap, you are learning to use the exact same tool the movie stars use.
+
+THE RULES OF THE GAME
+Before we start sending our robot explorer out to jiggle door handles, there is one very important rule you must learn. Sending Nmap to explore a computer network that you do not own is like walking up to a stranger's house and checking to see if their front door is unlocked. It is extremely illegal in most places, and you can get in huge trouble! You must only use Nmap on your own computers, in safe practice labs like this one, or on networks where the owner has signed a piece of paper giving you explicit permission to test their locks. Good hackers use Nmap to help companies find their open doors and lock them before the bad guys do.`,
     questions: [
       { q: "What does Nmap stand for?", a: "Network Mapper" },
-      { q: "What year was Nmap created?", a: "1997" },
-      { q: "What do we call the 'doors' on a computer that services listen on?", a: "ports" },
-      { q: "Is Nmap free and open-source? (yes/no)", a: "yes" }
+      { q: "What year was the famous Nmap tool created?", a: "1997" },
+      { q: "What do we call the 'digital doors' on a computer that Nmap checks?", a: "ports" },
+      { q: "Is Nmap a free tool that anyone can use? (yes/no)", a: "yes" },
+      { q: "Is it legal to use Nmap on a stranger's computer without permission? (yes/no)", a: "no" }
     ]
   },
   {
-    title: "Why Use Nmap?",
+    title: "2. Why Do We Use Nmap?",
     points: 20,
-    content: "Now that you know WHAT Nmap is, let's understand WHY it's so important.\n\n🛡️ Why Do Security Professionals Use Nmap?\n\nIn cybersecurity, the very first phase of any penetration test or security audit is called RECONNAISSANCE (or \"recon\"). This is the phase where you gather as much information as possible about your target — before you try to break in.\n\nNmap is the #1 tool for active reconnaissance because it answers the most critical questions:\n\n  Question 1: \"Is this machine even online?\"\n  → Nmap's host discovery tells you which machines are alive\n\n  Question 2: \"What doors are open?\"\n  → Nmap's port scanning finds every open port\n\n  Question 3: \"What's running behind each door?\"\n  → Nmap's service detection tells you the software and version\n\n  Question 4: \"What operating system is this?\"\n  → Nmap's OS detection fingerprints the target\n\n  Question 5: \"Are there known vulnerabilities?\"\n  → Nmap's scripting engine (NSE) can check for specific CVEs\n\n🎯 Real-World Use Cases:\n\n• Penetration Testers use Nmap to find entry points into a client's network\n• System Administrators use it to verify that only approved services are running\n• Bug Bounty Hunters use it to discover forgotten servers and subdomains\n• Incident Responders use it to identify compromised machines\n• Network Engineers use it to troubleshoot connectivity issues\n• Compliance Auditors use it to verify firewall rules are working\n\n📊 The Penetration Testing Lifecycle:\n  1. Reconnaissance  ← Nmap lives here!\n  2. Scanning & Enumeration  ← And here!\n  3. Exploitation\n  4. Post-Exploitation\n  5. Reporting\n\nWithout good recon, you're trying to pick a lock in the dark. Nmap turns the lights on.\n\nTASK: Answer the questions below.",
+    content: `THE FIRST STEP OF HACKING
+If you want to break into a fortress, you don't just run up to the front gate and start hitting it with a stick. You sit on a hill with binoculars, sketching a map, counting the guards, and finding the weakest window. In cybersecurity, this planning phase is called "Reconnaissance." It is always the very first step of any hacking mission, and it is the most important part! Nmap is the ultimate pair of digital binoculars. Security experts use it to gather as much information as possible about their target before they ever try to break in. If you don't do your reconnaissance, you are just guessing in the dark. Nmap turns the lights on so you can see exactly what you are dealing with.
+
+THE FIVE BIG QUESTIONS
+When a hacker points Nmap at a target, they are trying to answer five massive questions. Question One: "Is this machine even turned on right now?" Nmap sends a quick ping to see if anyone answers. Question Two: "What doors are open?" Nmap checks all 65,535 doors to find the open ones. Question Three: "What is running behind the door?" If door number 80 is open, Nmap peeks inside to see if it is a web server or a database. Question Four: "What operating system is this computer using?" Nmap acts like a detective, looking at tiny clues to guess if it is a Windows computer or a Mac. Question Five: "Are there any easy traps to spring?" Nmap has special built-in scripts that can actually check if the open doors have known, famous security holes in them.
+
+WHO USES THIS TOOL?
+Because Nmap answers so many important questions, almost everyone in the computer world uses it. Good-guy hackers (Penetration Testers) use it to find the weak spots in a company's armor so they can fix them. System Administrators (the people who run the networks) use it to make sure nobody accidentally left a dangerous door open. Bug Bounty Hunters use it to explore giant companies, hunting for forgotten, broken servers so they can earn a reward. Even network mechanics use it just to figure out why the internet isn't working properly! It is the Swiss Army knife of the internet.`,
     questions: [
-      { q: "What is the first phase of a penetration test called?", a: "reconnaissance" },
-      { q: "What Nmap feature can check for specific CVE vulnerabilities?", a: "NSE" },
-      { q: "What does 'active reconnaissance' mean? (type: directly scanning the target)", a: "directly scanning the target" },
-      { q: "In the pentest lifecycle, what phase comes after Reconnaissance?", a: "Scanning & Enumeration" }
+      { q: "What is the very first step of any hacking mission called?", a: "Reconnaissance" },
+      { q: "What Nmap feature checks for specific known security holes using scripts?", a: "NSE" },
+      { q: "What do we call the good-guy hackers who test companies' armor?", a: "Penetration Testers" },
+      { q: "Does Nmap try to guess if the computer is running Windows or a Mac? (yes/no)", a: "yes" },
+      { q: "How many total 'doors' (ports) does Nmap have to check?", a: "65,535" }
     ]
   },
   {
-    title: "How Nmap Works — The Basics",
+    title: "3. How Does Nmap Actually Work?",
     points: 20,
-    content: "Before we start running commands, let's understand HOW Nmap actually works under the hood. Don't worry — we'll keep it super simple!\n\n📡 Step 1: How Computers Talk\nEvery computer on a network has an IP address (like a home address). Example: 192.168.1.10\nEvery service on a computer listens on a PORT (like an apartment number). Example: Port 80\n\nSo when you visit a website, your browser connects to:\n  IP Address : Port\n  93.184.216.34 : 80\n\nThere are 65,535 total ports on every computer (0 to 65535).\n\n📡 Step 2: How Nmap Scans\nNmap works by sending tiny network packets to the target and analyzing the responses:\n\n  1. Nmap sends a packet to a port\n  2. If the port is OPEN → the target responds with \"Yes, I'm listening!\"\n  3. If the port is CLOSED → the target responds with \"Nothing here.\"\n  4. If the port is FILTERED → no response at all (a firewall is blocking it)\n\n📡 Step 3: The TCP Three-Way Handshake\nNormal network connections use a \"handshake\" before talking:\n\n  Your computer → SYN → Target       (\"Hey, want to connect?\")\n  Target → SYN-ACK → Your computer    (\"Sure, let's connect!\")\n  Your computer → ACK → Target        (\"Great, we're connected!\")\n\nNmap exploits this handshake to determine if ports are open — without always completing the full connection.\n\n📡 Step 4: Where Nmap Runs\nNmap is pre-installed on Kali Linux. You can also install it on:\n• Ubuntu/Debian: sudo apt install nmap\n• macOS: brew install nmap\n• Windows: Download from nmap.org\n\nTo check if Nmap is installed, run:\n  nmap --version\n\n⚖️ IMPORTANT — Legal Warning:\nScanning networks you do NOT own without written permission is ILLEGAL in most countries. Only scan:\n• Your own machines\n• Lab environments (like this one!)\n• Targets you have written authorization to test\n\nTASK: Answer the questions below.",
+    content: `HOW COMPUTERS SHAKE HANDS
+Imagine you walk up to a friend and say, "Hi, want to talk?" Your friend says, "Sure, let's talk!" Then you say, "Great, I'm ready!" This little three-step greeting is exactly how computers talk to each other on the internet. It is called the "TCP Three-Way Handshake." When your computer wants to connect to a website, it sends a tiny packet called a SYN (which means 'Synchronize' or 'Hello'). The server replies with a SYN-ACK ('Hello back, I am ready'). Finally, your computer sends an ACK ('Acknowledge, let's go'). Nmap is incredibly clever because it exploits this handshake to figure out if doors are open. Nmap sends the first 'Hello' packet to every single door. If the door is locked (closed), the server rudely yells back, "Go away!" (an RST packet). If the door is open, the server politely says, "Hello back!" (SYN-ACK). 
+
+THE SNEAKY STEALTH SCAN
+If Nmap completes the full three-way handshake, the server's diary (the log) writes down, "Someone named Nmap just stopped by to say hello." Hackers don't want to leave their name in the diary! So, Nmap uses a brilliant trick called a Stealth Scan. Nmap sends the first 'Hello' packet. The server happily replies 'Hello back, I am ready!' But instead of finishing the handshake, Nmap suddenly sends an 'RST' packet, which means 'Never mind, forget I asked!' and runs away. Because the conversation was never actually finished, the server's diary usually doesn't write anything down. Nmap found out the door was open, but it didn't leave a trace. This sneaky trick is why Nmap is so powerful.
+
+UNDERSTANDING PORT STATES
+When Nmap finishes knocking on all the doors, it gives you a neat little report card. It labels every door with a "State" so you know exactly what is going on. If the state is "open," it means a program is happily listening behind the door, ready to talk. This is the jackpot for a hacker! If the state is "closed," it means the computer is on, but nobody is standing behind that particular door. But sometimes, Nmap gets no answer at all. It knocks and knocks, but it is just total silence. When this happens, Nmap labels the door "filtered." This means there is a giant, invisible security wall (a firewall) standing in front of the door, catching Nmap's 'Hello' packets and throwing them in the trash before they even reach the door!`,
     questions: [
-      { q: "How many total ports does every computer have?", a: "65535" },
-      { q: "What are the 3 steps of the TCP handshake? (type: SYN, SYN-ACK, ACK)", a: "SYN, SYN-ACK, ACK" },
-      { q: "What port state means a firewall is blocking the probe?", a: "filtered" },
-      { q: "On which Linux distribution is Nmap pre-installed?", a: "Kali Linux" },
-      { q: "Is it legal to scan a network without permission? (yes/no)", a: "no" }
+      { q: "What is the three-step greeting computers use to start talking called?", a: "TCP Three-Way Handshake" },
+      { q: "What are the three steps of the handshake? (type: SYN, SYN-ACK, ACK)", a: "SYN, SYN-ACK, ACK" },
+      { q: "What does Nmap do in a Stealth Scan after the server says 'Hello back'?", a: "sends an 'RST' (Never mind!) and runs away" },
+      { q: "What state means a program is happily listening behind the door?", a: "open" },
+      { q: "What state means a security wall (firewall) is blocking Nmap's packets?", a: "filtered" }
     ]
   },
   {
-    title: "Nmap Scan Types — A Quick Reference",
+    title: "4. The Different Scan Types",
     points: 20,
-    content: "Nmap supports many types of scans. Before we practice each one, here's a quick overview so you know the difference.\n\n📋 The Main Scan Types:\n\n┌─────────────────────────────────────────────────────────────┐\n│ Scan Type        │ Flag │ What It Does                     │\n├─────────────────────────────────────────────────────────────┤\n│ TCP Connect Scan │ -sT  │ Full TCP handshake (no root)     │\n│ SYN Scan         │ -sS  │ Half-open, stealth (needs root)  │\n│ UDP Scan         │ -sU  │ Scans UDP ports (slow)           │\n│ Ping Scan        │ -sn  │ Only checks if host is alive     │\n│ Version Scan     │ -sV  │ Detects service versions         │\n│ OS Detection     │ -O   │ Fingerprints operating system    │\n│ Aggressive Scan  │ -A   │ OS + Version + Scripts + Route   │\n│ Script Scan      │ -sC  │ Runs default NSE scripts         │\n└─────────────────────────────────────────────────────────────┘\n\n📋 Key Differences:\n\n🔹 TCP Connect (-sT) vs SYN Scan (-sS):\n   • -sT completes the full handshake → logged by the target → noisy\n   • -sS only sends SYN, then resets → not logged → stealthy\n   • -sS is the default when you run Nmap as root\n   • -sT is the default when you run without root\n\n🔹 Version Detection (-sV) vs OS Detection (-O):\n   • -sV identifies the SOFTWARE and VERSION on each open port\n   • -O identifies the OPERATING SYSTEM of the entire machine\n   • Both are important — they answer different questions\n\n🔹 Aggressive (-A) = Everything at once:\n   • Combines -O + -sV + -sC + --traceroute\n   • Very thorough but also very loud (easy to detect)\n   • Perfect for CTF labs, risky in real-world pentests\n\n📋 Common Ports You MUST Know:\n  21 → FTP (File Transfer)\n  22 → SSH (Secure Shell)\n  23 → Telnet (Insecure remote access)\n  25 → SMTP (Email)\n  53 → DNS (Domain Name System)\n  80 → HTTP (Web)\n  443 → HTTPS (Secure Web)\n  3306 → MySQL (Database)\n  3389 → RDP (Remote Desktop)\n  8080 → HTTP Proxy\n\nTASK: Answer the questions to confirm you understand the scan types.",
+    content: `THE MANY WAYS TO SCAN
+Nmap is like a giant toolbox; it doesn't just have one way to scan, it has dozens! You tell Nmap which tool to use by adding a "flag" (a little dash and a letter) to your command. The most common tool is the Stealth Scan we just learned about. You use it by typing "-sS". But if you don't have the special administrator powers on your computer to be sneaky, you have to use the noisy, normal scan called the TCP Connect Scan, by typing "-sT". This completes the full handshake and leaves a big mess in the server's diary. If you want to check if the computer is even awake without knocking on all 65,535 doors, you use a Ping Scan by typing "-sn". This just yells "Are you there?" and waits for an answer. It is super fast and perfect for finding out how many computers are in the castle.
+
+THE DETECTIVE FLAGS
+Once you find an open door, you want to know what is behind it. You use the Version Detection flag, "-sV". This makes Nmap politely knock on the open door and ask, "Excuse me, what software are you running?" The server might reply, "I am an Apache web server, version 2.4." This is incredibly useful because if version 2.4 has a famous broken lock, the hacker instantly knows how to break in! If you want to guess whether the whole computer is a Windows machine or a Linux machine, you use the OS Detection flag, "-O". Nmap looks at exactly how the computer answers its knocks, because Windows and Linux have slightly different accents when they talk. 
+
+THE EVERYTHING BURGER (AGGRESSIVE SCAN)
+Sometimes you are in a rush and you just want Nmap to do absolutely everything at once. You want it to find the open doors, ask what software is running, guess the operating system, and run security checks all at the same time. You can do this by using the Aggressive Scan flag, "-A". It is like ordering the biggest, messiest burger on the menu! The Aggressive Scan is incredibly powerful and gives you a massive amount of information. But there is a catch: it is incredibly loud. Imagine throwing fireworks at the castle walls instead of sneaking around. Every security guard (and firewall) in the area will instantly know you are there. It is perfect for practice labs, but very dangerous to use if you are trying to be a sneaky ninja!`,
     questions: [
-      { q: "What flag performs a stealth SYN scan?", a: "-sS" },
-      { q: "What flag performs a full TCP connect scan?", a: "-sT" },
-      { q: "What does -A combine? (type: OS, version, scripts, traceroute)", a: "OS, version, scripts, traceroute" },
-      { q: "What service runs on port 443?", a: "HTTPS" },
-      { q: "Which scan type is the default when running Nmap as root? (SYN/TCP Connect)", a: "SYN" }
+      { q: "What flag do you type to use the sneaky Stealth Scan?", a: "-sS" },
+      { q: "What flag do you type to politely ask the open door what software version it is running?", a: "-sV" },
+      { q: "What flag do you type to guess if the computer is running Windows or Linux?", a: "-O" },
+      { q: "What flag does absolutely everything at once (the 'Everything Burger')?", a: "-A" },
+      { q: "Is the Aggressive Scan (-A) sneaky and quiet, or extremely loud and messy?", a: "loud and messy" }
     ]
   },
   {
-    title: "Practical: Discovering Live Hosts",
+    title: "5. Practical: Discovering Live Hosts",
     points: 30,
-    content: "🔬 TIME TO GET HANDS-ON!\nFrom this lesson onward, you'll be running real Nmap commands. Launch the Kali container above if you haven't already.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🎯 Goal: Find which machines are alive on the network\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🔧 Commands to Try:\n\n1. Ping Scan — find live hosts without scanning ports:\n   nmap -sn 192.168.1.0/24\n\n   What this does:\n   • Sends ICMP echo requests (pings) to every IP in the range\n   • Reports which hosts responded = which are alive\n   • Does NOT scan any ports (fast!)\n\n2. Scan a single host:\n   nmap -sn <target-ip>\n\n3. Scan a range:\n   nmap -sn 10.10.10.1-50\n\n4. Skip host discovery (force scan even if host seems down):\n   nmap -Pn <target-ip>\n   Why? Some firewalls block pings. -Pn says \"don't ping, just scan.\"\n\n5. ARP discovery (local network only):\n   nmap -PR 192.168.1.0/24\n\n📖 Reading the Output:\n  Nmap scan report for 10.10.10.5\n  Host is up (0.0024s latency).\n\n  \"Host is up\" = the machine is alive and reachable.\n  \"0.0024s latency\" = it took 2.4 milliseconds to respond.\n\n💡 Pro Tip:\nAlways start with host discovery! There's no point scanning ports on a machine that's turned off.\n\nTASK: Practice these commands in Kali and answer below.",
+    content: `TIME TO START EXPLORING!
+Now it is time to put your hands on the keyboard and act like a real explorer. The first thing you always do is figure out who is awake in the castle. You don't want to waste hours knocking on the doors of a computer that is completely unplugged! We do this using Host Discovery. Imagine standing in a dark hallway and shining a flashlight. If someone is there, the light bounces back. Nmap does this by sending a "Ping" (a tiny echo request). To do this, you open your terminal and type: "nmap -sn 192.168.1.0/24". The "-sn" tells Nmap "Do a Ping Scan only, don't check the doors yet." The numbers at the end tell Nmap to shine its flashlight down the entire hallway, checking all 256 possible addresses in that neighborhood at once.
+
+DEFEATING THE FIREWALL
+Sometimes, computers are extremely shy. They have a security wall (a firewall) that is programmed to completely ignore your Ping flashlights. You shine the light, and nothing bounces back, so you think the computer is turned off. But really, it is hiding! Hackers have a trick for this. They use the "-Pn" flag. This tells Nmap: "Assume the computer is awake, even if it ignores your Ping, and just go straight to checking the doors!" It takes a lot longer because Nmap will carefully check all the doors even if the computer really is turned off, but it is the only way to find those shy, hidden computers that are trying to ignore you.
+
+READING THE MAP
+When Nmap finishes its Ping scan, it prints out a little map on your screen. It will look something like this: "Nmap scan report for 10.10.10.5. Host is up (0.0024s latency)." This is a success! "Host is up" means the computer is awake and ready to play. The "latency" is just a fancy word for how long it took the ping to travel there and bounce back. 0.0024 seconds means the computer is extremely close to you, probably on the exact same network. Once you have your list of awake computers, you can move on to the really fun part: checking their doors!`,
     questions: [
-      { q: "What Nmap flag performs a ping scan without port scanning?", a: "-sn" },
-      { q: "What flag skips host discovery and treats all hosts as up?", a: "-Pn" },
-      { q: "What protocol does a standard ping scan use?", a: "ICMP" },
-      { q: "What does /24 mean in 192.168.1.0/24? (type: subnet mask)", a: "subnet mask" },
-      { q: "What type of scan works only on local networks? (ARP/TCP/UDP)", a: "ARP" }
+      { q: "What flag do you use to do a Ping scan to see who is awake without checking doors?", a: "-sn" },
+      { q: "What does Nmap send to see if a computer is awake, like shining a flashlight?", a: "a Ping (echo request)" },
+      { q: "What flag tells Nmap to ignore the Ping and assume the computer is awake?", a: "-Pn" },
+      { q: "What phrase does Nmap print to tell you the computer is awake and ready?", a: "Host is up" },
+      { q: "What is the fancy word for how long it took the ping to bounce back?", a: "latency" }
     ]
   },
   {
-    title: "Practical: Scanning Open Ports",
+    title: "6. Practical: Scanning Open Ports",
     points: 30,
-    content: "━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🎯 Goal: Find which ports are open on the target\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🔧 Commands to Try:\n\n1. Default scan (top 1000 most common ports):\n   nmap <target-ip>\n\n2. Scan specific ports:\n   nmap -p 22,80,443 <target-ip>\n\n3. Scan a port range:\n   nmap -p 1-1000 <target-ip>\n\n4. Scan ALL 65,535 ports:\n   nmap -p- <target-ip>\n   ⚠️ This takes longer but finds hidden services on unusual ports!\n\n5. Scan top N most common ports:\n   nmap --top-ports 100 <target-ip>\n\n📖 Understanding Port States:\n\n  • open — A service IS listening. This is what you want to find!\n  • closed — Nothing is listening, but the port is reachable\n  • filtered — A firewall is blocking your probe. You can't tell if it's open or closed\n  • open|filtered — Nmap can't determine which one\n\n📖 Reading the Output:\n  PORT    STATE  SERVICE\n  22/tcp  open   ssh\n  80/tcp  open   http\n  443/tcp closed https\n  3306/tcp filtered mysql\n\n  This tells you:\n  • SSH and HTTP are running and accessible\n  • HTTPS port exists but nothing is listening\n  • MySQL port is blocked by a firewall\n\n💡 Pro Tip:\nAlways run -p- at least once per target. Many CTF flags are hidden on high-numbered ports like 8888, 9999, or 31337!\n\nTASK: Scan the target and answer the questions below.",
+    content: `KNOCKING ON THE DOORS
+Now that you know which computers are awake, it is time to find their open doors (ports). If you just type "nmap" and the computer's address, Nmap will automatically knock on the 1,000 most popular doors. It knows that most people put their web servers on door 80, and their file servers on door 21, so it checks those first. This saves a lot of time! But sometimes you only want to check a few specific doors. You can use the "-p" flag. If you type "nmap -p 80,443 target-ip", Nmap will ONLY check door 80 and door 443. This is like running straight to the kitchen and the living room without bothering to check the bedrooms. It is incredibly fast.
+
+FINDING THE HIDDEN DOORS
+Hackers know that security guards watch the popular doors very closely. So, if a hacker installs a secret backdoor into a computer, they usually hide it on a weird, high-numbered door, like door 31337 or door 9999. If you only scan the top 1,000 doors, you will completely miss the hacker's secret hideout! To fix this, you have to tell Nmap to scan every single door in the entire castle, all 65,535 of them. You do this by typing a special flag: "-p-". That little dash after the 'p' means "check everything from 1 to 65535." It takes a lot longer for the robot to run down that massive hallway, but it guarantees that absolutely nothing can stay hidden from you.
+
+IMPORTANT DOORS TO MEMORIZE
+As an explorer, you need to memorize what usually lives behind the most popular doors. If door 80 is open, it almost always means a normal Website (HTTP) is running there. If door 443 is open, it is a Secure Website (HTTPS). Door 22 is a very special door called SSH; it allows administrators to log in and control the computer from far away. Door 21 is for FTP, which is like a giant digital filing cabinet where people can download files. And door 3306 is where the massive databases (MySQL) live, guarding all the passwords. When you see these numbers pop up on your Nmap scan, you will instantly know exactly what kind of treasure is hiding inside!`,
     questions: [
-      { q: "How many ports does Nmap scan by default?", a: "1000" },
-      { q: "What flag scans ALL 65535 ports?", a: "-p-" },
-      { q: "What port state means a service IS actively listening?", a: "open" },
-      { q: "What service typically runs on port 22?", a: "SSH" },
-      { q: "What service typically runs on port 80?", a: "HTTP" }
+      { q: "If you don't give it any special instructions, how many popular doors does Nmap check?", a: "1,000" },
+      { q: "What flag do you use to tell Nmap to check every single one of the 65,535 doors?", a: "-p-" },
+      { q: "What kind of treasure is usually hiding behind door 80?", a: "a Website (HTTP)" },
+      { q: "What is door 22 (SSH) used for?", a: "administrators controlling the computer from far away" },
+      { q: "Why might a hacker hide their secret backdoor on a weird door like 31337?", a: "Because security guards only watch the popular doors" }
     ]
   },
   {
-    title: "Practical: Service & Version Detection",
+    title: "7. Practical: Saving Your Work",
     points: 30,
-    content: "━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🎯 Goal: Find WHAT is running on each open port and its exact version\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nKnowing that port 80 is open tells you \"there's a web server.\" But knowing it's running Apache 2.4.49 tells you there's a critical Path Traversal vulnerability (CVE-2021-41773)!\n\n🔧 Commands to Try:\n\n1. Version detection:\n   nmap -sV <target-ip>\n\n2. More aggressive version probing:\n   nmap -sV --version-intensity 9 <target-ip>\n   (intensity ranges from 0-9, default is 7)\n\n3. Quick/light version scan:\n   nmap -sV --version-light <target-ip>\n\n📖 Reading the Output:\n  PORT    STATE SERVICE VERSION\n  22/tcp  open  ssh     OpenSSH 8.9p1 Ubuntu 3\n  80/tcp  open  http    Apache httpd 2.4.49\n  3306/tcp open mysql   MySQL 5.7.38\n\n  Now you know:\n  • The SSH server is OpenSSH version 8.9\n  • The web server is Apache version 2.4.49 (vulnerable!)\n  • The database is MySQL version 5.7.38\n\n🎯 Why Versions Matter:\n  1. Search \"Apache 2.4.49 exploit\" → find CVE-2021-41773\n  2. Search \"OpenSSH 8.9 vulnerability\" → check if it's patched\n  3. Search \"MySQL 5.7 exploit\" → find privilege escalation paths\n\n  The CVE database (cve.mitre.org) maps vulnerabilities to specific software versions. Knowing the version = knowing the exploit.\n\nTASK: Run version detection and answer below.",
+    content: `KEEPING YOUR NOTES ORGANIZED
+Imagine you spend three hours exploring a massive castle, writing down which doors are locked and which ones are open. But as you walk out, you trip, drop your notebook in a puddle, and the ink washes away! All your hard work is gone. When you run a giant Nmap scan, all the answers print out on your black terminal screen. If you close that window or turn off your computer, the answers disappear forever. Real hackers and security professionals never let this happen. They always tell Nmap to save its report card into a permanent file so they can read it later, share it with their team, or put it in their official security report.
+
+THE MAGIC EXPORT FLAGS
+Nmap has special flags that tell it how to save the file. If you use the "-oN" flag, Nmap saves a "Normal" file. It looks exactly like what you see on your screen, which is great for humans to read. But computers are terrible at reading human text. So, you can use the "-oX" flag to save an "XML" file. This looks like crazy, messy code to you, but other hacking tools (like Metasploit) can read it instantly and understand everything Nmap found! If you use the "-oG" flag, it saves a "Grepable" file, which crams all the answers onto one giant long line so you can easily search through it. 
+
+THE ULTIMATE SAVING TRICK
+Instead of trying to decide which type of file you want, professional hackers just ask for all of them! You can use the amazing "-oA" flag. The "A" stands for All. If you type "nmap -A -p- -oA myscan target-ip", Nmap will run the big Aggressive scan, check all the doors, and then save THREE different files to your computer: myscan.nmap, myscan.xml, and myscan.gnmap. Now you have a human copy to read, a computer copy for your other hacking tools, and a searchable copy for later. You have perfectly saved all your hard work!`,
     questions: [
-      { q: "What Nmap flag enables service version detection?", a: "-sV" },
-      { q: "What is the default version detection intensity?", a: "7" },
-      { q: "What database maps vulnerabilities to specific software versions?", a: "CVE" },
-      { q: "Why is knowing the exact version important? (type: find exploits)", a: "find exploits" }
+      { q: "Why is it important to save your Nmap scan results into a file?", a: "So they don't disappear when you close the screen" },
+      { q: "Which flag saves a 'Normal' file that is easy for humans to read?", a: "-oN" },
+      { q: "Which flag saves an 'XML' file that other hacking tools can easily read?", a: "-oX" },
+      { q: "What does the amazing '-oA' flag do?", a: "saves all three types of files at once" },
+      { q: "If you use '-oA myscan', what three files does Nmap create?", a: "myscan.nmap, myscan.xml, and myscan.gnmap" }
     ]
   },
   {
-    title: "Practical: OS Detection & Stealth Scans",
-    points: 30,
-    content: "━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🎯 Goal: Fingerprint the target OS & perform stealth scanning\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🖥️ OS DETECTION\nNmap can guess the operating system by analyzing subtle differences in how the target's TCP/IP stack responds.\n\n🔧 Commands:\n  nmap -O <target-ip>              # Basic OS detection\n  nmap -O --osscan-guess <target>  # Aggressive guessing\n\n📖 Example Output:\n  OS details: Linux 4.15 - 5.6\n  OS CPE: cpe:/o:linux:linux_kernel:5.4\n\n⚠️ Requirements:\n  • Needs root/sudo privileges\n  • Target must have at least 1 open AND 1 closed port\n  • Results are probabilistic (best guess)\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🥷 STEALTH SYN SCAN\nThe SYN scan is the most popular scan because it's fast AND stealthy.\n\n🔧 Commands:\n  nmap -sS <target-ip>   # SYN scan (stealth, needs root)\n  nmap -sT <target-ip>   # TCP connect (full handshake, no root needed)\n  nmap -sU <target-ip>   # UDP scan (discovers DNS, SNMP, etc.)\n\n📖 How SYN Scan Works:\n  1. Nmap sends SYN → \"Hey, want to connect?\"\n  2. If port is OPEN → target replies SYN-ACK\n  3. Nmap sends RST → \"Never mind!\" (connection never completed)\n  4. Because the connection was never completed, it often doesn't appear in the target's logs!\n\n🆚 Why SYN > TCP Connect?\n  • SYN is 5-10x faster\n  • SYN doesn't complete the handshake → harder to detect\n  • SYN is the default when running as root\n\nTASK: Try both scan types and answer below.",
-    questions: [
-      { q: "What Nmap flag enables OS detection?", a: "-O" },
-      { q: "What privilege level is required for OS detection? (root/user)", a: "root" },
-      { q: "What flag performs a SYN (stealth) scan?", a: "-sS" },
-      { q: "In a SYN scan, does Nmap complete the TCP handshake? (yes/no)", a: "no" },
-      { q: "What flag performs a UDP scan?", a: "-sU" }
-    ]
-  },
-  {
-    title: "Practical: Aggressive Scan & Saving Results",
-    points: 30,
-    content: "━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🎯 Goal: Run a full aggressive scan and save your results like a pro\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🚀 AGGRESSIVE SCAN\nWhen you want EVERYTHING at once:\n\n  nmap -A <target-ip>\n\nThis single flag enables:\n  • OS detection (-O)\n  • Service version detection (-sV)\n  • Default script scanning (-sC)\n  • Traceroute (--traceroute)\n\n⏱️ TIMING TEMPLATES (T0-T5):\n  -T0  Paranoid   (extremely slow, evades IDS)\n  -T1  Sneaky     (slow, evades IDS)\n  -T2  Polite     (slower than default)\n  -T3  Normal     (default speed)\n  -T4  Aggressive (fast — perfect for labs!)\n  -T5  Insane     (fastest, may miss results)\n\n  Best combo for labs: nmap -A -T4 <target>\n  Best combo for stealth: nmap -sS -T1 <target>\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n💾 SAVING RESULTS\nProfessional pentesters always save scan results!\n\n  nmap -oN scan.txt <target>     # Normal (human-readable)\n  nmap -oX scan.xml <target>     # XML (for Metasploit)\n  nmap -oG scan.gnmap <target>   # Grepable (for scripting)\n  nmap -oA fullscan <target>     # ALL formats at once!\n\n  -oA creates 3 files: fullscan.nmap, fullscan.xml, fullscan.gnmap\n\n🎯 Pro Workflow:\n  1. Run:    nmap -A -T4 -oA recon <target>\n  2. Review: cat recon.nmap\n  3. Parse:  grep 'open' recon.gnmap\n  4. Import: db_import recon.xml  (in Metasploit)\n\nTASK: Run an aggressive scan, save the output, and answer below.",
-    questions: [
-      { q: "What Nmap flag enables the aggressive scan?", a: "-A" },
-      { q: "What timing template is recommended for CTF labs?", a: "T4" },
-      { q: "What flag saves output in ALL formats at once?", a: "-oA" },
-      { q: "What flag saves output in XML format?", a: "-oX" },
-      { q: "What timing template is called 'Paranoid'?", a: "T0" }
-    ]
-  },
-  {
-    title: "Mission: NexaCorp Reconnaissance",
+    title: "8. Mission: NexaCorp Reconnaissance",
     points: 40,
-    content: "🎯 MISSION BRIEFING\n━━━━━━━━━━━━━━━━━\nClient: NexaCorp Industries\nObjective: External Network Reconnaissance\nClassification: AUTHORIZED PENETRATION TEST\n\n📋 Background:\nNexaCorp Industries has hired you as a penetration tester. They suspect unauthorized services are exposed on their staging server. Your job: find every entry point.\n\n🎯 Mission Objectives:\n\n  Objective 1: Host Discovery\n  • Confirm the target is alive\n  • Command: nmap -sn <target>\n\n  Objective 2: Port Enumeration\n  • Discover ALL open ports\n  • Command: nmap -p- -T4 <target>\n\n  Objective 3: Service Fingerprinting\n  • Identify services and versions\n  • Command: nmap -sV <target>\n\n  Objective 4: OS Identification\n  • Determine the operating system\n  • Command: nmap -O <target>\n\n  Objective 5: Full Reconnaissance\n  • Run comprehensive aggressive scan and save results\n  • Command: nmap -A -T4 -oA nexacorp_recon <target>\n\n📝 Your Report Should Include:\n  • List of all live hosts discovered\n  • All open ports and their services\n  • Software versions detected\n  • Operating system identified\n  • Saved scan files for the client\n\nTASK: Complete all objectives and answer the debrief.",
+    content: `YOUR FIRST OFFICIAL MISSION
+You have learned how to use the flashlight, how to knock on the doors, and how to save your notes. Now it is time for a real mission! A pretend company called NexaCorp Industries has hired you as a professional Penetration Tester. They think they accidentally left some dangerous doors open on their main server, but they don't know which ones. They have given you legal permission to scan their systems and find out. Your job is to perform a full, professional reconnaissance sweep of their target machine and report back with everything you find. 
+
+THE FIVE OBJECTIVES
+To do a professional job, you need to follow the five steps. Objective 1: Do a Ping scan (-sn) to prove the server is actually awake. Objective 2: Run a fast scan on all 65,535 doors (-p-) to make sure no secret hacker backdoors are hiding in the high numbers. Objective 3: Once you find the open doors, use the Version Detection flag (-sV) to politely ask the doors exactly what software is running behind them. Objective 4: Use the OS Detection flag (-O) to figure out if NexaCorp is using Windows or Linux computers. Objective 5: Finally, run the giant Aggressive scan (-A) and use the save flag (-oA) to create a permanent record of your findings for the NexaCorp boss. 
+
+BEING A PROFESSIONAL
+Remember, hacking isn't just about breaking things; it is about writing good reports! When you finish your scans, you need to be able to tell the boss: "I found three computers awake. One of them has a Web Server running Apache version 2.4 on door 80, and the computer is using Linux." By saving your Nmap files, you can prove exactly what you found and help the company lock their doors before the real bad guys show up. Now open your terminal and get to work, explorer!`,
     questions: [
-      { q: "What is the first step in any network recon? (type: host discovery)", a: "host discovery" },
-      { q: "What flags would you use for a full aggressive scan with saved output? (type: -A -T4 -oA)", a: "-A -T4 -oA" },
-      { q: "What Nmap flag scans all 65535 ports?", a: "-p-" },
-      { q: "After finding services, what database do you search for vulnerabilities?", a: "CVE" },
-      { q: "Should scan results be included in the pentest report? (yes/no)", a: "yes" }
+      { q: "What is your pretend job title for this mission?", a: "Penetration Tester" },
+      { q: "Why did NexaCorp hire you to scan their computers?", a: "to see if they accidentally left dangerous doors open" },
+      { q: "What flag do you use for Objective 3 to find out exactly what software is running?", a: "-sV" },
+      { q: "What flag do you use for Objective 4 to figure out if it is Windows or Linux?", a: "-O" },
+      { q: "Why do professional hackers need to save their Nmap files? (To write good...)", a: "reports" }
     ]
   },
   {
-    title: "Capture the Flag — Nmap Challenge",
+    title: "9. Capture the Flag — Nmap Challenge",
     points: 50,
-    content: "🏁 FINAL CHALLENGE\n━━━━━━━━━━━━━━━━━\nIt is time to put everything you've learned into practice! You will scan a live target container and capture the hidden flag.\n\n🎯 Your Instructions:\n\n  1. Start both the Nmap Target Machine and the Kali Linux container above.\n  2. In your Kali terminal, perform an Nmap scan against the target hostname: host.docker.internal\n     Try a full port scan to find all open ports:\n     nmap -p- host.docker.internal\n\n  3. You should discover two open ports:\n     • Port 8880 (the public web server)\n     • Port 31337 (a secret, non-standard port!)\n\n  4. Query the secret port 31337 to extract the flag. You can use netcat (nc):\n     nc host.docker.internal 31337\n     Or run a version detection scan on that port:\n     nmap -sV -p 31337 host.docker.internal\n\n🏆 Complete the scan, find the flag, and answer the questions below to finish the lab!\n\nTASK: Submit the discovered port and flag.",
+    content: `THE ULTIMATE TEST
+This is the moment of truth! You are going to use your real Kali Linux terminal to scan a real, live target computer and capture a hidden flag. This isn't a multiple-choice test; you have to actually type the commands and find the secret. First, click the buttons to start both your Kali computer and the Target computer. Wait a few seconds for them to boot up. The target's name is "host.docker.internal". Your first mission is to find the open doors. The creators of this challenge have hidden a secret, non-standard door somewhere in the high numbers. If you just run a normal Nmap scan, you will only see the boring public web server on door 8880. You MUST use the special flag to scan all 65,535 doors to find the secret!
+
+EXTRACTING THE SECRET
+Once you run your full scan (nmap -p- host.docker.internal), you will see two open doors. One is 8880, and the other is a weird, secret 5-digit number. That secret number is where the flag is hiding! But Nmap only tells you the door is open; it doesn't automatically reach in and grab the flag. To get the flag, you have to talk to the secret door. You can do this by running a Version Detection scan exactly on that secret door (nmap -sV -p [SECRET_PORT] host.docker.internal). When Nmap politely asks the door what software it is running, the door will get confused and accidentally blurt out the secret CTF flag! 
+
+CLAIM YOUR PRIZE
+Read the Nmap output very carefully. Hidden inside the text describing the software version, you will see the flag. It will look like this: CTF{some_secret_words_here}. Copy that exact text and paste it into the answer box below to prove you have mastered the Network Mapper. Good luck, and happy hunting!`,
     questions: [
-      { q: "What is the target hostname you scanned?", a: "host.docker.internal" },
-      { q: "What is the standard HTTP port mapped on the host for this target?", a: "8880" },
-      { q: "What is the secret high port number you discovered?", a: "31337" },
-      { q: "What tool did you use to connect to port 31337 to fetch the banner? (nc/curl)", a: "nc" },
-      { q: "What is the flag you retrieved from port 31337? (format: CTF{...})", a: "CTF{n4v1g4t1ng_p0rts_w1th_nm4p}" }
+      { q: "What is the secret target name you need to scan in this challenge?", a: "host.docker.internal" },
+      { q: "What flag must you use to find the secret 5-digit door?", a: "-p-" },
+      { q: "What is the normal, boring door that Nmap finds right away?", a: "8880" },
+      { q: "What is the secret, 5-digit high door number you discovered?", a: "31337" },
+      { q: "What is the flag you retrieved from the secret door? (format: CTF{...})", a: "CTF{n4v1g4t1ng_p0rts_w1th_nm4p}" }
     ]
   }
 ];

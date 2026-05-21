@@ -37,7 +37,7 @@
             <a href="/dashboard">Dashboard</a>
             <a href="/profile">Profile</a>
             {% if user.role == 'admin' %}
-            <a href="/admin" style="color:#f1c40f; font-weight:bold;">Admin Panel ⭐</a>
+            <a href="/admin" style="color:#f1c40f; font-weight:bold;">Admin Panel </a>
             {% else %}
             <a href="/admin">Admin Panel</a>
             {% endif %}
@@ -70,7 +70,7 @@
 
         <!-- CTF Hint: Mass Assignment -->
         <div class="hint-box">
-            <h4>🔍 CTF Hint — Mass Assignment</h4>
+            <h4> CTF Hint — Mass Assignment</h4>
             <p>When you click <strong>Save Changes</strong>, the browser sends a <code>POST</code> request to <code>/api/update_profile</code> with a JSON body. Open <strong>DevTools → Network</strong> to inspect it.</p>
             <p>Notice the JSON contains a <code>user_id</code> and <code>email</code> field. What happens if you add a <code>"role"</code> field? Try pasting the snippet below into the <strong>Console</strong> tab:</p>
             <pre id="exploit-snippet">Loading...</pre>
@@ -112,10 +112,10 @@
             .then(function(res) {
                 var msg = document.getElementById('message');
                 if (res.success) {
-                    msg.textContent = '✅ ' + (res.message || 'Profile updated!');
+                    msg.textContent = ' ' + (res.message || 'Profile updated!');
                     msg.className = 'msg-ok';
                 } else {
-                    msg.textContent = '❌ ' + (res.error || 'Update failed.');
+                    msg.textContent = ' ' + (res.error || 'Update failed.');
                     msg.className = 'msg-err';
                 }
                 btn.disabled = false;
@@ -124,7 +124,7 @@
             })
             .catch(function(err) {
                 var msg = document.getElementById('message');
-                msg.textContent = '❌ Network error: ' + err;
+                msg.textContent = ' Network error: ' + err;
                 msg.className = 'msg-err';
                 btn.disabled = false;
                 btn.textContent = 'Save Changes';

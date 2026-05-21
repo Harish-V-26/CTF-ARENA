@@ -48,7 +48,7 @@
 
     /* Terminal preview */
     .terminal-preview{background:#0a0a0a;border:1px solid rgba(0,255,65,.2);border-radius:8px;padding:16px;margin:20px 0;font-family:var(--font-mono);font-size:13px;color:#00ff41;line-height:1.8;position:relative;overflow:hidden}
-    .terminal-preview::before{content:'┌── Terminal ──┐';display:block;color:rgba(0,255,65,.4);font-size:11px;margin-bottom:8px}
+    .terminal-preview::before{content:' Terminal ';display:block;color:rgba(0,255,65,.4);font-size:11px;margin-bottom:8px}
     .terminal-preview .prompt{color:#00cc33}
     .terminal-preview .cmd{color:#00ff41}
     .terminal-preview .output{color:rgba(0,255,65,.6)}
@@ -85,7 +85,7 @@
     <a href="../../../challenges.html" class="active">Challenges</a>
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile ▾</a>
+      <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content">
         <a href="#">Dashboard</a>
         <a href="#">Settings</a>
@@ -116,15 +116,15 @@
     <!-- Hero -->
     <div class="nmap-hero">
       <div class="badge-row">
-        <span class="nmap-badge">🔍 Reconnaissance</span>
+        <span class="nmap-badge"> Reconnaissance</span>
         <span class="nmap-badge">Easy</span>
         <span class="nmap-badge">11 Lessons</span>
       </div>
       <h1>$ Introduction to Nmap_</h1>
       <p>Learn to use Nmap in Kali Linux to discover live hosts, scan open ports, detect services & versions, fingerprint operating systems, and perform full reconnaissance on target networks.</p>
       <div class="terminal-preview">
-        <div><span class="prompt">┌──(kali㉿kali)-[~]</span></div>
-        <div><span class="prompt">└─$</span> <span class="cmd">nmap -A -T4 10.10.10.5</span></div>
+        <div><span class="prompt">(kalikali)-[~]</span></div>
+        <div><span class="prompt">$</span> <span class="cmd">nmap -A -T4 10.10.10.5</span></div>
         <div class="output">Starting Nmap 7.94 ( https://nmap.org )</div>
         <div class="output">Nmap scan report for 10.10.10.5</div>
         <div class="output">PORT   STATE SERVICE VERSION</div>
@@ -146,10 +146,10 @@
 
       <!-- Target Launch -->
       <div class="docker-launch" id="target-panel" style="border-left-color: #3498db; margin-bottom: 16px;">
-        <h3 style="color:#3498db">🎯 Nmap Target Machine</h3>
+        <h3 style="color:#3498db"> Nmap Target Machine</h3>
         <p>Spin up a private target machine with multiple hidden ports and services to perform reconnaissance against.</p>
         <button id="target-launch-btn" class="btn-launch" style="background:#3498db;color:#fff" onclick="launchTarget()">Launch Target Machine ⇗</button>
-        <button id="target-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopTarget()">Stop Target 🛑</button>
+        <button id="target-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopTarget()">Stop Target </button>
         <p id="target-msg" style="display:none;color:#3498db;font-weight:bold;margin-top:12px"></p>
         <div id="target-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid rgba(52,152,219,.2)">
           <p style="color:var(--text-muted);margin-top:0;font-size:.85rem">Target is running. Scan the following hostname from your Kali container:</p>
@@ -159,10 +159,10 @@
 
       <!-- Kali Launch -->
       <div class="docker-launch" id="kali-panel">
-        <h3>🐉 Kali Linux — Attack Box</h3>
+        <h3> Kali Linux — Attack Box</h3>
         <p>Spin up a private Kali container pre-loaded with Nmap and all recon tools.</p>
         <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Launch Kali Machine ⇗</button>
-        <button id="kali-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopKali()">Stop Kali 🛑</button>
+        <button id="kali-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopKali()">Stop Kali </button>
         <p id="kali-msg" style="display:none;color:#00ff41;font-weight:bold;margin-top:12px"></p>
         <div id="kali-terminal-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid rgba(0,255,65,.2)">
           <p style="color:var(--text-muted);margin-top:0;font-size:.85rem">Your Kali container is ready. Connect via terminal:</p>
@@ -173,17 +173,17 @@
       <!-- Hints Section -->
       <div id="hints-panel" style="margin-bottom:10px">
         <div class="hint-box" id="hint-1">
-          <div class="hint-header" onclick="toggleHint('hint-1')"><span>💡 Common Nmap Flags</span><span class="hint-arrow">▶</span></div>
+          <div class="hint-header" onclick="toggleHint('hint-1')"><span> Common Nmap Flags</span><span class="hint-arrow"></span></div>
           <div class="hint-body">
             <code>-sn</code> Ping scan · <code>-sS</code> SYN scan · <code>-sV</code> Version detect · <code>-O</code> OS detect · <code>-A</code> Aggressive · <code>-p-</code> All ports · <code>-T4</code> Fast timing · <code>-oA</code> Save all formats
           </div>
         </div>
         <div class="hint-box" id="hint-2">
-          <div class="hint-header" onclick="toggleHint('hint-2')"><span>⚖️ Ethical Hacking Reminder</span><span class="hint-arrow">▶</span></div>
+          <div class="hint-header" onclick="toggleHint('hint-2')"><span> Ethical Hacking Reminder</span><span class="hint-arrow"></span></div>
           <div class="hint-body">Always obtain written authorization before scanning any network. Unauthorized scanning is illegal. This lab uses isolated containers for safe practice.</div>
         </div>
         <div class="hint-box" id="hint-3">
-          <div class="hint-header" onclick="toggleHint('hint-3')"><span>🔢 Port Number Basics</span><span class="hint-arrow">▶</span></div>
+          <div class="hint-header" onclick="toggleHint('hint-3')"><span> Port Number Basics</span><span class="hint-arrow"></span></div>
           <div class="hint-body">Ports 0-1023: Well-known (SSH=22, HTTP=80, HTTPS=443). Ports 1024-49151: Registered. Ports 49152-65535: Dynamic/private. Total: 65,536 ports.</div>
         </div>
       </div>
@@ -197,18 +197,18 @@
       <!-- Lesson panel -->
       <div id="lesson-panel">
         <div class="reading-panel">
-          <div class="reading-label"><span>📖</span> Instructions &amp; Tasks</div>
+          <div class="reading-label"><span></span> Instructions &amp; Tasks</div>
           <div class="reading-text" id="reading-text" style="white-space:pre-wrap"></div>
         </div>
         <div class="qa-section" id="qa-section">
-          <div class="qa-heading">✏️ Check Your Understanding</div>
+          <div class="qa-heading"> Check Your Understanding</div>
           <div id="questions-container"></div>
         </div>
       </div>
 
       <!-- Completion -->
       <div class="completion-card" id="completion-card">
-        <div class="trophy-icon">🏆</div>
+        <div class="trophy-icon"></div>
         <h2 style="color:#00ff41">Reconnaissance Complete!</h2>
         <p>You've mastered the fundamentals of Nmap! You earned the <strong style="color:#00ff41">Recon Beginner</strong> achievement.</p>
         <div class="score-pill" id="score-pill">0 / 320 pts</div>
@@ -394,7 +394,7 @@ window.addEventListener('beforeunload',()=>{
           <button class="check-btn" id="btn-${idx}-${qi}" onclick="checkAnswer(${idx},${qi})" ${answered[idx][qi]?'disabled':''}>Check</button>
         </div>
         <div class="feedback${answered[idx][qi]?' correct-msg show':''}" id="fb-${idx}-${qi}">
-          ${answered[idx][qi]?'✅ Correct! '+l.questions[qi].a:''}
+          ${answered[idx][qi]?' Correct! '+l.questions[qi].a:''}
         </div>
       </div>`).join('');
   }
@@ -419,11 +419,11 @@ window.addEventListener('beforeunload',()=>{
     const fb=document.getElementById(`fb-${lesson}-${qi}`),qc=document.getElementById(`qc-${lesson}-${qi}`);
     if(ok){
       answered[lesson][qi]=true;qc.classList.add('correct');
-      fb.className='feedback correct-msg show';fb.textContent='✅ Correct! '+correct;
+      fb.className='feedback correct-msg show';fb.textContent=' Correct! '+correct;
       input.disabled=true;document.getElementById(`btn-${lesson}-${qi}`).disabled=true;
       updateProgress();
     }else{
-      qc.classList.add('wrong');fb.className='feedback wrong-msg show';fb.textContent='❌ Not quite — try again.';
+      qc.classList.add('wrong');fb.className='feedback wrong-msg show';fb.textContent=' Not quite — try again.';
       setTimeout(()=>{qc.classList.remove('wrong');fb.classList.remove('show')},2000);
     }
   }

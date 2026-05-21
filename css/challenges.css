@@ -2,7 +2,7 @@
    CTF LABS — Challenges Page Styles
    ================================================ */
 
-/* ─── PAGE HERO ─── */
+/*  PAGE HERO  */
 .page-hero {
   padding: 80px 40px 60px;
   text-align: center;
@@ -40,7 +40,7 @@
   margin: 0 auto;
 }
 
-/* ─── FILTER BAR ─── */
+/*  FILTER BAR  */
 .filter-bar {
   display: flex;
   align-items: center;
@@ -107,7 +107,7 @@
 
 .search-icon { color: var(--text-muted); font-size: 16px; }
 
-/* ─── CHALLENGES GRID ─── */
+/*  CHALLENGES GRID  */
 .challenges-section { padding-bottom: 100px; }
 
 .challenges-grid {
@@ -116,7 +116,7 @@
   gap: 24px;
 }
 
-/* ─── CHALLENGE CARD ─── */
+/*  CHALLENGE CARD  */
 .challenge-card {
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -248,7 +248,7 @@
   color: #000;
 }
 
-/* ─── EMPTY STATE ─── */
+/*  EMPTY STATE  */
 .empty-state {
   text-align: center;
   padding: 80px 20px;
@@ -261,7 +261,7 @@
 .empty-icon { font-size: 56px; margin-bottom: 16px; }
 .empty-state h3 { font-size: 22px; color: var(--text-primary); margin-bottom: 8px; }
 
-/* ─── CHALLENGE MODAL ─── */
+/*  CHALLENGE MODAL  */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -371,7 +371,7 @@
   gap: 8px;
 }
 .modal-list li::before {
-  content: '✓';
+  content: '';
   color: var(--accent);
   font-weight: bold;
 }

@@ -45,12 +45,12 @@ def handle_port_31337(client_socket):
     try:
         # Send flag upon connection
         msg = (
-            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-            "🔓 SecureCorp Internal Flag Server 1.0\n"
-            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            "\n"
+            " SecureCorp Internal Flag Server 1.0\n"
+            "\n"
             "Access Granted.\n\n"
             "Flag: CTF{n4v1g4t1ng_p0rts_w1th_nm4p}\n"
-            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            "\n"
         )
         client_socket.sendall(msg.encode('utf-8'))
     except Exception as e:

@@ -5,7 +5,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
-/* ─── Reset & Tokens ─── */
+/*  Reset & Tokens  */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -43,12 +43,12 @@ body {
   line-height: 1.6;
 }
 
-/* ─── Scrollbar ─── */
+/*  Scrollbar  */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-base); }
 ::-webkit-scrollbar-thumb { background: var(--accent-dim); border-radius: 3px; }
 
-/* ─── NAVBAR ─── */
+/*  NAVBAR  */
 .navbar {
   position: sticky;
   top: 0;
@@ -113,7 +113,7 @@ body {
   width: 100%;
 }
 
-/* ─── DROPDOWN ─── */
+/*  DROPDOWN  */
 .dropdown { position: relative; }
 
 .dropdown-content {
@@ -153,7 +153,7 @@ body {
 
 .dropdown:hover .dropdown-content { display: block; }
 
-/* ─── SHARED SECTION HEADER ─── */
+/*  SHARED SECTION HEADER  */
 .section-header {
   text-align: center;
   margin-bottom: 56px;
@@ -175,7 +175,7 @@ body {
   margin-right: auto;
 }
 
-/* ─── BADGE PILL ─── */
+/*  BADGE PILL  */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -191,7 +191,7 @@ body {
   border: 1px solid rgba(255, 77, 109, 0.3);
 }
 
-/* ─── BUTTONS ─── */
+/*  BUTTONS  */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -230,7 +230,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* ─── CARD ─── */
+/*  CARD  */
 .card {
   background: var(--bg-surface);
   padding: 28px;
@@ -258,7 +258,7 @@ body {
   line-height: 1.65;
 }
 
-/* ─── FOOTER ─── */
+/*  FOOTER  */
 footer {
   background: var(--bg-surface);
   text-align: center;
@@ -276,7 +276,7 @@ footer a {
 
 footer a:hover { text-decoration: underline; }
 
-/* ─── UTILITY ─── */
+/*  UTILITY  */
 .container {
   max-width: 1200px;
   margin: 0 auto;

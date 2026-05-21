@@ -1,237 +1,116 @@
 const LESSONS = [
   {
-    title: "Introduction to Brute Force Attacks",
+    title: "1. The Giant Keychain",
     points: 10,
-    content: `A brute force attack is a trial-and-error method used by attackers to decode sensitive data, most commonly passwords or encryption keys. It is the digital equivalent of trying every key on a keychain until one opens the door.
+    content: `WHAT IS A BRUTE FORCE ATTACK?
+Imagine you find a heavy, locked treasure chest. You know there is a key somewhere, but instead of finding it, you bring a giant ring with a million different keys on it. You sit there and try every single key, one by one, until finally, one of them turns the lock! This is exactly what a Brute Force Attack is in the computer world. Hackers want to break into your accounts, but they don't know your password. So, they use a computer program to rapidly try thousands of different passwords, over and over, until they accidentally guess the right one. It is not very sneaky or clever; it is just using pure computer muscle to smash the door open. 
 
-WHAT DO THEY TARGET?
-- Login pages (web applications, SSH, FTP, RDP)
-- Encrypted files and ZIP archives
-- Password hashes stolen from databases
-- Authentication tokens and API keys
-- Wi-Fi WPA/WPA2 handshakes
+WHY DOES IT WORK?
+You might think guessing passwords would take forever. If a hacker has to try every single combination of letters and numbers (like "aaaaa", then "aaaab", then "aaaac"), it would take millions of years! But computers are incredibly fast. A normal computer can guess thousands of passwords a second. And if a hacker uses a special computer built for video games (using a GPU), they can sometimes guess billions of passwords every single second! Because so many people use terrible, short passwords like "12345" or "qwerty," the hacker's super-fast guessing machine will unlock the account almost instantly. 
 
-WHY USE BRUTE FORCE?
-Despite being one of the oldest attack methods, it remains highly effective because human beings are terrible at creating strong, unique passwords. If an attacker has enough time and computing power, a simple brute force attack will eventually crack any weak credential.
-
-HOW LONG DOES IT TAKE?
-The time depends on the password's character space and length:
-  4-digit PIN (10^4):       10,000 guesses → cracked in seconds
-  6 lowercase letters:      308 million guesses → cracked in minutes
-  8 mixed characters:       200+ trillion guesses → could take years on a single CPU
-  But with GPUs: modern hardware can test billions of hashes per second.
-
-REAL-WORLD SCENARIO:
-An attacker discovers an exposed administrative login panel for a company's website. They configure an automated script to submit combinations of common usernames (like "admin" or "root") and passwords until the server grants them access.
-
-TYPES OF BRUTE FORCE ATTACKS:
-  1. Simple Brute Force — tries every possible combination.
-  2. Dictionary Attack — uses a wordlist of common passwords.
-  3. Hybrid Attack — combines dictionary words with numbers/symbols.
-  4. Credential Stuffing — reuses leaked username/password pairs.
-  5. Password Spraying — tests one password against many accounts.`,
+WHAT DO THEY ATTACK?
+Hackers don't just attack website login screens. They also use the giant keychain to unlock secret, encrypted ZIP files that hold private company documents. If a hacker breaks into a website and steals the giant database file where everyone's passwords are saved (which are usually scrambled up to protect them), the hacker takes that scrambled file home. They put it into their giant, roaring guessing machine and let it run for weeks, trying to unscramble all the passwords so they can sell them on the internet.`,
     questions: [
-      { q: "What attack method uses trial-and-error to decode sensitive data or passwords?", a: "Brute Force" },
-      { q: "Why do brute force attacks remain highly effective today?", a: "Because humans create weak passwords" },
-      { q: "Besides login pages, what is another common target for brute force attacks?", a: "Encrypted files (or password hashes, tokens)" },
-      { q: "What hardware is commonly used to massively speed up brute force attacks?", a: "GPUs (Graphics Processing Units)" },
-      { q: "What type of brute force attack tries every single possible character combination?", a: "Simple Brute Force" }
+      { q: "What attack involves trying passwords over and over like testing keys on a giant ring?", a: "Brute Force" },
+      { q: "Why are these attacks still so successful today?", a: "Because humans create weak passwords" },
+      { q: "What do hackers use besides login screens to test their guessing machines?", a: "Encrypted files (or password hashes, tokens)" },
+      { q: "What special computer part (used for video games) makes guessing incredibly fast?", a: "GPUs (Graphics Processing Units)" },
+      { q: "What do we call the simplest attack that tries every single letter combination (a, b, c...)?", a: "Simple Brute Force" }
     ]
   },
   {
-    title: "Dictionary Attacks & Weak Passwords",
+    title: "2. The Hacker's Dictionary",
     points: 10,
-    content: `A pure brute force attack tries every possible character combination (a, b, c... aa, ab...). This takes an impossibly long time for long passwords. To speed things up, attackers use Dictionary Attacks.
+    content: `WHAT IS A DICTIONARY ATTACK?
+Instead of guessing random nonsense letters like "x-q-z-b-f", which takes forever, hackers realized they could save a lot of time. Humans aren't very creative when making passwords. Most people use normal words like "football", "summer", or "password". So, hackers created massive text files called "Wordlists." These files are literally just giant dictionaries containing millions of normal words. When a hacker uses a program to read down this list and try every word as a password, it is called a "Dictionary Attack." It is much, much faster than a Simple Brute Force attack because the computer isn't wasting time guessing words that don't make sense.
 
-WHAT IS A DICTIONARY ATTACK?
-Instead of trying random characters, the attacker uses a pre-compiled list of common words, phrases, and leaked passwords (called a "wordlist"). The most famous wordlist is the "RockYou.txt" list, which contains over 14 million common passwords leaked in the 2009 RockYou breach.
+THE ROCKYOU FILE
+Over the years, many big websites have been hacked, and the hackers stole all the passwords. The hackers took all those real passwords and mashed them together into the ultimate hacker dictionary. The most famous dictionary in the entire world is called "RockYou.txt." It contains over 14 million passwords that real, living people actually used on the internet! If you use a password that is anywhere in that file, a hacker's computer will guess your password in less than a second. 
 
-THE RISK OF WEAK PASSWORDS:
-If your password is "password123", "qwerty", or "summer2024", it is already in every attacker's wordlist. A dictionary attack will guess these passwords in milliseconds.
-
-TOP 10 MOST COMMON PASSWORDS (still used today):
-  1. 123456         6. password1
-  2. password       7. abc123
-  3. 12345678       8. iloveyou
-  4. qwerty         9. 111111
-  5. 123456789     10. welcome
-
-HYBRID ATTACKS:
-A hybrid attack combines a dictionary attack with brute force. It takes words from a dictionary and appends common numbers or symbols.
-Example: The attacker's list has the word "football". The hybrid attack will try "football1", "football123", "football!", and "Football@1".
-
-RULE-BASED ATTACKS (Hashcat Rules):
-Advanced tools like Hashcat apply transformation rules to wordlists:
-  - Capitalize first letter: football → Football
-  - Append year:            football → football2024
-  - Leet substitution:      football → f00tb@ll
-  - Reverse:                football → llabtoof
-This dramatically multiplies the effectiveness of a wordlist without storing all variants.`,
+MIXING IT UP (HYBRID ATTACKS)
+Hackers know that sometimes people try to be a little bit tricky. Someone might take a dictionary word like "football" and add the year to the end, making it "football2024." To catch these people, hackers use a "Hybrid Attack." Their guessing machine takes a word from the dictionary and automatically adds numbers and symbols to the end. It will try "football1", "football!", and "football123". The smartest hacking machines even have "Rules." These rules tell the machine to take a dictionary word and capitalize the first letter, or change the letter "o" into the number "0" (like f00tball). This multiplies the power of the dictionary, making the attack incredibly dangerous!`,
     questions: [
-      { q: "What type of attack uses a pre-compiled list of common words and passwords?", a: "Dictionary Attack" },
-      { q: "What is the name of the famous wordlist containing over 14 million common passwords?", a: "RockYou" },
-      { q: "What type of attack combines dictionary words with random numbers and symbols?", a: "Hybrid Attack" },
-      { q: "In what year was the RockYou password list leaked?", a: "2009" },
-      { q: "What does a rule-based attack (e.g., in Hashcat) do to a wordlist?", a: "Applies transformations like capitalization, number appending, or leet substitution" }
+      { q: "What attack uses a giant list of normal words to guess passwords faster?", a: "Dictionary Attack" },
+      { q: "What is the name of the most famous hacker dictionary with 14 million passwords?", a: "RockYou" },
+      { q: "What attack takes dictionary words and adds numbers or symbols to them?", a: "Hybrid Attack" },
+      { q: "In what year was the famous RockYou list leaked?", a: "2009" },
+      { q: "What do advanced hacking machines use to capitalize letters or change letters to numbers?", a: "Rules (or transformation rules)" }
     ]
   },
   {
-    title: "Credential Stuffing & Password Spraying",
+    title: "3. Stuffing the Box",
     points: 10,
-    content: `Attackers have adapted to modern security defenses by developing smarter brute force techniques that are harder to detect.
+    content: `WHAT IS CREDENTIAL STUFFING?
+Hackers have gotten even smarter in recent years. They realized that trying millions of passwords against one account makes a lot of noise and sets off security alarms. So, they invented a sneaky attack called "Credential Stuffing." When a giant website (like a video game company or a forum) gets hacked, the bad guys steal a massive list of usernames and the exact passwords that match them. Because humans are very lazy, they often use the exact same username and password on every single website they visit! The hacker takes that stolen list and automatically "stuffs" those exact username and password pairs into the login screens of thousands of completely different websites, like banks and email providers. If your forum account got hacked, the bad guy instantly has the key to your bank account, too!
 
-CREDENTIAL STUFFING:
-When a website is breached, the stolen username and password pairs are sold on the dark web. In a credential stuffing attack, attackers take these leaked pairs and automatically inject ("stuff") them into other, unrelated websites (like banks, gaming sites, or email providers).
-Why it works: People frequently reuse the same password across multiple websites. If your forum account is breached, your bank account is now at risk.
+THE SNEAKY SPRAY ATTACK
+Another very clever trick hackers use to avoid setting off alarms is called "Password Spraying." Normally, a brute force attack tries a thousand passwords on one single user account. The website sees this, gets suspicious, and locks the account to keep it safe. But in a Spray attack, the hacker does the exact opposite! The hacker gathers a list of a thousand different usernames. Then, they take just ONE very common password (like "Winter2024!") and "spray" it across all one thousand accounts. Because each account only sees one single bad guess, the security alarm never rings! 
 
-SCALE OF THE PROBLEM:
-The "Have I Been Pwned" (HIBP) database contains over 12 billion breached accounts. Criminals have automated tools that can test thousands of credential pairs per second against multiple sites simultaneously.
-
-CREDENTIAL STUFFING TOOLS:
-  - SentryMBA: Configurable credential stuffing framework.
-  - OpenBullet: Open-source automation tool used for stuffing.
-  - SNIPR: Specialized tool targeting specific website configs.
-
-PASSWORD SPRAYING:
-Traditional brute force targets one account with thousands of passwords. This is noisy and triggers account lockouts.
-Password Spraying does the opposite: it targets thousands of different accounts, but only tries a few common passwords (e.g., "Welcome1!", "Winter2024") on each account.
-Why it works: It avoids triggering security alerts and account lockouts because each account only registers a single failed login attempt.
-
-PASSWORD SPRAYING TIMING:
-Attackers often wait 30-60 minutes between spray attempts to stay below lockout thresholds. This makes detection even harder for blue teams.
-
-DIFFERENCE SUMMARY:
-  Credential Stuffing → Known credentials, many sites.
-  Password Spraying   → Common passwords, many accounts, same site.`,
+WAITING IN THE SHADOWS
+To be even sneakier, hackers who use the Spray attack will often wait a very long time between guesses. They might try one password, wait 45 minutes, and then try another one. They do this because they know the security guards are looking for fast, robotic clicking. By moving incredibly slowly, the hacker blends in with normal traffic, making it almost impossible for the website's defenders to realize an attack is happening until it is too late!`,
     questions: [
-      { q: "What attack uses stolen username/password pairs from one breach to log into other websites?", a: "Credential Stuffing" },
-      { q: "Why is credential stuffing so successful against modern users?", a: "Because users reuse passwords" },
-      { q: "What attack tries a single common password against thousands of different accounts to avoid lockouts?", a: "Password Spraying" },
-      { q: "What well-known website lets you check if your email has appeared in a data breach?", a: "Have I Been Pwned (HIBP)" },
-      { q: "Why do password spraying attackers wait 30-60 minutes between attempts?", a: "To stay below account lockout thresholds and avoid detection" }
+      { q: "What attack takes stolen username and password pairs and uses them on other websites?", a: "Credential Stuffing" },
+      { q: "Why does the Stuffing attack work so well on humans?", a: "Because users reuse the same password on many websites" },
+      { q: "What attack tries one common password against thousands of different accounts to avoid alarms?", a: "Password Spraying" },
+      { q: "What website lets you check if your password was stolen in a big hack?", a: "Have I Been Pwned (HIBP)" },
+      { q: "Why do Spray attackers wait 45 minutes between their guesses?", a: "To stay below alarms and avoid getting locked out" }
     ]
   },
   {
-    title: "Defending Against Brute Force: Policies & MFA",
+    title: "4. Building a Stronger Door (Defense)",
     points: 10,
-    content: `The best way to stop brute force attacks is to implement layers of defense that make the attack computationally expensive or impossible.
+    content: `HOW TO MAKE AN UNBREAKABLE KEY
+If hackers have giant supercomputers guessing passwords, how do we stop them? The absolute best defense is to make a password that is incredibly long. Length is much more important than weird symbols. A password like "purpledinosaurridingabicycle" is much, much harder for a supercomputer to guess than "P@ssw0rd1!". This is because every single letter you add makes the math problem millions of times harder for the computer to solve. To remember these long passwords, you should use a "Password Manager," which is a digital vault that creates and stores a different, super-long password for every single website you visit.
 
-STRONG PASSWORD POLICIES:
-Require passwords to be long (12+ characters) and complex. Length is mathematically more important than complexity. A 16-character password of random lowercase letters is much harder to brute force than an 8-character password with symbols.
+THE SECOND LOCK (MFA)
+Even if you have a perfect password, a hacker might trick you into giving it to them. This is why every important website uses "Multi-Factor Authentication" (MFA). Imagine a vault with two completely different locks. The first lock is your password (something you know). The second lock is a special code that pops up on your mobile phone (something you have). If a hacker in another country steals your password and tries to log in, the vault stops them and says, "Okay, now type the code from your phone!" Since the hacker doesn't have your physical phone in their hand, they are completely locked out. MFA stops 99% of all hacker attacks!
 
-Password Entropy:
-Entropy measures unpredictability. Higher entropy = harder to crack.
-  6 lowercase chars:  ~28 bits of entropy → cracked easily
-  12 random chars:    ~71 bits of entropy → safe for years
-  16 random chars:    ~95 bits of entropy → practically uncrackable
-
-PASSWORD MANAGERS:
-Encourage users to use Password Managers. These tools generate and store 20+ character random passwords for every site, completely eliminating password reuse and dictionary attacks.
-Popular managers: Bitwarden (free, open-source), 1Password, Dashlane, KeePass.
-
-MULTI-FACTOR AUTHENTICATION (MFA):
-MFA requires the user to provide two or more verification factors to gain access.
-  1. Something you know (a password).
-  2. Something you have (a phone app generating a code, or a hardware security key).
-  3. Something you are (biometrics — fingerprint, face scan).
-
-Even if an attacker brute forces your password, they cannot log in without physically possessing your second factor. MFA stops 99.9% of automated account takeover attacks (per Microsoft research).
-
-TYPES OF MFA:
-  - TOTP (Time-based One-Time Password): Google Authenticator, Authy.
-  - SMS OTP: One-time code via text (weaker — SIM swap attacks possible).
-  - Hardware Keys: YubiKey, FIDO2 — the strongest form.
-  - Push Notifications: Microsoft Authenticator app approvals.
-
-PASSKEYS (FIDO2):
-Passkeys are the next evolution — they use cryptographic key pairs stored on your device. They are completely phishing-resistant and immune to brute force since no password is ever transmitted.`,
+THE FUTURE OF KEYS
+Passwords are fundamentally broken because humans are bad at making them. The internet is slowly moving to a new system called "Passkeys." With a Passkey, you don't even have a password to type! Instead, your phone or computer holds a secret, invisible cryptographic key. When you want to log in, the website asks your phone to unlock the door, and you just use your fingerprint or face scan to say "Yes, it's me." Because there is no password to type, there is absolutely nothing for a hacker to steal or guess. It makes brute force attacks completely impossible!`,
     questions: [
-      { q: "When creating a secure password, what is more important: length or complexity?", a: "Length" },
-      { q: "What tool helps users generate and store long, unique passwords for every website?", a: "Password Manager" },
-      { q: "What defense requires a second form of verification, like a code from a phone app?", a: "Multi-Factor Authentication (or MFA)" },
-      { q: "What does TOTP stand for?", a: "Time-based One-Time Password" },
-      { q: "What modern standard uses cryptographic key pairs stored on your device, making it phishing-resistant?", a: "Passkeys (or FIDO2)" }
+      { q: "When creating a safe password to beat a supercomputer, what is more important: length or weird symbols?", a: "Length" },
+      { q: "What digital vault creates and stores a different long password for every website you use?", a: "Password Manager" },
+      { q: "What defense puts a second lock on the door, like sending a code to your phone?", a: "Multi-Factor Authentication (or MFA)" },
+      { q: "What does the 'T' stand for in TOTP (the special code app on your phone)?", a: "Time-based (Time-based One-Time Password)" },
+      { q: "What new technology uses fingerprints instead of typed passwords, making hacking impossible?", a: "Passkeys (or FIDO2)" }
     ]
   },
   {
-    title: "Defending Against Brute Force: Application Controls",
+    title: "5. Traps for the Hackers",
     points: 10,
-    content: `Web applications must enforce strict controls on their login pages to stop automated attack scripts.
+    content: `THE ANGRY BOUNCER
+Websites have to fight back against the robot guessing machines. The most common way they do this is with an "Account Lockout" policy. Imagine a very strict bouncer at the door of a club. If you tell the bouncer the wrong secret password five times in a row, the bouncer crosses his arms and says, "You are locked out! Come back in 15 minutes." This completely breaks the hacker's guessing machine. If the hacker has to wait 15 minutes after every five guesses, it will take them thousands of years to try all the words in their dictionary! 
 
-ACCOUNT LOCKOUTS:
-Temporarily lock the user's account after a certain number of failed login attempts (e.g., 5 failed attempts locks the account for 15 minutes). This entirely prevents traditional brute force against a single account.
+SLOWING THEM DOWN
+Sometimes, hackers try to be sneaky and attack hundreds of different accounts from the same computer. To stop this, websites use "Rate Limiting." The bouncer looks at the hacker's IP address (their computer's home address) and says, "You are only allowed to make 10 guesses per minute, total!" If the hacker tries to guess 11 times, the bouncer throws the guesses in the trash. Hackers try to get around this by using "botnets," which is a giant army of infected computers all around the world. The hacker makes each infected computer send one guess, so the bouncer doesn't realize it's all coming from the same bad guy!
 
-Limitation: Attackers can weaponize lockouts for Denial-of-Service — intentionally locking out every account to prevent legitimate users from logging in. A better approach is progressive delays (increasing wait time after each failure).
-
-RATE LIMITING:
-Limit the number of login requests an IP address can make within a specific timeframe (e.g., max 10 requests per minute). This slows down automated tools, making dictionary attacks impractical.
-
-Limitation: Attackers can rotate IP addresses using botnets or residential proxies to bypass per-IP rate limits.
-
-CAPTCHA:
-(Completely Automated Public Turing test to tell Computers and Humans Apart). Requires the user to identify objects in images or solve puzzles before logging in. This is highly effective at stopping automated scripts from submitting forms.
-Types:
-  - reCAPTCHA v2: Click "I'm not a robot" checkbox.
-  - reCAPTCHA v3: Invisible, runs in background — scores behavior.
-  - hCaptcha: Privacy-focused alternative to Google reCAPTCHA.
-
-GEO-BLOCKING & DEVICE FINGERPRINTING:
-Block login attempts from unexpected geographic locations or unrecognized devices. If a user usually logs in from India and suddenly gets a login attempt from Russia, flag it immediately.
-
-MONITORING & ALERTING:
-Security teams should actively monitor logs for:
-  - Massive spikes in failed login attempts
-  - Single IP trying many different accounts
-  - Unusual geographic login locations
-  - High rate of "account not found" errors
-
-HONEYPOT ACCOUNTS:
-Create fake admin accounts like "administrator" or "root" that no real user would use. Any login attempt to these accounts is guaranteed to be an attacker — immediately block their IP.`,
+THE SQUIGGLY LETTERS AND FAKE ACCOUNTS
+To prove you are not a robotic guessing machine, websites make you solve a puzzle called a CAPTCHA. You have to click pictures of traffic lights or type out squiggly, hard-to-read letters. Robots are terrible at reading squiggly letters, so they get stuck at the puzzle and can't even try to guess the password. The sneakiest trick of all is a "Honeypot Account." A website creator will make a fake account named "administrator" and never tell anyone about it. Since no real human knows the account exists, if anyone ever tries to log into it, the website instantly knows it is a hacker guessing passwords! The website immediately blocks the hacker's computer from the entire internet.`,
     questions: [
-      { q: "What mechanism locks an account after multiple failed login attempts?", a: "Account Lockout" },
-      { q: "What defense limits the number of requests an IP address can make in a given timeframe?", a: "Rate Limiting" },
-      { q: "What mechanism forces a user to solve an image puzzle to prove they are not a robot?", a: "CAPTCHA" },
-      { q: "How can attackers bypass per-IP rate limiting?", a: "By rotating IP addresses using botnets or proxies" },
-      { q: "What is a honeypot account in the context of brute force defense?", a: "A fake account designed to detect attackers — any login attempt to it signals an attack" }
+      { q: "What policy locks the door for 15 minutes after you type the wrong password five times?", a: "Account Lockout" },
+      { q: "What defense tells a computer they are only allowed to make 10 guesses per minute?", a: "Rate Limiting" },
+      { q: "What puzzle forces you to read squiggly letters to prove you are a human and not a robot?", a: "CAPTCHA" },
+      { q: "How do hackers get around Rate Limiting by using infected computers?", a: "By rotating IP addresses (using botnets or proxies)" },
+      { q: "What is the secret fake account called that websites use to catch hackers?", a: "A Honeypot account" }
     ]
   },
   {
-    title: "Ethical Testing Tools for Brute Force",
+    title: "6. The Hacker's Tools",
     points: 10,
-    content: `Security professionals and penetration testers use specialized tools to test the strength of passwords and the resilience of authentication portals. Always obtain explicit written permission before testing!
+    content: `THE PROFESSIONAL LOCKPICKS
+Just like a locksmith needs special tools to open a safe, cybersecurity professionals use special guessing tools to test how strong a company's passwords really are. Remember, it is incredibly illegal to use these tools on computers you do not own! One of the most famous and fastest tools is called "Hydra." It is a network logon cracker. You open a terminal, point Hydra at a server (like a website or an email server), hand it the giant RockYou dictionary, and tell it to go to work. Hydra will fire thousands of guesses at the server's front door until it breaks in. Another tool very similar to Hydra is called "Medusa," which is built for extreme speed and testing lots of computers all at the exact same time.
 
-HYDRA (THC-Hydra):
-A very fast network logon cracker. It supports numerous protocols (SSH, FTP, HTTP, SMB, RDP, SMTP) and allows testers to launch automated dictionary attacks against network services.
-Example usage:
-  hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.10
-  hydra -L users.txt -P pass.txt http-post-form "/login:user=^USER^&pass=^PASS^:Invalid"
+THE OFFLINE CRACKING MACHINES
+Sometimes, a hacker breaks into a website and steals the giant filing cabinet containing everyone's passwords. The passwords are scrambled up (hashed) so nobody can read them. To unscramble them, the hacker takes the file home and uses an "Offline Cracking" tool. The most famous offline tools are "John the Ripper" and "Hashcat." These tools don't talk to the internet at all. They just sit on the hacker's super-fast video game computer and try millions of different dictionary words, scrambling each word to see if it perfectly matches the stolen scrambled passwords. Hashcat is so powerful that it can guess billions of passwords every single second using the computer's graphics card!
 
-MEDUSA:
-Similar to Hydra but designed for speed and parallel connections. Supports HTTP, FTP, SSH, MSSQL, MySQL, and more. Often preferred for large-scale testing.
-
-BURP SUITE INTRUDER:
-A highly customizable tool used to automate customized web attacks. Testers configure Intruder to perform password spraying or credential stuffing specifically against custom web application login forms.
-Attack Types:
-  - Sniper: One payload set, one position at a time.
-  - Cluster Bomb: Multiple payload sets tested in all combinations.
-  - Pitchfork: Multiple payload sets tested in parallel.
-
-JOHN THE RIPPER & HASHCAT:
-These are offline password cracking tools. If a penetration tester manages to steal the database of password hashes, they will load those hashes into John or Hashcat and use high-end graphics cards (GPUs) to brute force the hashes locally, at millions of guesses per second.
-  John the Ripper: Great for beginners, handles many hash types automatically.
-  Hashcat: Faster, GPU-accelerated, supports 300+ hash algorithms.
-  Example: hashcat -m 0 hashes.txt rockyou.txt   (mode 0 = MD5)
-
-WFUZZ:
-A web application fuzzer excellent for brute-forcing directories, files, and login forms. Often used to discover hidden admin panels before launching brute force.
-
-Important: These tools are strictly for use on systems you have explicit permission to test!`,
+THE INTRUDER
+If a professional wants to attack a very specific, custom website, they use the "Intruder" tool built inside Burp Suite (the magical toll booth we learned about). Intruder lets the hacker take a web request, highlight the password box, and say, "Fire the dictionary right here!" Intruder will automatically swap out the password, send the request, read the website's answer, and highlight any guess that worked. By using these tools, security experts find the weak passwords and force the employees to change them before the bad guys show up!`,
     questions: [
-      { q: "What fast network logon cracker is frequently used to brute force SSH or FTP services?", a: "Hydra" },
-      { q: "What Burp Suite module is used to automate web attacks like credential stuffing?", a: "Intruder" },
-      { q: "What type of tool is used offline to crack stolen password hashes using GPUs?", a: "Hashcat (or John the Ripper)" },
-      { q: "In Hashcat, what mode number is used to crack MD5 hashes?", a: "0" },
-      { q: "What is the Burp Intruder attack type that tests multiple payload sets in all combinations?", a: "Cluster Bomb" }
+      { q: "What fast network cracking tool do professionals use to test a server's front door?", a: "Hydra" },
+      { q: "What tool built inside Burp Suite lets you fire a dictionary at a specific website password box?", a: "Intruder" },
+      { q: "What tool do hackers use offline to unscramble stolen passwords using super-fast graphics cards?", a: "Hashcat (or John the Ripper)" },
+      { q: "What mode number is used in Hashcat to crack old MD5 passwords?", a: "0" },
+      { q: "What type of Intruder attack tests multiple payload lists in all combinations?", a: "Cluster Bomb" }
     ]
   }
 ];

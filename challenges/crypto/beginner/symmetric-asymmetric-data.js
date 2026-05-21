@@ -395,7 +395,7 @@ Key components:
 ============= SYMMETRIC vs ASYMMETRIC SUMMARY =============
 
   Feature          | Symmetric         | Asymmetric
-  ─────────────────|───────────────────|──────────────────
+  ||
   Keys             | 1 shared key      | 2 keys (pub/priv)
   Speed            | Very fast         | Very slow
   Key distribution | Difficult         | Easy (public key)

@@ -72,7 +72,7 @@
     <a href="../../../challenges.html" class="active">Challenges</a>
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile ▾</a>
+      <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content">
         <a href="#">Dashboard</a>
         <a href="#">Settings</a>
@@ -84,14 +84,14 @@
 
 <div class="room-wrapper">
 
-  <!-- ═══ SIDEBAR ═══ -->
+  <!--  SIDEBAR  -->
   <aside class="room-sidebar">
     <div class="sidebar-header">
       <div class="sidebar-title">Web Recon Lab</div>
       <div style="margin: 10px 0 6px; display:flex; flex-wrap:wrap;">
-        <span class="tool-badge">🔍 ffuf</span>
-        <span class="tool-badge">🌐 WhatWeb</span>
-        <span class="tool-badge">🧩 Wappalyzer</span>
+        <span class="tool-badge"> ffuf</span>
+        <span class="tool-badge"> WhatWeb</span>
+        <span class="tool-badge"> Wappalyzer</span>
       </div>
       <div class="overall-progress-wrap">
         <div class="overall-progress-bar">
@@ -103,7 +103,7 @@
     <nav class="sidebar-nav" id="sidebar-nav"></nav>
   </aside>
 
-  <!-- ═══ MAIN ═══ -->
+  <!--  MAIN  -->
   <div class="room-main">
 
     <div class="challenge-header">
@@ -119,20 +119,20 @@
 
       <!-- Target Server Launch -->
       <div class="docker-launch" id="target-panel">
-        <h3>🎯 Recon Target Server</h3>
+        <h3> Recon Target Server</h3>
         <p>Spin up a private target web server to practice reconnaissance against. It contains hidden directories and fingerprint-able technologies.</p>
         <button id="launch-target-btn" class="btn-launch" onclick="launchTarget()">Launch Target Server ⇗</button>
-        <button id="stop-target-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopTarget()">Stop Server 🛑</button>
+        <button id="stop-target-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopTarget()">Stop Server </button>
         <p id="target-msg" style="display:none; color:#e67e22; font-weight:bold; margin-top:12px;"></p>
       </div>
 
       <!-- Kali Attack Box -->
       <div class="docker-launch" id="kali-panel">
-        <h3>🐉 Kali Linux — Attack Box</h3>
+        <h3> Kali Linux — Attack Box</h3>
         <p>Need ffuf or WhatWeb? Spin up a private Kali container pre-loaded with all recon tools.</p>
         <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Start Kali Container ⇗</button>
-        <button id="kali-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopKali()">Stop Kali 🛑</button>
-        <a href="recon-guide.html" class="btn-launch" style="margin-left:10px;" target="_blank">📖 Read Walkthrough</a>
+        <button id="kali-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopKali()">Stop Kali </button>
+        <a href="recon-guide.html" class="btn-launch" style="margin-left:10px;" target="_blank"> Read Walkthrough</a>
         <p id="kali-msg" style="display:none; color:#e67e22; font-weight:bold; margin-top:12px;"></p>
         <div id="kali-terminal-info" style="display:none; margin-top:14px; background:#0d1117; padding:14px; border-radius:6px; text-align:left; border:1px solid var(--border);">
           <p style="color:var(--text-muted); margin-top:0; font-size:0.85rem;">Your Kali container is ready. Connect via your host terminal:</p>
@@ -145,18 +145,18 @@
       <!-- Lesson panel -->
       <div id="lesson-panel">
         <div class="reading-panel">
-          <div class="reading-label"><span>📖</span> Instructions &amp; Tasks</div>
+          <div class="reading-label"><span></span> Instructions &amp; Tasks</div>
           <div class="reading-text" id="reading-text" style="white-space:pre-wrap;"></div>
         </div>
         <div class="qa-section" id="qa-section">
-          <div class="qa-heading">✏️ Check Your Understanding</div>
+          <div class="qa-heading"> Check Your Understanding</div>
           <div id="questions-container"></div>
         </div>
       </div>
 
       <!-- Completion -->
       <div class="completion-card" id="completion-card">
-        <div class="trophy-icon">🏆</div>
+        <div class="trophy-icon"></div>
         <h2>Recon Complete!</h2>
         <p>You've mapped the attack surface and captured the flag!</p>
         <div class="score-pill" id="score-pill">0 / 260 pts</div>
@@ -176,12 +176,12 @@
   </div>
 </div>
 
-<!-- ═══ SCRIPTS ═══ -->
+<!--  SCRIPTS  -->
 <script>
 let currentTargetId = null;
 let currentKaliId   = null;
 
-/* ── Target Server ── */
+/*  Target Server  */
 async function launchTarget() {
   const btn = document.getElementById('launch-target-btn');
   const msg = document.getElementById('target-msg');
@@ -230,7 +230,7 @@ async function stopTarget() {
   } catch (e) { msg.textContent = 'Error stopping target.'; }
 }
 
-/* ── Kali Container ── */
+/*  Kali Container  */
 async function launchKali() {
   const btn  = document.getElementById('kali-launch-btn');
   const stop = document.getElementById('kali-stop-btn');
@@ -349,7 +349,7 @@ window.addEventListener('beforeunload', () => {
             ${answered[idx][qi] ? 'disabled' : ''}>Check</button>
         </div>
         <div class="feedback${answered[idx][qi] ? ' correct-msg show' : ''}" id="fb-${idx}-${qi}">
-          ${answered[idx][qi] ? '✅ Correct! ' + l.questions[qi].a : ''}
+          ${answered[idx][qi] ? ' Correct! ' + l.questions[qi].a : ''}
         </div>
       </div>`).join('');
   }
@@ -381,14 +381,14 @@ window.addEventListener('beforeunload', () => {
       answered[lesson][qi] = true;
       qc.classList.add('correct');
       fb.className  = 'feedback correct-msg show';
-      fb.textContent = '✅ Correct! ' + correct;
+      fb.textContent = ' Correct! ' + correct;
       input.disabled = true;
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
       qc.classList.add('wrong');
       fb.className  = 'feedback wrong-msg show';
-      fb.textContent = '❌ Not quite — try again.';
+      fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
     }
   }

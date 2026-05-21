@@ -6,7 +6,7 @@ from . import devtools_bp
 from .docker_client import get_docker_client
 client = get_docker_client()
 
-# ── DevTools Guided Practice Lab ──
+#  DevTools Guided Practice Lab 
 @devtools_bp.route('/api/start-devtools-guided', methods=['POST'])
 def start_devtools_guided():
     if not client:
@@ -42,7 +42,7 @@ def stop_devtools_guided(container_id):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# ── DevTools Field Test Lab ──
+#  DevTools Field Test Lab 
 @devtools_bp.route('/api/start-devtools-fieldtest', methods=['POST'])
 def start_devtools_fieldtest():
     if not client:

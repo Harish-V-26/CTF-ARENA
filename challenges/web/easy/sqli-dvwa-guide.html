@@ -22,7 +22,7 @@
 </head>
 <body>
 
-  <!-- ═══ NAVBAR ═══ -->
+  <!--  NAVBAR  -->
   <nav class="navbar" aria-label="Main navigation">
     <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
     <div class="nav-links">
@@ -30,7 +30,7 @@
       <a href="../../../challenges.html" class="active">Challenges</a>
       <a href="../../../rules.html">Rules</a>
       <div class="dropdown" role="navigation" aria-label="Profile menu">
-        <a href="#" aria-haspopup="true">Profile ▾</a>
+        <a href="#" aria-haspopup="true">Profile </a>
         <div class="dropdown-content" role="menu">
           <a href="#" role="menuitem">Dashboard</a>
           <a href="#" role="menuitem">Settings</a>
@@ -40,10 +40,10 @@
     </div>
   </nav>
 
-  <!-- ═══ PAGE INTRO ═══ -->
+  <!--  PAGE INTRO  -->
   <div class="container">
     <div style="padding: 60px 0 0; text-align:center;">
-      <span class="badge" style="margin-bottom:20px;display:inline-flex;">📖 Official Walkthrough</span>
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
       <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
         SQL Injection <span style="color:var(--accent);">Guide.</span>
       </h1>
@@ -52,28 +52,28 @@
       </p>
     </div>
 
-    <!-- ═══ TWO-COLUMN LAYOUT ═══ -->
+    <!--  TWO-COLUMN LAYOUT  -->
     <div class="rules-section" id="rules-section">
 
       <!-- Sidebar Nav -->
       <aside class="rules-nav" aria-label="Guide navigation">
         <div class="rules-nav-title">Jump to Section</div>
         <ul>
-          <li><a href="#low" class="active" id="nav-low">🟢 Low Security</a></li>
-          <li><a href="#medium" id="nav-medium">🟡 Medium Security</a></li>
-          <li><a href="#high" id="nav-high">🔴 High Security</a></li>
-          <li><a href="#impossible" id="nav-impossible">🛡️ Impossible Security</a></li>
-          <li><a href="#sqlmap" id="nav-sqlmap">🤖 SQLMAP Commands</a></li>
+          <li><a href="#low" class="active" id="nav-low"> Low Security</a></li>
+          <li><a href="#medium" id="nav-medium"> Medium Security</a></li>
+          <li><a href="#high" id="nav-high"> High Security</a></li>
+          <li><a href="#impossible" id="nav-impossible"> Impossible Security</a></li>
+          <li><a href="#sqlmap" id="nav-sqlmap"> SQLMAP Commands</a></li>
         </ul>
       </aside>
 
       <!-- Guide Content -->
       <main class="rules-content" id="rules-content">
 
-        <!-- ── Low Level ── -->
+        <!--  Low Level  -->
         <div class="rules-block" id="low">
           <div class="rules-block-header">
-            <div class="block-icon">🟢</div>
+            <div class="block-icon"></div>
             <div>
               <h2>Low Security (Easy)</h2>
               <p>Basic String Injection</p>
@@ -106,10 +106,10 @@
           <div class="code-block">1' UNION SELECT column_name,table_name FROM information_schema.columns#</div>
         </div>
 
-        <!-- ── Medium Level ── -->
+        <!--  Medium Level  -->
         <div class="rules-block" id="medium">
           <div class="rules-block-header">
-            <div class="block-icon">🟡</div>
+            <div class="block-icon"></div>
             <div>
               <h2>Medium Security</h2>
               <p>Numeric Injection (No Quotes)</p>
@@ -130,10 +130,10 @@
 1 UNION SELECT column_name,table_name FROM information_schema.columns#</div>
         </div>
 
-        <!-- ── High Level ── -->
+        <!--  High Level  -->
         <div class="rules-block" id="high">
           <div class="rules-block-header">
-            <div class="block-icon">🔴</div>
+            <div class="block-icon"></div>
             <div>
               <h2>High Security</h2>
               <p>Second-Order / Out-of-Band</p>
@@ -159,10 +159,10 @@
 1' UNION SELECT @@version,user()#</div>
         </div>
 
-        <!-- ── Impossible Level ── -->
+        <!--  Impossible Level  -->
         <div class="rules-block" id="impossible">
           <div class="rules-block-header">
-            <div class="block-icon">🛡️</div>
+            <div class="block-icon"></div>
             <div>
               <h2>Impossible Security</h2>
               <p>How it is fixed</p>
@@ -179,10 +179,10 @@
           </p>
         </div>
 
-        <!-- ── SQLMAP ── -->
+        <!--  SQLMAP  -->
         <div class="rules-block" id="sqlmap">
           <div class="rules-block-header">
-            <div class="block-icon">🤖</div>
+            <div class="block-icon"></div>
             <div>
               <h2>SQLMAP Commands</h2>
               <p>Automating the attacks via Terminal</p>
@@ -216,7 +216,7 @@ sqlmap -u "TARGET" -D dvwa -T users --dump</div>
     </div>
   </div>
 
-  <!-- ═══ FOOTER ═══ -->
+  <!--  FOOTER  -->
   <footer>
     <p>© 2026 <a href="../../../index.html">CTF LABS</a> · Internship Project Demo</p>
   </footer>

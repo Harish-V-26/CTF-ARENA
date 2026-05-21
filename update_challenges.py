@@ -37,16 +37,16 @@ for card in cards:
     
     # Generate some details based on title
     learn_list = []
-    env_icon = "📖"
+    env_icon = ""
     env_title = "Theory & Reading Lab"
     env_desc = "You will read through a set of lessons and answer knowledge check questions."
     
     if "Practical" in diff or "Docker" in desc or "Gauntlet" in title or "Target" in title:
-        env_icon = "🐳"
+        env_icon = ""
         env_title = "Live Docker Environment"
         env_desc = "You will be provided with a private, isolated container running the vulnerable application."
     elif "Guided" in desc or "Auth" in title or "DevTools" in title:
-        env_icon = "💻"
+        env_icon = ""
         env_title = "Interactive Guided Lab"
         env_desc = "A split-screen environment with step-by-step instructions alongside an interactive browser or target."
         
@@ -82,7 +82,7 @@ for card in cards:
 
 # Add Modal HTML
 modal_html = """
-  <!-- ═══ CHALLENGE DETAILS MODAL ═══ -->
+  <!--  CHALLENGE DETAILS MODAL  -->
   <div id="challenge-modal" class="modal-overlay">
     <div class="modal-content">
       <button class="modal-close" onclick="closeModal()">×</button>
@@ -97,15 +97,15 @@ modal_html = """
         <p id="modal-desc" class="modal-desc">Detailed description goes here.</p>
         
         <div class="modal-section">
-          <h3>🎯 What You Will Learn</h3>
+          <h3> What You Will Learn</h3>
           <ul id="modal-learn-list" class="modal-list">
           </ul>
         </div>
         
         <div class="modal-section">
-          <h3>💻 Environment & Expected Result</h3>
+          <h3> Environment & Expected Result</h3>
           <div class="env-preview">
-            <div class="env-icon" id="modal-env-icon">🐳</div>
+            <div class="env-icon" id="modal-env-icon"></div>
             <div class="env-text">
               <strong id="modal-env-title">Docker Lab</strong>
               <p id="modal-env-desc">You will be dropped into a private container...</p>

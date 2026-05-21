@@ -481,7 +481,7 @@ In CTF challenges involving Caesar Cipher:
     ]
   },
   {
-    title: "🚩 Caesar's Secret Message",
+    title: " Caesar's Secret Message",
     points: 50,
     content: `============= CHALLENGE: DECRYPT THE MESSAGE =============
 
@@ -503,7 +503,7 @@ Flag format: CTF{...}`,
     ]
   },
   {
-    title: "🚩 ROT13 Decoder",
+    title: " ROT13 Decoder",
     points: 50,
     content: `============= CHALLENGE: ROT13 DECRYPTION =============
 
@@ -523,7 +523,7 @@ Flag format: CTF{...}`,
     ]
   },
   {
-    title: "🚩 The Hash Detective",
+    title: " The Hash Detective",
     points: 50,
     content: `============= CHALLENGE: IDENTIFY THE HASH =============
 

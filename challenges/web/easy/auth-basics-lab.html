@@ -42,7 +42,7 @@
     <a href="../../../challenges.html" class="active">Challenges</a>
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile ▾</a>
+      <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content">
         <a href="#">Dashboard</a>
         <a href="#">Settings</a>
@@ -83,15 +83,15 @@
     <div class="room-body" id="room-body">
       
       <div class="docker-launch">
-        <h3>🔐 Authentication Target Lab</h3>
+        <h3> Authentication Target Lab</h3>
         <p>Click the button below to open the target login portal. Analyze the login flow, cookies, and tokens.</p>
         <button id="launch-btn" class="btn-launch" onclick="launchLab()">Open Login Portal ⇗</button>
-        <button id="guide-toggle-btn" class="btn-launch" style="background: #27ae60; margin-left: 10px;" onclick="toggleGuide()">Show Walkthrough Guide 📖</button>
+        <button id="guide-toggle-btn" class="btn-launch" style="background: #27ae60; margin-left: 10px;" onclick="toggleGuide()">Show Walkthrough Guide </button>
       </div>
 
       <!-- Inline Guide -->
       <div id="inline-guide" style="display: none; background: #1a252f; border: 1px solid #27ae60; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-        <h3 style="color: #27ae60; margin-top: 0;">🔐 Complete Lab Walkthrough</h3>
+        <h3 style="color: #27ae60; margin-top: 0;"> Complete Lab Walkthrough</h3>
         <p style="color: #bdc3c7; font-size: 14px; margin-bottom: 15px;">If you get stuck, follow these steps to find the answers and the flag.</p>
         <ul style="color: #ecf0f1; font-size: 14.5px; line-height: 1.8; padding-left: 20px; margin: 0;">
           <li style="margin-bottom: 8px;"><strong>Lesson 2 (Invalid Login):</strong> In the target tab, open DevTools (F12) -> <strong>Network</strong> tab. Submit the form with bad credentials (e.g., test/test). The Network request will return a <strong>401 Unauthorized</strong> status code.</li>
@@ -104,18 +104,18 @@
       <!-- Lesson panel (rendered by JS) -->
       <div id="lesson-panel">
         <div class="reading-panel">
-          <div class="reading-label"><span>📖</span> Instructions & Tasks</div>
+          <div class="reading-label"><span></span> Instructions & Tasks</div>
           <div class="reading-text" id="reading-text" style="white-space: pre-wrap;"></div>
         </div>
         <div class="qa-section" id="qa-section">
-          <div class="qa-heading">✏️ Check Your Understanding</div>
+          <div class="qa-heading"> Check Your Understanding</div>
           <div id="questions-container"></div>
         </div>
       </div>
 
       <!-- Completion -->
       <div class="completion-card" id="completion-card">
-        <div class="trophy-icon">🏆</div>
+        <div class="trophy-icon"></div>
         <h2>Lab Complete!</h2>
         <p>You've successfully analyzed the login flow, extracted session cookies, and decoded JWT tokens!</p>
         <div class="score-pill" id="score-pill">0 / 200 pts</div>
@@ -140,10 +140,10 @@ function toggleGuide() {
     const btn = document.getElementById('guide-toggle-btn');
     if (guide.style.display === 'none') {
         guide.style.display = 'block';
-        btn.textContent = 'Hide Walkthrough Guide 📖';
+        btn.textContent = 'Hide Walkthrough Guide ';
     } else {
         guide.style.display = 'none';
-        btn.textContent = 'Show Walkthrough Guide 📖';
+        btn.textContent = 'Show Walkthrough Guide ';
     }
 }
 
@@ -208,7 +208,7 @@ function launchLab() {
             ${answered[idx][qi]?'disabled':''}>Check</button>
         </div>
         <div class="feedback${answered[idx][qi]?' correct-msg show':''}" id="fb-${idx}-${qi}">
-          ${answered[idx][qi]?'✅ Correct! '+l.questions[qi].a:''}
+          ${answered[idx][qi]?' Correct! '+l.questions[qi].a:''}
         </div>
       </div>`).join('');
   }
@@ -242,14 +242,14 @@ function launchLab() {
       answered[lesson][qi] = true;
       qc.classList.add('correct');
       fb.className = 'feedback correct-msg show';
-      fb.textContent = '✅ Correct! ' + correct;
+      fb.textContent = ' Correct! ' + correct;
       input.disabled = true;
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
       qc.classList.add('wrong');
       fb.className = 'feedback wrong-msg show';
-      fb.textContent = '❌ Not quite — try again.';
+      fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
     }
   }

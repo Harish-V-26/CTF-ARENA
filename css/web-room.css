@@ -2,14 +2,14 @@
    CTF LABS — Web Room Styles
    ================================================ */
 
-/* ─── ROOM LAYOUT ─── */
+/*  ROOM LAYOUT  */
 .room-wrapper {
   display: grid;
   grid-template-columns: 300px 1fr;
   min-height: calc(100vh - 70px);
 }
 
-/* ─── SIDEBAR ─── */
+/*  SIDEBAR  */
 .room-sidebar {
   background: var(--bg-surface);
   border-right: 1px solid var(--border);
@@ -160,7 +160,7 @@
 
 .nav-item.completed .nav-pts { color: var(--accent); }
 
-/* ─── MAIN CONTENT ─── */
+/*  MAIN CONTENT  */
 .room-main {
   display: flex;
   flex-direction: column;
@@ -229,7 +229,7 @@
 .step-dot.done { background: var(--accent); }
 .step-dot.current { background: rgba(255,77,109,0.5); }
 
-/* ─── READING CONTENT ─── */
+/*  READING CONTENT  */
 .room-body {
   flex: 1;
   overflow-y: auto;
@@ -281,7 +281,7 @@
   color: var(--accent);
 }
 
-/* ─── Q&A SECTION ─── */
+/*  Q&A SECTION  */
 .qa-section {
   display: flex;
   flex-direction: column;
@@ -400,7 +400,7 @@
   border: 1px solid rgba(255,77,109,0.25);
 }
 
-/* ─── COMPLETION CARD ─── */
+/*  COMPLETION CARD  */
 .completion-card {
   display: none;
   flex-direction: column;
@@ -444,7 +444,7 @@
   margin-bottom: 32px;
 }
 
-/* ─── BOTTOM NAV BAR ─── */
+/*  BOTTOM NAV BAR  */
 .room-footer-nav {
   padding: 20px 48px;
   border-top: 1px solid var(--border);
@@ -498,7 +498,7 @@
   transform: translateY(-1px);
 }
 
-/* ─── ALL COMPLETE state ─── */
+/*  ALL COMPLETE state  */
 .all-complete-banner {
   display: none;
   flex-direction: column;
@@ -510,7 +510,7 @@
 
 .all-complete-banner.show { display: flex; }
 
-/* ─── RESPONSIVE ─── */
+/*  RESPONSIVE  */
 @media (max-width: 900px) {
   .room-wrapper { grid-template-columns: 1fr; }
 

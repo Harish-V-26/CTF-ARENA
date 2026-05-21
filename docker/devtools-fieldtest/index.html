@@ -36,7 +36,7 @@
     ::-webkit-scrollbar-track { background: var(--bg-base); }
     ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
-    /* ── Corporate Header ── */
+    /*  Corporate Header  */
     .corp-header {
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border);
@@ -83,7 +83,7 @@
 
     .status-dot.online { background: #ff4d6d; box-shadow: 0 0 8px rgba(255,77,109,0.5); }
 
-    /* ── Main Content ── */
+    /*  Main Content  */
     .container {
       max-width: 800px;
       margin: 0 auto;
@@ -112,7 +112,7 @@
       line-height: 1.7;
     }
 
-    /* ── Mission Briefing ── */
+    /*  Mission Briefing  */
     .briefing {
       background: var(--bg-surface);
       border: 1px solid var(--border);
@@ -182,7 +182,7 @@
       color: var(--accent);
     }
 
-    /* ── Corporate Content (Decoy) ── */
+    /*  Corporate Content (Decoy)  */
     .corp-content {
       background: var(--bg-surface);
       border: 1px solid var(--border);
@@ -230,7 +230,7 @@
       margin-top: 4px;
     }
 
-    /* ── Flag Submission ── */
+    /*  Flag Submission  */
     .submit-section {
       background: var(--bg-surface);
       border: 2px solid var(--border);
@@ -331,7 +331,7 @@
     .victory h2 span { color: #ff4d6d; }
     .victory p { color: var(--text-muted); font-size: 15px; }
 
-    /* ── Fake image (for Network challenge) ── */
+    /*  Fake image (for Network challenge)  */
     .corp-banner {
       width: 100%;
       height: 200px;
@@ -357,10 +357,10 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════════════ -->
+<!--  -->
 <!-- FLAG PART 1: Hidden in this HTML comment            -->
 <!-- flag_part1{dev_tools_                              -->
-<!-- ═══════════════════════════════════════════════════ -->
+<!--  -->
 
 <header class="corp-header">
   <div class="corp-logo">SECURE<span>CORP™</span></div>
@@ -375,29 +375,29 @@
 <div class="container">
 
   <div class="hero">
-    <h1>🎯 The <span>Field Test</span></h1>
+    <h1> The <span>Field Test</span></h1>
     <p>No hand-holding this time. A complete flag is hidden across this page, split into <strong>three parts</strong>. Use your DevTools skills to find them all.</p>
   </div>
 
   <!-- Mission Briefing -->
   <div class="briefing">
-    <h2>📋 Mission Briefing</h2>
+    <h2> Mission Briefing</h2>
     <p>SecureCorp™ left a secret flag scattered across their employee portal. The flag is split into <strong>three pieces</strong>, each hidden using a different technique. You must find all three parts and combine them in order to submit the complete flag.</p>
     <div class="flag-format">FLAG FORMAT: flag_part1{_____________________}</div>
     <p>Each piece was hidden using a <strong>different DevTools panel</strong>. Here's where to look:</p>
     <div class="location-hints">
       <div class="location-hint">
-        <div class="icon">🔍</div>
+        <div class="icon"></div>
         <div class="label">Part 1</div>
         <div class="tool">Inspector</div>
       </div>
       <div class="location-hint">
-        <div class="icon">🌐</div>
+        <div class="icon"></div>
         <div class="label">Part 2</div>
         <div class="tool">Network</div>
       </div>
       <div class="location-hint">
-        <div class="icon">🐛</div>
+        <div class="icon"></div>
         <div class="label">Part 3</div>
         <div class="tool">Debugger / Sources</div>
       </div>
@@ -406,7 +406,7 @@
 
   <!-- Corporate Content (Decoy) -->
   <div class="corp-content">
-    <h3>📊 Q2 2026 Performance Dashboard</h3>
+    <h3> Q2 2026 Performance Dashboard</h3>
     <p>SecureCorp continues to lead the cybersecurity market with record growth. Our security audit pipeline has doubled, and our threat detection accuracy now exceeds industry benchmarks.</p>
     <div class="stats">
       <div class="stat-card">
@@ -426,13 +426,13 @@
 
   <!-- Banner image that will 404 — flag in headers -->
   <div class="corp-banner">
-    <span>📷 Banner image failed to load — try checking the Network tab...</span>
+    <span> Banner image failed to load — try checking the Network tab...</span>
   </div>
   <img src="/assets/banner-q2-2026.png" alt="Q2 Banner" style="display:none;" id="fake-banner"/>
 
   <!-- Flag Submission -->
   <div class="submit-section" id="submit-section">
-    <h3>🚩 Submit Your Flag</h3>
+    <h3> Submit Your Flag</h3>
     <p>Combine all three parts and submit the complete flag below.</p>
     <div class="submit-row">
       <input type="text" class="submit-input" id="final-flag-input" placeholder="flag_part1{...}" autocomplete="off"/>
@@ -442,7 +442,7 @@
   </div>
 
   <div class="victory" id="victory">
-    <div class="trophy">🏆</div>
+    <div class="trophy"></div>
     <h2>Mission <span>Complete!</span></h2>
     <p>You've proven you can find hidden data across Inspector, Network, and Debugger. You are now a certified DevTools operator.</p>
   </div>
@@ -466,7 +466,7 @@
 
     if (userAnswer === correct) {
       result.className = 'result correct show';
-      result.textContent = '✅ FLAG CAPTURED! You found all three parts! 🎉';
+      result.textContent = ' FLAG CAPTURED! You found all three parts! ';
       input.disabled = true;
       document.getElementById('final-submit').disabled = true;
       document.getElementById('submit-section').style.borderColor = '#ff4d6d';
@@ -482,10 +482,10 @@
 
       if (found.length > 0 && found.length < 3) {
         result.className = 'result partial show';
-        result.textContent = `⚠️ You found ${found.length}/3 parts. Keep searching!`;
+        result.textContent = ` You found ${found.length}/3 parts. Keep searching!`;
       } else {
         result.className = 'result wrong show';
-        result.textContent = '❌ Incorrect. Check all three locations and combine the parts.';
+        result.textContent = ' Incorrect. Check all three locations and combine the parts.';
       }
       setTimeout(() => { result.classList.remove('show'); }, 3000);
     }

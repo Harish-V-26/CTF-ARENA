@@ -24,7 +24,7 @@
     <a href="../../../challenges.html" class="active">Challenges</a>
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile ▾</a>
+      <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content">
         <a href="#">Dashboard</a><a href="#">Settings</a><a href="#">Logout</a>
       </div>
@@ -34,7 +34,7 @@
 
 <div class="container">
   <div style="padding:60px 0 0;text-align:center;">
-    <span class="badge" style="margin-bottom:20px;display:inline-flex;">📖 Official Walkthrough &amp; Master Guide</span>
+    <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough &amp; Master Guide</span>
     <h1 style="font-size:clamp(36px,5vw,60px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
       File Upload <span style="color:#e74c3c;">Vulnerability Guide.</span>
     </h1>
@@ -42,7 +42,7 @@
       Complete walkthrough for DVWA File Upload across Low, Medium, and High security levels. Covers manual exploitation, tool-based attacks, bypass techniques, and defensive coding.
     </p>
     <div class="warn" style="max-width:700px;margin:20px auto 0;text-align:left;">
-      ⚠️ <strong>Educational Use Only.</strong> Practice exclusively inside isolated DVWA lab environments. Unauthorized testing is illegal.
+       <strong>Educational Use Only.</strong> Practice exclusively inside isolated DVWA lab environments. Unauthorized testing is illegal.
     </div>
   </div>
 
@@ -52,16 +52,16 @@
     <aside class="rules-nav" aria-label="Guide navigation">
       <div class="rules-nav-title">Jump to Section</div>
       <ul>
-        <li><a href="#intro"    class="active" id="nav-intro">🎯 Introduction</a></li>
-        <li><a href="#labsetup" id="nav-labsetup">🖥️ Lab Setup</a></li>
-        <li><a href="#basics"   id="nav-basics">📚 Upload Basics</a></li>
-        <li><a href="#low"      id="nav-low">🟢 DVWA Low</a></li>
-        <li><a href="#medium"   id="nav-medium">🟡 DVWA Medium</a></li>
-        <li><a href="#high"     id="nav-high">🔴 DVWA High</a></li>
-        <li><a href="#tools"    id="nav-tools">⚙️ Tool-Based</a></li>
-        <li><a href="#advanced" id="nav-advanced">💀 Advanced</a></li>
-        <li><a href="#defense"  id="nav-defense">🛡️ Defenses</a></li>
-        <li><a href="#conclude" id="nav-conclude">🏁 Conclusion</a></li>
+        <li><a href="#intro"    class="active" id="nav-intro"> Introduction</a></li>
+        <li><a href="#labsetup" id="nav-labsetup"> Lab Setup</a></li>
+        <li><a href="#basics"   id="nav-basics"> Upload Basics</a></li>
+        <li><a href="#low"      id="nav-low"> DVWA Low</a></li>
+        <li><a href="#medium"   id="nav-medium"> DVWA Medium</a></li>
+        <li><a href="#high"     id="nav-high"> DVWA High</a></li>
+        <li><a href="#tools"    id="nav-tools"> Tool-Based</a></li>
+        <li><a href="#advanced" id="nav-advanced"> Advanced</a></li>
+        <li><a href="#defense"  id="nav-defense"> Defenses</a></li>
+        <li><a href="#conclude" id="nav-conclude"> Conclusion</a></li>
       </ul>
     </aside>
 
@@ -71,7 +71,7 @@
       <!-- INTRO -->
       <div class="rules-block" id="intro">
         <div class="rules-block-header">
-          <div class="block-icon">🎯</div>
+          <div class="block-icon"></div>
           <div><h2>Introduction</h2><p>What is a File Upload Vulnerability?</p></div>
         </div>
         <p style="color:var(--text-muted);line-height:1.7;">
@@ -87,7 +87,7 @@
       <!-- LAB SETUP -->
       <div class="rules-block" id="labsetup">
         <div class="rules-block-header">
-          <div class="block-icon">🖥️</div>
+          <div class="block-icon"></div>
           <div><h2>Lab Setup</h2><p>VirtualBox + Network Configuration</p></div>
         </div>
 
@@ -132,7 +132,7 @@
       <!-- BASICS -->
       <div class="rules-block" id="basics">
         <div class="rules-block-header">
-          <div class="block-icon">📚</div>
+          <div class="block-icon"></div>
           <div><h2>File Upload Basics</h2><p>MIME types, magic bytes, and extensions explained</p></div>
         </div>
         <ul class="rule-list">
@@ -146,7 +146,7 @@
       <!-- LOW -->
       <div class="rules-block" id="low">
         <div class="rules-block-header">
-          <div class="block-icon">🟢</div>
+          <div class="block-icon"></div>
           <div><h2>DVWA Low — No Filtering</h2><p>Direct PHP shell upload</p></div>
         </div>
         <div class="payload-group">
@@ -172,7 +172,7 @@
       <!-- MEDIUM -->
       <div class="rules-block" id="medium">
         <div class="rules-block-header">
-          <div class="block-icon">🟡</div>
+          <div class="block-icon"></div>
           <div><h2>DVWA Medium — MIME Spoofing</h2><p>Bypass Content-Type header check</p></div>
         </div>
         <p style="color:var(--text-muted);">Medium checks: <code>$_FILES['uploaded']['type'] == "image/jpeg"</code> — but this header comes from the <em>browser/client</em>, which the attacker controls.</p>
@@ -202,7 +202,7 @@
       <!-- HIGH -->
       <div class="rules-block" id="high">
         <div class="rules-block-header">
-          <div class="block-icon">🔴</div>
+          <div class="block-icon"></div>
           <div><h2>DVWA High — Magic Byte Bypass</h2><p>GIF89a header trick + LFI chain</p></div>
         </div>
         <p style="color:var(--text-muted);">High uses <code>getimagesize()</code> which reads actual file bytes — and extension must end in .jpg/.png. Bypass: prepend GIF magic bytes, then include via LFI.</p>
@@ -231,7 +231,7 @@
       <!-- TOOLS -->
       <div class="rules-block" id="tools">
         <div class="rules-block-header">
-          <div class="block-icon">⚙️</div>
+          <div class="block-icon"></div>
           <div><h2>Tool-Based Method</h2><p>msfvenom, Metasploit, Burp Suite, netcat</p></div>
         </div>
 
@@ -270,7 +270,7 @@
       <!-- ADVANCED -->
       <div class="rules-block" id="advanced">
         <div class="rules-block-header">
-          <div class="block-icon">💀</div>
+          <div class="block-icon"></div>
           <div><h2>Advanced Challenges</h2><p>Double extension, .htaccess, null byte, LFI chain</p></div>
         </div>
 
@@ -306,7 +306,7 @@
       <!-- DEFENSE -->
       <div class="rules-block" id="defense">
         <div class="rules-block-header">
-          <div class="block-icon">🛡️</div>
+          <div class="block-icon"></div>
           <div><h2>Defensive Fixes</h2><p>Secure file upload implementation</p></div>
         </div>
 
@@ -355,7 +355,7 @@ move_uploaded_file($tmp, '/var/uploads/' . $name);
       <!-- CONCLUSION -->
       <div class="rules-block" id="conclude">
         <div class="rules-block-header">
-          <div class="block-icon">🏁</div>
+          <div class="block-icon"></div>
           <div><h2>Conclusion</h2></div>
         </div>
         <p style="color:var(--text-muted);line-height:1.7;">

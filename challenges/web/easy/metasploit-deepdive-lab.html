@@ -86,7 +86,7 @@
     <a href="../../../challenges.html" class="active">Challenges</a>
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile ▾</a>
+      <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content">
         <a href="#">Dashboard</a>
         <a href="#">Settings</a>
@@ -126,15 +126,15 @@
 
     <div class="room-body" id="room-body">
 
-      <!-- ═══ DOCKER PANELS (hidden by default, shown only on practical lessons) ═══ -->
+      <!--  DOCKER PANELS (hidden by default, shown only on practical lessons)  -->
       <div class="docker-panels" id="docker-panels">
 
         <!-- Target Server Launcher -->
         <div class="docker-launch" id="target-panel">
-          <h3>🎯 Metasploit Deep Dive Target</h3>
+          <h3> Metasploit Deep Dive Target</h3>
           <p>Spin up the vulnerable diagnostics portal container.</p>
           <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Launch Target Server ⇗</button>
-          <button id="target-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopTarget()">Stop Server 🛑</button>
+          <button id="target-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopTarget()">Stop Server </button>
           <p id="target-msg" style="display:none; color:#e67e22; font-weight:bold; margin-top:12px;"></p>
           <div class="kali-terminal-box" id="target-info" style="display:none; margin-top:14px; background:#0d1117; padding:14px; border-radius:6px; text-align:left; border:1px solid var(--border);">
             <p style="color:var(--text-muted); margin-top:0; font-size:0.85rem;">Target is up! Use this IP with curl:</p>
@@ -144,10 +144,10 @@
 
         <!-- Kali Linux Docker Environment Launcher -->
         <div class="docker-launch" id="kali-panel">
-          <h3>🐉 Kali Linux Environment</h3>
+          <h3> Kali Linux Environment</h3>
           <p>Spin up a private, isolated Kali container with curl, nmap, and other tools.</p>
           <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Start Kali Container ⇗</button>
-          <button id="kali-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopKali()">Stop Kali 🛑</button>
+          <button id="kali-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopKali()">Stop Kali </button>
           <p id="kali-msg" style="display:none; color:#e67e22; font-weight:bold; margin-top:12px;"></p>
           <div class="kali-terminal-box" id="kali-terminal-info">
             <p>Your Kali container is ready! Connect to it by running this command in your host terminal:</p>
@@ -160,18 +160,18 @@
       <!-- Lesson panel -->
       <div id="lesson-panel">
         <div class="reading-panel">
-          <div class="reading-label"><span>📖</span> Reading — Study before answering</div>
+          <div class="reading-label"><span></span> Reading — Study before answering</div>
           <div class="reading-text" id="reading-text" style="white-space: pre-wrap;"></div>
         </div>
         <div class="qa-section" id="qa-section">
-          <div class="qa-heading">✏️ Check Your Understanding</div>
+          <div class="qa-heading"> Check Your Understanding</div>
           <div id="questions-container"></div>
         </div>
       </div>
 
       <!-- Completion Card -->
       <div class="completion-card" id="completion-card">
-        <div class="trophy-icon">🏆</div>
+        <div class="trophy-icon"></div>
         <h2>Lab Complete!</h2>
         <p>Congratulations! You have completed the Metasploit Deep Dive. You've mastered database integration, staging behavior, advanced module parameters, and real-world command injection exploitation.</p>
         <div class="score-pill" id="score-pill">0 / 280 pts</div>
@@ -191,7 +191,7 @@
   </div>
 </div>
 
-<!-- ═══ DOCKER MANAGEMENT SCRIPTS ═══ -->
+<!--  DOCKER MANAGEMENT SCRIPTS  -->
 <script>
   let currentKaliId = null;
   let currentTargetId = null;
@@ -376,10 +376,10 @@
   });
 </script>
 
-<!-- ═══ LESSON DATA ═══ -->
+<!--  LESSON DATA  -->
 <script src="metasploit-deepdive-data.js"></script>
 
-<!-- ═══ LESSON ENGINE ═══ -->
+<!--  LESSON ENGINE  -->
 <script>
   let cur = 0;
   const TOTAL = LESSONS.length;
@@ -445,7 +445,7 @@
             ${answered[idx][qi]?'disabled':''}>Check</button>
         </div>
         <div class="feedback${answered[idx][qi]?' correct-msg show':''}" id="fb-${idx}-${qi}">
-          ${answered[idx][qi]?'✅ Correct! '+l.questions[qi].a:''}
+          ${answered[idx][qi]?' Correct! '+l.questions[qi].a:''}
         </div>
       </div>`).join('');
   }
@@ -479,14 +479,14 @@
       answered[lesson][qi] = true;
       qc.classList.add('correct');
       fb.className = 'feedback correct-msg show';
-      fb.textContent = '✅ Correct! ' + correct;
+      fb.textContent = ' Correct! ' + correct;
       input.disabled = true;
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
       qc.classList.add('wrong');
       fb.className = 'feedback wrong-msg show';
-      fb.textContent = '❌ Not quite — try again.';
+      fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
     }
   }

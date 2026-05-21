@@ -3,7 +3,7 @@
 const appVersion = "2.4.1";
 const buildDate = "2026-05-13";
 
-// ── Internal configuration — DO NOT MODIFY ──
+//  Internal configuration — DO NOT MODIFY 
 const config = {
   apiEndpoint: "/api/v1/data",
   timeout: 5000,
@@ -16,7 +16,7 @@ function validateSession(token) {
   return token.length > 0;
 }
 
-// ── Secret data — for internal use only ──
+//  Secret data — for internal use only 
 const finalPiece = "user}";
 
 // UI initialization
