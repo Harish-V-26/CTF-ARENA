@@ -327,20 +327,29 @@ If you successfully ran the exploit command from
 the previous lesson, the server returned a JSON 
 response containing the flag.
 
-The response should look like this:
+⚠️  You MUST run the actual exploit to get the flag!
+    The flag is hidden inside the target container.
+    There is no shortcut — execute the curl command
+    from Lesson 5 to reveal it.
+
+The response will look something like this:
 ┌─────────────────────────────────────────────────┐
 │  {                                              │
 │    "status": "success",                         │
 │    "output": "Simulated RCE Triggered:          │
-│               FLAG{MSF_D33P_D1V3_M4ST3R}",      │
+│               FLAG{?????_????_????_??????}",     │
 │    "debug_info": "Warning: Command              │
 │     sanitization failed. Unauthorized           │
 │     command context executed."                   │
 │  }                                              │
 └─────────────────────────────────────────────────┘
 
-Copy the FLAG{...} value from the JSON output and 
-paste it into the answer box below.
+Copy the FLAG{...} value from YOUR terminal output 
+and paste it into the answer box below.
+
+HINT: If you forgot the exploit command, go back 
+to Lesson 5, Step 5 and run:
+  curl "http://<TARGET_IP>/api/diagnostics?cmd=ping%3Bcat%20/etc/flag"
 
 
 QUICK REFERENCE — Commands You Used:

