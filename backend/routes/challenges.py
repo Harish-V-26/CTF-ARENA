@@ -12,7 +12,6 @@ def brute_force_target():
             <html>
                 <body style="background: #2c3e50; color: #ecf0f1; font-family: monospace; text-align: center; margin-top: 20%;">
                     <h1 style="color: #2ecc71;">Login Successful!</h1>
-                    <h2>Flag: CTF{brut3_f0rc3_m4st3r}</h2>
                 </body>
             </html>
             ''')
@@ -24,7 +23,7 @@ def brute_force_target():
                     <a href="/api/brute-force-target" style="color: #3498db;">Try Again</a>
                 </body>
             </html>
-            '''), 401
+            '''), 200
     
     return render_template_string('''
     <html>

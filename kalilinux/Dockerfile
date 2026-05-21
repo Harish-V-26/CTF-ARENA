@@ -23,5 +23,8 @@ RUN apt update && apt upgrade -y && \
 # Set working directory
 WORKDIR /workspace
 
+# Extract rockyou wordlist since it comes zipped by default in kali
+RUN gzip -d /usr/share/wordlists/rockyou.txt.gz
+
 # Default command
 CMD ["/bin/bash"]

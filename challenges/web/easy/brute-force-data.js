@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "Introduction to Brute Forcing",
     points: 20,
-    content: "Welcome to the Brute Force Lab! In this challenge, you will learn how to attack authentication mechanisms using Kali Linux tools.\n\n1. Click the red 'Open Target Page' button above to access the target login form.\n2. Note the URL and the form parameters (username and password) by inspecting the page source or intercepting a request.\n3. The goal is to find the correct password for the 'admin' user and retrieve the hidden flag.\n\nRead through the next sections to learn how to use automated tools to perform this attack.",
+    content: "Welcome to the Brute Force Lab! In this challenge, you will learn how to attack authentication mechanisms using Kali Linux tools.\n\n1. Click the red 'Open Target Page' button above to access the target login form.\n2. Note the URL and the form parameters (username and password) by inspecting the page source or intercepting a request.\n3. The goal is to find the correct password for the 'admin' user.\n\nRead through the next sections to learn how to use automated tools to perform this attack.",
     questions: [
       { q: "What username are you trying to brute force in this lab?", a: "admin" },
       { q: "What HTTP method does the target login form use to send credentials?", a: "POST" },
@@ -14,7 +14,7 @@ const LESSONS = [
   {
     title: "Using Hydra",
     points: 60,
-    content: "Hydra is a fast network logon cracker. It supports many protocols, including HTTP POST forms.\n\nTo attack the login page, you can use the following syntax:\n`hydra -l admin -P /usr/share/wordlists/rockyou.txt <Target_IP> http-post-form \"/api/brute-force-target:username=^USER^&password=^PASS^:Invalid username or password\" -s 5000`\n\n* `-l admin`: Specifies the single username 'admin'.\n* `-P <file>`: Specifies the password list (we recommend creating a small custom list for testing or using a popular wordlist).\n* `http-post-form`: The protocol.\n* `\"/api/...:username=^USER^&...:Invalid...\"`: The path, form data, and the failure message that Hydra uses to know if a guess was wrong.\n* `-s 5000`: Specifies the port.",
+    content: "Hydra is a fast network logon cracker. It supports many protocols, including HTTP POST forms.\n\nTo attack the login page, you can use the following syntax:\n`hydra -l admin -P /usr/share/wordlists/rockyou.txt <Target_IP> -s 5000 http-post-form \"/api/brute-force-target:username=^USER^&password=^PASS^:Invalid username or password\"`\n\n* `-l admin`: Specifies the single username 'admin'.\n* `-P <file>`: Specifies the password list (in this case, the pre-installed rockyou.txt).\n* `http-post-form`: The protocol.\n* `\"/api/...:username=^USER^&...:Invalid...\"`: The path, form data, and the failure message that Hydra uses to know if a guess was wrong.\n* `-s 5000`: Specifies the port.",
     questions: [
       { q: "What flag in Hydra is used to specify a single username?", a: "-l" },
       { q: "What flag in Hydra is used to specify a file containing a list of passwords?", a: "-P" },
@@ -24,15 +24,13 @@ const LESSONS = [
     ]
   },
   {
-    title: "Capture the Flag",
+    title: "Executing the Attack",
     points: 60,
-    content: "Now it's time to execute the attack! Use Hydra from your Kali Linux machine against the target.\n\nThe password is one of the top commonly used passwords. If you don't want to run a massive dictionary, try a small list like 'password123, admin123, qwerty, letmein'.\n\nOnce you crack the password, log in to the target page to view your flag.",
+    content: "Now it's time to execute the attack! Use Hydra from your Kali Linux machine against the target.\n\nRun the command using the pre-installed rockyou.txt wordlist.\n\nOnce you crack the password, log in to the target page to view your success.",
     questions: [
       { q: "What is the correct password you found for the admin user?", a: "qwerty" },
       { q: "Did the server return a 200 OK status code upon successful login? (yes/no)", a: "yes" },
-      { q: "What tool did you end up using to crack the password?", a: "Hydra" }, 
-      { q: "Enter the first 5 characters of the flag (including CTF{):", a: "CTF{b" },
-      { q: "Enter the full flag you found on the successful login page:", a: "CTF{brut3_f0rc3_m4st3r}" }
+      { q: "What tool did you end up using to crack the password?", a: "Hydra" }
     ]
   }
 ];

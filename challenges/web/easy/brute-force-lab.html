@@ -126,8 +126,8 @@
       <div class="completion-card" id="completion-card">
         <div class="trophy-icon">🏆</div>
         <h2>Lab Complete!</h2>
-        <p>You've successfully cracked the login page and captured the flag!</p>
-        <div class="score-pill" id="score-pill">0 / 150 pts</div>
+        <p>You've successfully cracked the login page and logged in!</p>
+        <div class="score-pill" id="score-pill">0 / 130 pts</div>
         <a href="../../../challenges.html" class="btn btn-primary">← Back to Challenges</a>
       </div>
     </div>
@@ -353,7 +353,7 @@ async function stopKali() {
     document.getElementById('lesson-panel').style.display = 'none';
     document.querySelector('.docker-launch').style.display = 'none';
     const pts = totalDone() * 10;
-    document.getElementById('score-pill').textContent = `${pts} / 150 pts`;
+    document.getElementById('score-pill').textContent = `${pts} / 130 pts`;
     document.getElementById('completion-card').classList.add('show');
     document.getElementById('btn-next').disabled = true;
     document.getElementById('btn-prev').disabled = true;
