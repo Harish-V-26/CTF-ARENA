@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "Path Traversal Basics",
     points: 10,
-    content: `Directory Traversal (also called Path Traversal) is a vulnerability that allows attackers to read files outside the web server's intended directory.
+    content: `Imagine a giant public library. The librarian says, "You can read any book in the 'Children's Section'." When you want a book, you give the librarian a slip of paper with the book's title, and they fetch it from that section. But what if you are a sneaky hacker? Instead of writing a book title, you write, "Go out of the Children's Section, walk into the Staff Only room, and bring me the Secret Employee Rulebook!" If the librarian is acting like a robot and blindly follows your exact instructions without checking the rules, they will actually go grab the secret book and hand it to you! In computers, this is called Directory Traversal. A website might let you ask for an image or a document. But if you type special commands like "../" (which means "go backwards out of this room"), a lazy server will actually walk backwards into its own private folders and hand you its most secret, locked files!
 
 WHAT IS IT?
 Web servers serve files from a specific folder (e.g., /var/www/html). If an app takes a filename from user input without validation:

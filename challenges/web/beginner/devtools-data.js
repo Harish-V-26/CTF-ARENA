@@ -2,10 +2,7 @@ const LESSONS = [
   {
     title: "Inspector (Elements) — Reading the DOM",
     points: 10,
-    content: `The Inspector (called "Elements" in Chrome) shows the raw HTML and CSS of the live page. It lets you view, edit, and manipulate the Document Object Model (DOM) in real time.
-
-WHY IT MATTERS FOR CTF:
-The DOM is the browser's in-memory representation of the page. Everything you see — and everything you don't — is described in HTML tags. Developers sometimes leave sensitive data in hidden elements, comments, or disabled fields.
+    content: `Imagine you are watching a magical play in a theater. From your seat in the audience, you only see what the director wants you to see: the actors, the painted backgrounds, and the bright lights. But what if you had a magic pair of X-ray glasses that let you see exactly what was happening backstage? You could see the actors changing costumes, the ropes holding up the scenery, and even secret notes the director left on the walls! In the computer world, a website is like that play, and the "Inspector" tool is your pair of magic X-ray glasses. The Inspector lets you see the raw, behind-the-scenes building blocks (called HTML and CSS) of the webpage. This is extremely important for hackers because developers are often lazy or forgetful. They might leave secret passwords, hidden buttons, or private notes "backstage" in the code, thinking that normal users will never see them. With the Inspector, you can peek behind the curtain, change the scenery yourself, and find the hidden treasure!
 
 HOW TO OPEN IT:
 Right-click any element on a page and select "Inspect", or press F12 and click the "Elements" / "Inspector" tab.

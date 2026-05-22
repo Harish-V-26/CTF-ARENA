@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "Unrestricted File Upload",
     points: 10,
-    content: `File upload features are extremely common attack vectors when not properly secured. The most dangerous scenario allows uploading executable files that the server then runs.
+    content: `Imagine a magical mailbox that lets anyone drop a letter inside. The mail carrier takes the letter and puts it on a big bulletin board for everyone to read. This works great if people only send nice letters or pictures. But what if a sneaky villain drops a magic spell into the mailbox? If the mail carrier doesn't carefully check what they are putting on the board, the magic spell might activate and take over the entire town! In the computer world, this is called an "Unrestricted File Upload" vulnerability. Websites often let users upload innocent things, like a profile picture or a resume. But if the website's security guards are lazy and don't check what the file actually is, a hacker can upload a dangerous file made of hacking code. When the website tries to read the "picture," the hacker's code activates instead, giving them total control over the server!
 
 THE CLASSIC WEB SHELL ATTACK:
   1. Attacker uploads: shell.php containing <?php system($_GET['cmd']); ?>

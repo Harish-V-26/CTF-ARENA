@@ -4,7 +4,7 @@ const LESSONS = [
     points: 30,
     content: `Welcome to the DevTools Field Test — Phase 2: The Independent Challenge!
 
-This is your FINAL practical exam for Browser Developer Tools. Unlike Phase 1, there are NO step-by-step instructions inside the sandbox. You must rely entirely on the skills you've learned.
+Imagine you are a master spy taking your final exam. You have been dropped into a secret facility with no map, no guide, and no instructions. The only tools you have are your magic X-ray glasses (the Inspector), your hidden microphone (the Network panel), and your code-breaking notebook (the Sources panel). Your mission is to find three pieces of a torn-up secret message hidden somewhere in this digital building. You must rely entirely on the spy skills you've practiced to hunt down each piece and put them back together. Are you ready to prove you are a true DevTools Master?
 
 HOW IT WORKS:
 1. Click the "Launch Field Test" button above.

@@ -4,7 +4,7 @@ const LESSONS = [
     points: 30,
     content: `Welcome to the DevTools Gauntlet — Phase 1: Guided Practice!
 
-This is your first PRACTICAL Docker challenge for Browser Developer Tools. Unlike the theory lessons, here you will exploit real vulnerabilities in a live web application running inside a Docker container.
+Imagine you are a spy recruit who just got their very first set of secret gadgets! You've read the instruction manual, but reading about gadgets isn't the same as actually using them. So, your spy academy has built a special training obstacle course called the "Gauntlet". In this safe, indoor course, you get to put on your magic X-ray glasses (the Inspector) and use your secret decoder ring (the Console) to overcome real challenges. You will practice unlocking locked doors without the key, finding invisible objects, and digging up buried secrets! Don't worry—because this is just Phase 1 practice, there will be step-by-step instructions floating next to every obstacle to help you learn exactly how to use your new powers before the final exam.
 
 HOW IT WORKS:
 1. Click the "Launch DevTools Guided Lab" button above.
