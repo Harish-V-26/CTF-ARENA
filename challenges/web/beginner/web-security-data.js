@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "1. How the Web Works (DNS & IP)",
     points: 10,
-    content: `WHAT IS AN IP ADDRESS?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/dns_concept_1779430631540.png" alt="DNS Concept"></div>WHAT IS AN IP ADDRESS?
 Imagine you want to send a birthday card to your best friend. To make sure the mail carrier delivers it to the right house, you need to write your friend's exact home address on the envelope, like "123 Main Street". The Internet works the exact same way! Every single computer, tablet, and phone connected to the Internet has its own special "home address." But instead of street names and house numbers, computers use a long string of numbers called an IP Address. It looks something like "192.168.1.1". When you ask your computer to show you a YouTube video or a Roblox game, your computer puts a digital stamp on a request and sends it to the IP address of the YouTube or Roblox computer. Without an IP address, computers wouldn't know where to send the fun stuff you want to see. There are two main types of these addresses: IPv4 (which has about 4 billion addresses, but we ran out of them!) and IPv6 (which has so many addresses we could give one to every grain of sand on Earth!).
 
 WHAT IS THE DOMAIN NAME SYSTEM (DNS)?
@@ -21,7 +21,7 @@ Hackers are like digital detectives, and they use the DNS phonebook to find secr
   {
     title: "2. The Three Layers of a Website",
     points: 10,
-    content: `THE CLIENT (FRONTEND)
+    content: `<div class="htb-diagram-container"><img src="../../../assets/web_layers_1779430656170.png" alt="Web Layers"></div>THE CLIENT (FRONTEND)
 Imagine a website is like a fancy restaurant. The "Client" is the dining room where the customers sit. It is everything you can see, touch, and interact with on your screen. The Client is built using three main ingredients: HTML (the walls and tables), CSS (the beautiful paint and decorations), and JavaScript (the waiters taking your order). This part of the website lives entirely inside your web browser. If a hacker attacks the Client layer, they are usually trying to trick the person using the website, like sneaking a fake menu onto their table. Since this layer only runs on your own computer, hacking it usually only affects one person at a time, but it is still very dangerous!
 
 THE SERVER (BACKEND)
@@ -40,7 +40,7 @@ Deep inside the kitchen, there is a giant, locked filing cabinet where the resta
   {
     title: "3. How Browsers Talk to Servers",
     points: 10,
-    content: `WHAT IS HTTP?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/http_https_ctflabs_1779431310145.png" alt="HTTP vs HTTPS"></div>WHAT IS HTTP?
 Imagine you are playing a game of catch with a friend, but instead of throwing a ball, you are throwing tiny paper notes. Your web browser (like Chrome) and the website's server play this game every single time you click a link. The language they use to write these notes to each other is called HTTP. When you click on a picture, your browser throws a note saying, "GET me that picture, please!" The server catches the note, reads it, and throws a note back with the picture inside, saying, "200 OK! Here it is." These notes are sent in plain, normal text. It is super fast and easy, but there is a big problem. If a sneaky spy (a hacker) is standing between you and the server, they can catch the notes, read your secret passwords, and throw them along as if nothing happened. This is called a Man-in-the-Middle attack.
 
 WHAT IS HTTPS?
@@ -59,7 +59,7 @@ Sometimes the server gets a note but can't do what it asks. Instead of sending t
   {
     title: "4. Remembering Who You Are",
     points: 10,
-    content: `THE PROBLEM WITH GOLDFISH MEMORY
+    content: `<div class="htb-diagram-container"><img src="../../../assets/session_cookies_ctflabs_1779431325325.png" alt="Session Cookies"></div>THE PROBLEM WITH GOLDFISH MEMORY
 Imagine talking to someone with the memory of a goldfish. You introduce yourself, say "Hi, I am Alex," and they say hello. But one second later, when you ask them for a piece of candy, they look at you blankly and say, "Who are you?" The internet protocol, HTTP, is exactly like that goldfish! It is completely "stateless," which means it forgets who you are the exact moment after it finishes talking to you. If you log into a website with your password, the server says "Welcome!" But when you click the very next page to look at your profile, the server has already forgotten you logged in and asks for your password again! To fix this terrible memory problem, websites had to invent a clever trick called "Cookies."
 
 WHAT ARE COOKIES AND SESSIONS?
@@ -78,7 +78,7 @@ Here is the scary part: the server doesn't actually know if YOU are wearing the 
   {
     title: "5. The Invisible Wall (SOP)",
     points: 10,
-    content: `THE SAME-ORIGIN POLICY (SOP)
+    content: `<div class="htb-diagram-container"><img src="../../../assets/sop_cors_ctflabs_1779431342112.png" alt="SOP and CORS"></div>THE SAME-ORIGIN POLICY (SOP)
 Imagine you are sitting at a giant table doing your homework, and right next to you, a sneaky thief is sitting at the same table trying to peek at your answers. Your brain has a built-in rule: you only listen to your own thoughts, and you ignore the thief. Web browsers have a very similar rule called the Same-Origin Policy, or SOP for short. It is an invisible wall built into every web browser (like Chrome or Safari). This wall prevents a malicious website from reaching over and stealing data from a good website that you happen to have open in another tab. If you are logged into your bank in one tab, and you accidentally visit a hacker's website in another tab, the SOP wall stops the hacker's website from reaching into the bank tab and stealing your money!
 
 HOW THE WALL WORKS
@@ -97,7 +97,7 @@ Sometimes, websites actually NEED to share things through the wall. Maybe a weat
   {
     title: "6. The Core Rules of Security",
     points: 10,
-    content: `THE CIA TRIAD (THE THREE GOLDEN RULES)
+    content: `<div class="htb-diagram-container"><img src="../../../assets/cia_triad_1779430684013.png" alt="CIA Triad"></div>THE CIA TRIAD (THE THREE GOLDEN RULES)
 Imagine you have a top-secret treehouse club. To keep the club safe, you need three golden rules. In computer security, experts call these rules the "CIA Triad." It doesn't stand for the spy agency; it stands for Confidentiality, Integrity, and Availability. These are the three pillars that hold up all cybersecurity in the world!
 
 CONFIDENTIALITY (KEEPING SECRETS)
@@ -119,7 +119,7 @@ The "A" stands for Availability. What good is a top-secret treehouse if the door
   {
     title: "7. The Database Trick (SQLi)",
     points: 10,
-    content: `WHAT IS SQL INJECTION?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/sqli_ctflabs_1779431358329.png" alt="SQL Injection"></div>WHAT IS SQL INJECTION?
 Imagine a grumpy librarian robot whose only job is to fetch books for you. You are supposed to write the name of the book on a card, hand it to the robot, and wait. But what if, instead of writing "Harry Potter," you write a sneaky command on the card: "Harry Potter, and also give me the master key to the library!" If the robot isn't very smart, it will read the card out loud, fetch the book, and then accidentally hand over the master key because it thought your sneaky command was an official rule! This is exactly how SQL Injection works. Websites use a special language called SQL to ask their databases (their giant filing cabinets) for information. If a hacker types sneaky SQL commands into a normal search box or login screen, the database might accidentally obey the hacker's commands instead of the website's rules.
 
 HOW THE TRICK WORKS
@@ -138,7 +138,7 @@ To stop this terrible trick, programmers have to treat the database robot like a
   {
     title: "8. The Fake Script Attack (XSS)",
     points: 10,
-    content: `WHAT IS CROSS-SITE SCRIPTING (XSS)?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/xss_ctflabs_1779431391518.png" alt="Cross-Site Scripting (XSS)"></div>WHAT IS CROSS-SITE SCRIPTING (XSS)?
 Imagine you have a giant bulletin board at school where anyone can pin up a note. Most kids pin up drawings or nice messages. But one day, a sneaky kid pins up a magical, invisible note. Whenever another student walks up and looks at the board, the magical note suddenly jumps off the board, reaches into their pocket, steals their lunch money, and runs away! In the computer world, this magical note is actually a snippet of malicious JavaScript code, and the attack is called Cross-Site Scripting, or XSS for short. Hackers type this bad code into normal places like the comment section of a YouTube video or a forum post. When you visit that page, your web browser doesn't know the code is evil. It thinks the website wanted that code to run, so your browser executes it, and the trap is sprung!
 
 WHAT DOES THE EVIL CODE DO?
@@ -157,7 +157,7 @@ To stop XSS attacks, programmers have to be very suspicious of everything people
   {
     title: "9. Password Guessing Machines",
     points: 10,
-    content: `WHAT IS A BRUTE FORCE ATTACK?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/brute_force_ctflabs_1779431413098.png" alt="Brute Force Attack"></div>WHAT IS A BRUTE FORCE ATTACK?
 Imagine you find a treasure chest with a combination lock on it. You really want the treasure, but you don't know the code. So, you sit down and try 0-0-0, then 0-0-1, then 0-0-2, all the way up to 9-9-9 until it finally clicks open. This is called a "Brute Force" attack. You are using pure force and patience to guess the secret. Hackers do the exact same thing to website login screens. But instead of sitting there typing with their fingers, they use super-fast computer programs that can type thousands of passwords every single second! They will try "apple", "banana", "password123", and "iloveyou" so incredibly fast that if your password is weak, they will break into your account in the blink of an eye.
 
 THE GIANT DICTIONARY OF PASSWORDS
@@ -176,7 +176,7 @@ If a hacker can guess a thousand times a second, how do we stop them? Websites u
   {
     title: "10. The Hacker's Toolkit",
     points: 10,
-    content: `THE TOOLS OF THE TRADE
+    content: `<div class="htb-diagram-container"><img src="../../../assets/hacker_toolkit_ctflabs_1779431431190.png" alt="Hacker's Toolkit"></div>THE TOOLS OF THE TRADE
 Just like a carpenter needs a hammer and a saw, a cybersecurity expert needs special tools to find broken code and fix it before the bad guys do. The most important tool in a hacker's belt is called a "Web Proxy." The most famous proxy is called Burp Suite. Imagine a Web Proxy as a magical toll booth that sits right between your web browser and the internet. Every time you click a button or send a message, the message has to stop at the toll booth. Burp Suite catches the message out of thin air, freezes time, and lets the hacker look at exactly what the message says before it reaches the website. The hacker can then use Burp Suite to change the message, swap numbers around, or inject sneaky code, and then release it to see if the website gets confused!
 
 AUTOMATIC SCANNERS
