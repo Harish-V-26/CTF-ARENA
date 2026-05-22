@@ -1,15 +1,35 @@
 const LESSONS = [
   {
-    title: "1. Welcome to the Gauntlet",
+    title: "Welcome to the Gauntlet",
     points: 30,
-    content: `THE TRAINING GROUND
-Welcome to the DevTools Gauntlet! This is your very first practical mission where you get to spin up a live target container and hack it. In the previous lessons, we learned the theory behind how developer tools work. Now, it's time to put on your detective gear, launch the sandbox, and solve three challenges. When you click the launch button above, the server will build a private Docker website just for you, and open it in a new browser tab.
+    content: `Welcome to the DevTools Gauntlet — Phase 1: Guided Practice!
 
-THE THREE CHALLENGES
-Inside the sandbox, you will face three tasks. Challenge 1 is "The Console Trick," where you must unlock a grayed-out button that refuses to be clicked. Challenge 2 is "The Hidden Element," where you must find a secret flag that is painted invisible using CSS rules. Challenge 3 is "The Storage Secret," where a flag is silently hidden inside the browser's LocalStorage vault when the page loads.
+This is your first PRACTICAL Docker challenge for Browser Developer Tools. Unlike the theory lessons, here you will exploit real vulnerabilities in a live web application running inside a Docker container.
 
-THE HINT BUTTONS
-Don't worry about getting lost! Each challenge inside the sandbox has step-by-step instructions and hint buttons to guide you. The entire sandbox runs safely inside your browser, so you don't need to write any complicated server scripts. When you are done exploring and finding the flags, come back to this page and answer the questions below to submit your flags and earn your points!`,
+HOW IT WORKS:
+1. Click the "Launch DevTools Guided Lab" button above.
+2. A private Docker container will spin up just for you.
+3. A new tab will open with your sandbox environment.
+4. Complete the three challenges inside the sandbox.
+5. Come back here and answer the questions to earn points.
+
+THE THREE CHALLENGES:
+  Challenge 01: The Console Trick
+    → A disabled button that you must unlock using the Console.
+
+  Challenge 02: The Hidden Element
+    → An invisible HTML element containing a flag, hidden with CSS.
+
+  Challenge 03: The Storage Secret
+    → A flag silently stored in LocalStorage when the page loaded.
+
+IMPORTANT TIPS:
+  • Each challenge has step-by-step instructions built into the sandbox page.
+  • Each challenge has a hint button if you get stuck.
+  • The sandbox runs entirely in your browser — no server-side hacking needed.
+  • Your container is automatically destroyed when you close the tab.
+
+Ready? Launch the lab and let's begin!`,
     questions: [
       { q: "What keyboard shortcut opens the Console in Chrome?", a: "Ctrl+Shift+J" },
       { q: "What CSS property is used to hide elements from view in Challenge 02?", a: "display: none" },
@@ -19,16 +39,34 @@ Don't worry about getting lost! Each challenge inside the sandbox has step-by-st
     ]
   },
   {
-    title: "2. Challenge 01 — The Console Trick",
+    title: "Challenge 01 — The Console Trick",
     points: 40,
-    content: `THE DISABLED BUTTON
-In many websites, when a form isn't filled out correctly or you don't have permission to click something, developers use a rule called the "disabled" attribute. This makes the button gray and locks it so it doesn't respond when you click it. Developers often think this is a safe way to block users. But they forget that the button is running inside YOUR browser, on YOUR computer, which means you can edit it however you like!
+    content: `OBJECTIVE: Unlock the disabled button and capture the flag.
 
-HOW TO UNLOCK IT
-To unlock the button, right-click it in the sandbox and select "Inspect" to open the Inspector tree. You will see the HTML tag: "<button id='flagBtn' disabled>Locked</button>". To bypass this with the Console walkie-talkie, click the Console tab, type "document.getElementById('flagBtn').disabled = false", and press Enter. The browser instantly executes your command, removes the disabled rule, and turns the button active! Click the button, and the flag will pop onto your screen.
+BACKGROUND:
+Many web applications use the HTML "disabled" attribute to prevent users from clicking buttons. Developers sometimes think this is a security feature — but it's not. The "disabled" attribute only exists in YOUR browser. You can modify it freely.
 
-THE LESSON LEARNED
-This challenge shows why developers must never trust front-end restrictions for security. If a user can edit the code in their browser, they can enable hidden buttons, write in read-only input boxes, and submit forms they shouldn't be allowed to touch. If you want a button to be truly secure, the server must verify the user's permissions when the form is submitted, rather than relying on a gray button to stop them!`,
+THE VULNERABILITY:
+The button uses: <button id="flagBtn" disabled>Locked</button>
+The word "disabled" tells the browser to gray out the button and ignore clicks. But you control the browser!
+
+STEP-BY-STEP WALKTHROUGH:
+1. In the sandbox tab, right-click the "Locked" button and select "Inspect".
+2. You'll see the HTML: <button id="flagBtn" disabled>
+3. Switch to the Console tab (Ctrl+Shift+J in Chrome).
+4. Type: document.getElementById('flagBtn').disabled = false
+5. Press Enter. The button turns green and active.
+6. Click the button to reveal the flag!
+
+ALTERNATIVE METHOD:
+In the Inspector, you can also:
+  • Double-click the word "disabled" in the HTML tag and delete it.
+  • Or right-click the element → Edit as HTML → remove "disabled".
+
+WHY THIS MATTERS:
+This demonstrates that ALL client-side restrictions can be bypassed. If a button, form, or input is "disabled" or "readonly" on the front-end, a real attacker can always enable it. True security must be enforced server-side.
+
+After completing this challenge in the sandbox, submit the flag and answer the questions below.`,
     questions: [
       { q: "What is the flag from Challenge 01? (Hint: click the unlocked button)", a: "flag{console_is_powerful}" },
       { q: "What JavaScript command disables/enables an element's disabled property?", a: "document.getElementById('flagBtn').disabled = false" },
@@ -37,16 +75,34 @@ This challenge shows why developers must never trust front-end restrictions for 
     ]
   },
   {
-    title: "3. Challenge 02 — The Hidden Element",
+    title: "Challenge 02 — The Hidden Element",
     points: 40,
-    content: `THE INVISIBLE BOX
-Sometimes developers want to hide elements on a page, like a secret coupon code or a hidden menu, and they use a CSS style called "display: none". This rule tells the browser: "Don't draw this box on the screen, keep it completely invisible." But the box still exists in the website's HTML blueprint! Because the blueprint is sent to your browser, you can read it, edit it, and find the secret text without ever rendering it on the screen.
+    content: `OBJECTIVE: Find the hidden HTML element and extract the flag.
 
-THE BLUUPRINT SEARCH
-To find the hidden flag, open the Elements/Inspector panel. Click inside the HTML tree and press Ctrl+F to open the search bar. Type "flag" and press Enter. The Inspector will jump straight to the hidden tag: "<div id='hidden-flag-div' style='display:none;'>flag{...}</div>". You can read the flag text directly from the blueprint! Alternatively, you can double-click the style "display: none", change it to "display: block", and watch the secret box instantly paint itself onto the page.
+BACKGROUND:
+Developers often hide elements using CSS rather than removing them from the page entirely. This means the data is still in the DOM — it's just invisible. The Inspector lets you see EVERYTHING in the DOM, regardless of visual styling.
 
-THE LESSON LEARNED
-This challenge teaches you that "security by obscurity" (trying to keep secrets safe just by hiding them from view) does not work. If data is sent to the client's browser, it is accessible, no matter what CSS rules you use to cover it up. If you don't want a user to read a secret flag, the server should never include it in the HTML code in the first place!`,
+THE VULNERABILITY:
+The sandbox contains: <div id="hidden-flag-div" style="display:none;">flag{...}</div>
+The CSS rule "display: none" makes the element invisible, but it still exists in the page source.
+
+STEP-BY-STEP WALKTHROUGH:
+1. In the sandbox tab, open DevTools (F12).
+2. Go to the Inspector / Elements tab.
+3. Press Ctrl+F to search the DOM.
+4. Type "flag" and press Enter.
+5. You'll find the hidden div with the flag inside!
+6. Copy the flag text.
+
+ALTERNATIVE METHOD (Console):
+Type in Console: document.getElementById('hidden-flag-div').textContent
+This directly extracts the text content without changing any styling.
+
+BONUS — MAKE IT VISIBLE:
+In the Inspector, change "display: none" to "display: block" to see the flag appear on the page.
+Or in Console: document.getElementById('hidden-flag-div').style.display = 'block'
+
+After finding the flag, submit it in the sandbox and answer the questions below.`,
     questions: [
       { q: "What is the flag from Challenge 02?", a: "flag{inspector_dom_master}" },
       { q: "What CSS rule was hiding the flag element?", a: "display: none" },
@@ -55,16 +111,34 @@ This challenge teaches you that "security by obscurity" (trying to keep secrets 
     ]
   },
   {
-    title: "4. Challenge 03 — The Storage Secret",
+    title: "Challenge 03 — The Storage Secret",
     points: 40,
-    content: `THE PERSISTENT STORAGE
-Websites have a hard time remembering things because browsers have goldfish memory. To solve this, browsers give websites a small filing cabinet called "LocalStorage." When a website wants to save a setting, like a dark mode preference or your username, it writes it down on a card and slides it into this cabinet. The cabinet persists, meaning the data stays there even if you close the tab, close the browser, or turn off your computer!
+    content: `OBJECTIVE: Find the flag hidden in the browser's LocalStorage.
 
-PEEKING IN THE CABINET
-When the sandbox page loaded, it silently executed a command that stored a secret key inside your cabinet: "localStorage.setItem('secret_flag', 'flag{...}')". Because the website didn't print this on the screen, you'd never know it was there. But you can check the cabinet! Open your DevTools, click the "Application" or "Storage" tab, expand the "Local Storage" folder, and click the website's URL. You will see a table with keys and values, and the secret flag is listed right there!
+BACKGROUND:
+Web applications frequently store data in the browser using LocalStorage — a key-value store that persists even after the browser is closed. Developers sometimes store sensitive data here: session tokens, user preferences, feature flags, and sometimes literal secrets.
 
-THE LESSON LEARNED
-LocalStorage is a convenient place for developers to save user preferences, but it is completely unencrypted and readable by anyone who opens DevTools. It can also be stolen by hackers using malicious scripts (XSS). Therefore, developers must never store sensitive keys, session tokens, or private user data inside LocalStorage. If data needs to be kept secure, it should be stored on the server's database instead!`,
+THE VULNERABILITY:
+When the sandbox page loaded, it silently executed:
+  localStorage.setItem('secret_flag', 'flag{...}');
+This stored a flag in your browser's LocalStorage without displaying it anywhere on the page.
+
+STEP-BY-STEP WALKTHROUGH:
+1. In the sandbox tab, open DevTools (F12).
+2. Go to the Application tab (Chrome) or Storage tab (Firefox).
+3. In the left sidebar, expand "Local Storage".
+4. Click on the current domain/URL.
+5. Look for a key named "secret_flag" — the value is your flag!
+
+ALTERNATIVE METHOD (Console):
+Type: localStorage.getItem('secret_flag')
+This directly retrieves the value from LocalStorage.
+
+BONUS — SEE ALL STORAGE:
+Type: localStorage   (returns all key-value pairs)
+Type: document.cookie   (returns all accessible cookies — there's a bonus hint cookie too!)
+
+After finding the flag, submit it in the sandbox and answer the questions below.`,
     questions: [
       { q: "What is the flag from Challenge 03?", a: "flag{storage_explorer_pro}" },
       { q: "What Console command retrieves a specific LocalStorage value?", a: "localStorage.getItem('secret_flag')" },
@@ -73,16 +147,32 @@ LocalStorage is a convenient place for developers to save user preferences, but 
     ]
   },
   {
-    title: "5. Phase 1 Complete — Debrief",
+    title: "Phase 1 Complete — Debrief",
     points: 50,
-    content: `THE DECTECTIVE'S SUMMARY
-Congratulations! You have completed Phase 1: Guided Practice. You have proven that you can unlock disabled buttons using the Console, find invisible elements in the Inspector DOM tree, and retrieve hidden variables from LocalStorage. These three skills form the core of web client-side analysis.
+    content: `Congratulations! You've completed Phase 1: Guided Practice of the DevTools Gauntlet!
 
-THE GOLDEN RULES
-Let's review the main lessons: Rule 1: Front-end security is an illusion. Any restriction that runs in the browser can be modified by the user. Rule 2: The DOM blueprint contains everything. If a secret is written in the HTML, it is visible. Rule 3: Browser storage is public. Anyone with access to the computer can open DevTools and read the LocalStorage.
+SKILLS YOU'VE MASTERED:
+   Console: Modifying DOM properties (removing "disabled" attributes).
+   Inspector: Searching the DOM for hidden elements and extracting their content.
+   Storage: Finding sensitive data in LocalStorage using both the Application tab and Console commands.
 
-THE NEXT STEP
-Now that you have completed the guided challenges, you are ready for Phase 2: The Independent Field Test! In the next phase, there are no instructions, and the flag is split into three parts hidden in different panels. You will need to check the Inspector, check the Network headers of a failed request, and search through JavaScript files to find all the pieces. Navigate back to the main Challenges page and start Phase 2 when you're ready!`,
+KEY TAKEAWAYS:
+1. Client-side security is an illusion.
+   Disabled buttons, hidden inputs, and front-end validation can ALL be bypassed by the user. Never rely on them for security.
+
+2. The DOM contains everything — visible or not.
+   If data is in the HTML source, it's accessible. "display: none" hides from human eyes, not from DevTools.
+
+3. Browser storage is NOT secure.
+   LocalStorage, SessionStorage, and cookies are all readable and modifiable by the user. Never store secrets client-side.
+
+4. The Console is your most powerful tool.
+   It lets you run arbitrary JavaScript in the page's context — reading variables, calling functions, modifying the DOM, and accessing storage.
+
+WHAT'S NEXT:
+Ready for Phase 2? The "DevTools Field Test" is the real challenge — no instructions, no hand-holding. A flag is split across three different locations (Inspector, Network headers, and JavaScript source code), and you must find all three parts independently.
+
+Navigate back to the Challenges page and launch "DevTools Field Test — Phase 2" when you're ready!`,
     questions: [
       { q: "Can 'disabled' attributes on HTML forms prevent a determined attacker? (yes/no)", a: "no" },
       { q: "What DevTools panel lets you run arbitrary JavaScript in the page's context?", a: "Console" },

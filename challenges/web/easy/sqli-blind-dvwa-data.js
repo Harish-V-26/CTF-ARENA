@@ -2,14 +2,18 @@ const LESSONS = [
   {
     title: "1. What is Blind SQLi?",
     points: 20,
-    content: `THE SILENT GUARD
-Imagine you are trying to find out what treasures are kept inside a locked room by asking the castle guard. In a normal SQL Injection attack, the guard is very talkative and dumps the items on a table for you. But in a "Blind SQL Injection" attack, the guard has tape over their mouth! They cannot speak or show you the data. However, they can still hear you, and they can nod their head "yes" or shake it "no". To steal the information, you have to play a game of "20 Questions," asking clever yes-or-no questions to figure out the secrets one letter at a time!
+    content: `Welcome to the Blind SQL Injection Lab! 
 
-THE TIME SPELL
-How do we get a computer to nod yes or shake no when it doesn't print any answers? We use a "Time Delay" spell! We tell the database guard: "Check if the first letter of the administrator's password is 'A'. If it is 'A', go to sleep and take a nap for exactly 5 seconds before answering me. If it is NOT 'A', answer me immediately." When we send the query, we look at our watch. If the page freezes and takes 5 seconds to load, we know the answer was YES! If it loads instantly, we know the answer was NO. By repeating this test for every letter, we can extract the complete password.
+WHAT IS BLIND SQL INJECTION?
+Imagine you are a detective investigating a crime, and you have found a very important witness who knows all the secrets! But there is a huge problem: the witness has duct tape over their mouth and cannot speak a single word. They also cannot hand you any papers. This is exactly what "Blind SQL Injection" is like! The website's security guards are smart enough to stop the database from printing out the passwords on the screen. The database knows the answers, but it is totally blind and mute to you. So, how do we get the secrets? We have to play the game "20 Questions" with the computer! Instead of asking "What is the password?", we ask "Does the password start with the letter A?" If the database guard nods yes, we know the first letter! Or, we can use an even cooler trick: we tell the guard, "If the answer is YES, close your eyes and go to sleep for exactly 5 seconds!" If we start our stopwatch and the website freezes for exactly 5 seconds, we magically know the answer was YES, without the guard ever speaking a word!
 
-SETTING UP THE LAB
-Let's launch the playground and prepare our environment. Click the red "Launch DVWA Instance" button above and wait for your container to load in a new tab. Log in using the default credentials: Username: "admin" and Password: "password". Scroll down, click the "Create / Reset Database" button to set up the practice tables, and then click the "DVWA Security" tab on the left menu. Change the security level to "Low" and click Submit so we can practice our first time-delay spell!`,
+STEP 1: Start the Lab
+Click "Launch DVWA Instance". Wait for your container to start.
+
+STEP 2: Log In & Setup
+1. Username: admin, Password: password
+2. Click "Create / Reset Database".
+3. Go to "DVWA Security" and set it to "Low".`,
     questions: [
       { q: "Can the guard (database) speak and show you the data directly in a Blind attack? (yes/no)", a: "no" },
       { q: "What game is Blind SQLi similar to? (20...)", a: "20 Questions" },
@@ -19,11 +23,21 @@ Let's launch the playground and prepare our environment. Click the red "Launch D
   {
     title: "2. The Sleeping Guard (Low Level)",
     points: 30,
-    content: `CASTING THE SLEEP SPELL
-Now that the laboratory is ready, click on "SQL Injection (Blind)" in the left side menu. You will see a text box asking for a User ID. If you type "1", the page simply replies "User ID exists". It does not print any usernames or details. To test if the input is vulnerable to SQL injection, we will cast our sleeping spell by typing: "1' AND SLEEP(5) #".
+    content: `THE SLEEPING GUARD TRICK
+Now it is time to try our amazing stopwatch trick on the mute database guard! Remember, the guard cannot talk to us, but the guard still obeys our math spells. We are going to hand the guard a note that says, "Hey, if my math equation is perfectly true, I want you to immediately go to sleep for 5 seconds before you do anything else." Since we know our math equation is true, the guard will read it, fall asleep, and make the entire website spin and freeze. When we see the website spinning, we know our spell worked and we have broken the lock!
 
-THE MATH BEHIND THE NAP
-Let's see why this works! The single quote (') closes the query string, and the hashtag (#) comments out the rest of the server's rules. The query becomes: "Check if User 1 exists, AND run the sleep command for 5 seconds." Since User 1 does exist, the database runs the SLEEP(5) instruction. The website will freeze and the loading wheel will spin for exactly 5 seconds before returning the "User ID exists" message. If the database was not vulnerable, it would ignore our sleep command and load instantly. This freeze proves the database is listening to our commands!`,
+HOW TO DO THE TRICK:
+
+1. Go to "SQL Injection (Blind)" on the left menu.
+2. If you type 1, it says "User ID exists". But it won't show you any names.
+3. Let's cast our sleeping spell: \`1' AND SLEEP(5) #\`
+
+Why does this work?
+- The guard checks if User 1 exists (YES).
+- Then it sees "AND SLEEP(5)". Since the first part was YES, it executes the sleep command!
+- The website will freeze and spin for exactly 5 seconds before answering.
+
+Try it! Notice how long it takes to load. You just proved the database is vulnerable!`,
     questions: [
       { q: "What word do we use to make the database freeze? (Hint: SLEEP)", a: "SLEEP" },
       { q: "How many seconds did we tell the guard to sleep?", a: "5" },
@@ -33,11 +47,20 @@ Let's see why this works! The single quote (') closes the query string, and the 
   {
     title: "3. The Hidden Dropdown (Medium Level)",
     points: 30,
-    content: `THE DROPDOWN BARRIER
-Let's step up the security! Go to the DVWA Security menu, change the difficulty to "Medium", and click Submit. Navigate back to "SQL Injection (Blind)". You will notice the free-text input box is gone, replaced by a simple dropdown menu. The programmer thinks that because you can only click the numbers 1 through 5, you cannot inject any SQL commands. But as we learned, this dropdown restriction only exists in your browser!
+    content: `HIDING THE MAGIC WAND
+Uh oh! We leveled up to Medium security, and the security guards realized we were typing magic spells into the text box. So, they completely ripped the text box off the wall! Instead, they left a simple dropdown menu where you can only click numbers. They think that because we can't type, we can't cast our spells. But hackers are very clever. We can use our Developer Tools (the x-ray glasses of the internet) to look behind the webpage and change the HTML code itself! We are going to rewrite the code of the dropdown menu to hide our sleeping spell right inside it.
 
-THE DEVTOOLS BYPASS
-To bypass this barrier, we will use our Browser Developer Tools (F12) to rewrite the dropdown menu options. Right-click the dropdown menu and select "Inspect" to open the HTML tree. Look for the code: "<option value='1'>1</option>". Double-click the "value='1'" attribute and change it to: "value='1 AND SLEEP(5)'". Press Enter to save your changes, select the number 1 in the dropdown, and click Submit. Watch the browser tab! It will freeze and spin for 5 seconds, proving the injection still works on Medium!`,
+HOW TO DO THE TRICK:
+
+1. Change security to Medium. Go back to "SQL Injection (Blind)".
+2. We have a dropdown menu again. Let's hack it using DevTools!
+3. Right-click the dropdown menu and click "Inspect".
+4. Find the code: \`<option value="1">1</option>\`.
+5. Double-click the \`value="1"\` part.
+6. Change it to: \`value="1 AND SLEEP(5)"\` (No quotes needed).
+7. Press Enter. Select the "1" from the dropdown and click Submit.
+
+Watch the loading spinner! If it spins for 5 seconds, you successfully hacked the Blind SQLi!`,
     questions: [
       { q: "What tool did we use to change the dropdown menu code?", a: "DevTools" },
       { q: "Did the website freeze for 5 seconds again? (yes/no)", a: "yes" },
@@ -47,11 +70,20 @@ To bypass this barrier, we will use our Browser Developer Tools (F12) to rewrite
   {
     title: "4. The Poisoned Cookie (High Level)",
     points: 30,
-    content: `THE COOKIE HIDING PLACE
-Let's increase the security again! Change the difficulty to "High" and return to the blind injection page. The dropdown menu is completely gone! The webpage doesn't even show a form. Instead, the page reads your User ID from a secret tracking file called a "Cookie" stored inside your browser. Because the input parameter is not in the URL or on the page, the developers think it is completely safe from hacking.
+    content: `THE POISONED WRISTBAND
+The security guards are getting really mad! On High security, they ripped out the text box AND the dropdown menu. Now there is absolutely nowhere to click or type. How are we supposed to hand our spell to the mute database guard? The answer is Cookies! Remember the special digital wristband the website gives you so it remembers who you are? The website is secretly reading your ID number off that wristband every time you click a page. We are going to use our Developer Tools to take our wristband, scratch out our ID number, and write our sleeping spell right on the wristband itself! When the guard scans our wristband, the spell will be cast invisibly!
 
-POISONING THE VAULT
-We can use our Developer Tools to open the browser's cookie storage and edit the cookie value directly! Open DevTools (F12), click the "Application" or "Storage" tab, expand "Cookies" on the left, and click the domain. You will see a cookie named "id" with a value of "1". Double-click that value and type our sleep spell: "1' AND SLEEP(5) #". Now, refresh the page by pressing F5. The page will take 5 seconds to reload, proving that even cookies can be poisoned to hack a database!`,
+HOW TO DO THE TRICK:
+
+1. Change security to High. Go to "SQL Injection (Blind)".
+2. The website is passing your User ID invisibly using a "Cookie".
+3. Open DevTools (F12). Go to the "Application" or "Storage" tab at the top.
+4. On the left side, click "Cookies" and select the website IP.
+5. You will see a cookie named \`id\` with a value of \`1\`.
+6. Double-click the value \`1\` and change it to our spell: \`1' AND SLEEP(5) #\`
+7. Refresh the page! 
+
+The page will take 5 seconds to reload. You just poisoned a cookie!`,
     questions: [
       { q: "Where was the vulnerable parameter hiding this time?", a: "Cookie" },
       { q: "Which tab in DevTools lets you see and change Cookies?", a: "Application" },
@@ -61,11 +93,17 @@ We can use our Developer Tools to open the browser's cookie storage and edit the
   {
     title: "5. The Strict Bouncer (Impossible Level)",
     points: 30,
-    content: `THE UNBREAKABLE DEFENSE
-Let's see how developers build a perfect defense. Change the security difficulty to "Impossible" and try running your sleep spells again. They will all fail completely! The server loads instantly, ignoring our commands. The developers fixed the code by using "Prepared Statements," which is the gold standard for database defense.
+    content: `THE ULTIMATE SHIELD
+Why did all of our amazing stopwatch and wristband tricks suddenly fail on Impossible mode? Even though the database guard is mute, the architects of the website finally gave the guard the ultimate shield: a Prepared Statement. 
 
-THE DATA PLACEHOLDER
-With Prepared Statements, the server sends the query blueprint to the database first: "Search for a user with ID equal to this placeholder (?)". The database compiles the SQL logic structure beforehand. When we submit our spell "1' AND SLEEP(5) #", the database reads it as a literal search term rather than computer instructions. It looks for a user whose ID name is literally the string "1-quote-AND-SLEEP...". Since no user has that name, it returns zero results instantly without running the sleep command, keeping the database perfectly safe!`,
+THE DEFENSE (Prepared Statements):
+Just like regular SQL Injection, the best defense is a "Prepared Statement".
+
+When you give the robot your spell: \`1' AND SLEEP(5) #\`
+The robot puts it in a safe box. It asks the database: "Is there a user named literally 1-Quote-AND-SLEEP-5-Hashtag?"
+The database instantly says NO, without ever running the SLEEP command.
+
+Prepared Statements save the day once again!`,
     questions: [
       { q: "What is the best defense against Blind SQL Injection?", a: "Prepared Statements" },
       { q: "Did the SLEEP command work on Impossible mode? (yes/no)", a: "no" },

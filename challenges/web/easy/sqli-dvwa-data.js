@@ -2,17 +2,54 @@ const LESSONS = [
   {
     title: "1. What is SQL Injection?",
     points: 20,
-    content: `THE DATABASE LIBRARY
-Imagine a massive library filled with thousands of books containing details about every user, account, and product on a website. To talk to the librarian, developers use a special programming language called SQL (Structured Query Language). When you log in, the website tells the librarian: "SELECT * FROM users WHERE username = 'alice' AND password = 'secretpassword'." This command tells the librarian to search the shelves, find the user named Alice, check if her password matches, and let her in if it does.
+    content: `SQL INJECTION — A BEGINNER'S COMPLETE GUIDE
 
-THE SLIPPED NOTE
-SQL Injection (SQLi) happens when the website takes something you type in a search box and pastes it directly into the note it hands to the librarian without checking it first. If the note-maker is lazy, an attacker can write librarian commands instead of a username! The librarian reads the note, gets confused, and executes the attacker's commands as if they were official rules. This is one of the oldest and most dangerous security bugs on the internet, allowing hackers to bypass login screens, steal entire tables of user data, modify account balances, or erase the entire library!
+WHAT IS SQL INJECTION?
+Imagine a giant filing cabinet guarded by a very strict robot librarian. To get a file, you have to write a note on a piece of paper and hand it to the robot. The robot only understands notes written in a special language called SQL. Normally, you write "Please give me the file named Alice." The robot reads it, understands you want Alice's file, and gives it to you. But what if you are a sneaky hacker? You could hand the robot a note that says: "Please give me the file named Alice, OR give me EVERY single file in the entire cabinet!" Because the robot isn't very smart, it just reads the note literally, gets confused by the "OR", and accidentally dumps thousands of secret files right onto the floor for you! SQL Injection (SQLi) is exactly like this trick. It happens when a website takes something you type and hands it directly to the database robot without checking to see if you snuck in any dangerous commands.
 
-THE OR 1=1 TRICK
-Let's see how the trick works. The note-maker builds the query by gluing text together: 'SELECT * FROM users WHERE username = ' + input. If the hacker types: "' OR 1=1 #", the note becomes: "SELECT * FROM users WHERE username = '' OR 1=1 #'". The single quote (') closes the search early. The "OR 1=1" is a mathematical statement that is always true. The hashtag (#) tells the librarian to ignore the rest of the text. The librarian reads the note, sees that one always equals one, and hands over every single book in the library!
+WHY DO ATTACKERS USE SQL INJECTION?
+SQL Injection is one of the oldest and most destructive web attacks. It is consistently ranked number one on the OWASP list of most critical web security risks.
 
-SETTING UP THE LAB
-Let's launch our training playground to see this trick in action! Click the red "Launch DVWA Instance" button and wait for the private Docker tab to open. Log in using Username: "admin" and Password: "password". Scroll to the bottom of the dashboard and click the "Create / Reset Database" button to set up our practice books. Finally, click the "DVWA Security" tab in the left sidebar, select "Low" difficulty, and click Submit to start our practice!`,
+An attacker can use SQLi to:
+  1. Bypass Authentication: Log in to any account, including admin accounts, without knowing the password.
+  2. Dump the Entire Database: Extract every user's username, password, email, and personal information in seconds.
+  3. Modify Data: Change prices, transfer funds, alter records, or delete data.
+  4. Destroy Data: Use commands like DROP TABLE to permanently wipe the entire database.
+  5. Take Over the Server: In some configurations, SQL commands can be used to read and write files on the server's hard drive.
+
+HOW DOES SQL INJECTION WORK?
+The core vulnerability is "trusting user input". When a developer writes code that does this:
+
+  query = "SELECT * FROM users WHERE username = '" + userInput + "'"
+
+They are building the SQL command by joining text together. If you type the name "alice", the query becomes safe:
+  SELECT * FROM users WHERE username = 'alice'
+
+But if you type: ' OR 1=1 #
+The query becomes:
+  SELECT * FROM users WHERE username = '' OR 1=1 #'
+
+Breaking this down:
+  - The first apostrophe (') closes the 'alice' string early.
+  - OR 1=1 adds a condition. Since 1 always equals 1, this condition is ALWAYS TRUE for every row in the table.
+  - The # symbol (in MySQL) turns the rest of the line into a comment, so the closing apostrophe is ignored.
+
+The database now returns every single user record because the OR 1=1 condition is true for all of them. You have bypassed the intended check completely.
+
+HOW TO SET UP THE LAB
+
+STEP 1 — Start the Lab:
+Click "Launch DVWA Instance" and wait for your private container to start.
+
+STEP 2 — Log In:
+  Username: admin
+  Password: password
+
+STEP 3 — Reset the Database:
+Scroll down and click "Create / Reset Database". This sets up the practice database.
+
+STEP 4 — Set Security Level:
+Go to "DVWA Security" in the left menu. Make sure it is set to "Low" and click "Submit".`,
     questions: [
       { q: "What is the name of the language used to communicate with databases?", a: "SQL" },
       { q: "What is the default username for our lab?", a: "admin" },
@@ -22,14 +59,48 @@ Let's launch our training playground to see this trick in action! Click the red 
   {
     title: "2. The Truth Trick — Low Security",
     points: 30,
-    content: `THE LOW-LEVEL HOLE
-At Low security, the website takes whatever you type in the User ID box and pastes it directly into the database query with no filter at all. The query looks like: "SELECT first_name, last_name FROM users WHERE user_id = '[INPUT]'". If you type "1", the query finds User 1. But because the input is trusted blindly, we can break out of the quote structure and inject our own database commands to extract all user records in the table.
+    content: `EXPLOITING SQL INJECTION ON LOW SECURITY
 
-CASTING THE SPELL
-Navigate to the "SQL Injection" page on the left menu. Try typing "1" and click Submit to verify normal behavior. You will see the admin details. Now, type our classic spell in the User ID box: "' OR 1=1 #". Click Submit and watch the screen! The page will dump all 5 users from the database. Let's analyze why: the first apostrophe (') closed the user search, the "OR 1=1" math statement evaluated to true for every single row in the database table, and the hashtag (#) commented out the remaining quotes in the server's code!
+UNDERSTANDING THE VULNERABILITY
+Imagine the website is a lazy messenger who takes your note and hands it straight to the database robot without even looking at it. At Low security, DVWA does exactly this! It takes whatever you type in the "User ID" box and pastes it directly into an SQL query with absolutely zero protection. The query looks like this:
 
-OTHER SPELLS TO TRY
-There are many variations of this trick. You can type "1' OR '1'='1" to achieve the same logical result using closing quotes. You can also type "1' UNION SELECT user, password FROM users #" which uses the UNION command to combine the normal query results with a second query that dumps the entire password table! If you want to check if the injection is vulnerable without dumping data, you can type "1' AND 1=2 #"; since one never equals two, this always returns zero results, confirming the injection exists.`,
+  SELECT first_name, last_name FROM users WHERE user_id = '[YOUR INPUT]'
+
+If you type "1", the query finds the user with ID 1. But we can break out of this query structure by typing SQL code.
+
+HOW TO PERFORM THE ATTACK
+
+STEP 1 — Navigate to the SQL Injection page:
+In the DVWA left sidebar, click "SQL Injection". You will see a text box asking for a User ID.
+
+STEP 2 — Verify normal behavior:
+Type "1" and click Submit. You should see the admin user's details. This confirms the input goes to the database.
+
+STEP 3 — Perform the SQL Injection:
+In the User ID box, type exactly this (include the apostrophe at the start):
+  ' OR 1=1 #
+
+Then click Submit.
+
+WHAT HAPPENS AND WHY:
+The server builds this SQL query from your input:
+  SELECT first_name, last_name FROM users WHERE user_id = '' OR 1=1 #'
+
+Analyzing each part:
+  - The ' (apostrophe) closes the opening quote. The user_id condition is now empty.
+  - OR adds an alternative condition. If EITHER condition is true, the row is returned.
+  - 1=1 is a mathematical statement that is ALWAYS TRUE for every single row in the table.
+  - The # symbol marks everything after it as a comment — the database ignores the rest.
+
+Result: The database returns EVERY user in the table because 1=1 is true for every row. You have bypassed the intended filter and extracted all user records.
+
+ADDITIONAL PAYLOADS TO TRY:
+  1' OR '1'='1
+    (Alternative syntax — same logical result)
+  1' UNION SELECT user, password FROM users #
+    (UNION attack — combines your query with a second query to dump the password table)
+  1' AND 1=2 #
+    (This returns NO results because AND 1=2 is always false — useful for confirming the injection exists)`,
     questions: [
       { q: "What mathematical condition do we inject that is always true?", a: "1=1" },
       { q: "What character (#) turns the rest of the SQL query into a comment?", a: "#" },
@@ -39,14 +110,47 @@ There are many variations of this trick. You can type "1' OR '1'='1" to achieve 
   {
     title: "3. The Dropdown Bypass — Medium Security",
     points: 30,
-    content: `THE DROPDOWN TRAP
-Let's increase the security! Go to the DVWA Security tab, change the difficulty level to "Medium", and click Submit. Return to the SQL Injection page. You will notice the text box is gone, replaced by a simple dropdown menu containing numbers. The developer did this thinking: "If the user cannot type, they cannot enter any SQL injection characters!" They also added a function called "mysql_real_escape_string" to add backslashes to any apostrophes to break them.
+    content: `BYPASSING MEDIUM SECURITY VIA DEVTOOLS
 
-THE DEVTOOLS REWRITE
-This dropdown menu is a "client-side" control, which means the restriction only exists in your browser. The browser sends the selected number to the server when you submit the form. To bypass this, we will use our Browser Developer Tools (F12) to rewrite the HTML code! Right-click on the dropdown menu and select "Inspect" to open the HTML editor. Look for the line: "<option value='1'>1</option>". Double-click "value='1'" and change it to: "value='1 OR 1=1'". Press Enter, select 1 from the menu, and click Submit.
+WHAT CHANGED IN MEDIUM?
+At Medium security, the lazy messenger finally realizes they are being tricked, so they try to fix the problem in two silly ways:
+  1. They replace the empty box where you write your note with a pre-printed multiple-choice checklist (the dropdown menu). They think, "If the hacker can only check boxes, they can't write any sneaky commands!"
+  2. They tell the messenger to look for dangerous punctuation marks (like apostrophes) and scribble over them.
 
-THE BACKSLASH ESCAPE
-Why did this injection work even though the developer is filtering apostrophes? Because the database query on Medium security does not put quotes around the number parameter! The query looks like: "WHERE user_id = [INPUT]". Since there are no quotes in the query, we did not need to use an apostrophe (') in our payload "1 OR 1=1" to break out of anything. The filter searched for apostrophes to escape, found none, and sent our payload straight to the database librarian, who executed it and returned all user records!`,
+WHY IT IS STILL VULNERABLE:
+The dropdown restriction only exists on the web page in your browser — it is a "client-side" control. The browser sends the selected value to the server as a simple number. The actual protection lives only in your browser, not on the server. Using your browser's Developer Tools, you can directly edit the HTML and change the value being sent.
+
+HOW TO PERFORM THE ATTACK
+
+STEP 1 — Change DVWA to Medium:
+Go to "DVWA Security" → select "Medium" → click "Submit".
+
+STEP 2 — Go to "SQL Injection":
+You will see the dropdown menu. There is no text box.
+
+STEP 3 — Open Developer Tools:
+Right-click on the dropdown menu and click "Inspect" (or press F12 and click the Inspector/Elements tab).
+This opens the browser's code editor, showing the raw HTML of the page.
+
+STEP 4 — Find and edit the dropdown values:
+In the code, look for lines that look like:
+  <option value="1">1</option>
+  <option value="2">2</option>
+
+Double-click the value="1" text inside one of these lines. The value becomes editable.
+
+STEP 5 — Change the value to an injection payload:
+Replace the value with:
+  1 OR 1=1
+
+So it now reads: <option value="1 OR 1=1">1</option>
+
+Note: We do NOT use an apostrophe (') here because medium security escapes apostrophes. Since the original query puts our input directly as a number (not inside quotes), we do not need one.
+
+STEP 6 — Select and submit:
+Click OK/press Enter to confirm the edit. Now select "1" from the dropdown and click Submit.
+
+The injected value (1 OR 1=1) is sent to the server. The database returns all users.`,
     questions: [
       { q: "What type of selection control replaced the text box in Medium level?", a: "dropdown" },
       { q: "What browser tool did we use to edit the web page code?", a: "DevTools" },
@@ -56,11 +160,33 @@ Why did this injection work even though the developer is filtering apostrophes? 
   {
     title: "4. The Popup Bypass — High Security",
     points: 30,
-    content: `THE POPUP BARRIER
-Let's increase the security level again! Go to the Security menu, change it to "High", and return to the SQL Injection page. You will see a text link saying "Click here to change your ID." When you click it, a separate browser popup window opens with an input box. The developer did this to separate the input page from the results page, thinking it would break automated hacking scripts that look at page URLs.
+    content: `EXPLOITING HIGH SECURITY VIA A POPUP WINDOW
 
-THE SECOND-ORDER ATTACK
-Even with this separation, the underlying database query still does not use parameterized queries. When you type your input inside the popup box and click submit, the website saves your input in a temporary storage location. Then, the main results page reads that saved input and runs it through the database. This is called a "Second-Order" SQL Injection. Type our classic payload "' OR 1=1 #" in the popup input, click submit, close the window, and refresh the main page. The injection fires on the results page and displays all users!`,
+WHAT CHANGED IN HIGH?
+At High security, the website designers think they have come up with a brilliant plan. They decide to move the place where you type your note into a completely different room (a popup window) far away from the database robot. They think that by making you walk to a different room to write the note, it will be impossible for you to trick the robot on the main page. They also add a few more guards to check your spelling. Despite this crazy setup, the main database robot is STILL vulnerable, and the guards are still not perfect! Our classic magic spell will still work.
+
+WHAT IS A SECOND-ORDER ATTACK?
+When the input and the output happen on different pages or at different times, this is called a Second-Order (or Stored) SQL Injection. You put your payload in one place (the popup form), it gets stored or passed to another part of the application (the main results page), and the injection fires there.
+
+HOW TO PERFORM THE ATTACK
+
+STEP 1 — Change DVWA to High:
+Go to "DVWA Security" → select "High" → click "Submit".
+
+STEP 2 — Go to "SQL Injection":
+You will see text saying "Click here to change your ID". Click it.
+
+STEP 3 — A popup window opens:
+This separate popup has a text input box for entering a User ID.
+
+STEP 4 — Enter the injection payload in the popup:
+In the popup's text box, type:
+  ' OR 1=1 #
+
+Click "Submit" and then close the popup.
+
+STEP 5 — View the results on the main page:
+The main page will now display all the user records from the database. The injection fired on the results page based on the value stored from the popup. The attack succeeded.`,
     questions: [
       { q: "Did the High level move the input to a separate popup window? (yes/no)", a: "yes" },
       { q: "What is it called when input is submitted in one place but the injection fires in another?", a: "Second-Order" },
@@ -70,11 +196,39 @@ Even with this separation, the underlying database query still does not use para
   {
     title: "5. The Unbreakable Defense — Impossible Level",
     points: 30,
-    content: `THE PREPARED BLUEPRINT
-Let's look at the only defense that stops every SQL Injection attack permanently. Go to the Security menu, set it to "Impossible", and click Submit. Try any of your SQL injection tricks now, and they will all fail! The server loads instantly and returns zero results. This is because the developers rewrote the database query using a technique called "Prepared Statements," also known as Parameterized Queries.
+    content: `WHY IMPOSSIBLE SECURITY STOPS ALL ATTACKS
 
-THE PLACEHOLDER METHOD
-With Prepared Statements, the developer sends the query structure to the database first, using placeholders: "SELECT first_name, last_name FROM users WHERE user_id = ?". The database parses this structure and knows that the "?" placeholder can only ever represent a literal value, not database commands. When the user sends their input, like "' OR 1=1 #", the database treats it as a search for a user whose ID name is literally that text. Since no user has that name, it returns nothing, rendering all SQL injection attacks completely useless!`,
+UNDERSTANDING THE DEFENSE
+At the Impossible level, the website finally fires the lazy messenger and buys a super-secure lockbox called "Parameterized Queries" (also known as Prepared Statements). This is the ultimate, unbreakable shield against SQL Injection.
+
+WHAT ARE PARAMETERIZED QUERIES?
+With normal (vulnerable) queries, the developer builds the SQL command as a text string with the user's input pasted inside it. The database receives a finished query with the input already embedded.
+
+With Parameterized Queries, the developer sends the SQL command STRUCTURE to the database first, separately from the data. It works in two steps:
+  1. First, the developer tells the database the SHAPE of the query: "I am going to search for a user ID. I will give you the number later. Here is a placeholder (?) for it."
+  2. Second, the developer sends the actual user input as a separate piece of data, clearly labeled as DATA, not as code.
+
+The database now knows for certain that the placeholder (?) will ONLY ever be treated as a value to compare against, NEVER as SQL instructions.
+
+WHAT HAPPENS TO OUR ATTACK?
+When we type:  ' OR 1=1 #
+
+With a parameterized query, the database does not parse this as SQL code. It searches for a user whose user_id column LITERALLY contains the text: ' OR 1=1 # (apostrophe, space, O, R, space, 1, equals sign, 1, space, hash).
+
+No user has that as their ID. The database returns zero results. The attack is completely, permanently broken.
+
+WHY IS THIS THE CORRECT FIX?
+  - It does not rely on filtering specific characters (which attackers can always bypass).
+  - It does not rely on escaping characters (which sometimes has edge cases).
+  - It works by making it structurally impossible for user input to be interpreted as code.
+  - It is the same protection used by all major, well-written web applications.
+
+TRY IT: Change security to Impossible, go to SQL Injection, and try:
+  ' OR 1=1 #
+  ' OR '1'='1
+  1 UNION SELECT username, password FROM users #
+
+All of these will return zero results or an error. Every injection technique fails.`,
     questions: [
       { q: "What is the name of the correct defense that permanently prevents SQL Injection?", a: "Prepared Statements" },
       { q: "With Parameterized Queries, does the database treat user input as SQL code? (yes/no)", a: "no" },

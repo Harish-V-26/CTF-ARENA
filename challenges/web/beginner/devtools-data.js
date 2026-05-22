@@ -1,15 +1,38 @@
 const LESSONS = [
   {
-    title: "1. Inspector (Elements) — Reading the DOM",
+    title: "Inspector (Elements) — Reading the DOM",
     points: 10,
-    content: `THE LIVE BLUEPRINT
-Imagine a website is like a massive LEGO castle. When you look at the screen, you only see the finished castle. But what if you could press a button and see the exact instructions booklet showing where every single brick was placed? In web browsers, this instruction booklet is called the "Inspector" or "Elements" panel. It shows the raw HTML code that builds the pages you look at. Every picture, every text box, and every hidden button is listed right there in a tree. Hackers use the Inspector to see if the website designers accidentally left secret folders or private developer notes lying around in the instructions booklet.
+    content: `The Inspector (called "Elements" in Chrome) shows the raw HTML and CSS of the live page. It lets you view, edit, and manipulate the Document Object Model (DOM) in real time.
 
-THE HIDDEN NOTES
-Website builders often write notes to each other inside the code, which are called "Comments." These comments look like this: "<!-- secret note here -->". Normal users can't see them on the page, but they are completely visible in the Inspector! Sometimes, developers also use a CSS style called "display: none" to make buttons or text completely invisible to normal visitors, but the code is still sitting right there in the booklet. Hackers search the Inspector for keywords like "flag" or "secret" to find these hidden goodies. 
+WHY IT MATTERS FOR CTF:
+The DOM is the browser's in-memory representation of the page. Everything you see — and everything you don't — is described in HTML tags. Developers sometimes leave sensitive data in hidden elements, comments, or disabled fields.
 
-BREAKING THE RULES
-The Inspector doesn't just let you read the instructions; it lets you change them! Imagine a button on a page is grayed out and you can't click it because it has a rule called "disabled" attached to it. You can double-click that "disabled" rule in the Inspector, press the delete key on your keyboard, and watch the button instantly light up! You can now click it, and it will send your data to the server. This works because the rule only existed on your computer, not on the server, showing that browser-side rules are very weak!`,
+HOW TO OPEN IT:
+Right-click any element on a page and select "Inspect", or press F12 and click the "Elements" / "Inspector" tab.
+
+WHERE TO FIND A FLAG:
+  • Hidden HTML comments: <!-- flag{you_found_the_comment} -->
+  • Hidden elements: <div style="display:none;">flag{hidden_div}</div>
+  • Invisible text: <p style="color: white; background: white;">flag{invisible_text}</p>
+  • Disabled buttons: <button disabled>Submit</button>
+  • Input fields with type="hidden": <input type="hidden" name="token" value="flag{secret_token}">
+
+EXPLOITATION TECHNIQUE — BYPASSING CLIENT-SIDE RESTRICTIONS:
+Client-side restrictions are NOT security controls. They only exist for user convenience.
+
+Example: A "Submit" button is grayed out with the 'disabled' attribute.
+  1. Open Inspector (F12).
+  2. Find the <button disabled> tag.
+  3. Double-click the word "disabled" and delete it.
+  4. The button is now clickable — submit the form.
+
+This works because the restriction only exists in the browser. The server never enforced it.
+
+SEARCH THE DOM:
+Press Ctrl+F inside the Inspector panel to search the entire DOM tree for keywords like "flag", "hidden", "secret", "password", or "admin".
+
+PRO TIP:
+You can also edit text content, change styles, add or remove attributes, and even delete entire elements directly in the Inspector. None of these changes are permanent — they only affect your local browser.`,
     questions: [
       { q: "What does the Inspector panel show you?", a: "The raw HTML and CSS of the live page" },
       { q: "What HTML comment syntax might hide a flag in the DOM?", a: "<!-- -->" },
@@ -19,16 +42,44 @@ The Inspector doesn't just let you read the instructions; it lets you change the
     ]
   },
   {
-    title: "2. Console — Running JavaScript Live",
+    title: "Console — Running JavaScript Live",
     points: 10,
-    content: `THE SECRET CHAT BOX
-Imagine your web browser has a secret walkie-talkie that lets you talk directly to the website's engine. This walkie-talkie is called the "Console." It is an interactive panel where you can type JavaScript commands and watch them execute instantly. Normally, the website uses its own JavaScript files to make things move and work. But the Console lets you jump in and type your own commands to override theirs! If a developer is lazy, they might print out secret messages or debugging codes to the Console, thinking that regular users won't know how to open it and read them.
+    content: `The Console is a place to run JavaScript commands and see logged messages from the website's scripts. It is your interactive command line inside the browser.
 
-OVERWRITING THE RULES
-The Console is extremely powerful because you can redefine how the website works. Imagine the website has a function called "validateUser()" that checks if you are allowed to see a secret page, and it always says "No!" You can open the Console, type "validateUser = function() { return true; };", and press enter. You just rewrote the rules in the website's brain! Now when you click the button, the website thinks you are allowed in and reveals the secret. 
+WHY IT MATTERS FOR CTF:
+Developers sometimes leave debugging information in console.log() statements that aren't visible on the main page. Variables, flags, API keys, and even passwords can be leaked this way.
 
-READING THE MEMORY
-You can also use the Console to check the website's memory. You can type "document.cookie" to see the digital wristbands (cookies) the server gave you, or type "localStorage" to see what data the site has saved on your hard drive. Hackers often write scripts that grab this memory data and send it to their own servers. The Console is also where you look for red error messages. If the server crashes or gets confused, it prints a red error here, which often tells you exactly what kind of software the server is using behind the scenes.`,
+HOW TO OPEN IT:
+Press F12 and click the "Console" tab. Or press Ctrl+Shift+J (Chrome) / Ctrl+Shift+K (Firefox).
+
+WHERE TO FIND A FLAG:
+  • Check for messages already printed by the page's scripts.
+  • Type window.flag, document.flag, or secret_variable and press Enter.
+  • Type localStorage to see all locally stored data.
+  • Type document.cookie to see all accessible cookies.
+  • Type Object.keys(window) to see all global variables defined by the page.
+
+EXPLOITATION TECHNIQUE — OVERRIDING FUNCTIONS:
+If a page has a JavaScript validation function that blocks your access, you can redefine it.
+
+Example: A page calls validateUser() before showing a secret area, and it always returns false.
+  1. Open Console.
+  2. Type: validateUser = function() { return true; };
+  3. Click the button — the page now thinks you're authorized.
+
+DOM MANIPULATION FROM CONSOLE:
+  document.getElementById('hidden-flag').style.display = 'block';
+  → Reveals a hidden element.
+
+  document.querySelectorAll('[type="hidden"]');
+  → Lists all hidden input fields and their values.
+
+ALERT/PROMPT EXPLOITATION:
+  alert(document.cookie)  → Pops up all accessible cookies.
+  alert(document.domain)  → Confirms which domain you're on (useful for XSS testing).
+
+PRO TIP — CONSOLE ERRORS:
+Error messages in the Console can reveal internal file paths, server endpoints, technology stack, and API structures. Always read the red error messages — they are a goldmine for reconnaissance.`,
     questions: [
       { q: "What JavaScript function do developers use to print messages to the Console?", a: "console.log()" },
       { q: "What command reveals all cookies accessible to JavaScript?", a: "document.cookie" },
@@ -38,16 +89,45 @@ You can also use the Console to check the website's memory. You can type "docume
     ]
   },
   {
-    title: "3. Debugger (Sources) — Pausing & Modifying Code",
+    title: "Debugger (Sources) — Pausing & Modifying Code",
     points: 10,
-    content: `FREEZING TIME
-Imagine you are playing a fast-paced video game, and you have a magical button that can freeze time at any exact second. While time is frozen, you can walk around, look at the values of all the items, change your health score, and then unfreeze time to watch it play out. In your web browser, this magical freezer is called the "Debugger" or "Sources" panel. It lists every single JavaScript file that the website has loaded. You can open any file, look at the code, and set a "Breakpoint" on any line you want to pause.
+    content: `The Debugger (called "Sources" in Chrome) shows all the JavaScript files loaded by the website. It lets you read, search, pause, and modify running code.
 
-THE PASSWORD TRAP
-Setting a breakpoint is the ultimate way to catch a secret. Imagine the website has a login button, and when you click it, the code runs a comparison check: "if (userPassword === correctPassword)". You can set a breakpoint right on that comparison line. When you type "hello" in the password box and click login, time freezes! The browser stops executing the code. You can now hover your mouse over the word "correctPassword" or type it into the Console, and the browser will reveal the real, secret password that was hidden in its memory!
+WHY IT MATTERS FOR CTF:
+Developers sometimes hardcode credentials, API keys, flags, or business logic directly in JavaScript files. The Debugger lets you examine this code line-by-line and even alter it during execution.
 
-CLEANING THE MESS
-Developers often squeeze all their JavaScript code onto one single line to make the website load faster. This is called "Minified Code," and it looks like a giant, messy pile of spaghetti. It is impossible for humans to read. But the Debugger has a magical button at the bottom that looks like two curly brackets "{ }". This button is called "Pretty Print." When you click it, the Debugger automatically cleans up the spaghetti code, formatting it into beautiful, easy-to-read lines so you can analyze exactly how it works.`,
+HOW TO OPEN IT:
+Press F12 and click the "Sources" / "Debugger" tab. The left panel shows a file tree of all loaded resources.
+
+WHERE TO FIND A FLAG:
+  • Search through .js files for keywords: "flag", "password", "key", "secret", "admin", "token".
+  • Look for Base64-encoded strings: atob("ZmxhZ3toaWRkZW5faW5fYmFzZTY0fQ==")
+  • Check for hardcoded API endpoints that might return sensitive data.
+
+BREAKPOINTS — THE MOST POWERFUL TOOL:
+A breakpoint pauses code execution at a specific line. While paused, you can:
+  1. View all variable values in the Scope panel.
+  2. Change variable values in the Console (e.g., isAdmin = true).
+  3. Step through execution one line at a time.
+  4. Skip over functions or step into them.
+
+EXPLOITATION TECHNIQUE — BREAKPOINT INJECTION:
+  1. Find the login validation function in the Sources panel.
+  2. Set a breakpoint on the line that checks: if (password === correctPassword)
+  3. Submit any login attempt.
+  4. Code pauses → In the Console, type: correctPassword
+  5. The actual password is revealed in the scope.
+  OR: Type password = correctPassword, then resume execution to bypass the check.
+
+CONDITIONAL BREAKPOINTS:
+Right-click a line number → "Add conditional breakpoint" → Enter a condition like: username === "admin"
+The code only pauses when the condition is true.
+
+WATCH EXPRESSIONS:
+Add variables to the "Watch" panel to monitor their values as you step through code. Useful for tracking how data flows through the application.
+
+PRO TIP — PRETTY PRINT:
+Minified JavaScript (all on one line) is hard to read. Click the { } icon at the bottom of the Sources panel to "Pretty Print" the code into readable, formatted JavaScript.`,
     questions: [
       { q: "What is a breakpoint?", a: "A marker that pauses code execution at a specific line" },
       { q: "What panel shows all variable values when code is paused at a breakpoint?", a: "Scope panel" },
@@ -57,16 +137,43 @@ Developers often squeeze all their JavaScript code onto one single line to make 
     ]
   },
   {
-    title: "4. Network — Intercepting Data in Transit",
+    title: "Network — Intercepting Data in Transit",
     points: 10,
-    content: `THE TRAFFIC MONITOR
-Every time you click a link, type a message, or load a picture on a website, your browser has to send a request to the server and wait for an answer. This constant back-and-forth conversation is logged in the "Network" panel. It acts like a digital traffic monitor that records every single message flying in and out of your computer. Hackers use the Network panel to see the raw text that the browser and server are saying to each other, which is often completely different from what you see on the screen.
+    content: `The Network panel records every HTTP request the browser makes and receives — HTML pages, images, scripts, stylesheets, API calls, WebSocket messages, and more.
 
-THE API TREASURE
-Sometimes, when you log into a dashboard, the server sends back a giant package of data containing your user ID, your email, and your secret role. The website's frontend code reads the package and only prints your name on the screen to keep it clean. But if you open the Network panel, click on the request, and look at the "Response" tab, you can see the raw package (usually called JSON)! The server might have accidentally included your secret password or a CTF flag inside that raw package, thinking the frontend would hide it. 
+WHY IT MATTERS FOR CTF:
+The Network tab shows you what the browser and server are actually saying to each other, not just what's displayed on the screen. Flags are often hidden in API responses, HTTP headers, or redirected URLs that the page never renders.
 
-REPLAYING THE MESSAGE
-The Network panel doesn't just let you watch; it lets you copy and rewrite requests. If you find a request that asks the server for user data, like "/api/user?id=1", you can right-click it, select "Copy as cURL", and paste it into a terminal. You can then change "id=1" to "id=2" and send it again to steal another user's data! This is the foundation of many web attacks, and the Network panel is where you gather the raw messages to modify them.`,
+HOW TO OPEN IT:
+Press F12 and click the "Network" tab. Refresh the page (F5) to start recording requests.
+
+WHERE TO FIND A FLAG:
+  • Response Body: Click on any request → "Response" tab. Check API calls (XHR/Fetch) for JSON data containing flags that the UI doesn't display.
+  • Response Headers: A flag might be in a custom header: X-Flag: flag{check_the_headers}
+  • Redirects: A 302 redirect's Location header might contain a flag URL.
+  • Request Headers: Custom headers like Authorization: Bearer <token> reveal authentication tokens.
+  • Query Parameters: GET requests with ?token=flag{...} in the URL.
+
+FILTER BY TYPE:
+The Network panel has filter buttons: All, Fetch/XHR, JS, CSS, Img, Doc, WS, etc.
+Click "Fetch/XHR" to isolate API calls — the most likely place to find hidden data.
+
+EXPLOITATION TECHNIQUE — REPLAYING & MODIFYING REQUESTS:
+  1. Find an interesting API call (e.g., /api/user?id=1).
+  2. Right-click → "Copy as cURL" → paste into terminal.
+  3. Modify the command: change id=1 to id=2 to access another user's data (IDOR attack).
+  4. Or right-click → "Edit and Resend" (Firefox) to modify parameters directly.
+
+TIMING ANALYSIS:
+The "Timing" tab shows how long each phase takes (DNS, TLS, Waiting, Download). Unusual delays might indicate:
+  • Server-side processing (e.g., time-based SQL injection: SLEEP(5) causes 5-second delay).
+  • Rate limiting or WAF (Web Application Firewall) blocking.
+
+WEBSOCKETS:
+Click on WebSocket connections (WS filter) to see real-time bidirectional messages. Chat applications, live dashboards, and game servers often leak data through WebSocket frames.
+
+PRO TIP — PRESERVE LOG:
+Check "Preserve log" to keep recordings even when the page navigates or redirects. Without this, requests disappear after each page load, and you might miss a flag hidden in a redirect chain.`,
     questions: [
       { q: "What Network tab shows the raw data returned by the server?", a: "Response" },
       { q: "What filter isolates API calls in the Network panel?", a: "Fetch/XHR" },
@@ -76,16 +183,50 @@ The Network panel doesn't just let you watch; it lets you copy and rewrite reque
     ]
   },
   {
-    title: "5. Storage (Application) — Cookies, LocalStorage & Sessions",
+    title: "Storage (Application) — Cookies, LocalStorage & Sessions",
     points: 10,
-    content: `THE browser'S SAFE
-Websites need a place to save data on your computer so they don't forget who you are. This local storage area is displayed in the "Storage" or "Application" panel. Here, you can see your Session Cookies (the digital wristbands that keep you logged in), "LocalStorage" (a persistent cabinet that saves your preferences even if you close the browser), and "SessionStorage" (a temporary cabinet that clears when you close the tab).
+    content: `The Storage panel (called "Application" in Chrome) displays all data stored locally in the browser — Cookies, LocalStorage, SessionStorage, IndexedDB, and Cache Storage.
 
-TAMPERING WITH THE SAFE
-Just like everything else in the browser, you have complete control over this storage area. If a website stores a value like "isAdmin = false" in your LocalStorage, you can simply double-click the word "false" inside the Application panel, type "true", and refresh the page. If the developers were lazy and didn't double-check this on their server, the website will suddenly load with full administrator powers! Hackers always check the Storage panel first to see what kind of keys are lying around.
+WHY IT MATTERS FOR CTF:
+Developers often store sensitive data client-side: session tokens, user roles, feature flags, and sometimes literal CTF flags. If you can read or modify this data, you can escalate privileges or reveal hidden information.
 
-DECODING THE TOKENS
-Many modern websites store JSON Web Tokens (JWTs) in their LocalStorage or Cookies. These tokens look like long, random strings of letters that start with "eyJ". While they look like nonsense, they are actually just encoded text. You can copy the token from the Storage panel, paste it into a decoder like jwt.io, and read exactly what permissions the website has granted you. If the token is poorly secured, you can edit it and paste it back into the Storage panel to escalate your privileges.`,
+HOW TO OPEN IT:
+Press F12 → "Application" (Chrome) or "Storage" (Firefox). Expand the sidebar to see each storage type.
+
+COOKIES:
+Small key-value pairs sent automatically with every HTTP request.
+  • Look for: session, token, user, role, admin, flag, auth.
+  • Check values: Base64-encoded strings? Decode them with atob() in the Console.
+  • Missing security flags: No HttpOnly? JavaScript can access it. No Secure? Sent over HTTP.
+
+EXPLOITATION — COOKIE MANIPULATION:
+  1. Find a cookie like: role=guest
+  2. Double-click the value and change it to: role=admin
+  3. Refresh the page.
+  4. If the server trusts the cookie without verifying, you've escalated your privileges.
+
+LOCALSTORAGE:
+Persistent key-value storage accessible via JavaScript. Data persists even after the browser is closed.
+  • View in Console: JSON.parse(localStorage.getItem('userData'))
+  • Modify: localStorage.setItem('isAdmin', 'true')
+  • Flags might be stored here during multi-step challenges.
+
+SESSIONSTORAGE:
+Identical to LocalStorage but cleared when the tab is closed.
+  • Check it separately — some challenges store flags in SessionStorage thinking it's "more secure".
+
+INDEXEDDB:
+A more advanced client-side database for structured data. Less common in CTFs but worth checking for complex web apps.
+
+JWT (JSON WEB TOKENS) IN STORAGE:
+JWTs are often stored in LocalStorage or cookies. They look like: eyJhbGciOi... (three Base64 sections separated by dots).
+  1. Copy the JWT.
+  2. Paste it into jwt.io to decode the payload.
+  3. Check for role, admin, or flag fields.
+  4. If the algorithm is "none", you can forge tokens without a secret key.
+
+PRO TIP — CLEAR STORAGE:
+Sometimes you need to reset a challenge. Right-click → "Clear" or use the "Clear site data" button in Chrome's Application tab to wipe all stored data and start fresh.`,
     questions: [
       { q: "What Storage type sends data automatically with every HTTP request?", a: "Cookies" },
       { q: "What JavaScript command reads a value from LocalStorage?", a: "localStorage.getItem()" },
@@ -95,16 +236,66 @@ Many modern websites store JSON Web Tokens (JWTs) in their LocalStorage or Cooki
     ]
   },
   {
-    title: "6. Style Editor — Uncovering Visual Secrets",
+    title: "Style Editor — Uncovering Visual Secrets",
     points: 10,
-    content: `THE INVISIBLE PAINT
-Sometimes developers hide secrets on a page by making them invisible. They might use a CSS style called "opacity: 0" (which makes the text fully transparent, like clean glass), or paint the text the exact same color as the background (white text on a white page). The text is physically there on the screen, and your computer knows it, but your eyes can't see it. The "Style Editor" tab lets you see and modify all the CSS paint rules on the website.
+    content: `The Style Editor lets you view and modify all CSS stylesheets loaded by the page. In the context of CTFs, it's your tool for revealing elements that have been visually hidden.
 
-REVEALING THE SECRETS
-In the Style Editor, you can turn off any CSS rule just by unchecking a box. If you see an element styled with "display: none" or "visibility: hidden", you can delete that rule or change it to "visible". Instantly, the hidden text or buttons will pop back onto the screen! You can also click the "Computed" tab to see the final, combined paint rules for any element you inspect, which makes it easy to spot if text is hidden by being pushed off-screen (like "position: absolute; left: -9999px").
+WHY IT MATTERS FOR CTF:
+A common CTF trick is to hide flags in plain sight — making text invisible through CSS tricks. The flag is literally on the page, but styled so humans can't see it. The Style Editor lets you strip away these disguises.
 
-THE NUCLEAR OPTION
-If you suspect there are lots of hidden elements on a page but you don't want to find them one by one, you can run a script in the Console that overrides every single CSS hiding rule at once. This script targets every element and forces its opacity to 1, its visibility to visible, and its color to bright red. The page will look crazy and broken, but any hidden passwords or CTF flags will be instantly revealed in bright colors right before your eyes!`,
+HOW TO OPEN IT:
+  • Chrome: Elements panel → Styles sidebar (or Computed tab).
+  • Firefox: F12 → Style Editor tab (shows full CSS files).
+
+COMMON HIDING TECHNIQUES AND HOW TO REVEAL THEM:
+
+1. display: none;
+   The element exists in the DOM but is not rendered at all.
+   FIX: Change to display: block; or display: inline;
+
+2. visibility: hidden;
+   The element takes up space but is invisible.
+   FIX: Change to visibility: visible;
+
+3. opacity: 0;
+   The element is fully transparent.
+   FIX: Change to opacity: 1;
+
+4. color matching background:
+   Text is the same color as the background (e.g., white on white).
+   FIX: Change color to something visible, like red or #00ff00.
+
+5. font-size: 0px;
+   Text exists but has zero size.
+   FIX: Change to font-size: 16px;
+
+6. position: absolute; left: -9999px;
+   Element is pushed way off-screen.
+   FIX: Change to position: static; or left: 0;
+
+7. overflow: hidden; height: 0;
+   Content is clipped to zero height.
+   FIX: Change height to auto and overflow to visible.
+
+NUCLEAR OPTION — REVEAL EVERYTHING:
+Paste this in the Console to override all hiding:
+  document.querySelectorAll('*').forEach(el => {
+    el.style.display = 'block';
+    el.style.visibility = 'visible';
+    el.style.opacity = '1';
+    el.style.color = '#00ff00';
+    el.style.fontSize = '16px';
+    el.style.position = 'static';
+    el.style.overflow = 'visible';
+    el.style.height = 'auto';
+  });
+
+COMPUTED STYLES:
+The "Computed" tab in Chrome shows the final, resolved CSS values after all stylesheets and overrides. Use it to check the actual rendered properties of any element.
+
+PRO TIP — HIGHLIGHT ALL ELEMENTS:
+Paste this in the Console to outline every element, making invisible containers obvious:
+  document.querySelectorAll('*').forEach(el => { el.style.outline = '1px solid red'; });`,
     questions: [
       { q: "What CSS property makes an element exist in the DOM but not render at all?", a: "display: none" },
       { q: "What is the difference between visibility: hidden and display: none?", a: "visibility: hidden takes up space but is invisible, display: none removes it from layout" },
@@ -114,16 +305,55 @@ If you suspect there are lots of hidden elements on a page but you don't want to
     ]
   },
   {
-    title: "7. Memory & Performance — Advanced Analysis",
+    title: "Memory & Performance — Advanced Analysis",
     points: 10,
-    content: `THE COMPUTER'S BRAIN
-The "Memory" panel lets you peek inside the browser's active thinking space. It captures a "Heap Snapshot," which is a picture of every single variable, word, and function currently alive in the browser's RAM. Sometimes, a website will load a secret flag or password into its memory temporarily to check if you typed it right, and then delete it from the screen. But because computers are messy, that secret word might still be sitting in the RAM heap waiting to be cleared!
+    content: `The Memory and Performance panels are advanced DevTools features. While less commonly used in beginner CTFs, they provide powerful capabilities for deep analysis.
 
-THE TIMING ATTACKS
-The "Performance" panel records exactly how long every single calculation takes. Hackers use this to perform "Timing Attacks." Imagine a password check that reads your input character-by-character. If your first letter is wrong, the code stops checking immediately and returns "No" in 0.1 milliseconds. But if your first letter is correct, it checks the second letter, which takes 0.2 milliseconds. By measuring the execution times in the Performance panel, a hacker can brute-force a password one letter at a time just by finding which letters make the computer think slightly longer!
+ MEMORY PANEL 
 
-CONSTANT-TIME DEFENSE
-To protect websites from timing attacks, programmers must write special "constant-time" comparison functions. These functions are designed to always take the exact same amount of time to check a password, regardless of whether the first letter was right or wrong. This makes the Performance stopwatch completely useless to hackers because the timing never changes, keeping the secrets safe.`,
+WHAT IT IS:
+The Memory panel captures snapshots of everything stored in JavaScript memory — every variable, object, string, function, and data structure currently alive in the page.
+
+WHY IT MATTERS FOR CTF:
+Some challenges load sensitive data (keys, flags, passwords) into memory temporarily, then delete the visible references. The data might still exist in memory as a "detached" object until garbage collection runs.
+
+HEAP SNAPSHOTS:
+  1. Open Memory panel → Select "Heap snapshot" → Click "Take snapshot".
+  2. Use the search/filter to look for strings containing "flag", "key", "secret".
+  3. Even if a variable was deleted with: delete window.secret; the string value might still be in the heap.
+
+ALLOCATION TIMELINE:
+Records memory allocation over time. Useful for seeing when and where data is created during page interactions (e.g., when clicking a button triggers an API call that briefly stores a flag).
+
+ PERFORMANCE PANEL 
+
+WHAT IT IS:
+The Performance panel records everything the browser does over a time period — JavaScript execution, rendering, painting, network requests, and user events.
+
+WHY IT MATTERS FOR CTF:
+Performance data can be used in "side-channel" attacks — inferring information based on how long operations take.
+
+TIMING SIDE-CHANNEL EXAMPLE:
+A password comparison function checks character-by-character:
+  if (input[0] !== correct[0]) return false;  // fails fast for wrong first char
+  if (input[1] !== correct[1]) return false;  // only reached if first char is correct
+  ...
+
+If the first character is wrong, the function returns in 0.1ms.
+If the first character is correct, it takes 0.2ms (it checks the second character too).
+
+By measuring response times in the Performance panel, an attacker can brute-force one character at a time:
+  'a' → 0.1ms 
+  'b' → 0.1ms 
+  'f' → 0.2ms  → First character found!
+
+This is a Timing Attack, a type of Side-Channel Attack.
+
+DEFENSE:
+Use constant-time comparison functions that always check every character, regardless of where the mismatch occurs.
+
+PRO TIP — PERFORMANCE MARKS:
+Some CTF challenges use performance.mark() and performance.measure() to track operations. Check the Performance panel's "User Timing" section for developer-added markers that might hint at hidden functionality.`,
     questions: [
       { q: "What Memory tool captures all objects currently in JavaScript memory?", a: "Heap snapshot" },
       { q: "What type of attack infers secrets by measuring how long operations take?", a: "Timing Attack (Side-Channel Attack)" },
@@ -133,16 +363,55 @@ To protect websites from timing attacks, programmers must write special "constan
     ]
   },
   {
-    title: "8. Accessibility — The Hidden Text Layer",
+    title: "Accessibility — The Hidden Text Layer",
     points: 10,
-    content: `THE SCREEN READER LAYER
-The "Accessibility" panel reveals the website's structure as interpreted by tools like screen readers, which read the page aloud for visually impaired users. Sometimes, developers hide text from the screen using visual CSS, but forget to hide it from the Accessibility Tree. Sighted users see nothing, but a screen reader will read the secret flag aloud! This is a very common trick in CTFs.
+    content: `The Accessibility panel reveals the semantic structure of a page as interpreted by assistive technologies like screen readers. It exposes text and labels that may be invisible to sighted users.
 
-THE ACCESSIBLE LABELS
-Developers use ARIA (Accessible Rich Internet Applications) attributes to label elements for screen readers. For example, a button might have a tag like "aria-label='secret_key'". This label never appears on the screen, but it is fully visible in the Accessibility panel or DOM. ALT text on images is another hidden layer. A logo image might have "alt='flag{hidden_treasure}'" attached to it, which screen readers read but normal browsers hide unless the image fails to load.
+WHY IT MATTERS FOR CTF:
+A clever CTF trick is to hide a flag in the "accessibility layer" — text that screen readers can read aloud but that sighted users cannot see. This text exists in the DOM but is visually invisible.
 
-FINDING THE LABELS
-To find these hidden labels, hackers use Console commands to scan the page for any elements with 'aria-label' or 'alt' attributes, or they simply browse the Accessibility Tree instead of the normal DOM tree. The Accessibility Tree strips away all the visual layout clutter and shows only the raw semantic content, making hidden screen-reader-only text stand out immediately.`,
+HOW TO OPEN IT:
+Press F12 → "Accessibility" tab (or Inspect an element → check the Accessibility pane in the sidebar).
+
+SCREEN-READER-ONLY TEXT:
+The classic CSS pattern for visually hiding text while keeping it accessible:
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+An element with this class is invisible on screen but read aloud by screen readers. A flag might be:
+  <span class="sr-only">flag{accessibility_is_security}</span>
+
+HOW TO FIND IT:
+  1. Open the Accessibility panel and browse the Accessibility Tree.
+  2. Or search the DOM (Ctrl+F in Inspector) for "sr-only", "visually-hidden", or "screen-reader".
+  3. Or use Console: document.querySelectorAll('.sr-only, .visually-hidden')
+
+ARIA ATTRIBUTES:
+Accessible Rich Internet Applications (ARIA) attributes add semantic meaning to elements:
+  • aria-label="flag{aria_label_secret}" — A label not shown visually.
+  • aria-describedby="hidden-desc" — Points to an element with the description.
+  • aria-hidden="true" — Hides an element FROM screen readers (the opposite trick).
+
+EXPLOITATION TECHNIQUE:
+  1. Search the DOM for all aria-label attributes:
+     document.querySelectorAll('[aria-label]').forEach(el => console.log(el.getAttribute('aria-label')));
+  2. Check if any contain flags, passwords, or hints.
+
+ALT TEXT ON IMAGES:
+Flags can be hidden in the alt attribute of images:
+  <img src="logo.png" alt="flag{alt_text_treasure}">
+The alt text is read by screen readers and shown in the Accessibility panel, but not displayed visually (unless the image fails to load).
+
+PRO TIP:
+Use the Accessibility Tree view instead of the DOM tree — it strips away visual clutter and shows only the semantic content, making hidden text easier to spot.`,
     questions: [
       { q: "What CSS class name is commonly used to hide text visually while keeping it accessible to screen readers?", a: "sr-only (or visually-hidden)" },
       { q: "What ARIA attribute provides a text label that is not displayed visually?", a: "aria-label" },
@@ -152,16 +421,76 @@ To find these hidden labels, hackers use Console commands to scan the page for a
     ]
   },
   {
-    title: "9. Global Search & Practical Workflow",
+    title: "Global Search & Practical Workflow",
     points: 10,
-    content: `THE ULTIMATE SHORTCUT
-Now that you know all the panels, it's time for the ultimate workflow secret. While DevTools is open, you can press "Ctrl+Shift+F" (or Cmd+Opt+F on Mac) to open the "Global Search" bar. This tool searches through every single file, script, stylesheet, and image loaded by the website all at once! Instead of clicking through folders one by one, you just type "flag" or "secret" and watch the results list every match instantly.
+    content: `Now that you know each DevTools panel, let's put it all together with practical workflows and the most powerful search technique available.
 
-THE SYSTEMATIC CHECKLIST
-When attacking a web CTF challenge, you should always follow a checklist. Step 1: Right-click and View Source (Ctrl+U) to look for simple comments. Step 2: Open the Inspector (F12) and search the DOM for hidden elements. Step 3: Check the Console for logged messages. Step 4: Use Global Search (Ctrl+Shift+F) to scan all JavaScript files for hardcoded keys. Step 5: Check the Network panel for API responses. Step 6: Inspect the Storage panel for cookies and local storage variables.
+ GLOBAL SEARCH: Ctrl+Shift+F 
 
-CLIENT-SIDE IS NOT SECURITY
-The most important rule in web security is: All client-side checks can be bypassed! Since the browser runs on the user's computer, the user has complete control over it. They can delete disabled buttons, rewrite JavaScript functions, freeze execution, and change cookies. True security must always be enforced on the Server, which is in a locked control room that the user cannot touch.`,
+THE MOST IMPORTANT SHORTCUT:
+While DevTools is open, press Ctrl+Shift+F (or Cmd+Opt+F on Mac) to search EVERY SINGLE FILE loaded by the website — all HTML, CSS, JavaScript, JSON, and text resources at once.
+
+Search for:
+  "flag"        — The obvious CTF keyword.
+  "secret"      — Hidden variables, endpoints, or messages.
+  "password"    — Hardcoded credentials.
+  "admin"       — Admin panels, roles, or bypass paths.
+  "token"       — API keys, session tokens, JWTs.
+  "hidden"      — Hidden HTML elements or CSS classes.
+  "base64"      — Encoded data worth decoding.
+  "eval("       — Dangerous function that might execute hidden code.
+  "console.log" — Developer debugging messages left behind.
+
+ THE CTF DEVTOOLS CHECKLIST 
+
+Follow this systematic checklist on every web CTF challenge:
+
+STEP 1: VIEW SOURCE
+  • Right-click → View Page Source (Ctrl+U).
+  • Look for HTML comments <!-- --> and hidden inputs.
+
+STEP 2: INSPECT ELEMENTS
+  • Open Inspector (F12).
+  • Search DOM with Ctrl+F for "flag", "hidden", "secret".
+  • Check for disabled buttons, hidden divs, invisible text.
+
+STEP 3: CHECK CONSOLE
+  • Read all logged messages and errors.
+  • Try: window.flag, document.cookie, localStorage.
+
+STEP 4: SEARCH ALL FILES
+  • Ctrl+Shift+F → Search "flag", "password", "secret" across all loaded resources.
+
+STEP 5: INSPECT NETWORK
+  • Refresh the page with the Network tab open.
+  • Check Response bodies and Headers of all requests.
+  • Filter by Fetch/XHR for API calls.
+
+STEP 6: CHECK STORAGE
+  • Application tab → Cookies, LocalStorage, SessionStorage.
+  • Look for Base64 strings, JWTs, and role/admin values.
+
+STEP 7: EXAMINE JAVASCRIPT
+  • Sources tab → Browse .js files for hardcoded data.
+  • Set breakpoints on validation functions.
+
+STEP 8: REVEAL HIDDEN ELEMENTS
+  • Use the "nuclear option" CSS override from the Style Editor lesson.
+  • Check Accessibility Tree for screen-reader-only text.
+
+ PRACTICAL EXAMPLE: DOM EXPLOITATION 
+
+Imagine a page has a "Secret" button that only works if you are "Authorized," but there is no login page.
+
+  1. Open Console.
+  2. Type: validateUser = function() { return true; };
+  3. Click the button.
+  4. The site thinks you are authorized because you redefined the logic in the browser's memory, and it displays the flag!
+
+This works because all client-side validation can be bypassed — security must always be enforced server-side.
+
+PRO TIP:
+Bookmark this checklist. The difference between a beginner and an experienced CTF player is not talent — it's having a systematic approach that ensures you never miss a flag.`,
     questions: [
       { q: "What keyboard shortcut searches all loaded files at once in DevTools?", a: "Ctrl+Shift+F" },
       { q: "What is the first step in the CTF DevTools Checklist?", a: "View Source (Ctrl+U)" },

@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "1. What is Nmap?",
     points: 20,
-    content: `WHAT IS THE NETWORK MAPPER?
+    content: ` WHAT IS NMAP? 
 Imagine you are a brave explorer looking for hidden treasure in a giant, dark castle. The castle has thousands of doors, and you need to know which ones are open, which ones are locked, and what is hiding behind them. In the computer world, networks are like that giant castle, and hackers use a magical flashlight called "Nmap" to explore it. Nmap stands for Network Mapper. It is a free tool that you can type into your computer, and it acts like an incredibly fast robot explorer. You tell the robot to run down the digital hallways, jiggle every single door handle, and report back to you. It tells you exactly which computers are turned on, which digital doors (called ports) are wide open, and even tries to peek inside the rooms to see what kind of software is running in there.
 
 A FAMOUS HOLLYWOOD HACKER TOOL
