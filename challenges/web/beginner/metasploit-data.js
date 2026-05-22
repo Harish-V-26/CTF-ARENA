@@ -8,7 +8,7 @@ const LESSONS = [
     title: "Introduction — What is Penetration Testing?",
     points: 30,
     icon: "",
-    content: `WELCOME TO THE METASPLOIT INTRODUCTION LAB
+    content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_intro_nologo_1779434453492.png" alt="Metasploit Introduction"></div>WELCOME TO THE METASPLOIT INTRODUCTION LAB
 
 What is a Penetration Testing Framework?
 
@@ -49,7 +49,7 @@ NEVER run these commands against real systems without authorization!`,
     title: "What is Metasploit?",
     points: 40,
     icon: "",
-    content: `METASPLOIT FRAMEWORK — THE BASICS
+    content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_intro_nologo_1779434453492.png" alt="Metasploit Basics"></div>METASPLOIT FRAMEWORK — THE BASICS
 
 What is Metasploit?
 
@@ -103,7 +103,7 @@ Visual Flow
     title: "Core Commands — msfconsole",
     points: 50,
     icon: "",
-    content: `ESSENTIAL METASPLOIT COMMANDS
+    content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_intro_nologo_1779434453492.png" alt="Essential Metasploit Commands"></div>ESSENTIAL METASPLOIT COMMANDS
 
 msfconsole
 
@@ -213,7 +213,7 @@ Why it matters: When in doubt, always check help!`,
     title: "Interactive Terminal — Practice Commands",
     points: 60,
     icon: "",
-    content: `INTERACTIVE TERMINAL PRACTICE
+    content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_intro_nologo_1779434453492.png" alt="Interactive Terminal Practice"></div>INTERACTIVE TERMINAL PRACTICE
 
 You now have access to a SIMULATED Kali Linux terminal below!
 
@@ -267,7 +267,7 @@ Complete the practice challenge in the next lesson to earn the flag!`,
     title: "Practice Challenge — Find the FTP Scanner",
     points: 70,
     icon: "",
-    content: `PRACTICE CHALLENGE — EARN THE FLAG!
+    content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_intro_nologo_1779434453492.png" alt="Practice Challenge"></div>PRACTICE CHALLENGE — EARN THE FLAG!
 
 OBJECTIVE:
 Complete the following workflow in the terminal to earn FLAG{MSF_BEGINNER_COMPLETE}

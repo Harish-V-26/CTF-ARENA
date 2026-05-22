@@ -285,7 +285,7 @@ window.addEventListener('beforeunload', function () {
     document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
     document.getElementById('cur-num').textContent = idx+1;
     const portVal = currentPort ? String(currentPort) : '[PORT]';
-    document.getElementById('reading-text').innerText = l.content.replace(/\[PORT\]/g, portVal);
+    document.getElementById('reading-text').innerHTML = l.content.replace(/\[PORT\]/g, portVal);
 
     const qc = document.getElementById('questions-container');
     qc.innerHTML = l.questions.map((q, qi) => `

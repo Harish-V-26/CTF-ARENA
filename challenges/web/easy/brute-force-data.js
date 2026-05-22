@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "Introduction to Brute Forcing",
     points: 20,
-    content: `WHAT IS A BRUTE FORCE ATTACK?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/brute_force_intro_nologo_1779432704498.png" alt="Introduction to Brute Forcing"></div>WHAT IS A BRUTE FORCE ATTACK?
 Imagine you find a giant treasure chest locked with a heavy padlock. You know the treasure is inside, but you don't know the combination code. Instead of trying to find the combination written down somewhere, you just sit in front of the chest and try every single number combination you can think of: 0-0-0, then 0-0-1, then 0-0-2, all the way until it finally pops open! This is exactly what a "Brute Force" attack is. Hackers use special computer tools to try thousands of different passwords on a website's front door until they accidentally guess the right one. In this challenge, you will get to be the hacker and use professional Kali Linux tools to break into a website by guessing the password.
 
 1. Click the red 'Open Target Page' button above to access the target login form.
@@ -21,7 +21,7 @@ Read through the next sections to learn how to use automated tools to perform th
   {
     title: "Using Hydra",
     points: 60,
-    content: `WHAT IS HYDRA?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/using_hydra_nologo_1779432721188.png" alt="Using Hydra"></div>WHAT IS HYDRA?
 If you are trying to open that giant treasure chest, guessing numbers with your fingers would take a very long time. What if you had a super-fast robot that could spin the lock dials thousands of times a second? In the cybersecurity world, that robot is called "Hydra." Hydra is a famous and incredibly fast tool used by hackers to break into network doors. You can give Hydra a giant list of popular passwords, and it will fire them at the login screen faster than you can blink! It is so smart that it can understand many different types of locks, including the "HTTP POST forms" that websites use for their login pages. 
 
 To attack the login page, you can use the following syntax:
@@ -43,7 +43,7 @@ To attack the login page, you can use the following syntax:
   {
     title: "Executing the Attack",
     points: 60,
-    content: `UNLEASH THE ROBOT
+    content: `<div class="htb-diagram-container"><img src="../../../assets/executing_attack_nologo_1779432740633.png" alt="Executing the Attack"></div>UNLEASH THE ROBOT
 Now it is time to put everything you have learned together! You have the URL of the target, you know the username is 'admin', and you know how to command the super-fast Hydra robot. You are going to open your Kali Linux terminal and unleash Hydra against the website's front door. It will read through the giant dictionary of passwords and hammer the login screen until the door finally swings open. 
 
 Run the command using the pre-installed rockyou.txt wordlist.

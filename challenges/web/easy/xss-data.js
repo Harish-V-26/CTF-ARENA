@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "1. What is XSS and Core Concepts",
     points: 20,
-    content: `CROSS-SITE SCRIPTING (XSS) — A BEGINNER'S GUIDE
+    content: `<div class="htb-diagram-container"><img src="../../../assets/xss_intro_nologo_1779433714294.png" alt="What is XSS and Core Concepts"></div>CROSS-SITE SCRIPTING (XSS) — A BEGINNER'S GUIDE
 
 WHAT IS XSS?
 Imagine a giant public notice board in the middle of your school where anyone can pin up a message. Normally, people pin up normal pieces of paper that say things like "Happy Birthday!" or "Lost Dog". But what if a sneaky prankster pins up a special, magical piece of paper that looks totally normal, but actually contains a secret robot command? Because the school principal (the website) never checks the papers before they go on the board, that magical paper sits there waiting. When an innocent student walks by to read the board, the magical paper suddenly comes alive, jumps off the board, and forces the student's brain to do whatever the prankster commanded! This is exactly what Cross-Site Scripting (XSS) is. It happens when a hacker posts a message that isn't just normal text, but is actually a secret piece of computer code (called JavaScript). If the website doesn't clean the message first, the hacker's code runs automatically inside the browser of anyone who looks at the page!
@@ -66,7 +66,7 @@ Scroll down and click "Create / Reset Database". Then go to "DVWA Security" on t
   {
     title: "2. DVWA XSS (Reflected) — Practical Attack",
     points: 30,
-    content: `REFLECTED XSS — THE ECHO ATTACK
+    content: `<div class="htb-diagram-container"><img src="../../../assets/xss_reflected_nologo_1779433732914.png" alt="DVWA XSS (Reflected) - Practical Attack"></div>REFLECTED XSS — THE ECHO ATTACK
 
 WHAT IS REFLECTED XSS?
 Imagine standing in front of a giant canyon and shouting a magic word, and the canyon instantly echoes that exact magic word back to you, causing a spell to hit you right in the face! In Reflected XSS, the website is the canyon. You send a malicious piece of magic code TO the website (usually hidden inside a tricky web link), and the website instantly "echoes" it straight back at you without cleaning it up. The attack doesn't stick to the website forever; it only hits the specific person who shouted it (or the person who was tricked into clicking the sneaky link).
@@ -147,7 +147,7 @@ So your <script> tag becomes the VISIBLE TEXT "&lt;script&gt;" on screen. The br
   {
     title: "3. DVWA XSS (Stored) — The Permanent Attack",
     points: 30,
-    content: `STORED XSS — THE MOST DANGEROUS TYPE
+    content: `<div class="htb-diagram-container"><img src="../../../assets/xss_stored_nologo_1779433750517.png" alt="DVWA XSS (Stored) - The Permanent Attack"></div>STORED XSS — THE MOST DANGEROUS TYPE
 
 WHAT IS STORED XSS?
 Stored XSS is the absolute worst, most dangerous type of XSS. Imagine someone spray-paints a magical trap on a brick wall right in the middle of town. The trap doesn't just bounce off; it is permanently painted there! Every single person who walks past that wall, today, tomorrow, or next year, will accidentally trigger the trap and get hit by the spell! In Stored XSS, the attacker doesn't need to trick you into clicking a special link. Instead, they type their malicious code into a normal comment box on a website, and the website permanently saves it in its database (painting it on the wall). From that moment on, every single person who visits that webpage gets attacked instantly, without clicking anything at all!
@@ -233,7 +233,7 @@ Why: The server uses htmlspecialchars() on BOTH the Name and Message fields befo
   {
     title: "4. DVWA XSS (DOM) — The Invisible Attack",
     points: 30,
-    content: `DOM XSS — THE ATTACK THE SERVER NEVER SEES
+    content: `<div class="htb-diagram-container"><img src="../../../assets/xss_dom_nologo_1779433767352.png" alt="DVWA XSS (DOM) - The Invisible Attack"></div>DOM XSS — THE ATTACK THE SERVER NEVER SEES
 
 WHAT IS DOM XSS?
 Imagine a magical mirror that changes how you look based on a sticky note you put on your own forehead. The magical mirror never talks to anyone else, it only looks at you! DOM XSS is just like this. DOM stands for Document Object Model, which is just the internal picture your web browser paints of a website. In DOM XSS, the attack happens entirely inside your own web browser (the magic mirror). The malicious code is hidden in a special part of the web address that the server never even sees. Because the server never sees the attack, it can't protect you! Your own web browser reads the hidden code, updates its own internal picture, and accidentally attacks itself!
@@ -309,7 +309,7 @@ When textContent is used, your <script> tag is shown on screen as the literal ch
   {
     title: "5. Bypasses, Tools and Ultimate Defense",
     points: 30,
-    content: `ADVANCED BYPASSES AND HOW TO PROPERLY DEFEND AGAINST XSS
+    content: `<div class="htb-diagram-container"><img src="../../../assets/xss_defense_nologo_1779433783443.png" alt="Bypasses, Tools and Ultimate Defense"></div>ADVANCED BYPASSES AND HOW TO PROPERLY DEFEND AGAINST XSS
 
 WHAT ARE FILTER BYPASSES?
 Imagine a teacher who makes a list of "Bad Words" that students are not allowed to say. If a student tries to write a bad word, the teacher erases it. This is called "blacklisting," and websites use it to try to block XSS attacks by erasing words like "script". The problem is, kids are very clever! If the teacher blocks the word "mad", the kids will just say "angry" or "furious". Attackers do the exact same thing! If a website blocks one type of attack code, attackers will just write the exact same code in dozens of different, sneaky ways using different words or symbols. As long as just ONE of their sneaky methods tricks the teacher, the attack succeeds!

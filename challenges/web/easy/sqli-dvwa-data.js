@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "1. What is SQL Injection?",
     points: 20,
-    content: `SQL INJECTION — A BEGINNER'S COMPLETE GUIDE
+    content: `<div class="htb-diagram-container"><img src="../../../assets/sqli_intro_nologo_1779433210463.png" alt="What is SQL Injection?"></div>SQL INJECTION — A BEGINNER'S COMPLETE GUIDE
 
 WHAT IS SQL INJECTION?
 Imagine a giant filing cabinet guarded by a very strict robot librarian. To get a file, you have to write a note on a piece of paper and hand it to the robot. The robot only understands notes written in a special language called SQL. Normally, you write "Please give me the file named Alice." The robot reads it, understands you want Alice's file, and gives it to you. But what if you are a sneaky hacker? You could hand the robot a note that says: "Please give me the file named Alice, OR give me EVERY single file in the entire cabinet!" Because the robot isn't very smart, it just reads the note literally, gets confused by the "OR", and accidentally dumps thousands of secret files right onto the floor for you! SQL Injection (SQLi) is exactly like this trick. It happens when a website takes something you type and hands it directly to the database robot without checking to see if you snuck in any dangerous commands.
@@ -59,7 +59,7 @@ Go to "DVWA Security" in the left menu. Make sure it is set to "Low" and click "
   {
     title: "2. The Truth Trick — Low Security",
     points: 30,
-    content: `EXPLOITING SQL INJECTION ON LOW SECURITY
+    content: `<div class="htb-diagram-container"><img src="../../../assets/sqli_low_nologo_1779433226521.png" alt="The Truth Trick - Low Security"></div>EXPLOITING SQL INJECTION ON LOW SECURITY
 
 UNDERSTANDING THE VULNERABILITY
 Imagine the website is a lazy messenger who takes your note and hands it straight to the database robot without even looking at it. At Low security, DVWA does exactly this! It takes whatever you type in the "User ID" box and pastes it directly into an SQL query with absolutely zero protection. The query looks like this:
@@ -110,7 +110,7 @@ ADDITIONAL PAYLOADS TO TRY:
   {
     title: "3. The Dropdown Bypass — Medium Security",
     points: 30,
-    content: `BYPASSING MEDIUM SECURITY VIA DEVTOOLS
+    content: `<div class="htb-diagram-container"><img src="../../../assets/sqli_medium_nologo_1779433243852.png" alt="The Dropdown Bypass - Medium Security"></div>BYPASSING MEDIUM SECURITY VIA DEVTOOLS
 
 WHAT CHANGED IN MEDIUM?
 At Medium security, the lazy messenger finally realizes they are being tricked, so they try to fix the problem in two silly ways:
@@ -160,7 +160,7 @@ The injected value (1 OR 1=1) is sent to the server. The database returns all us
   {
     title: "4. The Popup Bypass — High Security",
     points: 30,
-    content: `EXPLOITING HIGH SECURITY VIA A POPUP WINDOW
+    content: `<div class="htb-diagram-container"><img src="../../../assets/sqli_high_nologo_1779433261627.png" alt="The Popup Bypass - High Security"></div>EXPLOITING HIGH SECURITY VIA A POPUP WINDOW
 
 WHAT CHANGED IN HIGH?
 At High security, the website designers think they have come up with a brilliant plan. They decide to move the place where you type your note into a completely different room (a popup window) far away from the database robot. They think that by making you walk to a different room to write the note, it will be impossible for you to trick the robot on the main page. They also add a few more guards to check your spelling. Despite this crazy setup, the main database robot is STILL vulnerable, and the guards are still not perfect! Our classic magic spell will still work.
@@ -196,7 +196,7 @@ The main page will now display all the user records from the database. The injec
   {
     title: "5. The Unbreakable Defense — Impossible Level",
     points: 30,
-    content: `WHY IMPOSSIBLE SECURITY STOPS ALL ATTACKS
+    content: `<div class="htb-diagram-container"><img src="../../../assets/sqli_impossible_nologo_1779433282143.png" alt="The Unbreakable Defense - Impossible Level"></div>WHY IMPOSSIBLE SECURITY STOPS ALL ATTACKS
 
 UNDERSTANDING THE DEFENSE
 At the Impossible level, the website finally fires the lazy messenger and buys a super-secure lockbox called "Parameterized Queries" (also known as Prepared Statements). This is the ultimate, unbreakable shield against SQL Injection.
