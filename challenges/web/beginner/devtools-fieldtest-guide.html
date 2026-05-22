@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF LABS Guide — Official walkthrough for DevTools Field Test Challenge." />
+  <title>CTF LABS — DevTools Field Test Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #1a252f;
+      color: #3498db;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+    <div class="nav-links">
+      <a href="../../../index.html">Home</a>
+      <a href="../../../challenges.html" class="active">Challenges</a>
+      <a href="../../../rules.html">Rules</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="#" role="menuitem">Dashboard</a>
+          <a href="#" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE INTRO  -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        DevTools Field Test <span style="color:var(--accent);">Walkthrough.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
+        A complete step-by-step walkthrough to help you approach, attack, and solve the DevTools Field Test.
+      </p>
+    </div>
+
+    <!--  TWO-COLUMN LAYOUT  -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro" class="active" id="nav-intro"> Introduction</a></li>
+          <li><a href="#inspector" id="nav-inspector"> 1. The Inspector Hunt</a></li>
+          <li><a href="#network" id="nav-network"> 2. The Network Detective</a></li>
+          <li><a href="#sources" id="nav-sources"> 3. The Source Code Spy</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!--  Intro  -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Introduction</h2>
+              <p>How the practical labs work</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Welcome to the practical side of CTF LABS! In this lab, you'll be using Developer Tools (DevTools) built into your browser to search for three pieces of a secret flag hidden across Inspector, Network headers, and JavaScript source code.
+          </p>
+        </div>
+
+        <!--  Inspector Walkthrough  -->
+        <div class="rules-block" id="inspector">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 1</h2>
+              <p>The Inspector Hunt</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Open Elements.</strong> Open Developer Tools in your browser (F12 or Ctrl+Shift+I / Cmd+Option+I) and switch to the <strong>Elements</strong> (or Inspector) tab.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Search.</strong> Press <code>Ctrl+F</code> to open the search bar within the DOM and type the word <code>flag</code>.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Find Part 1.</strong> Look through the search results until you find an HTML comment <code>&lt;!-- --&gt;</code>. You will find Part 1 hidden in the comment: <code>flag_part1{dev_tools_</code>
+              </span>
+            </li>
+          </ul>
+        </div>
+        
+        <!--  Network Walkthrough  -->
+        <div class="rules-block" id="network">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 2</h2>
+              <p>The Network Detective</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Go to Network Tab.</strong> Go to the <strong>Network</strong> tab in Developer Tools. Refresh the page (F5 or Ctrl+R) to capture all network traffic.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Find Failed Request.</strong> You will see several requests. Notice that one request for an image fails with a <strong>404 Not Found</strong> error status. Click on it.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Find Part 2.</strong> Look at the <strong>Response Headers</strong> section. Look for a custom HTTP header starting with "X-". You will find the header <code>X-Flag-Part2</code>. Its value is Part 2: <code>power_</code>
+              </span>
+            </li>
+          </ul>
+        </div>
+        
+        <!--  Sources Walkthrough  -->
+        <div class="rules-block" id="sources">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 3</h2>
+              <p>The Source Code Spy</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Go to Sources Tab.</strong> Go to the <strong>Sources</strong> (or Debugger) tab in Developer Tools.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Search Code.</strong> Open the file named <code>app.js</code> (or similar). Look through the code or press <code>Ctrl+F</code> within the file to search for "flag" or "final".</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Find Part 3.</strong> You will find a hardcoded variable named <code>finalPiece</code> containing the last part of the flag. The value of this variable is Part 3: <code>user}</code>
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 4</span>
+              <span class="rule-text">
+                <strong>Combine the Pieces.</strong> Combine all three parts together to form the complete flag:
+                <div class="code-block">Part 1 + Part 2 + Part 3 = flag_part1{dev_tools_power_user}</div>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+      </main>
+    </div><!-- /rules-section -->
+  </div><!-- /container -->
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>© 2026 <a href="../../../index.html">CTF LABS</a> · Internship Project Demo</p>
+  </footer>
+
+  <!-- Active sidebar highlighting on scroll -->
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>

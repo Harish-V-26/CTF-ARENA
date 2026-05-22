@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF LABS Guide — Official walkthrough for Metasploit Introduction Challenge." />
+  <title>CTF LABS — Metasploit Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #1a252f;
+      color: #2ecc71;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+    <div class="nav-links">
+      <a href="../../../index.html">Home</a>
+      <a href="../../../challenges.html" class="active">Challenges</a>
+      <a href="../../../rules.html">Rules</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="#" role="menuitem">Dashboard</a>
+          <a href="#" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE INTRO  -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        Metasploit <span style="color:var(--accent);">Guide.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
+        A complete step-by-step walkthrough to help you approach, attack, and solve the Metasploit Introduction challenge.
+      </p>
+    </div>
+
+    <!--  TWO-COLUMN LAYOUT  -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro" class="active" id="nav-intro"> Introduction</a></li>
+          <li><a href="#attack" id="nav-attack"> Exploit Walkthrough</a></li>
+          <li><a href="#faq" id="nav-faq"> FAQ</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!--  Intro  -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Introduction</h2>
+              <p>How the practical labs work</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Welcome to the practical side of CTF LABS! The Metasploit Introduction challenge requires you to attack a real, running server. 
+            To do this safely, our platform uses Docker to instantly spin up isolated, private lab environments specifically for you.
+          </p>
+        </div>
+
+        <!--  Attack Walkthrough  -->
+        <div class="rules-block" id="attack">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Metasploit Target</h2>
+              <p>Using Kali Linux & Metasploit</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Start the Target and Kali.</strong> Go to the Metasploit Lab page. Click "Launch Target Server" and "Start Kali Container". Wait for both to spin up. Note the IP address given in the Target Server panel.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Connect to Kali.</strong> Copy the displayed command (e.g., <code>docker exec -it [id] bash</code>) and paste it into your local computer's terminal. You are now inside Kali!</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Launch Metasploit Console.</strong> Inside the Kali terminal, type:
+                <div class="code-block">msfconsole</div>
+                Wait for the <code>msf6 ></code> prompt.
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 4</span>
+              <span class="rule-text">
+                <strong>Search and Use the FTP Scanner.</strong> We need to find the FTP version scanner. Type:
+                <div class="code-block">search ftp
+use auxiliary/scanner/ftp/ftp_version</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 5</span>
+              <span class="rule-text">
+                <strong>Set Options and Exploit.</strong> Set the RHOSTS to your Target Server's IP, then run the exploit:
+                <div class="code-block">set RHOSTS &lt;Target-IP-Address&gt;
+run</div>
+                The scanner will connect to the target FTP server and grab its banner. The secret flag will be returned in the banner message!
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  FAQ  -->
+        <div class="rules-block" id="faq">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Frequently Asked Questions</h2>
+            </div>
+          </div>
+
+          <div class="penalty-box" style="margin-top:24px;">
+            <span class="penalty-icon"></span>
+            <p><strong>What is the RHOSTS option?</strong><br>
+              RHOSTS stands for "Remote Hosts" and is the IP address of the target you want to attack.
+            </p>
+          </div>
+          <div class="penalty-box" style="margin-top:24px; background: rgba(231, 76, 60, 0.1); border-color: rgba(231, 76, 60, 0.3);">
+            <span class="penalty-icon"></span>
+            <p><strong>Do I need to stop my containers?</strong><br>
+              Our backend automatically shuts down your Docker containers when you click the "Stop" buttons or simply close your browser tab! This ensures your computer doesn't run out of memory.
+            </p>
+          </div>
+        </div>
+
+      </main>
+    </div><!-- /rules-section -->
+  </div><!-- /container -->
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>© 2026 <a href="../../../index.html">CTF LABS</a> · Internship Project Demo</p>
+  </footer>
+
+  <!-- Active sidebar highlighting on scroll -->
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>

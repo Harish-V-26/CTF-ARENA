@@ -86,19 +86,7 @@
         <h3> Authentication Target Lab</h3>
         <p>Click the button below to open the target login portal. Analyze the login flow, cookies, and tokens.</p>
         <button id="launch-btn" class="btn-launch" onclick="launchLab()">Open Login Portal ⇗</button>
-        <button id="guide-toggle-btn" class="btn-launch" style="background: #27ae60; margin-left: 10px;" onclick="toggleGuide()">Show Walkthrough Guide </button>
-      </div>
-
-      <!-- Inline Guide -->
-      <div id="inline-guide" style="display: none; background: #1a252f; border: 1px solid #27ae60; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-        <h3 style="color: #27ae60; margin-top: 0;"> Complete Lab Walkthrough</h3>
-        <p style="color: #bdc3c7; font-size: 14px; margin-bottom: 15px;">If you get stuck, follow these steps to find the answers and the flag.</p>
-        <ul style="color: #ecf0f1; font-size: 14.5px; line-height: 1.8; padding-left: 20px; margin: 0;">
-          <li style="margin-bottom: 8px;"><strong>Lesson 2 (Invalid Login):</strong> In the target tab, open DevTools (F12) -> <strong>Network</strong> tab. Submit the form with bad credentials (e.g., test/test). The Network request will return a <strong>401 Unauthorized</strong> status code.</li>
-          <li style="margin-bottom: 8px;"><strong>Lesson 2 (Valid Login):</strong> Log in using <code>admin</code> / <code>admin123</code>. The Network request will return a <strong>200 OK</strong> status code.</li>
-          <li style="margin-bottom: 8px;"><strong>Lesson 3 (Cookies):</strong> Navigate to the <strong>Application</strong> tab (Chrome) or <strong>Storage</strong> tab (Firefox) in DevTools. Expand "Cookies" and click your domain. You will see the server set <code>session_id</code> and <code>auth_token</code> cookies.</li>
-          <li><strong>Lesson 4 (Decode JWT):</strong> Copy the value of the <code>auth_token</code> cookie. Go to <a href="https://jwt.io" target="_blank" style="color: #f39c12; text-decoration: underline;">jwt.io</a> and paste the token. In the decoded Payload section on the right, you will see the secret flag: <strong>flag{jwt_m4st3r_decoded}</strong>.</li>
-        </ul>
+        <a href="auth-basics-guide.html" class="btn-launch" style="margin-left: 10px; background: #3498db;" target="_blank"> Read Walkthrough</a>
       </div>
 
       <!-- Lesson panel (rendered by JS) -->
@@ -135,17 +123,6 @@
 </div>
 
 <script>
-function toggleGuide() {
-    const guide = document.getElementById('inline-guide');
-    const btn = document.getElementById('guide-toggle-btn');
-    if (guide.style.display === 'none') {
-        guide.style.display = 'block';
-        btn.textContent = 'Hide Walkthrough Guide ';
-    } else {
-        guide.style.display = 'none';
-        btn.textContent = 'Show Walkthrough Guide ';
-    }
-}
 
 function launchLab() {
     let targetUrl;
