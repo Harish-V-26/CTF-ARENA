@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "1. Start Here — Set Up the Lab",
     points: 10,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_setup_nologo_1779677372368.png" alt="Lab Setup"></div>
  GOAL: Get both machines running and log into DVWA
 
 
@@ -56,7 +56,7 @@ Both machines are now running:
   {
     title: "2. What is a File Upload Vulnerability?",
     points: 10,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_concept_nologo_1779677390166.png" alt="File Upload Concept"></div>
  CONCEPT: Understanding the Attack
 
 
@@ -87,7 +87,7 @@ The attack usually follows these simple steps:
   {
     title: "3. Linux Commands You Will Use",
     points: 10,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_commands_nologo_1779677405894.png" alt="Linux Commands"></div>
 ⌨  LEARN: Linux commands for the attack
 
 
@@ -135,7 +135,7 @@ Use + instead of spaces in the URL:
   {
     title: "4. DVWA Low — Upload Your First Shell",
     points: 20,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_low_nologo_1779677421616.png" alt="DVWA Low Security"></div>
  PRACTICAL ATTACK — DVWA Security: LOW
 
 
@@ -224,7 +224,7 @@ through nothing but a web browser URL bar!`,
   {
     title: "5. How Servers Check Files (MIME & Magic Bytes)",
     points: 10,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_filters_nologo_1779677438330.png" alt="File Type Filters"></div>
  THEORY: How does the server decide if a file is safe?
 
 
@@ -279,7 +279,7 @@ PHP interpreter sees the <?php code → executes it!
   {
     title: "6. DVWA Medium — Bypass the MIME Check",
     points: 20,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_medium_nologo_1779677455707.png" alt="DVWA Medium Security"></div>
  PRACTICAL ATTACK — DVWA Security: MEDIUM
 
 
@@ -367,7 +367,7 @@ the actual file content. The file is still pure PHP.`,
   {
     title: "7. DVWA High — Bypass Magic Byte Check",
     points: 20,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_high_nologo_1779677473626.png" alt="DVWA High Security"></div>
  PRACTICAL ATTACK — DVWA Security: HIGH
 
 
@@ -471,7 +471,7 @@ regardless of the file extension (.gif, .txt, etc).`,
   {
     title: "8. Tool Method — Metasploit Reverse Shell",
     points: 20,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_reverse_shell_nologo_1779677495172.png" alt="Reverse Shell Metasploit"></div>
   TOOLS: Automate the attack with Metasploit
 
 
@@ -545,7 +545,7 @@ Now type:
   {
     title: "9. Defenses — How to Stop These Attacks",
     points: 15,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_defense_nologo_1779677510360.png" alt="Secure Upload Defenses"></div>
   DEFENSE: How developers should fix file upload
 
 
@@ -602,7 +602,7 @@ Even a fully working web shell cannot execute without a URL.`,
   {
     title: "10. Final Quiz — Prove You Know It!",
     points: 15,
-    content: `
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_quiz_nologo_1779677530414.png" alt="Final Quiz"></div>
  FINAL QUIZ — Answer all questions to complete the lab!
 
 

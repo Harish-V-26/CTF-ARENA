@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "Unrestricted File Upload",
     points: 10,
-    content: `Imagine a magical mailbox that lets anyone drop a letter inside. The mail carrier takes the letter and puts it on a big bulletin board for everyone to read. This works great if people only send nice letters or pictures. But what if a sneaky villain drops a magic spell into the mailbox? If the mail carrier doesn't carefully check what they are putting on the board, the magic spell might activate and take over the entire town! In the computer world, this is called an "Unrestricted File Upload" vulnerability. Websites often let users upload innocent things, like a profile picture or a resume. But if the website's security guards are lazy and don't check what the file actually is, a hacker can upload a dangerous file made of hacking code. When the website tries to read the "picture," the hacker's code activates instead, giving them total control over the server!
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_concept_nologo_1779677390166.png" alt="Unrestricted File Upload"></div>Imagine a magical mailbox that lets anyone drop a letter inside. The mail carrier takes the letter and puts it on a big bulletin board for everyone to read. This works great if people only send nice letters or pictures. But what if a sneaky villain drops a magic spell into the mailbox? If the mail carrier doesn't carefully check what they are putting on the board, the magic spell might activate and take over the entire town! In the computer world, this is called an "Unrestricted File Upload" vulnerability. Websites often let users upload innocent things, like a profile picture or a resume. But if the website's security guards are lazy and don't check what the file actually is, a hacker can upload a dangerous file made of hacking code. When the website tries to read the "picture," the hacker's code activates instead, giving them total control over the server!
 
 THE CLASSIC WEB SHELL ATTACK:
   1. Attacker uploads: shell.php containing <?php system($_GET['cmd']); ?>
@@ -47,7 +47,7 @@ Defense 5: Size Check
   {
     title: "Web Shells & Exploitation",
     points: 10,
-    content: `A web shell is a malicious script uploaded to a server that gives the attacker a web-based command execution interface.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_low_nologo_1779677421616.png" alt="Web Shells"></div>A web shell is a malicious script uploaded to a server that gives the attacker a web-based command execution interface.
 
 SIMPLE WEB SHELLS:
 
@@ -104,7 +104,7 @@ FINDING UPLOADED SHELLS:
   {
     title: "Bypassing Advanced Upload Filters",
     points: 10,
-    content: `When basic bypass techniques fail, attackers use more sophisticated methods to get their web shells onto servers.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_medium_nologo_1779677455707.png" alt="Bypassing Filters"></div>When basic bypass techniques fail, attackers use more sophisticated methods to get their web shells onto servers.
 
 DOUBLE EXTENSION ATTACK:
   Some servers process the last extension: shell.php.jpg
@@ -159,7 +159,7 @@ EXIFTOOL METADATA INJECTION:
   {
     title: "Server-Side Issues: XXE & SSRF via Upload",
     points: 10,
-    content: `File uploads can trigger server-side vulnerabilities beyond web shell execution — particularly XXE and SSRF through malicious file content.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_high_nologo_1779677473626.png" alt="XXE & SSRF"></div>File uploads can trigger server-side vulnerabilities beyond web shell execution — particularly XXE and SSRF through malicious file content.
 
 XML EXTERNAL ENTITY (XXE) VIA FILE UPLOAD:
   Affected file types: XML, DOCX, XLSX, SVG, PDF (with XML metadata)
@@ -219,7 +219,7 @@ PREVENTION:
   {
     title: "Secure File Upload Implementation",
     points: 10,
-    content: `Properly securing file uploads requires multiple layered defenses. A single control is never sufficient — attackers bypass any one restriction.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_defense_nologo_1779677510360.png" alt="Secure Uploads"></div>Properly securing file uploads requires multiple layered defenses. A single control is never sufficient — attackers bypass any one restriction.
 
 COMPLETE SECURE UPLOAD CHECKLIST:
 
@@ -277,7 +277,7 @@ COMPLETE SECURE UPLOAD CHECKLIST:
   {
     title: "Real-World File Upload CVEs & Bug Bounties",
     points: 10,
-    content: `File upload vulnerabilities have led to some of the most impactful real-world bugs, attracting major bug bounty payouts.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/fileupload_quiz_nologo_1779677530414.png" alt="Real World & Quiz"></div>File upload vulnerabilities have led to some of the most impactful real-world bugs, attracting major bug bounty payouts.
 
 NOTABLE REAL-WORLD CASES:
 

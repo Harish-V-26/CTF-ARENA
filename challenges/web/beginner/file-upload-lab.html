@@ -102,7 +102,24 @@
     document.getElementById('ch-pts').textContent = l.points + ' pts';
     document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
     document.getElementById('cur-num').textContent = idx+1;
-    document.getElementById('reading-text').textContent = l.content;
+    // Separate diagram from text to avoid executing HTML payloads
+    let contentHtml = '';
+    const diagramMatch = l.content.match(/^<div class="htb-diagram-container">.*?<\/div>/);
+    if (diagramMatch) {
+      const diagram = diagramMatch[0];
+      const rest = l.content.slice(diagram.length);
+      const escapedRest = rest
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      contentHtml = diagram + escapedRest;
+    } else {
+      contentHtml = l.content
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+    document.getElementById('reading-text').innerHTML = contentHtml;
     const qc = document.getElementById('questions-container');
     qc.innerHTML = l.questions.map((q, qi) => `
       <div class="question-card${answered[idx][qi]?' correct':''}" id="qc-${idx}-${qi}">
