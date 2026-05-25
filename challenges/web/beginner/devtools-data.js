@@ -2,24 +2,24 @@ const LESSONS = [
   {
     title: "Inspector (Elements) — Reading the DOM",
     points: 10,
-    content: `Imagine you are watching a magical play in a theater. From your seat in the audience, you only see what the director wants you to see: the actors, the painted backgrounds, and the bright lights. But what if you had a magic pair of X-ray glasses that let you see exactly what was happening backstage? You could see the actors changing costumes, the ropes holding up the scenery, and even secret notes the director left on the walls! In the computer world, a website is like that play, and the "Inspector" tool is your pair of magic X-ray glasses. The Inspector lets you see the raw, behind-the-scenes building blocks (called HTML and CSS) of the webpage. This is extremely important for hackers because developers are often lazy or forgetful. They might leave secret passwords, hidden buttons, or private notes "backstage" in the code, thinking that normal users will never see them. With the Inspector, you can peek behind the curtain, change the scenery yourself, and find the hidden treasure!
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_inspector_1779432792544.png" alt="Inspector (Elements) Diagram"></div>Imagine you are watching a magical play in a theater. From your seat in the audience, you only see what the director wants you to see: the actors, the painted backgrounds, and the bright lights. But what if you had a magic pair of X-ray glasses that let you see exactly what was happening backstage? You could see the actors changing costumes, the ropes holding up the scenery, and even secret notes the director left on the walls! In the computer world, a website is like that play, and the "Inspector" tool is your pair of magic X-ray glasses. The Inspector lets you see the raw, behind-the-scenes building blocks (called HTML and CSS) of the webpage. This is extremely important for hackers because developers are often lazy or forgetful. They might leave secret passwords, hidden buttons, or private notes "backstage" in the code, thinking that normal users will never see them. With the Inspector, you can peek behind the curtain, change the scenery yourself, and find the hidden treasure!
 
 HOW TO OPEN IT:
 Right-click any element on a page and select "Inspect", or press F12 and click the "Elements" / "Inspector" tab.
 
 WHERE TO FIND A FLAG:
-  • Hidden HTML comments: <!-- flag{you_found_the_comment} -->
-  • Hidden elements: <div style="display:none;">flag{hidden_div}</div>
-  • Invisible text: <p style="color: white; background: white;">flag{invisible_text}</p>
-  • Disabled buttons: <button disabled>Submit</button>
-  • Input fields with type="hidden": <input type="hidden" name="token" value="flag{secret_token}">
+  • Hidden HTML comments: &lt;!-- flag{you_found_the_comment} --&gt;
+  • Hidden elements: &lt;div style="display:none;"&gt;flag{hidden_div}&lt;/div&gt;
+  • Invisible text: &lt;p style="color: white; background: white;"&gt;flag{invisible_text}&lt;/p&gt;
+  • Disabled buttons: &lt;button disabled&gt;Submit&lt;/button&gt;
+  • Input fields with type="hidden": &lt;input type="hidden" name="token" value="flag{secret_token}"&gt;
 
 EXPLOITATION TECHNIQUE — BYPASSING CLIENT-SIDE RESTRICTIONS:
 Client-side restrictions are NOT security controls. They only exist for user convenience.
 
 Example: A "Submit" button is grayed out with the 'disabled' attribute.
   1. Open Inspector (F12).
-  2. Find the <button disabled> tag.
+  2. Find the &lt;button disabled&gt; tag.
   3. Double-click the word "disabled" and delete it.
   4. The button is now clickable — submit the form.
 
@@ -32,7 +32,7 @@ PRO TIP:
 You can also edit text content, change styles, add or remove attributes, and even delete entire elements directly in the Inspector. None of these changes are permanent — they only affect your local browser.`,
     questions: [
       { q: "What does the Inspector panel show you?", a: "The raw HTML and CSS of the live page" },
-      { q: "What HTML comment syntax might hide a flag in the DOM?", a: "<!-- -->" },
+      { q: "What HTML comment syntax might hide a flag in the DOM?", a: "&lt;!-- --&gt;" },
       { q: "How do you bypass a 'disabled' button using DevTools?", a: "Delete the disabled attribute in the Inspector" },
       { q: "What CSS property is commonly used to hide an element from view?", a: "display: none" },
       { q: "What keyboard shortcut opens DevTools in most browsers?", a: "F12" }
@@ -41,7 +41,7 @@ You can also edit text content, change styles, add or remove attributes, and eve
   {
     title: "Console — Running JavaScript Live",
     points: 10,
-    content: `The Console is a place to run JavaScript commands and see logged messages from the website's scripts. It is your interactive command line inside the browser.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_console_1779432832051.png" alt="Console Diagram"></div>The Console is a place to run JavaScript commands and see logged messages from the website's scripts. It is your interactive command line inside the browser.
 
 WHY IT MATTERS FOR CTF:
 Developers sometimes leave debugging information in console.log() statements that aren't visible on the main page. Variables, flags, API keys, and even passwords can be leaked this way.
@@ -88,7 +88,7 @@ Error messages in the Console can reveal internal file paths, server endpoints, 
   {
     title: "Debugger (Sources) — Pausing & Modifying Code",
     points: 10,
-    content: `The Debugger (called "Sources" in Chrome) shows all the JavaScript files loaded by the website. It lets you read, search, pause, and modify running code.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_sources_1779432847368.png" alt="Sources Diagram"></div>The Debugger (called "Sources" in Chrome) shows all the JavaScript files loaded by the website. It lets you read, search, pause, and modify running code.
 
 WHY IT MATTERS FOR CTF:
 Developers sometimes hardcode credentials, API keys, flags, or business logic directly in JavaScript files. The Debugger lets you examine this code line-by-line and even alter it during execution.
@@ -136,7 +136,7 @@ Minified JavaScript (all on one line) is hard to read. Click the { } icon at the
   {
     title: "Network — Intercepting Data in Transit",
     points: 10,
-    content: `The Network panel records every HTTP request the browser makes and receives — HTML pages, images, scripts, stylesheets, API calls, WebSocket messages, and more.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_network_1779432863966.png" alt="Network Diagram"></div>The Network panel records every HTTP request the browser makes and receives — HTML pages, images, scripts, stylesheets, API calls, WebSocket messages, and more.
 
 WHY IT MATTERS FOR CTF:
 The Network tab shows you what the browser and server are actually saying to each other, not just what's displayed on the screen. Flags are often hidden in API responses, HTTP headers, or redirected URLs that the page never renders.
@@ -148,7 +148,7 @@ WHERE TO FIND A FLAG:
   • Response Body: Click on any request → "Response" tab. Check API calls (XHR/Fetch) for JSON data containing flags that the UI doesn't display.
   • Response Headers: A flag might be in a custom header: X-Flag: flag{check_the_headers}
   • Redirects: A 302 redirect's Location header might contain a flag URL.
-  • Request Headers: Custom headers like Authorization: Bearer <token> reveal authentication tokens.
+  • Request Headers: Custom headers like Authorization: Bearer &lt;token&gt; reveal authentication tokens.
   • Query Parameters: GET requests with ?token=flag{...} in the URL.
 
 FILTER BY TYPE:
@@ -182,7 +182,7 @@ Check "Preserve log" to keep recordings even when the page navigates or redirect
   {
     title: "Storage (Application) — Cookies, LocalStorage & Sessions",
     points: 10,
-    content: `The Storage panel (called "Application" in Chrome) displays all data stored locally in the browser — Cookies, LocalStorage, SessionStorage, IndexedDB, and Cache Storage.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_storage_1779432888344.png" alt="Storage Diagram"></div>The Storage panel (called "Application" in Chrome) displays all data stored locally in the browser — Cookies, LocalStorage, SessionStorage, IndexedDB, and Cache Storage.
 
 WHY IT MATTERS FOR CTF:
 Developers often store sensitive data client-side: session tokens, user roles, feature flags, and sometimes literal CTF flags. If you can read or modify this data, you can escalate privileges or reveal hidden information.
@@ -235,7 +235,7 @@ Sometimes you need to reset a challenge. Right-click → "Clear" or use the "Cle
   {
     title: "Style Editor — Uncovering Visual Secrets",
     points: 10,
-    content: `The Style Editor lets you view and modify all CSS stylesheets loaded by the page. In the context of CTFs, it's your tool for revealing elements that have been visually hidden.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_styles_1779432908788.png" alt="Style Editor Diagram"></div>The Style Editor lets you view and modify all CSS stylesheets loaded by the page. In the context of CTFs, it's your tool for revealing elements that have been visually hidden.
 
 WHY IT MATTERS FOR CTF:
 A common CTF trick is to hide flags in plain sight — making text invisible through CSS tricks. The flag is literally on the page, but styled so humans can't see it. The Style Editor lets you strip away these disguises.
@@ -304,7 +304,7 @@ Paste this in the Console to outline every element, making invisible containers 
   {
     title: "Memory & Performance — Advanced Analysis",
     points: 10,
-    content: `The Memory and Performance panels are advanced DevTools features. While less commonly used in beginner CTFs, they provide powerful capabilities for deep analysis.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_memory_1779432928449.png" alt="Memory Diagram"></div>The Memory and Performance panels are advanced DevTools features. While less commonly used in beginner CTFs, they provide powerful capabilities for deep analysis.
 
  MEMORY PANEL 
 
@@ -362,7 +362,7 @@ Some CTF challenges use performance.mark() and performance.measure() to track op
   {
     title: "Accessibility — The Hidden Text Layer",
     points: 10,
-    content: `The Accessibility panel reveals the semantic structure of a page as interpreted by assistive technologies like screen readers. It exposes text and labels that may be invisible to sighted users.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_accessibility_1779432955428.png" alt="Accessibility Diagram"></div>The Accessibility panel reveals the semantic structure of a page as interpreted by assistive technologies like screen readers. It exposes text and labels that may be invisible to sighted users.
 
 WHY IT MATTERS FOR CTF:
 A clever CTF trick is to hide a flag in the "accessibility layer" — text that screen readers can read aloud but that sighted users cannot see. This text exists in the DOM but is visually invisible.
@@ -384,7 +384,7 @@ The classic CSS pattern for visually hiding text while keeping it accessible:
   }
 
 An element with this class is invisible on screen but read aloud by screen readers. A flag might be:
-  <span class="sr-only">flag{accessibility_is_security}</span>
+  &lt;span class="sr-only"&gt;flag{accessibility_is_security}&lt;/span&gt;
 
 HOW TO FIND IT:
   1. Open the Accessibility panel and browse the Accessibility Tree.
@@ -404,7 +404,7 @@ EXPLOITATION TECHNIQUE:
 
 ALT TEXT ON IMAGES:
 Flags can be hidden in the alt attribute of images:
-  <img src="logo.png" alt="flag{alt_text_treasure}">
+  &lt;img src="logo.png" alt="flag{alt_text_treasure}"&gt;
 The alt text is read by screen readers and shown in the Accessibility panel, but not displayed visually (unless the image fails to load).
 
 PRO TIP:
@@ -420,7 +420,7 @@ Use the Accessibility Tree view instead of the DOM tree — it strips away visua
   {
     title: "Global Search & Practical Workflow",
     points: 10,
-    content: `Now that you know each DevTools panel, let's put it all together with practical workflows and the most powerful search technique available.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_search_1779432972713.png" alt="Global Search Diagram"></div>Now that you know each DevTools panel, let's put it all together with practical workflows and the most powerful search technique available.
 
  GLOBAL SEARCH: Ctrl+Shift+F 
 
@@ -444,7 +444,7 @@ Follow this systematic checklist on every web CTF challenge:
 
 STEP 1: VIEW SOURCE
   • Right-click → View Page Source (Ctrl+U).
-  • Look for HTML comments <!-- --> and hidden inputs.
+  • Look for HTML comments &lt;!-- --&gt; and hidden inputs.
 
 STEP 2: INSPECT ELEMENTS
   • Open Inspector (F12).

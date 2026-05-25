@@ -2,7 +2,7 @@ const LESSONS = [
   {
     title: "1. The Giant Keychain",
     points: 10,
-    content: `WHAT IS A BRUTE FORCE ATTACK?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/bf_keychain_1779434324462.png" alt="The Giant Keychain Diagram"></div>WHAT IS A BRUTE FORCE ATTACK?
 Imagine you find a heavy, locked treasure chest. You know there is a key somewhere, but instead of finding it, you bring a giant ring with a million different keys on it. You sit there and try every single key, one by one, until finally, one of them turns the lock! This is exactly what a Brute Force Attack is in the computer world. Hackers want to break into your accounts, but they don't know your password. So, they use a computer program to rapidly try thousands of different passwords, over and over, until they accidentally guess the right one. It is not very sneaky or clever; it is just using pure computer muscle to smash the door open. 
 
 WHY DOES IT WORK?
@@ -21,7 +21,7 @@ Hackers don't just attack website login screens. They also use the giant keychai
   {
     title: "2. The Hacker's Dictionary",
     points: 10,
-    content: `WHAT IS A DICTIONARY ATTACK?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/bf_dictionary_1779434339084.png" alt="The Hacker's Dictionary Diagram"></div>WHAT IS A DICTIONARY ATTACK?
 Instead of guessing random nonsense letters like "x-q-z-b-f", which takes forever, hackers realized they could save a lot of time. Humans aren't very creative when making passwords. Most people use normal words like "football", "summer", or "password". So, hackers created massive text files called "Wordlists." These files are literally just giant dictionaries containing millions of normal words. When a hacker uses a program to read down this list and try every word as a password, it is called a "Dictionary Attack." It is much, much faster than a Simple Brute Force attack because the computer isn't wasting time guessing words that don't make sense.
 
 THE ROCKYOU FILE
@@ -40,7 +40,7 @@ Hackers know that sometimes people try to be a little bit tricky. Someone might 
   {
     title: "3. Stuffing the Box",
     points: 10,
-    content: `WHAT IS CREDENTIAL STUFFING?
+    content: `<div class="htb-diagram-container"><img src="../../../assets/brute_force_ctflabs_1779431413098.png" alt="Credential Stuffing Diagram"></div>WHAT IS CREDENTIAL STUFFING?
 Hackers have gotten even smarter in recent years. They realized that trying millions of passwords against one account makes a lot of noise and sets off security alarms. So, they invented a sneaky attack called "Credential Stuffing." When a giant website (like a video game company or a forum) gets hacked, the bad guys steal a massive list of usernames and the exact passwords that match them. Because humans are very lazy, they often use the exact same username and password on every single website they visit! The hacker takes that stolen list and automatically "stuffs" those exact username and password pairs into the login screens of thousands of completely different websites, like banks and email providers. If your forum account got hacked, the bad guy instantly has the key to your bank account, too!
 
 THE SNEAKY SPRAY ATTACK
@@ -59,7 +59,7 @@ To be even sneakier, hackers who use the Spray attack will often wait a very lon
   {
     title: "4. Building a Stronger Door (Defense)",
     points: 10,
-    content: `HOW TO MAKE AN UNBREAKABLE KEY
+    content: `<div class="htb-diagram-container"><img src="../../../assets/brute_force_ctflabs_1779431413098.png" alt="Building a Stronger Door Diagram"></div>HOW TO MAKE AN UNBREAKABLE KEY
 If hackers have giant supercomputers guessing passwords, how do we stop them? The absolute best defense is to make a password that is incredibly long. Length is much more important than weird symbols. A password like "purpledinosaurridingabicycle" is much, much harder for a supercomputer to guess than "P@ssw0rd1!". This is because every single letter you add makes the math problem millions of times harder for the computer to solve. To remember these long passwords, you should use a "Password Manager," which is a digital vault that creates and stores a different, super-long password for every single website you visit.
 
 THE SECOND LOCK (MFA)
@@ -78,7 +78,7 @@ Passwords are fundamentally broken because humans are bad at making them. The in
   {
     title: "5. Traps for the Hackers",
     points: 10,
-    content: `THE ANGRY BOUNCER
+    content: `<div class="htb-diagram-container"><img src="../../../assets/brute_force_ctflabs_1779431413098.png" alt="Traps for the Hackers Diagram"></div>THE ANGRY BOUNCER
 Websites have to fight back against the robot guessing machines. The most common way they do this is with an "Account Lockout" policy. Imagine a very strict bouncer at the door of a club. If you tell the bouncer the wrong secret password five times in a row, the bouncer crosses his arms and says, "You are locked out! Come back in 15 minutes." This completely breaks the hacker's guessing machine. If the hacker has to wait 15 minutes after every five guesses, it will take them thousands of years to try all the words in their dictionary! 
 
 SLOWING THEM DOWN
@@ -97,7 +97,7 @@ To prove you are not a robotic guessing machine, websites make you solve a puzzl
   {
     title: "6. The Hacker's Tools",
     points: 10,
-    content: `THE PROFESSIONAL LOCKPICKS
+    content: `<div class="htb-diagram-container"><img src="../../../assets/hacker_toolkit_ctflabs_1779431431190.png" alt="The Hacker's Tools Diagram"></div>THE PROFESSIONAL LOCKPICKS
 Just like a locksmith needs special tools to open a safe, cybersecurity professionals use special guessing tools to test how strong a company's passwords really are. Remember, it is incredibly illegal to use these tools on computers you do not own! One of the most famous and fastest tools is called "Hydra." It is a network logon cracker. You open a terminal, point Hydra at a server (like a website or an email server), hand it the giant RockYou dictionary, and tell it to go to work. Hydra will fire thousands of guesses at the server's front door until it breaks in. Another tool very similar to Hydra is called "Medusa," which is built for extreme speed and testing lots of computers all at the exact same time.
 
 THE OFFLINE CRACKING MACHINES
