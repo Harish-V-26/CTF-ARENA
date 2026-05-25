@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF LABS Web Challenges — Start with the SQL Injection Lab." />
+  <title>CTF LABS — Learn</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/challenges.css" />
+</head>
+
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="index.html" class="logo">CTF<span>LABS</span></a>
+
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="learn.html" class="active">Learn</a>
+      <a href="challenges.html">Challenges</a>
+      <a href="rules.html">Rules</a>
+
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="#" role="menuitem">Dashboard</a>
+          <a href="#" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE HERO  -->
+  <div class="page-hero" id="challenges-hero">
+    <div class="page-hero-content">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Learning path</span>
+      <h1><span class="accent">Learn.</span></h1>
+      <p>Master cybersecurity fundamentals through theory lessons, conceptual labs, and hands-on practical exercises.</p>
+    </div>
+  </div>
+
+  <!--  CHALLENGES SECTION  -->
+  <section class="challenges-section">
+    <div class="container">
+
+      <h2 style="margin-bottom: 20px;">Beginner Level — Theory Labs</h2>
+      <div class="challenges-grid" id="challenges-grid-beginner">
+
+        <div class="challenge-card" data-category="web" id="card-web-sec-lab"
+          onclick="window.location.href='challenges/web/beginner/web-security-lab.html'" style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Web Security Fundamentals</div>
+            <div class="challenge-desc">
+              Learn the core concepts of web security, HTTP basics, data protection, and common attacks like SQLi, XSS,
+              and brute force. Also covers testing tools like Burp Suite.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">100 pts</span>
+            <span class="solve-count"> 10 lessons</span>
+            <a href="challenges/web/beginner/web-security-lab.html" class="start-btn" id="start-web-sec-lab">Start →</a>
+          </div>
+        </div>
+
+        <div class="challenge-card" data-category="web" id="card-devtools-lab"
+          onclick="window.location.href='challenges/web/beginner/devtools-lab.html'" style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Mastering DevTools for Web Exploitation</div>
+            <div class="challenge-desc">
+              A beginner-friendly guide to using Browser Developer Tools (DevTools) as your hacking lab. Learn to find
+              hidden flags in the Inspector, Console, Network, and Storage panels.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">80 pts</span>
+            <span class="solve-count"> 9 lessons</span>
+            <a href="challenges/web/beginner/devtools-lab.html" class="start-btn" id="start-devtools-lab">Start →</a>
+          </div>
+        </div>
+
+        <div class="challenge-card" data-category="web" id="card-bruteforce-lab"
+          onclick="window.location.href='challenges/web/beginner/bruteforce-lab.html'" style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Brute Force Attacks</div>
+            <div class="challenge-desc">
+              Learn about dictionary attacks, credential stuffing, and password spraying. Understand how to defend
+              against automated attacks using MFA, rate limiting, and CAPTCHA.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">60 pts</span>
+            <span class="solve-count"> 6 lessons</span>
+            <a href="challenges/web/beginner/bruteforce-lab.html" class="start-btn" id="start-bruteforce-lab">Start
+              →</a>
+          </div>
+        </div>
+
+        <div class="challenge-card" data-category="web" id="card-sqli-lab"
+          onclick="window.location.href='challenges/web/beginner/sqli-lab.html'" style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">SQL Injection Mastery</div>
+            <div class="challenge-desc">
+              Master SQL injection — from basic auth bypass to UNION extraction, error-based, blind, time-based,
+              filter evasion, advanced techniques, and prevention strategies.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">90 pts</span>
+            <span class="solve-count"> 9 lessons</span>
+            <a href="challenges/web/beginner/sqli-lab.html" class="start-btn" id="start-sqli-lab">Start →</a>
+          </div>
+        </div>
+
+        <div class="challenge-card" data-category="web" id="card-dir-traversal-lab"
+          onclick="window.location.href='challenges/web/beginner/directory-traversal-lab.html'"
+          style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Directory Traversal</div>
+            <div class="challenge-desc">
+              Learn how path traversal attacks work, how to read files outside the web root using ../ sequences, and how
+              to bypass common traversal filters.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">60 pts</span>
+            <span class="solve-count"> 6 lessons</span>
+            <a href="challenges/web/beginner/directory-traversal-lab.html" class="start-btn"
+              id="start-dir-traversal-lab">Start →</a>
+          </div>
+        </div>
+
+        <div class="challenge-card" data-category="web" id="card-command-injection-lab"
+          onclick="window.location.href='challenges/web/beginner/command-injection-lab.html'" style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Command Injection</div>
+            <div class="challenge-desc">
+              Understand OS command injection — how attackers chain shell commands, exploit blind injection, and how to
+              defend using safe APIs and input validation.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">60 pts</span>
+            <span class="solve-count"> 6 lessons</span>
+            <a href="challenges/web/beginner/command-injection-lab.html" class="start-btn"
+              id="start-command-injection-lab">Start →</a>
+          </div>
+        </div>
+
+        <div class="challenge-card" data-category="web" id="card-broken-auth-lab"
+          onclick="window.location.href='challenges/web/beginner/broken-auth-lab.html'" style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Broken Authentication</div>
+            <div class="challenge-desc">
+              Explore authentication weaknesses — weak password policies, session fixation and hijacking, JWT
+              vulnerabilities, and how to implement secure auth.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">60 pts</span>
+            <span class="solve-count"> 6 lessons</span>
+            <a href="challenges/web/beginner/broken-auth-lab.html" class="start-btn" id="start-broken-auth-lab">Start
+              →</a>
+          </div>
+        </div>
+
+        <div class="challenge-card" data-category="web" id="card-file-upload-lab"
+          onclick="window.location.href='challenges/web/beginner/file-upload-lab.html'" style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">File Upload Vulnerabilities</div>
+            <div class="challenge-desc">
+              Understand the dangers of unrestricted file uploads — how web shells achieve RCE, how to bypass upload
+              filters, and how to implement secure file handling.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">60 pts</span>
+            <span class="solve-count"> 6 lessons</span>
+            <a href="challenges/web/beginner/file-upload-lab.html" class="start-btn" id="start-file-upload-lab">Start
+              →</a>
+          </div>
+        </div>
+
+        <div class="challenge-card" data-category="web" id="card-owasp-lab"
+          onclick="window.location.href='challenges/web/beginner/owasp-lab.html'" style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium">Medium</span>
+            </div>
+            <div class="challenge-title">OWASP Top 10 Overview</div>
+            <div class="challenge-desc">
+              Master the OWASP Top 10 (2021) — from Broken Access Control and Injection to SSRF and Security Logging
+              failures, plus practical testing tools.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">60 pts</span>
+            <span class="solve-count"> 6 lessons</span>
+            <a href="challenges/web/beginner/owasp-lab.html" class="start-btn" id="start-owasp-lab">Start →</a>
+          </div>
+        </div>
+
+        <!-- DevTools Gauntlet — Guided Practice -->
+        <div class="challenge-card" data-category="web" id="card-learn-devtools-guided"
+          onclick="window.location.href='challenges/web/beginner/devtools-guided-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #ff4d6d, #e0364d);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">DevTools Gauntlet — Guided Practice</div>
+            <div class="challenge-desc">
+              Phase 1: Three live sandbox challenges inside a Docker container. Unlock disabled buttons with the
+              Console, find hidden DOM elements with the Inspector, and extract secrets from LocalStorage.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">200 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/beginner/devtools-guided-lab.html" class="start-btn" id="start-learn-devtools-guided">Start →</a>
+          </div>
+        </div>
+
+        <!-- DevTools Field Test — The Final Boss -->
+        <div class="challenge-card" data-category="web" id="card-learn-devtools-fieldtest"
+          onclick="window.location.href='challenges/web/beginner/devtools-fieldtest-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #ff6b35, #e05a2b);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">DevTools Field Test — The Final Boss</div>
+            <div class="challenge-desc">
+              Phase 2: No instructions. A "SecureCorp™" portal hides a 3-part flag across HTML comments, Network
+              response headers, and JavaScript source code. Find them all using only your DevTools skills.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">250 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/beginner/devtools-fieldtest-lab.html" class="start-btn" id="start-learn-devtools-fieldtest">Start →</a>
+          </div>
+        </div>
+
+        <!-- Authentication Basics -->
+        <div class="challenge-card" data-category="web" id="card-learn-auth-basics"
+          onclick="window.location.href='challenges/web/easy/auth-basics-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #f39c12, #d35400);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Authentication Basics</div>
+            <div class="challenge-desc">
+              Understand how login systems work. Analyze the login flow, observe session cookies, decode JWTs, and compare valid vs invalid logins in a guided practical lab.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">200 pts</span>
+            <span class="solve-count"> Guided Lab</span>
+            <a href="challenges/web/easy/auth-basics-lab.html" class="start-btn" id="start-learn-auth-basics">Start →</a>
+          </div>
+        </div>
+
+      </div><!-- /challenges-grid-beginner -->
+
+      <h2 style="margin-top: 40px; margin-bottom: 20px;">Easy Level — Practical Labs</h2>
+      <div class="challenges-grid" id="challenges-grid-easy-practical">
+
+        <!-- Metasploit Introduction -->
+        <div class="challenge-card" data-category="web" id="card-learn-metasploit"
+          onclick="window.location.href='challenges/web/beginner/metasploit-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #1f2d3d, #3c4f66);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Metasploit Introduction</div>
+            <div class="challenge-desc">
+              Learn the fundamentals of the Metasploit Framework. Spin up a Kali Linux container and practice essential commands inside msfconsole to capture the flag.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">250 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/beginner/metasploit-lab.html" class="start-btn" id="start-learn-metasploit">Start →</a>
+          </div>
+        </div>
+
+        <!-- Metasploit Deep Dive -->
+        <div class="challenge-card" data-category="web" id="card-learn-metasploit-deepdive"
+          onclick="window.location.href='challenges/web/easy/metasploit-deepdive-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #1f2d3d, #e74c3c);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Metasploit Deep Dive</div>
+            <div class="challenge-desc">
+              Go deeper with the Metasploit Framework. Master PostgreSQL integration, workspaces, advanced search filters, staged vs unstaged payloads, and deploy a web command injection exploit.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">280 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/metasploit-deepdive-lab.html" class="start-btn" id="start-learn-metasploit-deepdive">Start →</a>
+          </div>
+        </div>
+
+        <!-- DVWA Lab -->
+        <div class="challenge-card" data-category="web" id="card-learn-dvwa"
+          onclick="window.location.href='challenges/web/easy/dvwa-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Damn Vulnerable Web App (DVWA)</div>
+            <div class="challenge-desc">
+              Your first practical Docker challenge. Spin up a local DVWA container and put your skills to the test with real-world SQLi, Command Injection, and Brute Force attacks.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">200 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/dvwa-lab.html" class="start-btn" id="start-learn-dvwa">Start →</a>
+          </div>
+        </div>
+
+        <!-- XSS Lab -->
+        <div class="challenge-card" data-category="web" id="card-learn-xss"
+          onclick="window.location.href='challenges/web/easy/xss-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e67e22, #d35400);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Cross-Site Scripting (XSS) Lab</div>
+            <div class="challenge-desc">
+              A practical lab to understand XSS. Spin up a DVWA instance and explore Reflected, Stored, and DOM-based XSS vulnerabilities and their fixes.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">140 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/xss-lab.html" class="start-btn" id="start-learn-xss">Start →</a>
+          </div>
+        </div>
+
+        <!-- SQL Injection in DVWA -->
+        <div class="challenge-card" data-category="web" id="card-learn-sqli-dvwa"
+          onclick="window.location.href='challenges/web/easy/sqli-dvwa-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">SQL Injection in DVWA</div>
+            <div class="challenge-desc">
+              Focus specifically on SQL Injection. Launch your DVWA instance, reset the database, and conquer all 4 security levels (Low, Medium, High, Impossible) to capture the flags.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">240 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/sqli-dvwa-lab.html" class="start-btn" id="start-learn-sqli-dvwa">Start →</a>
+          </div>
+        </div>
+
+        <!-- Brute Force Target -->
+        <div class="challenge-card" data-category="web" id="card-learn-brute-force"
+          onclick="window.location.href='challenges/web/easy/brute-force-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Brute Force Target</div>
+            <div class="challenge-desc">
+              A standalone target server challenge. Put your dictionary attack skills to the test against a vulnerable login endpoint using Kali Linux tools like Hydra and Burp Suite.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">200 pts</span>
+            <span class="solve-count"> Attack Target</span>
+            <a href="challenges/web/easy/brute-force-lab.html" class="start-btn" id="start-learn-brute-force">Start →</a>
+          </div>
+        </div>
+
+        <!-- Web Reconnaissance Fundamentals -->
+        <div class="challenge-card" data-category="web" id="card-learn-recon"
+          onclick="window.location.href='challenges/web/easy/recon-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #ff4d6d, #c0392b);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Web Reconnaissance Fundamentals</div>
+            <div class="challenge-desc">
+              Map the attack surface. Discover hidden directories, identify the tech stack, and uncover staging environments using ffuf, WhatWeb, and Wappalyzer.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">260 pts</span>
+            <span class="solve-count"> Recon Lab</span>
+            <a href="challenges/web/easy/recon-lab.html" class="start-btn" id="start-learn-recon">Start →</a>
+          </div>
+        </div>
+
+        <!-- SQL Injection (Blind) in DVWA -->
+        <div class="challenge-card" data-category="web" id="card-learn-sqli-blind"
+          onclick="window.location.href='challenges/web/easy/sqli-blind-dvwa-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #2c3e50, #34495e);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">SQL Injection (Blind) in DVWA</div>
+            <div class="challenge-desc">
+              Master Blind SQL Injection techniques. Use boolean logic and time delays (SLEEP) to infer hidden data across all 4 security levels. Terminal tools included!
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">240 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/sqli-blind-dvwa-lab.html" class="start-btn" id="start-learn-sqli-blind">Start →</a>
+          </div>
+        </div>
+
+        <!-- IDOR Lab -->
+        <div class="challenge-card" data-category="web" id="card-learn-idor"
+          onclick="window.location.href='challenges/web/easy/idor-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #f39c12, #e67e22);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">IDOR (Insecure Direct Object Reference)</div>
+            <div class="challenge-desc">
+              Hack an Invoice Management System. Change object IDs to access another user's data and escalate privileges using mass assignment vulnerabilities.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">120 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/idor-lab.html" class="start-btn" id="start-learn-idor">Start →</a>
+          </div>
+        </div>
+
+        <!-- File Upload in DVWA -->
+        <div class="challenge-card" data-category="web" id="card-learn-file-upload-dvwa"
+          onclick="window.location.href='challenges/web/easy/file-upload-dvwa-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e74c3c, #c0392b);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">File Upload in DVWA</div>
+            <div class="challenge-desc">
+              Exploit file upload vulnerabilities in DVWA. Upload web shells, bypass filters, and achieve remote code execution across all 4 security levels with Kali Linux tools.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">170 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/file-upload-dvwa-lab.html" class="start-btn" id="start-learn-file-upload-dvwa">Start →</a>
+          </div>
+        </div>
+
+        <!-- Introduction to Nmap -->
+        <div class="challenge-card" data-category="web" id="card-learn-nmap"
+          onclick="window.location.href='challenges/web/easy/nmap-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #00ff41, #00cc33);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Introduction to Nmap</div>
+            <div class="challenge-desc">
+              Master network reconnaissance with Nmap. Discover live hosts, scan open ports, detect services & versions, fingerprint operating systems, and perform stealth scans using Kali Linux.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">320 pts</span>
+            <span class="solve-count"> 11 Lessons</span>
+            <a href="challenges/web/easy/nmap-lab.html" class="start-btn" id="start-learn-nmap">Start →</a>
+          </div>
+        </div>
+
+        <!-- Nmap Deep Dive -->
+        <div class="challenge-card" data-category="web" id="card-learn-nmap-deepdive"
+          onclick="window.location.href='challenges/web/easy/nmap-deepdive-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #00f0ff, #00b8d4);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Nmap Deep Dive</div>
+            <div class="challenge-desc">
+              Take your Nmap skills to the next level. Learn advanced scan types (Null, FIN, Xmas), firewall evasion techniques, decoys, IP spoofing, and Nmap scripts (NSE).
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">180 pts</span>
+            <span class="solve-count"> 5 Lessons</span>
+            <a href="challenges/web/easy/nmap-deepdive-lab.html" class="start-btn" id="start-learn-nmap-deepdive">Start →</a>
+          </div>
+        </div>
+
+      </div><!-- /challenges-grid-easy-practical -->
+
+    </div>
+  </section>
+
+  <!--  CRYPTO CATEGORY  -->
+  <div class="page-hero" id="crypto-hero" style="border-top: 1px solid var(--border); margin-top: 40px;">
+    <div class="page-hero-content">
+      <span class="badge"
+        style="margin-bottom:20px;display:inline-flex;background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.3);">
+        Crypto Category</span>
+      <h1><span class="accent" style="color:#a78bfa;">Crypto.</span></h1>
+      <p>Explore the world of cryptography — from classical ciphers to modern encryption, hashing, and PKI.</p>
+    </div>
+  </div>
+
+  <section class="challenges-section">
+    <div class="container">
+
+      <h2 style="margin-bottom: 20px;">Beginner Level</h2>
+      <div class="challenges-grid" id="challenges-grid-crypto-beginner">
+
+        <!-- Cryptography Fundamentals Lab -->
+        <div class="challenge-card" data-category="crypto" id="card-crypto-fundamentals-lab"
+          onclick="window.location.href='challenges/crypto/beginner/crypto-fundamentals-lab.html'"
+          style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Crypto</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Cryptography Fundamentals</div>
+            <div class="challenge-desc">
+              Learn the core concepts of cryptography — what it is, the CIA triad, essential terminology, types of
+              cryptographic systems, Kerckhoffs's Principle, and classic ciphers like Caesar and ROT13.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">210 pts</span>
+            <span class="solve-count"> 9 lessons</span>
+            <a href="challenges/crypto/beginner/crypto-fundamentals-lab.html" class="start-btn"
+              id="start-crypto-fundamentals-lab">Start →</a>
+          </div>
+        </div>
+
+        <!-- Symmetric & Asymmetric Encryption Lab -->
+        <div class="challenge-card" data-category="crypto" id="card-sym-asym-lab"
+          onclick="window.location.href='challenges/crypto/beginner/symmetric-asymmetric-lab.html'"
+          style="cursor: pointer;">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Crypto</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Symmetric & Asymmetric Encryption</div>
+            <div class="challenge-desc">
+              Master both encryption paradigms — stream vs block ciphers, AES modes of operation, RSA & ECC,
+              Diffie-Hellman key exchange, hybrid encryption, and Public Key Infrastructure (PKI).
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">210 pts</span>
+            <span class="solve-count"> 9 lessons</span>
+            <a href="challenges/crypto/beginner/symmetric-asymmetric-lab.html" class="start-btn"
+              id="start-sym-asym-lab">Start →</a>
+          </div>
+        </div>
+
+
+
+      </div><!-- /challenges-grid-crypto-beginner -->
+
+    </div>
+  </section>
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>© 2026 <a href="index.html">CTF LABS</a> · Internship Project Demo</p>
+  </footer>
+
+  <!--  CHALLENGE DETAILS MODAL  -->
+  <div id="challenge-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close modal">×</button>
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="category-tag" id="modal-category">Web</span>
+          <span class="difficulty-tag" id="modal-difficulty">Easy</span>
+        </div>
+        <h2 id="modal-title">Challenge Title</h2>
+      </div>
+      <div class="modal-body">
+        <p id="modal-desc" class="modal-desc">Detailed description goes here.</p>
+        
+        <div class="modal-section">
+          <h3> What You Will Learn</h3>
+          <ul id="modal-learn-list" class="modal-list">
+          </ul>
+        </div>
+        
+        <div class="modal-section">
+          <h3> Environment & Expected Result</h3>
+          <div class="env-preview">
+            <div class="env-icon" id="modal-env-icon"></div>
+            <div class="env-text">
+              <strong id="modal-env-title">Docker Lab</strong>
+              <p id="modal-env-desc">You will be dropped into a private container...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span class="points" id="modal-points">200 pts</span>
+        <a href="#" class="start-btn-large" id="modal-start-btn">Start Challenge →</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const cards = document.querySelectorAll(".challenge-card");
+      
+      cards.forEach(card => {
+        // Extract the URL from onclick
+        const onclickStr = card.getAttribute("onclick");
+        let url = "";
+        if (onclickStr) {
+          const match = onclickStr.match(/window\.location\.href='([^']+)'/);
+          if (match) url = match[1];
+          // Remove the default onclick to prevent immediate navigation
+          card.removeAttribute("onclick");
+        }
+        
+        // Add click event for opening modal
+        card.addEventListener("click", function(e) {
+          // Don't trigger modal if they explicitly clicked the start button (let it navigate)
+          if (e.target.closest('.start-btn')) {
+            window.location.href = url;
+            return;
+          }
+          openModal(card, url);
+        });
+      });
+    });
+
+    function openModal(card, url) {
+      const title = card.querySelector(".challenge-title").textContent;
+      const desc = card.querySelector(".challenge-desc").textContent;
+      const cat = card.querySelector(".category-tag").textContent;
+      const diff = card.querySelector(".difficulty-tag").textContent;
+      const pts = card.querySelector(".points").textContent;
+      
+      let solveCountEl = card.querySelector(".solve-count");
+      const solveCount = solveCountEl ? solveCountEl.textContent : "";
+      
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-desc').textContent = desc.trim();
+      document.getElementById('modal-category').textContent = cat;
+      document.getElementById('modal-difficulty').textContent = diff;
+      document.getElementById('modal-difficulty').className = card.querySelector(".difficulty-tag").className;
+      
+      document.getElementById('modal-points').textContent = pts;
+      document.getElementById('modal-start-btn').href = url || '#';
+      
+      // Infer Environment and "What you will learn" dynamically
+      let envIcon = "";
+      let envTitle = "Theory & Reading Lab";
+      let envDesc = "You will read through a set of lessons and answer knowledge check questions.";
+      let learnList = ["Vulnerability Identification", "Exploitation Techniques", "Mitigation Strategies"];
+      
+      if (diff.includes("Practical") || solveCount.includes("Docker") || title.includes("Gauntlet") || title.includes("Target") || title.includes("DVWA")) {
+          envIcon = "";
+          envTitle = "Live Docker Environment";
+          envDesc = "You will launch a private, isolated Docker container running a vulnerable application target. You'll interact with it like a real-world server.";
+      } else if (desc.includes("guided") || title.includes("Auth") || title.includes("DevTools")) {
+          envIcon = "";
+          envTitle = "Interactive Guided Lab";
+          envDesc = "A split-screen environment with step-by-step instructions on the left and an interactive target/browser view on the right.";
+      } else if (solveCount.includes("Recon")) {
+          envIcon = "";
+          envTitle = "Recon Target";
+          envDesc = "Perform reconnaissance on a simulated infrastructure target using industry standard tools to map the attack surface.";
+      }
+      
+      if (title.includes("SQL")) {
+          learnList = ["SQL Syntax & Payloads", "Authentication Bypass", "UNION-Based Data Extraction", "Error/Blind Injection Techniques"];
+      } else if (title.includes("XSS")) {
+          learnList = ["Reflected XSS Execution", "Stored XSS Persistence", "DOM-based vulnerabilities", "JavaScript Payload Development"];
+      } else if (title.includes("DevTools") || title.includes("Mastering DevTools")) {
+          learnList = ["Inspector DOM Manipulation", "Console JavaScript Execution", "Network Request Interception", "Cookie/LocalStorage Management"];
+      } else if (title.includes("Auth") || title.includes("Broken Auth")) {
+          learnList = ["Session Cookies Analysis", "JWT Token Decoding & Forgery", "Login Flow Verification", "Brute Force Concepts"];
+      } else if (title.includes("Crypto") || title.includes("Encryption")) {
+          learnList = ["Encryption vs Hashing", "Block vs Stream Ciphers", "Public Key Infrastructure (PKI)", "Key Exchange Protocols"];
+      } else if (title.includes("Directory Traversal")) {
+          learnList = ["Path Traversal Vectors", "Filter Bypassing", "Reading Arbitrary OS Files"];
+      } else if (title.includes("Command Injection")) {
+          learnList = ["OS Command Injection", "Shell Operators chaining", "Input Sanitization failures"];
+      } else if (title.includes("File Upload")) {
+          learnList = ["Web Shell Execution", "Content-Type Bypassing", "Extension Blacklist/Whitelist filters", "Remote Code Execution via Upload"];
+      } else if (title.includes("IDOR")) {
+          learnList = ["Insecure Direct Object References", "Horizontal Privilege Escalation", "Mass Assignment Attacks", "Access Control Bypass"];
+      } else if (title.includes("Deep Dive") || title.includes("Nmap Deep Dive")) {
+          learnList = ["Advanced TCP Scans (Null/FIN/Xmas)", "Packet Fragmentation & MTU", "Decoy Scanning & IP Spoofing", "NSE Script Configuration"];
+      } else if (title.includes("Nmap")) {
+          learnList = ["Host Discovery & Ping Scanning", "Port Scanning & Enumeration", "Service Version Detection", "OS Fingerprinting", "Stealth SYN Scanning", "Saving & Exporting Results"];
+      } else if (title.includes("Reconnaissance")) {
+          learnList = ["Directory Fuzzing (ffuf)", "Tech Stack Discovery (Wappalyzer)", "Attack Surface Mapping"];
+      } else if (title.includes("Brute Force")) {
+          learnList = ["Dictionary Attacks", "Credential Stuffing", "Rate Limiting Bypass", "Using Hydra & Burp Suite"];
+      } else if (title.includes("OWASP")) {
+          learnList = ["Broken Access Control", "Cryptographic Failures", "Injection Attacks", "Insecure Design Principles"];
+      } else if (title.includes("Web Security")) {
+          learnList = ["CIA Triad in Web", "HTTP Protocol Basics", "Common Vulnerabilities", "Defensive Strategies"];
+      } else if (title.includes("Metasploit Deep Dive")) {
+          learnList = ["PostgreSQL Database Integration", "Workspaces & db_nmap", "Advanced Search Filters", "Staged vs Unstaged Payloads", "Web API Exploitation & RCE"];
+      } else if (title.includes("Metasploit")) {
+          learnList = ["Penetration Testing Frameworks", "Core Metasploit Commands (msfconsole)", "Exploits vs Payloads vs Auxiliary Modules", "Simulated Scanner Execution"];
+      }
+
+      
+      const ul = document.getElementById('modal-learn-list');
+      ul.innerHTML = learnList.map(item => `<li>${item}</li>`).join('');
+      
+      document.getElementById('modal-env-icon').textContent = envIcon;
+      document.getElementById('modal-env-title').textContent = envTitle;
+      document.getElementById('modal-env-desc').textContent = envDesc;
+      
+      document.getElementById('challenge-modal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('challenge-modal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    window.addEventListener('click', function(e) {
+      const modal = document.getElementById('challenge-modal');
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+</html>
