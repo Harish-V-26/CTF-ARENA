@@ -335,7 +335,7 @@
           </div>
         </div>
 
-        <!-- Metasploit Deep Dive -->
+        <!-- Metasploit Deep Dive (Advanced) -->
         <div class="challenge-card" data-category="web" id="card-learn-metasploit-deepdive"
           onclick="window.location.href='challenges/web/easy/metasploit-deepdive-lab.html'" style="cursor: pointer;">
           <div class="card-top" style="background: linear-gradient(135deg, #1f2d3d, #e74c3c);"></div>
@@ -344,13 +344,13 @@
               <span class="category-tag">Web</span>
               <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
             </div>
-            <div class="challenge-title">Metasploit Deep Dive</div>
+            <div class="challenge-title">Metasploit Deep Dive — Advanced</div>
             <div class="challenge-desc">
-              Go deeper with the Metasploit Framework. Master PostgreSQL integration, workspaces, advanced search filters, staged vs unstaged payloads, and deploy a web command injection exploit.
+              Master advanced Metasploit concepts: Meterpreter post-exploitation, pivoting & port forwarding, evasion techniques, persistence mechanisms, resource script automation, and practical exploitation chains.
             </div>
           </div>
           <div class="card-footer">
-            <span class="points">280 pts</span>
+            <span class="points">360 pts</span>
             <span class="solve-count"> Docker Lab</span>
             <a href="challenges/web/easy/metasploit-deepdive-lab.html" class="start-btn" id="start-learn-metasploit-deepdive">Start →</a>
           </div>
@@ -782,8 +782,8 @@
           learnList = ["Broken Access Control", "Cryptographic Failures", "Injection Attacks", "Insecure Design Principles"];
       } else if (title.includes("Web Security")) {
           learnList = ["CIA Triad in Web", "HTTP Protocol Basics", "Common Vulnerabilities", "Defensive Strategies"];
-      } else if (title.includes("Metasploit Deep Dive")) {
-          learnList = ["PostgreSQL Database Integration", "Workspaces & db_nmap", "Advanced Search Filters", "Staged vs Unstaged Payloads", "Web API Exploitation & RCE"];
+      } else if (title.includes("Metasploit Deep Dive") || title.includes("Advanced")) {
+          learnList = ["Meterpreter Post-Exploitation Commands", "Post Modules & Persistence Mechanisms", "Pivoting & Port Forwarding (autoroute, portfwd)", "Evasion — Encoders, Packers & AV Bypass", "Resource Scripts & Handler Automation", "Practical Exploitation Chains"];
       } else if (title.includes("Metasploit")) {
           learnList = ["Penetration Testing Frameworks", "Core Metasploit Commands (msfconsole)", "Exploits vs Payloads vs Auxiliary Modules", "Simulated Scanner Execution"];
       }
