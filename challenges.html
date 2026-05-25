@@ -46,8 +46,10 @@
   <section class="challenges-section">
     <div class="container">
 
+      <h2 style="margin-bottom: 20px;">Beginner Level — CTF Challenges</h2>
       <div class="challenges-grid" id="challenges-grid">
 
+<<<<<<< HEAD
         <!-- Future challenges will be added here -->
         <div class="challenge-card" id="ch-ultimate-gauntlet" data-category="web" onclick="window.location.href='challenges/web/hard/ultimate-challenge-lab.html'">
           <div class="card-top"></div>
@@ -65,6 +67,26 @@
           <div class="card-footer">
             <span class="solve-count"> Practical Docker Lab</span>
             <button class="start-btn">Start ⇗</button>
+=======
+        <!-- Operation Shadow Gate -->
+        <div class="challenge-card" data-category="web" id="card-operation-shadow-gate"
+          onclick="window.location.href='challenges/web/beginner/operation-shadow-gate-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(90deg, #ff4d6d, #e67e22, #f39c12, #9b59b6, #3498db, #2ecc71);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: rgba(255,77,109,0.15); color: #ff4d6d;">Multi-Stage</span>
+            </div>
+            <div class="challenge-title">Operation Shadow Gate</div>
+            <div class="challenge-desc">
+              Infiltrate NEXUS CORP by combining five attack vectors: Nmap Reconnaissance, Brute Force, SQL Injection, XSS, and Metasploit. Extract the hidden master flag from the server in this pure CTF environment.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">500 pts</span>
+            <span class="solve-count"> Live Target</span>
+            <a href="challenges/web/beginner/operation-shadow-gate-lab.html" class="start-btn" id="start-shadow-gate">Start →</a>
+>>>>>>> refs/remotes/origin/main
           </div>
         </div>
 
@@ -184,6 +206,10 @@
       
       if (title.includes("SQL")) {
           learnList = ["SQL Syntax & Payloads", "Authentication Bypass", "UNION-Based Data Extraction", "Error/Blind Injection Techniques"];
+      } else if (title.includes("Shadow Gate") || title.includes("Operation")) {
+          learnList = ["Nmap Reconnaissance", "Brute Force Attack Execution", "SQL Injection", "Cross-Site Scripting (XSS)", "Metasploit Exploitation"];
+          envTitle = "Pure CTF Challenge";
+          envDesc = "A live Docker environment where you must independently apply all five learned techniques to compromise the target and locate the master flag.";
       } else if (title.includes("XSS")) {
           learnList = ["Reflected XSS Execution", "Stored XSS Persistence", "DOM-based vulnerabilities", "JavaScript Payload Development"];
       } else if (title.includes("DevTools") || title.includes("Mastering DevTools")) {
