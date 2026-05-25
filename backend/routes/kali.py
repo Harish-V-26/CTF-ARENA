@@ -28,7 +28,8 @@ def start_kali():
             "kali-rolling:latest",
             command="tail -f /dev/null",
             detach=True,
-            remove=True
+            remove=True,
+            extra_hosts={"host.docker.internal": "host-gateway"}
         )
 
         return jsonify({
@@ -63,6 +64,7 @@ def start_kali_terminal():
             detach=True,
             remove=True,
             ports={"7681/tcp": ttyd_port},
+            extra_hosts={"host.docker.internal": "host-gateway"},
             # Give hacker user sudo without password for lab use
             cap_add=["NET_ADMIN"],
         )
@@ -79,7 +81,7 @@ def start_kali_terminal():
                     if dvwa_ip:
                         break
                 if dvwa_ip:
-                    run_kwargs["extra_hosts"] = {"dvwa": dvwa_ip}
+                    run_kwargs["extra_hosts"]["dvwa"] = dvwa_ip
             except Exception:
                 pass  # Non-critical: DVWA link is optional
 

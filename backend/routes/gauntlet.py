@@ -30,10 +30,10 @@ def start_gauntlet():
             "ctflabs/gauntlet-target:latest",
             detach=True,
             ports={
-                '80/tcp':   7780,
-                '21/tcp':   7721,
-                '8080/tcp': 7808,
-                '9090/tcp': 7909,
+                '80/tcp':   8000,
+                '21/tcp':   21,
+                '8080/tcp': 8081,
+                '9090/tcp': 9000,
             },
             remove=True
         )
@@ -41,10 +41,10 @@ def start_gauntlet():
             "status": "success",
             "container_id": container.id,
             "ports": {
-                "http":   7780,
-                "ftp":    7721,
-                "idor":   7808,
-                "upload": 7909
+                "http":   8000,
+                "ftp":    21,
+                "idor":   8081,
+                "upload": 9000
             }
         })
     except Exception as e:

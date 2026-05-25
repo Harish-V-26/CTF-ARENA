@@ -233,9 +233,10 @@
         <p id="target-msg" style="display:none;color:#e67e22;font-weight:bold;margin-top:15px"></p>
         
         <div id="target-info" class="target-details">
-          <p style="margin-top:0; color:#aaa;">Target is running. Scan the following hostname from your Kali container:</p>
-          <div style="background:#000; padding:10px; border-radius:4px; margin-bottom:10px;">
-            Target Host: <code id="target-hostname">host.docker.internal</code>
+          <p style="margin-top:0; color:#aaa;">Target is running. Scan the following hostname and mapped ports from your Kali container:</p>
+          <div style="background:#000; padding:10px; border-radius:4px; margin-bottom:10px; line-height:1.5;">
+            Target Host: <code id="target-hostname">host.docker.internal</code><br>
+            Target Ports: <code id="target-ports">Loading...</code>
           </div>
         </div>
       </div>
@@ -377,6 +378,13 @@ async function launchTarget(){
       msg.style.color = '#3498db';
       msg.textContent = 'Gauntlet environment is ready!';
       stop.style.display = 'inline-block';
+      
+      if(data.ports) {
+          document.getElementById('target-ports').textContent = `${data.ports.ftp}, ${data.ports.http}, ${data.ports.idor}, ${data.ports.upload}`;
+      } else {
+          document.getElementById('target-ports').textContent = `21, 80, 8080, 9090`;
+      }
+      
       info.style.display = 'block';
     } else {
       msg.style.color = '#e74c3c';

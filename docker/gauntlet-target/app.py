@@ -33,7 +33,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # Write the real flag to /flag.txt inside the container
 with open("/flag.txt", "w") as f:
-    f.write("CTF{R3C0N_1D0R_F1L3_G4UNT}\n")
+    f.write("G4UNT}\n")
 
 # ─── Fake user/invoice DB (IDOR) ──────────────────────────────────────────────
 USERS = {
@@ -46,6 +46,81 @@ INVOICES = {
     1003: {"id": 1003, "owner_id": 2, "amount": "$99,000", "desc": "Phase 3 token: _F1L3_"},
     1004: {"id": 1004, "owner_id": 2, "amount": "$5,000",  "desc": "Security Review"},
 }
+
+IDOR_HTML = """<!DOCTYPE html>
+<html>
+<head><title>SecureCorp Billing System</title>
+<style>
+  body{background:#0a0f0a;color:#00ff41;font-family:monospace;display:flex;
+       justify-content:center;align-items:center;height:100vh;margin:0;}
+  .box{background:#111;border:1px solid #00ff41;padding:40px;border-radius:8px;width:500px;}
+  h2{margin:0 0 20px;color:#00ff41;text-align:center;}
+  .form-group{margin-bottom:20px;}
+  label{display:block;margin-bottom:8px;color:#888;}
+  input[type=number]{width:100%;padding:10px;background:#1a1a1a;border:1px solid #333;color:#00ff41;border-radius:4px;box-sizing:border-box;font-family:monospace;font-size:1.1rem;}
+  button{background:#00ff41;color:#000;border:none;padding:10px 20px;
+         font-size:1rem;cursor:pointer;border-radius:4px;font-weight:bold;width:100%;margin-top:10px;}
+  button:hover{background:#00cc33;}
+  .invoice-card{margin-top:30px;border:1px dashed #333;padding:20px;border-radius:6px;display:none;background:#151515;}
+  .invoice-header{display:flex;justify-content:space-between;border-bottom:1px solid #222;padding-bottom:10px;margin-bottom:15px;}
+  .invoice-title{font-weight:bold;font-size:1.2rem;}
+  .invoice-amount{color:#ff5555;font-weight:bold;font-size:1.2rem;}
+  .invoice-desc{color:#ccc;}
+</style>
+</head>
+<body>
+<div class="box">
+  <h2>💳 SecureCorp Invoice Portal</h2>
+  <div class="form-group">
+    <label for="invoice-id">Enter Invoice ID:</label>
+    <input type="number" id="invoice-id" value="1001" placeholder="e.g. 1001"/>
+    <button onclick="loadInvoice()">View Invoice</button>
+  </div>
+  
+  <div id="invoice-card" class="invoice-card">
+    <div style="display:flex; justify-content:space-between; border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:15px;">
+      <span class="invoice-title" id="card-title">Invoice #1001</span>
+      <span class="invoice-amount" id="card-amount">$200</span>
+    </div>
+    <p><strong>Description:</strong> <span id="card-desc">Stationery</span></p>
+    <p style="color:#666; font-size:0.8rem; margin-top:15px; margin-bottom:0;">Owner ID: <span id="card-owner">1</span></p>
+  </div>
+</div>
+
+<script>
+async function loadInvoice() {
+  const id = document.getElementById('invoice-id').value;
+  const card = document.getElementById('invoice-card');
+  try {
+    const res = await fetch(`/api/invoice/${id}`);
+    if (res.status === 200) {
+      const data = await res.json();
+      document.getElementById('card-title').textContent = `Invoice #${data.id}`;
+      document.getElementById('card-amount').textContent = data.amount;
+      document.getElementById('card-desc').textContent = data.desc;
+      document.getElementById('card-owner').textContent = data.owner_id;
+      card.style.display = 'block';
+    } else {
+      alert("Invoice not found or Access Denied!");
+      card.style.display = 'none';
+    }
+  } catch(e) {
+    alert("Error fetching invoice data.");
+  }
+}
+// Load default
+window.onload = loadInvoice;
+</script>
+</body>
+</html>
+"""
+
+@app.route("/")
+def index():
+    port = request.environ.get('SERVER_PORT')
+    if port == '9090':
+        return render_template_string(UPLOAD_HTML)
+    return render_template_string(IDOR_HTML)
 
 # ─── Port 8080 — IDOR API ─────────────────────────────────────────────────────
 
@@ -94,6 +169,7 @@ UPLOAD_HTML = """<!DOCTYPE html>
     <button type="submit">Upload File</button>
   </form>
   <p class="note">Allowed types: image/jpeg, image/png, application/pdf</p>
+  <!-- Dev Note: Remember to remove the /execute-debug?script=<filepath> testing endpoint before production! -->
 </div>
 </body>
 </html>
@@ -139,24 +215,28 @@ def do_upload():
     return jsonify({
         "success": True,
         "message": f"File '{filename}' uploaded successfully.",
-        "path": f"/execute?cmd=cat+/flag.txt",
-        "hint": "Your file was saved. You can execute it via /execute?cmd=<command>"
+        "path": f"/tmp/uploads/{filename}"
     })
 
-@app.route("/execute")
+@app.route("/execute-debug")
 def execute():
-    cmd = request.args.get("cmd", "")
-    if not cmd:
-        return jsonify({"error": "No cmd parameter"}), 400
+    script = request.args.get("script", "")
+    if not script:
+        return jsonify({"error": "No script parameter provided"}), 400
+    
+    if not os.path.exists(script):
+        return jsonify({"error": "File not found"}), 404
+
     try:
         import subprocess
-        result = subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT, timeout=5)
+        # Execute the uploaded file as a bash script
+        result = subprocess.check_output(f"bash {script}", shell=True, stderr=subprocess.STDOUT, timeout=5)
         output = result.decode("utf-8", errors="ignore")
     except subprocess.CalledProcessError as e:
         output = e.output.decode("utf-8", errors="ignore")
     except Exception as ex:
         output = str(ex)
-    return render_template_string(EXEC_HTML, cmd=cmd, output=output)
+    return EXEC_HTML.format(cmd=f"bash {script}", output=output)
 
 
 # ─── Port 80 — Web Recon HTTP server ─────────────────────────────────────────
@@ -185,7 +265,7 @@ Disallow: /dev/
 
 STAGING_INDEX = b"""HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nConnection: close\r\n\r\n<!DOCTYPE html>
 <html><body style="background:#111;color:#0f0;font-family:monospace;padding:40px;">
-<h2>/staging/ — Development Environment</h2>
+<h2>/staging/ - Development Environment</h2>
 <ul>
   <li><a href="/staging/api_key.txt" style="color:#0f0;">/staging/api_key.txt</a></li>
   <li><a href="/staging/config.bak" style="color:#0f0;">/staging/config.bak</a></li>

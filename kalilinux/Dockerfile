@@ -2,8 +2,8 @@
 FROM kalilinux/kali-rolling
 
 # Update and install common tools
-RUN apt update && apt upgrade -y && \
-    apt install -y \
+RUN apt-get update --fix-missing && \
+    apt-get install -y \
     net-tools \
     iputils-ping \
     curl \
@@ -17,6 +17,7 @@ RUN apt update && apt upgrade -y && \
     hashcat \
     ffuf \
     whatweb \
+    netcat-traditional \
     dirb \
     wordlists
 
