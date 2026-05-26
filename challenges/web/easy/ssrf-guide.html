@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF LABS Guide — Official walkthrough for SSRF Challenge." />
+  <title>CTF LABS — SSRF Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #1a252f;
+      color: #3498db;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+  <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+  <div class="nav-links">
+    <a href="../../../index.html">Home</a>
+    <a href="../../../learn.html">Learn</a>
+    <a href="../../../challenges.html" class="active">Challenges</a>
+    <a href="../../../rules.html">Rules</a>
+    <div class="dropdown">
+      <a href="#" aria-haspopup="true">Profile </a>
+      <div class="dropdown-content">
+        <a href="#">Dashboard</a>
+        <a href="#">Settings</a>
+        <a href="#">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+  <!--  PAGE INTRO  -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        SSRF <span style="color:var(--accent);">Walkthrough.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
+        A complete step-by-step walkthrough to help you understand and exploit Server-Side Request Forgery and filter bypasses.
+      </p>
+    </div>
+
+    <!--  TWO-COLUMN LAYOUT  -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro" class="active" id="nav-intro"> Introduction</a></li>
+          <li><a href="#ssrf" id="nav-ssrf"> 1. Basic SSRF</a></li>
+          <li><a href="#bypass" id="nav-bypass"> 2. Filter Bypassing</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!--  Intro  -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Introduction</h2>
+              <p>How the SSRF lab works</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Welcome to the SSRF lab! In this module, you will observe how a web server proxies user requests. By feeding the proxy server local endpoints, you can bypass network firewalls and access internal systems.
+          </p>
+        </div>
+
+        <!--  Basic SSRF Walkthrough  -->
+        <div class="rules-block" id="ssrf">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 1</h2>
+              <p>Basic Server-Side Request Forgery</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Log In.</strong> Launch the lab and log in using the credentials <code>employee_john</code> / <code>password123</code>.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Identify Proxy Form.</strong> Look at **Tool 1: General Web Previewer**. It performs HTTP requests on behalf of the server.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Force Local Request.</strong> Direct the tool to query the server's own local loopback address: <code>http://127.0.0.1/admin</code>. The response will show the internal portal template containing the flag: <code>CTF{SSRF_l0c4lh0st_byp4ss}</code>.
+              </span>
+            </li>
+          </ul>
+        </div>
+        
+        <!--  Filter Bypass Walkthrough  -->
+        <div class="rules-block" id="bypass">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 2</h2>
+              <p>Bypassing Firewall Blacklists</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Understand Constraints.</strong> Look at **Tool 2: Secure Endpoint Status Checker**. If you supply <code>127.0.0.1</code> or <code>localhost</code>, the backend blacklist detects it and blocks the request.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Use Alternate Representations.</strong> Bypassing the blacklist can be accomplished by representing <code>127.0.0.1</code> differently:
+                <div class="code-block">
+Alternative IP: http://127.1/secure-admin
+IPv6 Loopback: http://[::1]/secure-admin
+Decimal Address: http://2130706433/secure-admin
+Hex Address: http://0x7f000001/secure-admin
+Bind Address: http://0.0.0.0/secure-admin
+                </div>
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Extract Second Flag.</strong> Submit one of the bypassed URLs into Tool 2. The server will resolve it to the loopback interface, bypass the string matching check, and display the secret flag: <code>CTF{SSRF_byp4ss_bl4ckl1st}</code>.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+      </main>
+    </div><!-- /rules-section -->
+  </div><!-- /container -->
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>© 2026 <a href="../../../index.html">CTF LABS</a> · Internship Project Demo</p>
+  </footer>
+
+  <!-- Active sidebar highlighting on scroll -->
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>

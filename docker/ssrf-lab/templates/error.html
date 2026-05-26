@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Access Denied | SecureCorp</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; margin: 0; padding: 40px; color: #f1f5f9; text-align: center; }
+        .container { background: #1e293b; max-width: 500px; margin: 80px auto; padding: 40px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); border: 1px solid #ef4444; }
+        h1 { color: #ef4444; margin-top: 0; }
+        p { color: #94a3b8; font-size: 1.1rem; line-height: 1.6; }
+        .status-code { font-size: 5rem; font-weight: bold; color: #ef4444; opacity: 0.8; margin-bottom: 20px; }
+        .btn-back { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #334155; color: #f1f5f9; text-decoration: none; border-radius: 6px; font-weight: bold; transition: background 0.2s; }
+        .btn-back:hover { background: #475569; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="status-code">403</div>
+        <h1>Access Denied</h1>
+        <p>{{ message }}</p>
+        <a href="/" class="btn-back">Return to Portal</a>
+    </div>
+</body>
+</html>

@@ -19,6 +19,7 @@ from routes.nmap import nmap_bp
 from routes.nmap_deepdive import nmap_deepdive_bp
 from routes.gauntlet import gauntlet_bp
 from routes.shadow_gate import shadow_gate_bp
+from routes.ssrf import ssrf_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -35,6 +36,7 @@ app.register_blueprint(nmap_bp)
 app.register_blueprint(nmap_deepdive_bp)
 app.register_blueprint(gauntlet_bp)
 app.register_blueprint(shadow_gate_bp)
+app.register_blueprint(ssrf_bp)
 
 if __name__ == '__main__':
     # Run the server
