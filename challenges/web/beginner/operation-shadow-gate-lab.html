@@ -209,11 +209,13 @@
     <p>Unlike standard training labs, <strong>there is no guide here.</strong> You must independently use the knowledge acquired from your previous training to compromise the server.</p>
     <p>To succeed, you will need to perform a complete attack chain:</p>
     <ul>
-      <li><strong>Nmap Reconnaissance:</strong> Map the attack surface and discover vulnerable services.</li>
-      <li><strong>Brute Force:</strong> Crack weak authentication mechanisms.</li>
-      <li><strong>SQL Injection:</strong> Extract sensitive backend data.</li>
-      <li><strong>XSS:</strong> Exploit client-side trust.</li>
-      <li><strong>Metasploit:</strong> Gain remote code execution and a Meterpreter shell to read the flag.</li>
+      <li><strong>Nmap Reconnaissance:</strong> Map the attack surface (specifically scanning simulated FTP and SSH services).</li>
+      <li><strong>DevTools Analysis:</strong> Audit client-side DOM structure/source code for comments.</li>
+      <li><strong>Brute Force:</strong> Crack weak credentials on the administrative login page.</li>
+      <li><strong>SQL Injection:</strong> Inject UNION queries to extract secret keys from the SQLite catalog database.</li>
+      <li><strong>XSS (Stored):</strong> Deliver a guestbook comment containing executable scripting.</li>
+      <li><strong>Insecure Direct Object Reference (IDOR):</strong> Guess sequential identifiers to read confidential admin invoices.</li>
+      <li><strong>Command Injection / Metasploit:</strong> Exploit OS shell diagnostic interfaces to obtain target system files.</li>
     </ul>
     <p>Spin up the Target and your Kali Linux environment below, and get to work.</p>
   </div>
@@ -229,8 +231,12 @@
       <div class="terminal-box" id="target-info">
         <p>Target is online! Access the web portal at:</p>
         <code id="target-url"></code>
-        <p style="margin-top:10px;">Target Internal IP for Nmap/Metasploit:</p>
-        <code id="target-ip"></code>
+        <p style="margin-top:10px;">Target Services Ports (Host: <span style="color:#00ff66;">host.docker.internal</span>):</p>
+        <div style="background:#111; padding:10px; border-radius:4px; margin-top:5px; font-family:monospace; font-size:0.9rem; text-align:left;">
+          HTTP Web Port: <code id="port-web" style="display:inline; color:#00ff66;"></code><br>
+          FTP Port: <code id="port-ftp" style="display:inline; color:#00ff66;"></code><br>
+          SSH Port: <code id="port-ssh" style="display:inline; color:#00ff66;"></code>
+        </div>
       </div>
     </div>
 
@@ -285,14 +291,15 @@
       if (data.status === 'success') {
         currentTargetId = data.container_id;
         sessionStorage.setItem('shadow_gate_target_container', currentTargetId);
-        sessionStorage.setItem('shadow_gate_target_port', data.port);
+        sessionStorage.setItem('shadow_gate_target_ports', JSON.stringify(data.ports));
 
         msg.style.display = 'none';
         stopBtn.style.display = 'inline-block';
         info.style.display = 'block';
-        document.getElementById('target-url').textContent = `http://${host}:${data.port}`;
-        // Since we map ports to host, they can target the host IP or localhost
-        document.getElementById('target-ip').textContent = `http://${host}:${data.port}`;
+        document.getElementById('target-url').textContent = `http://${host}:${data.ports.web}`;
+        document.getElementById('port-web').textContent = data.ports.web;
+        document.getElementById('port-ftp').textContent = data.ports.ftp;
+        document.getElementById('port-ssh').textContent = data.ports.ssh;
       } else {
         msg.style.color = '#e74c3c';
         msg.textContent = 'Error: ' + data.message;
@@ -328,7 +335,7 @@
       
       launchBtn.style.display = 'inline-block';
       sessionStorage.removeItem('shadow_gate_target_container');
-      sessionStorage.removeItem('shadow_gate_target_port');
+      sessionStorage.removeItem('shadow_gate_target_ports');
       currentTargetId = null;
     } catch (e) {
       msg.textContent = 'Error stopping Target container.';
@@ -408,16 +415,19 @@
     const host = window.location.hostname || "localhost";
     
     const savedTarget = sessionStorage.getItem('shadow_gate_target_container');
-    const savedPort = sessionStorage.getItem('shadow_gate_target_port');
-    if (savedTarget) {
+    const savedPortsStr = sessionStorage.getItem('shadow_gate_target_ports');
+    if (savedTarget && savedPortsStr) {
       currentTargetId = savedTarget;
+      const savedPorts = JSON.parse(savedPortsStr);
       fetch(`http://${host}:5000/api/cancel-stop-shadow-gate/${savedTarget}`, { method: 'POST' }).catch(()=>{});
       
       document.getElementById('target-launch-btn').style.display = 'none';
       document.getElementById('target-stop-btn').style.display = 'inline-block';
       document.getElementById('target-info').style.display = 'block';
-      document.getElementById('target-url').textContent = `http://${host}:${savedPort}`;
-      document.getElementById('target-ip').textContent = `http://${host}:${savedPort}`;
+      document.getElementById('target-url').textContent = `http://${host}:${savedPorts.web}`;
+      document.getElementById('port-web').textContent = savedPorts.web;
+      document.getElementById('port-ftp').textContent = savedPorts.ftp;
+      document.getElementById('port-ssh').textContent = savedPorts.ssh;
     }
 
     const savedKali = sessionStorage.getItem('shadow_gate_kali_container');
@@ -448,7 +458,7 @@
     const fb = document.getElementById('flag-feedback');
     
     // The correct flag matches the one we echo in the backend route
-    const CORRECT_FLAG = "CTF{shadow_g4t3_m4st3r_br3ach3d}";
+    const CORRECT_FLAG = "CTF{nmap_f1rst_st3p_h1dd3n_in_source_brut3_f0rc3_pass_sql_inj3ct_dat4_1dor_priv_esc_rce_syst3m_gained}";
     
     if (input === CORRECT_FLAG) {
       fb.textContent = " ACCESS GRANTED. Challenge Complete! Congratulations, Agent.";

@@ -16,7 +16,7 @@ def start_devtools_guided():
         user_port = random.randint(9001, 9500)
 
         container = client.containers.run(
-            "devtools-guided:latest",
+            "ctflabs/devtools-guided:latest",
             detach=True,
             ports={'80/tcp': user_port},
             remove=True
@@ -52,7 +52,7 @@ def start_devtools_fieldtest():
         user_port = random.randint(9501, 9999)
 
         container = client.containers.run(
-            "devtools-fieldtest:latest",
+            "ctflabs/devtools-fieldtest:latest",
             detach=True,
             ports={'80/tcp': user_port},
             remove=True

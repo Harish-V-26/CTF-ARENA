@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaySecure Bank - Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --border-color: #1f2937;
+            --accent-color: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-color);
+        }
+
+        .nav-btn {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .logout-btn {
+            color: var(--error-color);
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-box {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.05) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+        }
+
+        .balance-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text-color);
+        }
+
+        .flag-banner {
+            background: linear-gradient(90deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px solid var(--success-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+
+        .flag-banner h4 {
+            color: var(--success-color);
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .flag-box {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--success-color);
+            display: inline-block;
+        }
+
+        .msg {
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .msg-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--error-color);
+        }
+
+        .msg-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-color);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            background-color: #1f2937;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .submit-btn.secure {
+            background-color: var(--success-color);
+        }
+
+        .submit-btn.secure:hover {
+            background-color: #059669;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .tx-type {
+            font-weight: 600;
+        }
+
+        .amount-green {
+            color: var(--success-color);
+        }
+
+        .amount-red {
+            color: var(--error-color);
+        }
+
+        .badge {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: monospace;
+            border: 1px solid var(--border-color);
+        }
+
+        .badge.secure {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+        
+        .badge.vulnerable {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/dashboard" class="logo">Pay<span>Secure</span></a>
+        <nav>
+            <a href="/dashboard" class="active">Dashboard</a>
+            <a href="/exploit-server" class="nav-btn" style="background-color: #f59e0b;">Attacker Server</a>
+            <a href="/report" class="nav-btn">Report to Victim</a>
+            <span style="color: var(--text-muted); font-size: 14px; margin-left: 10px;">User: <strong>{{ account.username }}</strong></span>
+            <a href="/logout" class="logout-btn" style="margin-left: 10px;">Log Out</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <!-- Left Side: Balance & Transaction History -->
+        <div>
+            {% if account.username == 'alice' and account.balance >= 3000 %}
+            <div class="flag-banner">
+                <h4>Flag Captured!</h4>
+                <p>Congratulations! You successfully executed a CSRF attack on Bob and transferred funds to Alice's account.</p>
+                <div class="flag-box">{{ account.flag }}</div>
+            </div>
+            {% endif %}
+
+            <div class="balance-box">
+                <div class="balance-label">Available Balance</div>
+                <div class="balance-amount">${{ account.balance }}</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Transaction History</div>
+                {% if transactions %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tx in transactions %}
+                        <tr>
+                            <td class="tx-type">
+                                {{ tx.desc }}
+                                {% if tx.desc == 'Secure Transfer' %}
+                                <span class="badge secure">Secure</span>
+                                {% else %}
+                                <span class="badge">Vulnerable</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ tx.from }}</td>
+                            <td>{{ tx.to }}</td>
+                            <td>
+                                <span class="{% if tx.to == account.username %}amount-green{% else %}amount-red{% endif %}">
+                                    {% if tx.to == account.username %}+{% else %}-{% endif %}${{ tx.amount }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p style="color: var(--text-muted); margin: 0;">No transactions found.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Side: Money Transfer Section -->
+        <div>
+            <div class="card">
+                <div class="card-title">Transfer Funds</div>
+                
+                {% if error %}
+                <div class="msg msg-error">{{ error }}</div>
+                {% endif %}
+                
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('vuln-tab')">Standard (Vuln)</button>
+                    <button class="tab-btn" onclick="switchTab('secure-tab')">Secure (Token)</button>
+                </div>
+
+                <!-- Vulnerable Form -->
+                <div id="vuln-tab" class="tab-content active">
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                        This transfer mode uses a standard POST request without CSRF validation. It is vulnerable to request forgery.
+                    </p>
+                    <form action="/transfer" method="POST">
+                        <div class="form-group">
+                            <label for="to_account">Recipient Username</label>
+                            <input type="text" name="to_account" placeholder="e.g. alice, bob, attacker" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount">Amount ($)</label>
+                            <input type="number" name="amount" min="1" placeholder="Enter amount" required>
+                        </div>
+                        <button type="submit" class="submit-btn">Send Money</button>
+                    </form>
+                </div>
+
+                <!-- Secure Form -->
+                <div id="secure-tab" class="tab-content">
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">
+                        This transfer mode includes a unique CSRF token in the form. The server validates this token to prevent request forgery.
+                    </p>
+                    <form action="/secure_transfer" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <div class="form-group">
+                            <label for="to_account_secure">Recipient Username</label>
+                            <input type="text" name="to_account" placeholder="e.g. alice, bob, attacker" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="amount_secure">Amount ($)</label>
+                            <input type="number" name="amount" min="1" placeholder="Enter amount" required>
+                        </div>
+                        <button type="submit" class="submit-btn secure">Securely Send Money</button>
+                    </form>
+                    
+                    <div style="margin-top: 15px; font-size: 12px; color: var(--text-muted); background: #1f2937; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);">
+                        Active CSRF Token:<br>
+                        <code class="badge secure" style="display:block; margin-top:5px; text-align:center; font-size:12px;">{{ csrf_token }}</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activate the button
+            const btnIndex = tabId === 'vuln-tab' ? 0 : 1;
+            document.querySelectorAll('.tab-btn')[btnIndex].classList.add('active');
+        }
+    </script>
+</body>
+</html>

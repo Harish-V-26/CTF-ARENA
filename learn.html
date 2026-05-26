@@ -566,6 +566,27 @@
           </div>
         </div>
 
+        <!-- CSRF Lab -->
+        <div class="challenge-card" data-category="web" id="card-learn-csrf"
+          onclick="window.location.href='challenges/web/easy/csrf-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Cross-Site Request Forgery (CSRF)</div>
+            <div class="challenge-desc">
+              Exploit CSRF vulnerabilities in a banking app. Design and host custom exploit payloads, simulate victim interactions, and learn to secure endpoints with anti-CSRF tokens.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">180 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/csrf-lab.html" class="start-btn" id="start-learn-csrf">Start →</a>
+          </div>
+        </div>
+
       </div><!-- /challenges-grid-easy-practical -->
 
     </div>
@@ -770,6 +791,8 @@
           learnList = ["Web Shell Execution", "Content-Type Bypassing", "Extension Blacklist/Whitelist filters", "Remote Code Execution via Upload"];
       } else if (title.includes("IDOR")) {
           learnList = ["Insecure Direct Object References", "Horizontal Privilege Escalation", "Mass Assignment Attacks", "Access Control Bypass"];
+      } else if (title.includes("CSRF") || title.includes("Cross-Site Request Forgery")) {
+          learnList = ["Cross-Site Request Forgery (CSRF) Concepts", "Browser Cookie & Session Mechanics", "Form Request Hijacking & Auto-submitting", "Anti-CSRF Tokens Protection", "SameSite Cookie Defense Configuration"];
       } else if (title.includes("Deep Dive") || title.includes("Nmap Deep Dive")) {
           learnList = ["Advanced TCP Scans (Null/FIN/Xmas)", "Packet Fragmentation & MTU", "Decoy Scanning & IP Spoofing", "NSE Script Configuration"];
       } else if (title.includes("Nmap")) {
