@@ -1,7 +1,6 @@
-version: "3"
 services:
   dvwa:
-    image: ./vulnerables/web-dvwa
+    image: vulnerables/web-dvwa
     ports:
       - "8080:80"
 
@@ -9,20 +8,22 @@ services:
     build: ./kalilinux
     ports:
       - "9090:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   devtools-fieldtest:
-    build: ./devtools-fieldtest
+    build: ./docker/devtools-fieldtest
     ports:
       - "7070:80"
 
 
   devtools-guided:
-    build: ./devtools-guided
+    build: ./docker/devtools-guided
     ports:
       - "6060:80"
 
   recon-ng:
-    build: ./recon-ng
+    build: ./docker/recon-target
     ports:
       - "5050:80"
 
@@ -43,3 +44,4 @@ services:
       - "8881:80"
       - "2121:21"
       - "54321:54321"
+

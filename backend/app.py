@@ -17,6 +17,7 @@ from routes.idor import idor_bp
 from routes.metasploit import metasploit_bp
 from routes.nmap import nmap_bp
 from routes.nmap_deepdive import nmap_deepdive_bp
+from routes.gauntlet import gauntlet_bp
 from routes.shadow_gate import shadow_gate_bp
 
 app = Flask(__name__)
@@ -32,6 +33,7 @@ app.register_blueprint(idor_bp)
 app.register_blueprint(metasploit_bp)
 app.register_blueprint(nmap_bp)
 app.register_blueprint(nmap_deepdive_bp)
+app.register_blueprint(gauntlet_bp)
 app.register_blueprint(shadow_gate_bp)
 
 if __name__ == '__main__':
