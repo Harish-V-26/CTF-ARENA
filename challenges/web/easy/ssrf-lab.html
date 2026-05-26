@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CTF LABS — Server-Side Request Forgery (SSRF)</title>
-  <link rel="stylesheet" href="../../../css/global.css"/>
-  <link rel="stylesheet" href="../../../css/web-room.css"/>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/web-room.css" />
   <style>
     .docker-launch {
       background: #2c3e50;
@@ -16,7 +17,12 @@
       text-align: center;
       border-left: 4px solid #f39c12;
     }
-    .docker-launch h3 { margin-top: 0; color: #fff; }
+
+    .docker-launch h3 {
+      margin-top: 0;
+      color: #fff;
+    }
+
     .docker-launch code {
       background: #1a252f;
       padding: 5px 10px;
@@ -26,6 +32,7 @@
       display: inline-block;
       margin: 10px 0;
     }
+
     .btn-launch {
       display: inline-block;
       margin-top: 15px;
@@ -39,19 +46,35 @@
       border: none;
       cursor: pointer;
     }
-    .btn-launch:hover { background: #d35400; }
+
+    .btn-launch:hover {
+      background: #d35400;
+    }
 
     /* Lesson content styles */
-    .reading-text h3 { color: #f39c12; margin-top: 24px; margin-bottom: 12px; font-size: 1.1em; }
-    .reading-text p  { line-height: 1.7; margin-bottom: 12px; }
+    .reading-text h3 {
+      color: #f39c12;
+      margin-top: 24px;
+      margin-bottom: 12px;
+      font-size: 1.1em;
+    }
+
+    .reading-text p {
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
     .step-block {
-      display: flex; gap: 14px; align-items: flex-start;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 8px;
       padding: 16px;
       margin-bottom: 14px;
     }
+
     .step-num {
       background: #f39c12;
       color: #fff;
@@ -62,14 +85,21 @@
       white-space: nowrap;
       height: fit-content;
     }
-    .step-body { flex: 1; line-height: 1.7; font-size: 0.95em; }
+
+    .step-body {
+      flex: 1;
+      line-height: 1.7;
+      font-size: 0.95em;
+    }
+
     .step-body code {
-      background: rgba(243,156,18,0.15);
+      background: rgba(243, 156, 18, 0.15);
       color: #f39c12;
       padding: 2px 7px;
       border-radius: 4px;
       font-family: monospace;
     }
+
     .step-body pre {
       background: #0d1117;
       color: #e6e6e6;
@@ -82,6 +112,7 @@
       overflow-x: auto;
       white-space: pre;
     }
+
     kbd {
       background: #444;
       color: #fff;
@@ -91,8 +122,9 @@
       border: 1px solid #666;
       font-family: monospace;
     }
+
     .analogy-box {
-      background: rgba(52,152,219,0.12);
+      background: rgba(52, 152, 219, 0.12);
       border-left: 4px solid #3498db;
       border-radius: 6px;
       padding: 14px 18px;
@@ -100,6 +132,7 @@
       font-size: 0.93em;
       line-height: 1.6;
     }
+
     .badge.orange {
       background: #f39c12;
       color: #fff;
@@ -108,339 +141,365 @@
       font-size: 0.85em;
       font-weight: bold;
     }
-    .hint-text { color: #aaa; font-size: 0.9em; }
+
+    .hint-text {
+      color: #aaa;
+      font-size: 0.9em;
+    }
   </style>
 </head>
+
 <body>
 
-<nav class="navbar" aria-label="Main navigation">
-  <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
-  <div class="nav-links">
-    <a href="../../../index.html">Home</a>
-    <a href="../../../learn.html">Learn</a>
-    <a href="../../../challenges.html" class="active">Challenges</a>
-    <a href="../../../rules.html">Rules</a>
-    <div class="dropdown">
-      <a href="#" aria-haspopup="true">Profile </a>
-      <div class="dropdown-content">
-        <a href="#">Dashboard</a>
-        <a href="#">Settings</a>
-        <a href="#">Logout</a>
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+    <div class="nav-links">
+      <a href="../../../index.html">Home</a>
+      <a href="../../../learn.html">Learn</a>
+      <a href="../../../challenges.html" class="active">Challenges</a>
+      <a href="../../../rules.html">Rules</a>
+      <div class="dropdown">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content">
+          <a href="#">Dashboard</a>
+          <a href="#">Settings</a>
+          <a href="#">Logout</a>
+        </div>
       </div>
+    </div>
+  </nav>
+
+  <div class="room-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="room-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">SSRF Vulnerability Lab</div>
+        <div class="overall-progress-wrap">
+          <div class="overall-progress-bar">
+            <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
+          </div>
+          <div class="overall-progress-pct" id="overall-pct">0%</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="room-main">
+
+      <div class="challenge-header" style="position: relative; overflow: hidden;">
+        <div class="header-graphic" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); opacity: 0.18; pointer-events: none; max-height: 80px; width: auto; transition: opacity 0.3s;">
+          <img src="../../../assets/ssrf_concept_diagram.png" id="header-diagram-img" alt="SSRF Diagram" style="max-height: 70px; width: auto; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);">
+        </div>
+        <div class="ch-breadcrumb">Web Challenges › Easy Level › <span id="ch-crumb">Lesson 1</span></div>
+        <div class="ch-meta" style="position: relative; z-index: 1;">
+          <span class="ch-title" id="ch-title"></span>
+          <span class="ch-pts" id="ch-pts"></span>
+          <div class="step-dots" id="step-dots"></div>
+        </div>
+      </div>
+
+      <div class="room-body" id="room-body">
+
+        <div class="docker-launch">
+          <h3> Docker Lab Environment</h3>
+          <p>Click the button below to dynamically spin up your private SSRF lab instance.</p>
+          <button id="launch-btn" class="btn-launch" onclick="launchLab()">Launch Field Test ⇗</button>
+          <button id="stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;"
+            onclick="stopLab()">Stop Lab </button>
+          <a href="ssrf-guide.html" class="btn-launch" style="margin-left: 10px; background: #3498db;" target="_blank">
+            Read Walkthrough</a>
+          <p id="loading-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;">Spinning up
+            your private lab...</p>
+        </div>
+
+        <!-- Lesson panel (rendered by JS) -->
+        <div id="lesson-panel">
+          <div class="reading-panel">
+            <div class="reading-label"><span></span> Instructions & Tasks</div>
+            <div class="reading-text" id="reading-text" style="white-space: normal;"></div>
+          </div>
+          <div class="qa-section" id="qa-section">
+            <div class="qa-heading"> Check Your Understanding & Submit Flags</div>
+            <div id="questions-container"></div>
+          </div>
+        </div>
+
+        <!-- Completion -->
+        <div class="completion-card" id="completion-card">
+          <div class="trophy-icon"></div>
+          <h2>Lab Complete!</h2>
+          <p>You've successfully mastered Server-Side Request Forgery and IP Blacklist Bypass!</p>
+          <div class="score-pill" id="score-pill">0 / 250 pts</div>
+          <a href="../../../challenges.html" class="btn btn-primary">← Back to Challenges</a>
+        </div>
+      </div>
+
+      <div class="room-footer-nav">
+        <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">2</span></div>
+        <div class="nav-btns">
+          <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Previous</button>
+          <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
+        </div>
+      </div>
+
     </div>
   </div>
-</nav>
 
-<div class="room-wrapper">
+  <script>
+    let currentContainerId = null;
 
-  <!-- SIDEBAR -->
-  <aside class="room-sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-title">SSRF Vulnerability Lab</div>
-      <div class="overall-progress-wrap">
-        <div class="overall-progress-bar">
-          <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
-        </div>
-        <div class="overall-progress-pct" id="overall-pct">0%</div>
-      </div>
-    </div>
-    <nav class="sidebar-nav" id="sidebar-nav"></nav>
-  </aside>
+    async function launchLab() {
+      const btn = document.getElementById('launch-btn');
+      const msg = document.getElementById('loading-msg');
+      const stopBtn = document.getElementById('stop-btn');
 
-  <!-- MAIN -->
-  <div class="room-main">
+      btn.style.display = 'none';
+      stopBtn.style.display = 'none';
+      msg.style.display = 'block';
 
-    <div class="challenge-header">
-      <div class="ch-breadcrumb">Web Challenges › Easy Level › <span id="ch-crumb">Lesson 1</span></div>
-      <div class="ch-meta">
-        <span class="ch-title" id="ch-title"></span>
-        <span class="ch-pts" id="ch-pts"></span>
-        <div class="step-dots" id="step-dots"></div>
-      </div>
-    </div>
-
-    <div class="room-body" id="room-body">
-      
-      <div class="docker-launch">
-        <h3> Docker Lab Environment</h3>
-        <p>Click the button below to dynamically spin up your private SSRF lab instance.</p>
-        <button id="launch-btn" class="btn-launch" onclick="launchLab()">Launch Field Test ⇗</button>
-        <button id="stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopLab()">Stop Lab </button>
-        <a href="ssrf-guide.html" class="btn-launch" style="margin-left: 10px; background: #3498db;" target="_blank"> Read Walkthrough</a>
-        <p id="loading-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;">Spinning up your private lab...</p>
-      </div>
-
-      <!-- Lesson panel (rendered by JS) -->
-      <div id="lesson-panel">
-        <div class="reading-panel">
-          <div class="reading-label"><span></span> Instructions & Tasks</div>
-          <div class="reading-text" id="reading-text" style="white-space: normal;"></div>
-        </div>
-        <div class="qa-section" id="qa-section">
-          <div class="qa-heading"> Check Your Understanding & Submit Flags</div>
-          <div id="questions-container"></div>
-        </div>
-      </div>
-
-      <!-- Completion -->
-      <div class="completion-card" id="completion-card">
-        <div class="trophy-icon"></div>
-        <h2>Lab Complete!</h2>
-        <p>You've successfully mastered Server-Side Request Forgery and IP Blacklist Bypass!</p>
-        <div class="score-pill" id="score-pill">0 / 120 pts</div>
-        <a href="../../../challenges.html" class="btn btn-primary">← Back to Challenges</a>
-      </div>
-    </div>
-
-    <div class="room-footer-nav">
-      <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">2</span></div>
-      <div class="nav-btns">
-        <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Previous</button>
-        <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script>
-let currentContainerId = null;
-
-async function launchLab() {
-    const btn = document.getElementById('launch-btn');
-    const msg = document.getElementById('loading-msg');
-    const stopBtn = document.getElementById('stop-btn');
-    
-    btn.style.display = 'none';
-    stopBtn.style.display = 'none';
-    msg.style.display = 'block';
-
-    try {
+      try {
         const host = window.location.hostname || "localhost";
         const backendUrl = `http://${host}:5000/api/start-ssrf`;
 
         const response = await fetch(backendUrl, { method: 'POST' });
         const data = await response.json();
 
-        if(data.status === 'success') {
-            currentContainerId = data.container_id;
-            sessionStorage.setItem('ssrf_lab_container', data.container_id);
-            sessionStorage.setItem('ssrf_lab_port', data.port);
-            
-            msg.style.color = '#2ecc71';
-            msg.textContent = 'Lab started successfully! Opening...';
-            const labUrl = `http://${host}:${data.port}`;
-            
-            stopBtn.style.display = 'inline-block';
-            
-            setTimeout(() => {
-                window.open(labUrl, '_blank');
-                msg.textContent = 'Lab is running at ' + labUrl;
-            }, 1500);
+        if (data.status === 'success') {
+          currentContainerId = data.container_id;
+          sessionStorage.setItem('ssrf_lab_container', data.container_id);
+          sessionStorage.setItem('ssrf_lab_port', data.port);
+
+          msg.style.color = '#2ecc71';
+          msg.textContent = 'Lab started successfully! Opening...';
+          const labUrl = `http://${host}:${data.port}`;
+
+          stopBtn.style.display = 'inline-block';
+
+          setTimeout(() => {
+            window.open(labUrl, '_blank');
+            msg.textContent = 'Lab is running at ' + labUrl;
+          }, 1500);
         } else {
-            msg.style.color = '#e74c3c';
-            msg.textContent = 'Error starting lab: ' + data.message;
-            btn.style.display = 'inline-block';
+          msg.style.color = '#e74c3c';
+          msg.textContent = 'Error starting lab: ' + data.message;
+          btn.style.display = 'inline-block';
         }
-    } catch (err) {
+      } catch (err) {
         msg.style.color = '#e74c3c';
         msg.textContent = 'Failed to reach Python backend.';
         btn.style.display = 'inline-block';
+      }
     }
-}
 
-async function stopLab() {
-    if(!currentContainerId) return;
-    const host = window.location.hostname || "localhost";
-    const msg = document.getElementById('loading-msg');
-    
-    msg.style.color = '#e67e22';
-    msg.textContent = 'Stopping and deleting lab...';
-    
-    try {
+    async function stopLab() {
+      if (!currentContainerId) return;
+      const host = window.location.hostname || "localhost";
+      const msg = document.getElementById('loading-msg');
+
+      msg.style.color = '#e67e22';
+      msg.textContent = 'Stopping and deleting lab...';
+
+      try {
         await fetch(`http://${host}:5000/api/stop-ssrf/${currentContainerId}`, { method: 'POST' });
         msg.style.color = '#e74c3c';
         msg.textContent = 'Lab stopped and destroyed safely.';
         document.getElementById('stop-btn').style.display = 'none';
-        
+
         sessionStorage.removeItem('ssrf_lab_container');
         sessionStorage.removeItem('ssrf_lab_port');
-        
+
         const launchBtn = document.getElementById('launch-btn');
         launchBtn.style.display = 'inline-block';
         launchBtn.textContent = 'Relaunch Instance ⇗';
         currentContainerId = null;
-    } catch (e) {
+      } catch (e) {
         msg.textContent = 'Error stopping lab.';
+      }
     }
-}
 
-window.addEventListener('load', function() {
-    const host = window.location.hostname || "localhost";
-    const savedContainer = sessionStorage.getItem('ssrf_lab_container');
-    const savedPort = sessionStorage.getItem('ssrf_lab_port');
-    
-    if (savedContainer) {
+    window.addEventListener('load', function () {
+      const host = window.location.hostname || "localhost";
+      const savedContainer = sessionStorage.getItem('ssrf_lab_container');
+      const savedPort = sessionStorage.getItem('ssrf_lab_port');
+
+      if (savedContainer) {
         currentContainerId = savedContainer;
         const launchBtn = document.getElementById('launch-btn');
         const stopBtn = document.getElementById('stop-btn');
         const msg = document.getElementById('loading-msg');
-        
+
         launchBtn.style.display = 'none';
         stopBtn.style.display = 'inline-block';
         msg.style.display = 'block';
         msg.style.color = '#2ecc71';
         msg.textContent = `Lab is already running at http://${host}:${savedPort} (Restored)`;
-    }
-});
-</script>
-<script src="ssrf-data.js"></script>
-<script>
-  let cur = 0;
-  const TOTAL = LESSONS.length;
-  const answered = LESSONS.map(l => l.questions.map(() => false));
+      }
+    });
+  </script>
+  <script src="ssrf-data.js"></script>
+  <script>
+    let cur = 0;
+    const TOTAL = LESSONS.length;
+    const answered = LESSONS.map(l => l.questions.map(() => false));
 
-  function buildSidebar() {
-    const nav = document.getElementById('sidebar-nav');
-    nav.innerHTML = LESSONS.map((l, i) => `
+    function buildSidebar() {
+      const nav = document.getElementById('sidebar-nav');
+      nav.innerHTML = LESSONS.map((l, i) => `
       <div class="module-group">
         <div class="module-label" id="mod-${i}">
-          <span class="mod-num">${String(i+1).padStart(2,'0')}</span> ${l.title}
+          <span class="mod-num">${String(i + 1).padStart(2, '0')}</span> ${l.title}
         </div>
-        <div class="nav-item${i===0?' active':''}" id="nav-${i}" onclick="goTo(${i})">
+        <div class="nav-item${i === 0 ? ' active' : ''}" id="nav-${i}" onclick="goTo(${i})">
           <div class="nav-dot"></div>
           <span class="nav-label">${l.title}</span>
           <span class="nav-pts">${l.points} pts</span>
         </div>
       </div>`).join('');
-  }
+    }
 
-  function buildDots() {
-    document.getElementById('step-dots').innerHTML =
-      LESSONS.map((_,i) => `<div class="step-dot${i===0?' current':''}" id="dot-${i}"></div>`).join('');
-    document.getElementById('tot-num').textContent = TOTAL;
-  }
+    function buildDots() {
+      document.getElementById('step-dots').innerHTML =
+        LESSONS.map((_, i) => `<div class="step-dot${i === 0 ? ' current' : ''}" id="dot-${i}"></div>`).join('');
+      document.getElementById('tot-num').textContent = TOTAL;
+    }
 
-  function renderLesson(idx) {
-    const l = LESSONS[idx];
-    document.getElementById('ch-title').textContent = l.title;
-    document.getElementById('ch-pts').textContent = l.points + ' pts';
-    document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
-    document.getElementById('cur-num').textContent = idx+1;
-    document.getElementById('reading-text').innerHTML = l.html || '';
+    function renderLesson(idx) {
+      const l = LESSONS[idx];
+      document.getElementById('ch-title').textContent = l.title;
+      document.getElementById('ch-pts').textContent = l.points + ' pts';
+      document.getElementById('ch-crumb').textContent = `Lesson ${idx + 1}`;
+      document.getElementById('cur-num').textContent = idx + 1;
+      document.getElementById('reading-text').innerHTML = l.html || '';
 
-    const qc = document.getElementById('questions-container');
-    qc.innerHTML = l.questions.map((q, qi) => `
-      <div class="question-card${answered[idx][qi]?' correct':''}" id="qc-${idx}-${qi}">
-        <div class="question-text"><span class="q-num">Q${qi+1}</span>${q.q}</div>
+      // Update header graphic image dynamically based on lesson
+      const headerImg = document.getElementById('header-diagram-img');
+      if (headerImg) {
+        if (idx === 0) {
+          headerImg.src = "../../../assets/ssrf_concept_diagram.png";
+        } else if (idx === 1) {
+          headerImg.src = "../../../assets/ssrf_filter_bypass.png";
+        } else if (idx === 2) {
+          headerImg.src = "../../../assets/ssrf_metadata_diagram.png";
+        } else if (idx === 3) {
+          headerImg.src = "../../../assets/ssrf_mitigations.png";
+        }
+      }
+
+      const qc = document.getElementById('questions-container');
+      qc.innerHTML = l.questions.map((q, qi) => `
+      <div class="question-card${answered[idx][qi] ? ' correct' : ''}" id="qc-${idx}-${qi}">
+        <div class="question-text"><span class="q-num">Q${qi + 1}</span>${q.q}</div>
         <div class="answer-row">
           <input class="answer-input" id="ans-${idx}-${qi}" type="text"
             placeholder="Type your answer…" autocomplete="off"
-            ${answered[idx][qi]?'disabled':''} onkeydown="onEnter(event,${idx},${qi})"/>
+            ${answered[idx][qi] ? 'disabled' : ''} onkeydown="onEnter(event,${idx},${qi})"/>
           <button class="check-btn" id="btn-${idx}-${qi}"
             onclick="checkAnswer(${idx},${qi})"
-            ${answered[idx][qi]?'disabled':''}>Check</button>
+            ${answered[idx][qi] ? 'disabled' : ''}>Check</button>
         </div>
-        <div class="feedback${answered[idx][qi]?' correct-msg show':''}" id="fb-${idx}-${qi}">
-          ${answered[idx][qi]?' Correct! '+l.questions[qi].a:''}
+        <div class="feedback${answered[idx][qi] ? ' correct-msg show' : ''}" id="fb-${idx}-${qi}">
+          ${answered[idx][qi] ? ' Correct! ' + l.questions[qi].a : ''}
         </div>
       </div>`).join('');
-  }
-
-  function updateNav(from, to) {
-    const fromEl = document.getElementById(`nav-${from}`);
-    fromEl.classList.remove('active');
-    document.getElementById(`dot-${from}`).classList.remove('current');
-    document.getElementById(`dot-${from}`).classList.toggle('done', lessonDone(from));
-    if (lessonDone(from)) fromEl.classList.add('completed');
-
-    document.getElementById(`nav-${to}`).classList.add('active');
-    document.getElementById(`dot-${to}`).classList.add('current');
-  }
-
-  function normalise(s) { return s.trim().toLowerCase().replace(/\s+/g,' '); }
-
-  function checkAnswer(lesson, qi) {
-    if (answered[lesson][qi]) return;
-    const input = document.getElementById(`ans-${lesson}-${qi}`);
-    const correct = LESSONS[lesson].questions[qi].a;
-    const cn = normalise(correct);
-    const un = normalise(input.value);
-
-    const ok = un === cn || cn.includes(un) || un.includes(cn.split(' ')[0]);
-
-    const fb  = document.getElementById(`fb-${lesson}-${qi}`);
-    const qc  = document.getElementById(`qc-${lesson}-${qi}`);
-
-    if (ok) {
-      answered[lesson][qi] = true;
-      qc.classList.add('correct');
-      fb.className = 'feedback correct-msg show';
-      fb.textContent = ' Correct! ' + correct;
-      input.disabled = true;
-      document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
-      updateProgress();
-    } else {
-      qc.classList.add('wrong');
-      fb.className = 'feedback wrong-msg show';
-      fb.textContent = ' Not quite — try again.';
-      setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
     }
-  }
 
-  function onEnter(e, lesson, qi) {
-    if (e.key === 'Enter') checkAnswer(lesson, qi);
-  }
+    function updateNav(from, to) {
+      const fromEl = document.getElementById(`nav-${from}`);
+      fromEl.classList.remove('active');
+      document.getElementById(`dot-${from}`).classList.remove('current');
+      document.getElementById(`dot-${from}`).classList.toggle('done', lessonDone(from));
+      if (lessonDone(from)) fromEl.classList.add('completed');
 
-  function lessonDone(idx) { return answered[idx].every(Boolean); }
-  function totalDone()     { return answered.flat().filter(Boolean).length; }
-  function totalQs()       { return answered.flat().length; }
+      document.getElementById(`nav-${to}`).classList.add('active');
+      document.getElementById(`dot-${to}`).classList.add('current');
+    }
 
-  function updateProgress() {
-    const pct = Math.round(totalDone() / totalQs() * 100);
-    document.getElementById('overall-fill').style.width = pct + '%';
-    document.getElementById('overall-pct').textContent = pct + '%';
-    for (let i = 0; i < TOTAL; i++) {
-      if (lessonDone(i)) {
-        document.getElementById(`nav-${i}`).classList.add('completed');
-        document.getElementById(`mod-${i}`).classList.add('completed');
+    function normalise(s) { return s.trim().toLowerCase().replace(/\s+/g, ' '); }
+
+    function checkAnswer(lesson, qi) {
+      if (answered[lesson][qi]) return;
+      const input = document.getElementById(`ans-${lesson}-${qi}`);
+      const correct = LESSONS[lesson].questions[qi].a;
+      const cn = normalise(correct);
+      const un = normalise(input.value);
+
+      const ok = un === cn || cn.includes(un) || un.includes(cn.split(' ')[0]);
+
+      const fb = document.getElementById(`fb-${lesson}-${qi}`);
+      const qc = document.getElementById(`qc-${lesson}-${qi}`);
+
+      if (ok) {
+        answered[lesson][qi] = true;
+        qc.classList.add('correct');
+        fb.className = 'feedback correct-msg show';
+        fb.textContent = ' Correct! ' + correct;
+        input.disabled = true;
+        document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
+        updateProgress();
+      } else {
+        qc.classList.add('wrong');
+        fb.className = 'feedback wrong-msg show';
+        fb.textContent = ' Not quite — try again.';
+        setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
       }
     }
-    if (totalDone() === totalQs()) showCompletion();
-  }
 
-  function goTo(idx) {
-    updateNav(cur, idx);
-    cur = idx;
-    renderLesson(cur);
-    document.getElementById('btn-prev').disabled = cur === 0;
-    document.getElementById('btn-next').textContent = cur === TOTAL-1 ? 'Finish →' : 'Next →';
-    document.querySelector('.room-body').scrollTop = 0;
-  }
+    function onEnter(e, lesson, qi) {
+      if (e.key === 'Enter') checkAnswer(lesson, qi);
+    }
 
-  function navigate(dir) {
-    const next = cur + dir;
-    if (next >= 0 && next < TOTAL) { goTo(next); }
-    else if (dir === 1)            { showCompletion(); }
-  }
+    function lessonDone(idx) { return answered[idx].every(Boolean); }
+    function totalDone() { return answered.flat().filter(Boolean).length; }
+    function totalQs() { return answered.flat().length; }
 
-  function showCompletion() {
-    document.getElementById('lesson-panel').style.display = 'none';
-    document.querySelector('.docker-launch').style.display = 'none';
-    const pts = 120;
-    document.getElementById('score-pill').textContent = `${pts} / 120 pts`;
-    document.getElementById('completion-card').classList.add('show');
-    document.getElementById('btn-next').disabled = true;
-    document.getElementById('btn-prev').disabled = true;
-    document.getElementById('overall-fill').style.width = '100%';
-    document.getElementById('overall-pct').textContent = '100%';
-    document.querySelector('.room-body').scrollTop = 0;
-  }
+    function updateProgress() {
+      const pct = Math.round(totalDone() / totalQs() * 100);
+      document.getElementById('overall-fill').style.width = pct + '%';
+      document.getElementById('overall-pct').textContent = pct + '%';
+      for (let i = 0; i < TOTAL; i++) {
+        if (lessonDone(i)) {
+          document.getElementById(`nav-${i}`).classList.add('completed');
+          document.getElementById(`mod-${i}`).classList.add('completed');
+        }
+      }
+      if (totalDone() === totalQs()) showCompletion();
+    }
 
-  buildSidebar();
-  buildDots();
-  renderLesson(0);
-</script>
+    function goTo(idx) {
+      updateNav(cur, idx);
+      cur = idx;
+      renderLesson(cur);
+      document.getElementById('btn-prev').disabled = cur === 0;
+      document.getElementById('btn-next').textContent = cur === TOTAL - 1 ? 'Finish →' : 'Next →';
+      document.querySelector('.room-body').scrollTop = 0;
+    }
+
+    function navigate(dir) {
+      const next = cur + dir;
+      if (next >= 0 && next < TOTAL) { goTo(next); }
+      else if (dir === 1) { showCompletion(); }
+    }
+
+    function showCompletion() {
+      document.getElementById('lesson-panel').style.display = 'none';
+      document.querySelector('.docker-launch').style.display = 'none';
+      const pts = 250;
+      document.getElementById('score-pill').textContent = `${pts} / 250 pts`;
+      document.getElementById('completion-card').classList.add('show');
+      document.getElementById('btn-next').disabled = true;
+      document.getElementById('btn-prev').disabled = true;
+      document.getElementById('overall-fill').style.width = '100%';
+      document.getElementById('overall-pct').textContent = '100%';
+      document.querySelector('.room-body').scrollTop = 0;
+    }
+
+    buildSidebar();
+    buildDots();
+    renderLesson(0);
+  </script>
 
 </body>
+
 </html>

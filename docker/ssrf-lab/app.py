@@ -38,14 +38,75 @@ def dashboard():
     user = USERS[session['user_id']]
     return render_template('dashboard.html', user=user)
 
+def handle_local_or_mock_requests(url):
+    """
+    Handles local file protocol and mocks cloud metadata services
+    to simulate real-world SSRF scenarios.
+    """
+    # 1. Handle file:// scheme for Local File LFI simulation
+    if url.lower().startswith('file://'):
+        filepath = url[7:]
+        # Prevent accessing paths outside standard locations if needed, 
+        # but in a docker environment it's fine.
+        if os.path.exists(filepath) and os.path.isfile(filepath):
+            try:
+                with open(filepath, 'r', errors='ignore') as f:
+                    content = f.read()
+                return {
+                    "status": 200,
+                    "headers": {"Content-Type": "text/plain"},
+                    "body": content
+                }
+            except Exception as e:
+                return {"error": f"Error reading file: {str(e)}"}
+        else:
+            return {"error": f"File not found: {filepath}"}
+
+    # 2. Intercept AWS Metadata Service (169.254.169.254)
+    if "169.254.169.254" in url:
+        url_lower = url.lower()
+        if "/latest/meta-data/iam/security-credentials/admin-role" in url_lower:
+            return {
+                "status": 200,
+                "headers": {"Content-Type": "application/json"},
+                "body": '{\n  "Code" : "Success",\n  "LastUpdated" : "2026-05-26T12:00:00Z",\n  "Type" : "AWS-HMAC",\n  "AccessKeyId" : "ASIAIOSFODNN7EXAMPLE",\n  "SecretAccessKey" : "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",\n  "Token" : "CTF{SSRF_cl0ud_m3t4d4t4_l34k}",\n  "Expiration" : "2036-05-26T18:00:00Z"\n}'
+            }
+        elif "/latest/meta-data/iam/security-credentials" in url_lower:
+            return {
+                "status": 200,
+                "headers": {"Content-Type": "text/plain"},
+                "body": "admin-role"
+            }
+        elif "/latest/meta-data" in url_lower:
+            return {
+                "status": 200,
+                "headers": {"Content-Type": "text/plain"},
+                "body": "iam/"
+            }
+        else:
+            return {
+                "status": 200,
+                "headers": {"Content-Type": "text/plain"},
+                "body": "latest/"
+            }
+            
+    return None
+
 @app.route('/api/fetch', methods=['POST'])
 def fetch_api():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
     
-    url = request.form.get('url', '')
+    url = request.form.get('url', '').strip()
     if not url:
         return jsonify({"error": "URL is required"}), 400
+        
+    # Check for local protocols / mock metadata first
+    local_response = handle_local_or_mock_requests(url)
+    if local_response is not None:
+        if "error" in local_response:
+            return jsonify({"error": local_response["error"]}), 400
+        return jsonify(local_response)
         
     try:
         # Perform server-side GET request
@@ -73,6 +134,13 @@ def fetch_api_secure():
         if word in url.lower():
             return jsonify({"error": "Security Alert: Access to 127.0.0.1 and localhost is blocked by the Firewall."}), 403
             
+    # Check for local protocols / mock metadata first
+    local_response = handle_local_or_mock_requests(url)
+    if local_response is not None:
+        if "error" in local_response:
+            return jsonify({"error": local_response["error"]}), 400
+        return jsonify(local_response)
+        
     try:
         # Perform server-side GET request
         resp = requests.get(url, timeout=3, verify=False)
@@ -86,17 +154,23 @@ def fetch_api_secure():
 
 @app.route('/admin')
 def admin():
-    # Only allow requests originating from localhost (127.0.0.1)
+    # Regular page, doesn't contain flags directly
     if request.remote_addr != '127.0.0.1':
         return render_template('error.html', message="Access Denied: Localhost (127.0.0.1) requests only."), 403
-    return render_template('admin.html', flag="CTF{SSRF_l0c4lh0st_byp4ss}")
+    return render_template('admin.html', flag="[Access Granted] System status: Operational. Please check /api/admin/config for system variables.")
 
-@app.route('/secure-admin')
-def secure_admin():
-    # Only allow requests originating from localhost (127.0.0.1)
+@app.route('/api/admin/config')
+def admin_config():
+    # Internal system configuration API
     if request.remote_addr != '127.0.0.1':
         return render_template('error.html', message="Access Denied: Localhost (127.0.0.1) requests only."), 403
-    return render_template('admin.html', flag="CTF{SSRF_byp4ss_bl4ckl1st}")
+    return jsonify({
+        "status": "success",
+        "app_env": "production",
+        "debug": False,
+        "database_uri": "postgresql://admin:super_secret_db_pass@127.0.0.1:5432/securecorp",
+        "system_flag": "CTF{SSRF_byp4ss_bl4ckl1st}"
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)

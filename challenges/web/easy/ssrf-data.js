@@ -1,19 +1,23 @@
 const LESSONS = [
   {
-    title: "1. What is SSRF?",
+    title: "1. What is SSRF & Alternative Schemes",
     points: 50,
     html: `
       <h3>What is SSRF?</h3>
       <p>Imagine you are inside a gated corporate building. You aren't allowed to enter the highly secure Server Room, but there is a friendly delivery robot that can go anywhere in the building to fetch packages. If you tell the robot, "Go fetch a package from Room 101 (a public room)," it does so. But what if you tell it, "Go fetch the blueprints from the Server Room (which is normally locked to outsiders) and bring them back to me"? Because the robot is already inside the building's security perimeter, the doors open for it, and it blindly brings you the secret blueprints! This is <strong>Server-Side Request Forgery (SSRF)</strong>.</p>
       
+      <div class="htb-diagram-container">
+        <img src="../../../assets/ssrf_concept_diagram.png" alt="SSRF Concept Diagram" style="width: 100%; max-width: 600px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+      </div>
+
       <p>In a web application, SSRF occurs when a server fetches a remote resource (like an image, file, or API response) from a URL provided by the user. If the website does not validate this URL, an attacker can supply internal URLs (like <code>http://127.0.0.1/admin</code>) and force the server to read local files, query internal databases, or access protected control panels that are not exposed to the public internet.</p>
 
-      <h3>Why is SSRF Dangerous?</h3>
-      <p>SSRF allows attackers to:
+      <h3>Vulnerable Protocol Schemes</h3>
+      <p>Developers often assume SSRF only involves HTTP or HTTPS protocols. However, if the underlying fetch library supports other URI schemes, attackers can request:
         <ul>
-          <li><strong>Bypass Firewalls:</strong> Access internal services (such as databases, Redis, or admin portals) running on loopback interfaces.</li>
-          <li><strong>Leak Cloud Metadata:</strong> On AWS, Azure, or Google Cloud, query the internal link-local IP <code>http://169.254.169.254</code> to steal IAM credentials or API keys.</li>
-          <li><strong>Internal Port Scanning:</strong> Port scan the local network from the server's perspective.</li>
+          <li><strong>file://</strong> — Read local files from the server's disk (e.g. <code>file:///etc/passwd</code> or <code>file:///flag.txt</code>).</li>
+          <li><strong>gopher://</strong> — Construct raw TCP payloads (essential for interacting with Redis, Memcached, or databases).</li>
+          <li><strong>dict://</strong> — Connect to internal ports and retrieve banners or list protocols.</li>
         </ul>
       </p>
 
@@ -37,15 +41,16 @@ const LESSONS = [
       <div class="step-block">
         <div class="step-num">Step 3</div>
         <div class="step-body">
-          <strong>Exploit Basic SSRF</strong><br>
-          Look at **Tool 1: General Web Previewer**. It takes any URL and displays its contents. If you try to visit <code>http://<TARGET_IP>/admin</code> in your own browser, you will get a <code>403 Access Denied</code> because the admin page only allows requests originating from local loopback (127.0.0.1).<br><br>
-          Input <code>http://127.0.0.1/admin</code> into the General Web Previewer input field and click <strong>Fetch Preview</strong>. The server will request the page locally, bypass the remote address firewall, and return the response containing your first flag!
+          <strong>Exploit file:// Scheme to Read Local Files</strong><br>
+          Look at **Tool 1: General Web Previewer**. It takes any URL and displays its contents. If you try to visit <code>http://127.0.0.1/admin</code>, you will find out the flag is not hosted on the web page.<br><br>
+          Since the backend URL previewer is vulnerable to SSRF and supports alternative protocols, input <code>file:///flag.txt</code> into the General Web Previewer input field and click <strong>Fetch Preview</strong>. The server will read the local flag file and display it in the preview box!
         </div>
       </div>
     `,
     questions: [
       { q: "What does the first 'S' in SSRF stand for?", a: "Server" },
-      { q: "What is the flag found in the local admin panel?", a: "CTF{SSRF_l0c4lh0st_byp4ss}" }
+      { q: "Which URI scheme is used to read local files on the server? (e.g. http)", a: "file" },
+      { q: "What is the flag found inside the local flag file?", a: "CTF{SSRF_f1l3_sch3m3_r34d}" }
     ]
   },
   {
@@ -57,13 +62,17 @@ const LESSONS = [
       
       <p>However, blacklists are notoriously easy to bypass because there are many different ways to represent the same local loopback address in computer networking.</p>
 
+      <div class="htb-diagram-container">
+        <img src="../../../assets/ssrf_filter_bypass.png" alt="SSRF Filter Bypass Diagram" style="width: 100%; max-width: 600px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+      </div>
+
       <h3>Common Loopback Bypass Techniques</h3>
       <p>If a firewall blocks the literal strings <code>127.0.0.1</code> and <code>localhost</code>, you can try:
         <ul>
           <li><strong>Alternative IP representations:</strong>
             <ul>
               <li><code>127.1</code> (Omitted zeroes - resolved as 127.0.0.1)</li>
-              <li><code>0.0.0.0</code> or <code>0</code> (Often maps to localhost on Linux)</li>
+              <li><code>0.0.0.0</code> or <code>0</code> (Often maps to localhost on Linux systems)</li>
               <li><code>[::1]</code> (IPv6 loopback address)</li>
             </ul>
           </li>
@@ -76,7 +85,7 @@ const LESSONS = [
           </li>
           <li><strong>DNS Redirection:</strong>
             <ul>
-              <li>Using a domain that resolves to 127.0.0.1, such as <code>local.securecorp.com</code> or wildcards like <code>127.0.0.1.nip.io</code>.</li>
+              <li>Using a domain that resolves to 127.0.0.1, such as <code>local.securecorp.com</code> or wildcard services like <code>127.0.0.1.nip.io</code>.</li>
             </ul>
           </li>
         </ul>
@@ -87,27 +96,110 @@ const LESSONS = [
         <div class="step-body">
           <strong>Identify the Firewall Restriction</strong><br>
           Scroll down to **Tool 2: Secure Endpoint Status Checker**. This tool is configured with a blacklist blocking <code>127.0.0.1</code> and <code>localhost</code>.<br>
-          Try to fetch <code>http://127.0.0.1/secure-admin</code> or <code>http://localhost/secure-admin</code>. You will receive a security alert from the firewall.
+          Try to fetch <code>http://127.0.0.1/api/admin/config</code> or <code>http://localhost/api/admin/config</code>. You will receive a security alert from the firewall.
         </div>
       </div>
       <div class="step-block">
         <div class="step-num">Step 2</div>
         <div class="step-body">
           <strong>Bypass the Blacklist</strong><br>
-          Attempt one of the alternative representations listed above. For example, construct a URL targeting <code>/secure-admin</code> but replacing the blocked host with a bypass pattern (e.g. <code>http://127.1/secure-admin</code>, <code>http://0.0.0.0/secure-admin</code>, or decimal <code>http://2130706433/secure-admin</code>).
+          Attempt one of the alternative representations listed above. Construct a URL targeting the admin configuration API (<code>/api/admin/config</code>) but replacing the blocked host with a bypass pattern (e.g. <code>http://127.1/api/admin/config</code>, <code>http://0.0.0.0/api/admin/config</code>, or decimal <code>http://2130706433/api/admin/config</code>).
         </div>
       </div>
       <div class="step-block">
         <div class="step-num">Step 3</div>
         <div class="step-body">
           <strong>Fetch the Second Flag</strong><br>
-          Submit the bypassed URL into Tool 2. When successful, the firewall will be bypassed, and the server will return the response from the secure admin page containing the second flag!
+          Submit the bypassed URL into Tool 2. When successful, the firewall will be bypassed, and the server will return the response from the secure administrative configuration API containing the flag in a JSON property!
         </div>
       </div>
     `,
     questions: [
       { q: "Which protocol version uses '[::1]' as the loopback address? (IPv4/IPv6)", a: "IPv6" },
-      { q: "What is the flag found in the bypassed secure admin panel?", a: "CTF{SSRF_byp4ss_bl4ckl1st}" }
+      { q: "What is the flag found in the secure configuration API JSON?", a: "CTF{SSRF_byp4ss_bl4ckl1st}" }
+    ]
+  },
+  {
+    title: "3. Cloud Metadata Services (IMDSv1)",
+    points: 80,
+    html: `
+      <h3>SSRF in Cloud Environments</h3>
+      <p>In modern cloud environments (AWS, GCP, Azure), virtual machine instances have access to a local **Instance Metadata Service (IMDS)**. This service allows instances to retrieve information about themselves, including networks, instance IDs, and most importantly, temporary IAM role credentials.</p>
+      
+      <div class="htb-diagram-container">
+        <img src="../../../assets/ssrf_metadata_diagram.png" alt="Cloud Metadata Diagram" style="width: 100%; max-width: 600px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+      </div>
+
+      <p>This service is accessible via a link-local, non-routable IP address: <strong><code>http://169.254.169.254</code></strong>. Because it requires no authentication from within the VM, any SSRF vulnerability in a hosted application allows attackers to query this IP address and steal the server's cloud identity credentials.</p>
+
+      <h3>Exploitation Steps (AWS IMDSv1)</h3>
+      <p>Under AWS IMDSv1, fetching metadata is a straightforward GET request:
+        <ul>
+          <li><code>http://169.254.169.254/latest/meta-data/</code> — List top-level metadata categories.</li>
+          <li><code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code> — List the IAM roles attached to the instance.</li>
+          <li><code>http://169.254.169.254/latest/meta-data/iam/security-credentials/&lt;ROLE_NAME&gt;</code> — Retrieve AWS access keys, secret keys, and session tokens.</li>
+        </ul>
+      </p>
+
+      <div class="step-block">
+        <div class="step-num">Step 1</div>
+        <div class="step-body">
+          <strong>Enumerate the Metadata Service</strong><br>
+          In <strong>Tool 1</strong>, input <code>http://169.254.169.254/latest/meta-data/</code> and click <strong>Fetch Preview</strong>. Observe the category list returned.
+        </div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Step 2</div>
+        <div class="step-body">
+          <strong>Identify the Active IAM Role</strong><br>
+          Now query the security credentials subcategory by entering <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code>. Note down the role name returned in the response body.
+        </div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Step 3</div>
+        <div class="step-body">
+          <strong>Extract the Temporary Credentials</strong><br>
+          Fetch the actual credentials file for the role name you found: <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/&lt;ROLE_NAME&gt;</code>. You will receive a JSON structure containing AWS credentials and the third flag!
+        </div>
+      </div>
+    `,
+    questions: [
+      { q: "What is the standard link-local IP used to access instance metadata?", a: "169.254.169.254" },
+      { q: "What is the IAM role name configured for this simulated instance?", a: "admin-role" },
+      { q: "What is the flag found in the temporary security token?", a: "CTF{SSRF_cl0ud_m3t4d4t4_l34k}" }
+    ]
+  },
+  {
+    title: "4. SSRF Mitigations & IMDSv2",
+    points: 50,
+    html: `
+      <h3>How to Prevent SSRF</h3>
+      <p>Securing applications against SSRF requires defense-in-depth since attackers are skilled at bypassing filters. Effective mitigations include:
+        <ul>
+          <li><strong>Allowlists:</strong> Do not use blacklists. Validate inputs against a strict allowlist of approved schemas (only HTTP/HTTPS), domains, and ports.</li>
+          <li><strong>Disable Unused Protocols:</strong> Ensure the HTTP client library only supports <code>http://</code> and <code>https://</code>, explicitly disabling alternative schemes like <code>file://</code>, <code>gopher://</code>, or <code>ftp://</code>.</li>
+          <li><strong>Network Segregation:</strong> Configure local firewalls (e.g., iptables) to block outbound web server requests to internal systems (like databases, Redis) and the link-local metadata IP.</li>
+          <li><strong>DNS Resolution Checking:</strong> Perform DNS resolution on the input URL, verify it resolves to a public IP address (not a private subnet like 10.x.x.x, 192.168.x.x, or 127.x.x.x), and perform the fetch using the resolved IP to prevent DNS Rebinding attacks.</li>
+        </ul>
+      </p>
+
+      <div class="htb-diagram-container">
+        <img src="../../../assets/ssrf_mitigations.png" alt="SSRF Mitigations Diagram" style="width: 100%; max-width: 600px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 0;">
+      </div>
+
+      <h3>Mitigating Cloud SSRF with AWS IMDSv2</h3>
+      <p>To defend cloud environments against SSRF, AWS introduced <strong>IMDSv2</strong>. IMDSv2 converts the simple GET requests of IMDSv1 into a session-oriented request flow:
+        <ol>
+          <li>The client must make an HTTP <strong>PUT</strong> request to <code>http://169.254.169.254/latest/api/token</code> with a header specifying token expiration.</li>
+          <li>The client receives a session token in response.</li>
+          <li>The client performs a <strong>GET</strong> request to retrieve metadata categories, passing the token in the <code>X-aws-ec2-metadata-token</code> HTTP header.</li>
+        </ol>
+        Because simple SSRF vulnerabilities only allow attackers to perform standard GET requests (and typically do not let them inject arbitrary HTTP headers or perform PUT requests), IMDSv2 successfully mitigates the vast majority of metadata leak vectors!
+      </p>
+    `,
+    questions: [
+      { q: "Which version of the AWS Instance Metadata Service requires a PUT request and token header?", a: "IMDSv2" },
+      { q: "Is it safer to use an input validation blacklist or an allowlist?", a: "allowlist" }
     ]
   }
 ];

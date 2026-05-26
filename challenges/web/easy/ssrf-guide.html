@@ -49,7 +49,7 @@
         SSRF <span style="color:var(--accent);">Walkthrough.</span>
       </h1>
       <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
-        A complete step-by-step walkthrough to help you understand and exploit Server-Side Request Forgery and filter bypasses.
+        A complete step-by-step walkthrough to help you understand and exploit Server-Side Request Forgery, protocol schemes, and cloud metadata leaks.
       </p>
     </div>
 
@@ -61,8 +61,10 @@
         <div class="rules-nav-title">Jump to Section</div>
         <ul>
           <li><a href="#intro" class="active" id="nav-intro"> Introduction</a></li>
-          <li><a href="#ssrf" id="nav-ssrf"> 1. Basic SSRF</a></li>
+          <li><a href="#ssrf" id="nav-ssrf"> 1. Basic SSRF & file://</a></li>
           <li><a href="#bypass" id="nav-bypass"> 2. Filter Bypassing</a></li>
+          <li><a href="#metadata" id="nav-metadata"> 3. Cloud Metadata (IMDSv1)</a></li>
+          <li><a href="#mitigation" id="nav-mitigation"> 4. SSRF Mitigations & IMDSv2</a></li>
         </ul>
       </aside>
 
@@ -79,17 +81,17 @@
             </div>
           </div>
           <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
-            Welcome to the SSRF lab! In this module, you will observe how a web server proxies user requests. By feeding the proxy server local endpoints, you can bypass network firewalls and access internal systems.
+            Welcome to the SSRF lab! In this module, you will observe how a web server proxies user requests. By feeding the proxy server alternative schemes and bypassed addresses, you can read local server files, circumvent firewalls, and extract sensitive cloud metadata credentials.
           </p>
         </div>
 
-        <!--  Basic SSRF Walkthrough  -->
+        <!--  Basic SSRF & file:// Walkthrough  -->
         <div class="rules-block" id="ssrf">
           <div class="rules-block-header">
             <div class="block-icon"></div>
             <div>
               <h2>Part 1</h2>
-              <p>Basic Server-Side Request Forgery</p>
+              <p>Basic SSRF & Local File Retrieval</p>
             </div>
           </div>
 
@@ -105,7 +107,7 @@
             <li class="rule-item warn">
               <span class="rule-num">Step 3</span>
               <span class="rule-text">
-                <strong>Force Local Request.</strong> Direct the tool to query the server's own local loopback address: <code>http://127.0.0.1/admin</code>. The response will show the internal portal template containing the flag: <code>CTF{SSRF_l0c4lh0st_byp4ss}</code>.
+                <strong>Force Local Request.</strong> Direct the tool to query a local file on the server's disk using the file URI scheme: <code>file:///flag.txt</code>. The response will reveal the contents of the flag file on disk.
               </span>
             </li>
           </ul>
@@ -130,19 +132,70 @@
               <span class="rule-num">Step 2</span>
               <span class="rule-text"><strong>Use Alternate Representations.</strong> Bypassing the blacklist can be accomplished by representing <code>127.0.0.1</code> differently:
                 <div class="code-block">
-Alternative IP: http://127.1/secure-admin
-IPv6 Loopback: http://[::1]/secure-admin
-Decimal Address: http://2130706433/secure-admin
-Hex Address: http://0x7f000001/secure-admin
-Bind Address: http://0.0.0.0/secure-admin
+Alternative IP: http://127.1/api/admin/config
+IPv6 Loopback: http://[::1]/api/admin/config
+Decimal Address: http://2130706433/api/admin/config
+Hex Address: http://0x7f000001/api/admin/config
+Bind Address: http://0.0.0.0/api/admin/config
                 </div>
               </span>
             </li>
             <li class="rule-item warn">
               <span class="rule-num">Step 3</span>
               <span class="rule-text">
-                <strong>Extract Second Flag.</strong> Submit one of the bypassed URLs into Tool 2. The server will resolve it to the loopback interface, bypass the string matching check, and display the secret flag: <code>CTF{SSRF_byp4ss_bl4ckl1st}</code>.
+                <strong>Extract Second Flag.</strong> Submit one of the bypassed URLs into Tool 2. The server will resolve it to the loopback interface, bypass the string matching check, and display the JSON response containing the configuration settings and the secret system flag.
               </span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Cloud Metadata Service Walkthrough  -->
+        <div class="rules-block" id="metadata">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 3</h2>
+              <p>Cloud Instance Metadata (IMDSv1)</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Target Cloud IP.</strong> In Tool 1, query the link-local metadata address: <code>http://169.254.169.254/latest/meta-data/</code>. You will see a directory listing containing <code>iam/</code>.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Query IAM Role.</strong> Append the path to access the security credentials: <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/</code>. The output will show the attached IAM role name: <code>admin-role</code>.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Extract Credentials & Flag.</strong> Fetch the security credentials of the role: <code>http://169.254.169.254/latest/meta-data/iam/security-credentials/admin-role</code>. The response JSON contains AWS access keys, along with the third flag hidden inside the session token.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  SSRF Mitigations & IMDSv2 Walkthrough  -->
+        <div class="rules-block" id="mitigation">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 4</h2>
+              <p>SSRF Mitigations & IMDSv2</p>
+            </div>
+          </div>
+
+          <p style="color: var(--text-muted); line-height: 1.6;">
+            Review the mitigations section in the lesson:
+          </p>
+          <ul class="rule-list">
+            <li class="rule-item info">
+              <span class="rule-text"><strong>Allowlisting:</strong> Stricter validation that rejects all protocols and addresses not explicitly permitted.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-text"><strong>IMDSv2:</strong> AWS's defense mechanism which blocks GET-based metadata SSRF attacks by enforcing a PUT request first to get a token.</span>
             </li>
           </ul>
         </div>
