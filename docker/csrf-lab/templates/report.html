@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PaySecure Bank - Submit Link to Victim</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --border-color: #1f2937;
+            --accent-color: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --terminal-bg: #030712;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--text-color);
+        }
+
+        .nav-btn {
+            background-color: #f59e0b;
+            color: black;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: #d97706;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px 16px;
+            background-color: #1f2937;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .submit-btn {
+            padding: 12px 24px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .submit-btn:disabled {
+            background-color: #4b5563;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .terminal {
+            background-color: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 14px;
+            min-height: 250px;
+            max-height: 400px;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .terminal-log {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .log-info { color: #60a5fa; }
+        .log-success { color: #34d399; }
+        .log-warning { color: #fbbf24; }
+        .log-error { color: #f87171; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/dashboard" class="logo">Pay<span>Secure</span></a>
+        <nav>
+            <a href="/dashboard" class="nav-btn" style="background-color: #8b5cf6; color: white;">Back to Bank Dashboard</a>
+            <a href="/exploit-server" class="nav-btn">Attacker Server</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <div class="card">
+            <div class="card-title">Simulate Victim Admin Session</div>
+            <p style="font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 25px;">
+                Enter the URL of your hosted exploit. The simulated victim (Bob, who is logged into the bank) will visit this URL in his background browser session. If your CSRF exploit is correct, it will trick Bob's session into executing actions on PaySecure Bank.
+            </p>
+            
+            <div class="form-group">
+                <label for="exploit_url">Exploit URL</label>
+                <div class="input-row">
+                    <input type="text" id="exploit_url" placeholder="e.g. http://localhost/view-exploit/xxxx or /view-exploit/xxxx" required autocomplete="off">
+                    <button id="send-btn" class="submit-btn" onclick="sendToAdmin()">Send to Victim Bot</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="terminal-header">
+                <span>Simulation Output Console</span>
+                <span id="status-badge" style="color: var(--text-muted);">IDLE</span>
+            </div>
+            <div class="terminal" id="terminal-console">
+                <p class="terminal-log log-info">Ready to launch simulation. Input exploit URL above.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function sendToAdmin() {
+            const urlInput = document.getElementById('exploit_url');
+            const sendBtn = document.getElementById('send-btn');
+            const consoleEl = document.getElementById('terminal-console');
+            const statusBadge = document.getElementById('status-badge');
+            
+            const url = urlInput.value.trim();
+            if (!url) {
+                alert('Please enter an exploit URL first.');
+                return;
+            }
+
+            urlInput.disabled = true;
+            sendBtn.disabled = true;
+            statusBadge.textContent = 'RUNNING';
+            statusBadge.style.color = '#fbbf24';
+            
+            consoleEl.innerHTML = '';
+            appendLog('[*] Initializing Bot Crawler agent...', 'info');
+
+            try {
+                const response = await fetch('/report', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ 'exploit_url': url })
+                });
+
+                const data = await response.json();
+                const logs = data.logs || [];
+                
+                // Print logs sequentially with a small delay for realistic terminal feel
+                for (let i = 0; i < logs.length; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                    
+                    let type = 'info';
+                    if (logs[i].startsWith('[+]')) type = 'success';
+                    else if (logs[i].startsWith('[-]')) type = 'error';
+                    
+                    appendLog(logs[i], type);
+                }
+
+                statusBadge.textContent = data.status.toUpperCase();
+                if (data.status === 'success') {
+                    statusBadge.style.color = '#34d399';
+                } else {
+                    statusBadge.style.color = '#f87171';
+                }
+
+            } catch (err) {
+                appendLog('[-] Network Error communicating with lab backend.', 'error');
+                statusBadge.textContent = 'ERROR';
+                statusBadge.style.color = '#f87171';
+            } finally {
+                urlInput.disabled = false;
+                sendBtn.disabled = false;
+            }
+        }
+
+        function appendLog(text, type) {
+            const consoleEl = document.getElementById('terminal-console');
+            const p = document.createElement('p');
+            p.className = `terminal-log log-${type}`;
+            p.textContent = text;
+            consoleEl.appendChild(p);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF LABS Guide — Official walkthrough for CSRF Challenge." />
+  <title>CTF LABS — CSRF Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #1a252f;
+      color: #3498db;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+    <div class="nav-links">
+      <a href="../../../index.html">Home</a>
+      <a href="../../../learn.html">Learn</a>
+      <a href="../../../challenges.html" class="active">Challenges</a>
+      <a href="../../../rules.html">Rules</a>
+      <div class="dropdown">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content">
+          <a href="#">Dashboard</a>
+          <a href="#">Settings</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE INTRO  -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        CSRF <span style="color:var(--accent);">Walkthrough.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
+        A complete step-by-step walkthrough to help you approach, attack, and solve the Cross-Site Request Forgery (CSRF) lab.
+      </p>
+    </div>
+
+    <!--  TWO-COLUMN LAYOUT  -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro" class="active" id="nav-intro"> Introduction</a></li>
+          <li><a href="#attack" id="nav-attack"> 1. Executing the CSRF Attack</a></li>
+          <li><a href="#secure" id="nav-secure"> 2. Bypassing Secure Transfer</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!--  Intro  -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Introduction</h2>
+              <p>How the CSRF lab works</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            In this lab, you will explore Cross-Site Request Forgery (CSRF). You will play the role of the attacker, crafting a malicious HTML file that executes a hidden POST request to transfer funds from another user (Bob) to your own account.
+          </p>
+        </div>
+
+        <!--  Executing the CSRF Attack  -->
+        <div class="rules-block" id="attack">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 1</h2>
+              <p>Executing the CSRF Attack</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Log In.</strong> Launch the lab and log in as Alice using the credentials <code>alice</code> / <code>password123</code>. Notice Alice has a starting balance of $1,000.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Open Attacker Server.</strong> Click the yellow <strong>Attacker Server</strong> button in the top navigation bar. This simulates a server owned and controlled by the attacker.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Craft Exploit HTML.</strong> Write HTML code containing a form that targets the bank's vulnerable transfer endpoint (<code>/transfer</code>) and submits it automatically using JavaScript.
+                <div class="code-block">&lt;form id="csrf-form" action="/transfer" method="POST"&gt;
+  &lt;input type="hidden" name="to_account" value="alice"&gt;
+  &lt;input type="hidden" name="amount" value="2000"&gt;
+&lt;/form&gt;
+&lt;script&gt;
+  document.getElementById("csrf-form").submit();
+&lt;/script&gt;</div>
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 4</span>
+              <span class="rule-text">
+                <strong>Deliver and Exploit.</strong> Click <strong>Save and Host Exploit</strong>. Copy the generated exploit URL. Navigate to the <strong>Report to Victim</strong> page, paste the URL, and submit. The simulated admin bot (Bob) will visit the link.
+              </span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 5</span>
+              <span class="rule-text">
+                <strong>Claim Flag.</strong> Check the terminal console for success logs. Return to the main bank dashboard and refresh. Alice's balance is now $3,000, and the flag <code>CTF{CSRF_Tr4nsf3r_Succ3ss}</code> will be shown in a green banner.
+              </span>
+            </li>
+          </ul>
+        </div>
+        
+        <!--  Bypassing Secure Transfer  -->
+        <div class="rules-block" id="secure">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 2</h2>
+              <p>Bypassing Secure Transfer</p>
+            </div>
+          </div>
+
+          <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
+            In Lesson 3, you are tasked with testing the bank's secure transfer endpoint. This endpoint implements secret anti-CSRF tokens to prevent request forgery.
+          </p>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Inspect Secure Tab.</strong> Return to the Bank Dashboard and view the <strong>Secure (Token)</strong> tab. Notice a unique token value is appended as a hidden parameter.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Modify Exploit.</strong> Go to the Exploit Server. Change the form action to point to <code>/secure_transfer</code>. Save the exploit.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Test and Fail.</strong> Send the new exploit URL to the Victim Bot. The bot logs will show that the bank rejected the transaction with a <code>CSRF Token Mismatch</code> error because the attacker's page cannot guess or read Bob's secret session token.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+      </main>
+    </div><!-- /rules-section -->
+  </div><!-- /container -->
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>© 2026 <a href="../../../index.html">CTF LABS</a> · Internship Project Demo</p>
+  </footer>
+
+  <!-- Active sidebar highlighting on scroll -->
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+</body>
+</html>

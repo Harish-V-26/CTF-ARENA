@@ -32,6 +32,11 @@ services:
     ports:
       - "4040:80"
 
+  csrf-lab:
+    build: ./docker/csrf-lab
+    ports:
+      - "4050:80"
+
   nmap-target:
     build: ./docker/nmap-target
     ports:
