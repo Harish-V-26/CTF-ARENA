@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SecureCorp API Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; margin: 0; padding: 0; color: #f1f5f9; }
+        .navbar { background: #1e293b; color: #fff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
+        .navbar .brand { font-weight: bold; color: #38bdf8; font-size: 1.2rem; }
+        .navbar a { color: #cbd5e1; text-decoration: none; margin-left: 20px; font-size: 0.95rem; transition: color 0.2s; }
+        .navbar a:hover { color: #f1f5f9; }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .card { background: #1e293b; border-radius: 12px; border: 1px solid #334155; padding: 25px; margin-bottom: 30px; }
+        h2 { margin-top: 0; color: #f8fafc; font-size: 1.5rem; }
+        h3 { color: #38bdf8; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 10px; font-size: 1.2rem; }
+        p { color: #94a3b8; line-height: 1.6; }
+        .form-group { display: flex; gap: 10px; margin: 20px 0 10px 0; }
+        input[type="text"] { flex: 1; padding: 12px; background: #0f172a; border: 1px solid #475569; color: #f1f5f9; border-radius: 6px; font-size: 1rem; }
+        input[type="text"]:focus { border-color: #38bdf8; outline: none; }
+        button { padding: 12px 24px; background: #0284c7; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: background 0.2s; }
+        button:hover { background: #0369a1; }
+        .result-box { display: none; margin-top: 20px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 15px; }
+        .result-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.875rem; color: #64748b; font-family: monospace; border-bottom: 1px solid #1e293b; padding-bottom: 5px; }
+        .result-body { max-height: 300px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; font-size: 0.9rem; color: #e2e8f0; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-success { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+        .badge-error { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .text-error { color: #f87171; margin-top: 10px; font-size: 0.9rem; display: none; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="brand">SecureCorp API Portal</div>
+        <div>
+            <span>Welcome, <strong>{{ user.username }}</strong></span>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>Welcome to SecureCorp Internal API Sandbox</h2>
+            <p>This web interface allows developers to inspect internal status endpoints and query remote API services. Enter any URL to fetch a server-side response preview.</p>
+        </div>
+
+        <div class="card">
+            <h3>Tool 1: General Web Previewer</h3>
+            <p>This tool is used to query remote public web APIs. Type a URL below to test connectivity and fetch its body content.</p>
+            <div class="form-group">
+                <input type="text" id="url-input-1" placeholder="e.g. https://api.ipify.org" value="https://api.ipify.org">
+                <button onclick="fetchUrl(1, '/api/fetch')">Fetch Preview</button>
+            </div>
+            <div class="text-error" id="error-1"></div>
+            <div class="result-box" id="result-box-1">
+                <div class="result-header">
+                    <span>Status Code: <span id="status-1">200</span></span>
+                    <span>Endpoint 1 Proxy</span>
+                </div>
+                <div class="result-body" id="body-1"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Tool 2: Secure Endpoint Status Checker</h3>
+            <p>This secure version validates request URLs against local address patterns to prevent access to the local loopback interface (localhost / 127.0.0.1).</p>
+            <div class="form-group">
+                <input type="text" id="url-input-2" placeholder="e.g. http://google.com" value="http://google.com">
+                <button onclick="fetchUrl(2, '/api/fetch-secure')">Fetch Secure</button>
+            </div>
+            <div class="text-error" id="error-2"></div>
+            <div class="result-box" id="result-box-2">
+                <div class="result-header">
+                    <span>Status Code: <span id="status-2">200</span></span>
+                    <span>Endpoint 2 Proxy</span>
+                </div>
+                <div class="result-body" id="body-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchUrl(num, endpoint) {
+            const urlInput = document.getElementById(`url-input-${num}`);
+            const resultBox = document.getElementById(`result-box-${num}`);
+            const errorDiv = document.getElementById(`error-${num}`);
+            const statusEl = document.getElementById(`status-${num}`);
+            const bodyEl = document.getElementById(`body-${num}`);
+            
+            resultBox.style.display = 'none';
+            errorDiv.style.display = 'none';
+            
+            const formData = new FormData();
+            formData.append('url', urlInput.value);
+            
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await res.json();
+                if (res.ok) {
+                    statusEl.textContent = data.status;
+                    bodyEl.textContent = data.body;
+                    resultBox.style.display = 'block';
+                } else {
+                    errorDiv.textContent = data.error || "An unexpected error occurred.";
+                    errorDiv.style.display = 'block';
+                }
+            } catch (err) {
+                errorDiv.textContent = "Failed to communicate with the preview server.";
+                errorDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -503,6 +503,27 @@
           </div>
         </div>
 
+        <!-- SSRF Lab -->
+        <div class="challenge-card" data-category="web" id="card-learn-ssrf"
+          onclick="window.location.href='challenges/web/easy/ssrf-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #3498db, #9b59b6);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">SSRF (Server-Side Request Forgery)</div>
+            <div class="challenge-desc">
+              Abuse the server to request internal resources. Bypass input blacklists to access loopback services and retrieve hidden flags.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">120 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/ssrf-lab.html" class="start-btn" id="start-learn-ssrf">Start →</a>
+          </div>
+        </div>
+
         <!-- File Upload in DVWA -->
         <div class="challenge-card" data-category="web" id="card-learn-file-upload-dvwa"
           onclick="window.location.href='challenges/web/easy/file-upload-dvwa-lab.html'" style="cursor: pointer;">
@@ -759,7 +780,7 @@
       let envDesc = "You will read through a set of lessons and answer knowledge check questions.";
       let learnList = ["Vulnerability Identification", "Exploitation Techniques", "Mitigation Strategies"];
       
-      if (diff.includes("Practical") || solveCount.includes("Docker") || title.includes("Gauntlet") || title.includes("Target") || title.includes("DVWA")) {
+      if (diff.includes("Practical") || solveCount.includes("Docker") || title.includes("Gauntlet") || title.includes("Target") || title.includes("DVWA") || title.includes("SSRF")) {
           envIcon = "";
           envTitle = "Live Docker Environment";
           envDesc = "You will launch a private, isolated Docker container running a vulnerable application target. You'll interact with it like a real-world server.";
@@ -775,6 +796,8 @@
       
       if (title.includes("SQL")) {
           learnList = ["SQL Syntax & Payloads", "Authentication Bypass", "UNION-Based Data Extraction", "Error/Blind Injection Techniques"];
+      } else if (title.includes("SSRF") || title.includes("Server-Side Request Forgery")) {
+          learnList = ["Server-Side Request Forgery (SSRF) concepts", "Bypassing loopback address restrictions", "Localhost bypasses (127.1, [::1], 0.0.0.0)", "Decimal and Hexadecimal IP encoding", "Querying internal HTTP endpoints"];
       } else if (title.includes("XSS")) {
           learnList = ["Reflected XSS Execution", "Stored XSS Persistence", "DOM-based vulnerabilities", "JavaScript Payload Development"];
       } else if (title.includes("DevTools") || title.includes("Mastering DevTools")) {

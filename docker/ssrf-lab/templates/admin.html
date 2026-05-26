@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SecureCorp Internal Admin</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; margin: 0; padding: 40px; color: #f1f5f9; text-align: center; }
+        .container { background: #1e293b; max-width: 600px; margin: 50px auto; padding: 40px; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); border: 2px solid #22c55e; }
+        h1 { color: #22c55e; margin-top: 0; }
+        p { color: #94a3b8; font-size: 1.1rem; line-height: 1.6; }
+        .flag-box { background: #0f172a; padding: 20px; border-radius: 6px; border: 1px dashed #22c55e; font-size: 1.5rem; font-family: monospace; font-weight: bold; color: #4ade80; margin: 30px 0; word-break: break-all; }
+        .footer-note { font-size: 0.875rem; color: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 SecureCorp Internal Portal</h1>
+        <p>Congratulations! You have successfully forced the server to make a local request to its admin interface. This is a classic Server-Side Request Forgery (SSRF) vulnerability.</p>
+        
+        <div class="flag-box">
+            {{ flag }}
+        </div>
+        
+        <div class="footer-note">
+            Verification complete. Flag value is unique to this server instance.
+        </div>
+    </div>
+</body>
+</html>
