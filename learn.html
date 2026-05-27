@@ -608,6 +608,27 @@
           </div>
         </div>
 
+        <!-- OWASP Top 10 Part 1 (1-5) -->
+        <div class="challenge-card" data-category="web" id="card-learn-owasp-top5"
+          onclick="window.location.href='challenges/web/easy/owasp-top5-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e67e22, #eb5e28);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">OWASP Top 10 Part 1 (1-5)</div>
+            <div class="challenge-desc">
+              Learn and practice the first five vulnerabilities of the OWASP Top 10 (2021) — from Broken Access Control and Cryptographic Failures to SQL Injection, Security Misconfiguration, and Software Supply Chain Failures.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">250 pts</span>
+            <span class="solve-count"> 5 Lessons</span>
+            <a href="challenges/web/easy/owasp-top5-lab.html" class="start-btn" id="start-learn-owasp-top5">Start →</a>
+          </div>
+        </div>
+
       </div><!-- /challenges-grid-easy-practical -->
 
     </div>
@@ -824,6 +845,8 @@
           learnList = ["Directory Fuzzing (ffuf)", "Tech Stack Discovery (Wappalyzer)", "Attack Surface Mapping"];
       } else if (title.includes("Brute Force")) {
           learnList = ["Dictionary Attacks", "Credential Stuffing", "Rate Limiting Bypass", "Using Hydra & Burp Suite"];
+      } else if (title.includes("OWASP Top 10 Part 1")) {
+          learnList = ["Broken Access Control (IDOR)", "Cryptographic Failures (ROT13 & Hashing)", "SQL Injection (Tautology Bypass)", "Security Misconfiguration (Directory Listing)", "Software Supply Chain Failures (PyYAML Deserialization)"];
       } else if (title.includes("OWASP")) {
           learnList = ["Broken Access Control", "Cryptographic Failures", "Injection Attacks", "Insecure Design Principles"];
       } else if (title.includes("Web Security")) {

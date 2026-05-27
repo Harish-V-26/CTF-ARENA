@@ -20,6 +20,7 @@ from routes.nmap_deepdive import nmap_deepdive_bp
 from routes.shadow_gate import shadow_gate_bp
 from routes.csrf import csrf_bp
 from routes.ssrf import ssrf_bp
+from routes.owasp_top5 import owasp_top5_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -37,6 +38,7 @@ app.register_blueprint(nmap_deepdive_bp)
 app.register_blueprint(shadow_gate_bp)
 app.register_blueprint(csrf_bp)
 app.register_blueprint(ssrf_bp)
+app.register_blueprint(owasp_top5_bp)
 
 if __name__ == '__main__':
     # Run the server
