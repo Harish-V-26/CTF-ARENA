@@ -20,6 +20,11 @@ from routes.nmap_deepdive import nmap_deepdive_bp
 from routes.shadow_gate import shadow_gate_bp
 from routes.csrf import csrf_bp
 from routes.ssrf import ssrf_bp
+from routes.insecure_design import insecure_design_bp
+from routes.auth_failures import auth_failures_bp
+from routes.integrity_failures import integrity_failures_bp
+from routes.logging_failures import logging_failures_bp
+from routes.error_handling import error_handling_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -37,6 +42,11 @@ app.register_blueprint(nmap_deepdive_bp)
 app.register_blueprint(shadow_gate_bp)
 app.register_blueprint(csrf_bp)
 app.register_blueprint(ssrf_bp)
+app.register_blueprint(insecure_design_bp)
+app.register_blueprint(auth_failures_bp)
+app.register_blueprint(integrity_failures_bp)
+app.register_blueprint(logging_failures_bp)
+app.register_blueprint(error_handling_bp)
 
 if __name__ == '__main__':
     # Run the server
