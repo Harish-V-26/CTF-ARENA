@@ -309,6 +309,27 @@
           </div>
         </div>
 
+        <!-- Python Scripting for Pentesting -->
+        <div class="challenge-card" data-category="web" id="card-learn-python-hacking"
+          onclick="window.location.href='challenges/web/easy/python-hacking-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #306998, #ffd43b);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Python Scripting for Pentesting</div>
+            <div class="challenge-desc">
+              Learn Python scripting basics for cybersecurity. Write a port scanner, directory fuzzer, and login brute-forcer, then use them inside Kali to exploit the target container.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">260 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/python-hacking-lab.html" class="start-btn" id="start-learn-python-hacking">Start →</a>
+          </div>
+        </div>
+
       </div><!-- /challenges-grid-beginner -->
 
       <h2 style="margin-top: 40px; margin-bottom: 20px;">Easy Level — Practical Labs</h2>
@@ -650,7 +671,6 @@
             <a href="challenges/web/easy/owasp-part2-hub.html" class="start-btn" id="start-learn-owasp-part2">Start →</a>
           </div>
         </div>
-
       </div><!-- /challenges-grid-easy-practical -->
 
     </div>
@@ -877,6 +897,8 @@
           learnList = ["Meterpreter Post-Exploitation Commands", "Post Modules & Persistence Mechanisms", "Pivoting & Port Forwarding (autoroute, portfwd)", "Evasion — Encoders, Packers & AV Bypass", "Resource Scripts & Handler Automation", "Practical Exploitation Chains"];
       } else if (title.includes("Metasploit")) {
           learnList = ["Penetration Testing Frameworks", "Core Metasploit Commands (msfconsole)", "Exploits vs Payloads vs Auxiliary Modules", "Simulated Scanner Execution"];
+      } else if (title.includes("Python")) {
+          learnList = ["Python programming basics", "Socket port scanning automation", "HTTP fuzzer implementation", "Credentials brute-forcer automation", "Reverse shell mechanisms & redirection"];
       } else if (title.includes("Insecure Design")) {
           learnList = ["Missing Rate Limiting Controls", "Business Logic Flaw Exploitation", "Predictable Admin Path Discovery", "Threat Modeling & Abuse Stories", "Secure SDLC Principles"];
       } else if (title.includes("Authentication Failures")) {
