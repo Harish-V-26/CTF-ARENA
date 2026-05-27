@@ -1,6 +1,6 @@
 const LESSONS = [
   {
-    title: "1. Insecure Design (OWASP #4)",
+    title: "1. Insecure Design (OWASP A06:2025)",
     points: 20,
     html: `
       <div class="htb-diagram-container">
@@ -25,7 +25,7 @@ const LESSONS = [
     ]
   },
   {
-    title: "2. Authentication Failures (OWASP #7)",
+    title: "2. Authentication Failures (OWASP A07:2025)",
     points: 20,
     html: `
       <div class="htb-diagram-container">
@@ -51,7 +51,7 @@ const LESSONS = [
     ]
   },
   {
-    title: "3. Software Integrity Failures (OWASP #8)",
+    title: "3. Software or Data Integrity Failures (OWASP A08:2025)",
     points: 20,
     html: `
       <div class="htb-diagram-container">
@@ -75,7 +75,7 @@ const LESSONS = [
     ]
   },
   {
-    title: "4. Logging & Monitoring Failures (OWASP #9)",
+    title: "4. Security Logging & Alerting Failures (OWASP A09:2025)",
     points: 20,
     html: `
       <div class="htb-diagram-container">
@@ -99,7 +99,7 @@ const LESSONS = [
     ]
   },
   {
-    title: "5. Error Handling Failures",
+    title: "5. Mishandling of Exceptional Conditions (OWASP A10:2025)",
     points: 20,
     html: `
       <div class="htb-diagram-container">

@@ -1,6 +1,6 @@
 const LESSONS = [
   {
-    title: "1. Broken Access Control (BAC)",
+    title: "1. Broken Access Control (A01:2025)",
     points: 50,
     html: `
       <h3>What is Access Control?</h3>
@@ -57,7 +57,7 @@ const LESSONS = [
     ]
   },
   {
-    title: "2. Cryptographic Failures",
+    title: "2. Cryptographic Failures (A04:2025)",
     points: 50,
     html: `
       <h3>What are Cryptographic Failures?</h3>
@@ -114,7 +114,7 @@ const LESSONS = [
     ]
   },
   {
-    title: "3. Injection",
+    title: "3. Injection (A05:2025)",
     points: 50,
     html: `
       <h3>What is Injection?</h3>
@@ -171,7 +171,7 @@ const LESSONS = [
     ]
   },
   {
-    title: "4. Security Misconfiguration",
+    title: "4. Security Misconfiguration (A02:2025)",
     points: 50,
     html: `
       <h3>What is Security Misconfiguration?</h3>
@@ -218,7 +218,7 @@ const LESSONS = [
     ]
   },
   {
-    title: "5. Software Supply Chain Failures",
+    title: "5. Software Supply Chain Failures (A03:2025)",
     points: 50,
     html: `
       <h3>What is a Software Supply Chain Failure?</h3>
