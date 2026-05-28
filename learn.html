@@ -233,8 +233,7 @@
             </div>
             <div class="challenge-title">OWASP Top 10 Overview</div>
             <div class="challenge-desc">
-              Master the OWASP Top 10 (2021) — from Broken Access Control and Injection to SSRF and Security Logging
-              failures, plus practical testing tools.
+              Master the OWASP Top 10 (2025) — from Broken Access Control and Supply Chain Failures to Mishandling of Exceptional Conditions.
             </div>
           </div>
           <div class="card-footer">
@@ -309,6 +308,7 @@
           </div>
         </div>
 
+<<<<<<< HEAD
         <!-- Kali Linux Advanced Commands -->
         <div class="challenge-card" data-category="web" id="card-learn-kali-advance"
           onclick="window.location.href='challenges/web/beginner/kali-advance-lab.html'" style="cursor: pointer;">
@@ -327,6 +327,26 @@
             <span class="points">350 pts</span>
             <span class="solve-count"> 7 Lessons</span>
             <a href="challenges/web/beginner/kali-advance-lab.html" class="start-btn" id="start-learn-kali-advance">Start →</a>
+=======
+        <!-- Python Scripting for Pentesting -->
+        <div class="challenge-card" data-category="web" id="card-learn-python-hacking"
+          onclick="window.location.href='challenges/web/easy/python-hacking-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #306998, #ffd43b);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy">Easy</span>
+            </div>
+            <div class="challenge-title">Python Scripting for Pentesting</div>
+            <div class="challenge-desc">
+              Learn Python scripting basics for cybersecurity. Write a port scanner, directory fuzzer, and login brute-forcer, then use them inside Kali to exploit the target container.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">260 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="challenges/web/easy/python-hacking-lab.html" class="start-btn" id="start-learn-python-hacking">Start →</a>
+>>>>>>> refs/remotes/origin/main
           </div>
         </div>
 
@@ -641,7 +661,7 @@
             </div>
             <div class="challenge-title">OWASP Top 10 Part 1 (1-5)</div>
             <div class="challenge-desc">
-              Learn and practice the first five vulnerabilities of the OWASP Top 10 (2021) — from Broken Access Control and Cryptographic Failures to SQL Injection, Security Misconfiguration, and Software Supply Chain Failures.
+              Learn and practice the first five vulnerabilities of the OWASP Top 10 (2025) — from Broken Access Control and Security Misconfiguration to Software Supply Chain Failures, Cryptographic Failures, and Injection.
             </div>
           </div>
           <div class="card-footer">
@@ -671,7 +691,6 @@
             <a href="challenges/web/easy/owasp-part2-hub.html" class="start-btn" id="start-learn-owasp-part2">Start →</a>
           </div>
         </div>
-
       </div><!-- /challenges-grid-easy-practical -->
 
     </div>
@@ -898,6 +917,8 @@
           learnList = ["Meterpreter Post-Exploitation Commands", "Post Modules & Persistence Mechanisms", "Pivoting & Port Forwarding (autoroute, portfwd)", "Evasion — Encoders, Packers & AV Bypass", "Resource Scripts & Handler Automation", "Practical Exploitation Chains"];
       } else if (title.includes("Metasploit")) {
           learnList = ["Penetration Testing Frameworks", "Core Metasploit Commands (msfconsole)", "Exploits vs Payloads vs Auxiliary Modules", "Simulated Scanner Execution"];
+      } else if (title.includes("Python")) {
+          learnList = ["Python programming basics", "Socket port scanning automation", "HTTP fuzzer implementation", "Credentials brute-forcer automation", "Reverse shell mechanisms & redirection"];
       } else if (title.includes("Insecure Design")) {
           learnList = ["Missing Rate Limiting Controls", "Business Logic Flaw Exploitation", "Predictable Admin Path Discovery", "Threat Modeling & Abuse Stories", "Secure SDLC Principles"];
       } else if (title.includes("Authentication Failures")) {
