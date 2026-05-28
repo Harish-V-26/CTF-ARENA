@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CTF LABS — Kali Linux Advanced Commands Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css"/>
+  <link rel="stylesheet" href="../../../css/web-room.css"/>
+  <style>
+    .guide-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+    .guide-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 30px;
+    }
+    .guide-card h1 {
+      color: #00ff41;
+      font-size: 2rem;
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+    }
+    .guide-card h2 {
+      color: var(--text-primary);
+      font-size: 1.3rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+      margin-top: 28px;
+    }
+    .guide-card p {
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .guide-card code {
+      background: #0d1117;
+      color: #00ff41;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+    }
+    .guide-card pre {
+      background: #0a0a0a;
+      border: 1px solid rgba(0, 255, 65, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      color: #00ff41;
+      line-height: 1.6;
+      margin: 16px 0;
+    }
+    .guide-card .cmd-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: -10px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" aria-label="Main navigation">
+  <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+  <div class="nav-links">
+    <a href="../../../index.html">Home</a>
+    <a href="../../../learn.html">Learn</a>
+    <a href="../../../challenges.html" class="active">Challenges</a>
+    <a href="../../../rules.html">Rules</a>
+  </div>
+</nav>
+
+<div class="guide-container">
+  <div class="guide-card">
+    <h1>Kali Linux Advanced Commands Walkthrough</h1>
+    <p>This guide provides a comprehensive cheatsheet and step-by-step instructions for utilizing the five foundational command-line security tools loaded in your Kali Linux Attack Box sandbox.</p>
+
+    <h2>Connecting to the Live Sandbox</h2>
+    <p>Once you click <strong>Launch Kali Machine ⇗</strong> inside the room interface, copy the generated terminal connection command. It will look like this:</p>
+    <pre>docker exec -it [container_id] bash</pre>
+    <p>Open a terminal on your host machine, paste the command, and press Enter to drop directly into your live, isolated Kali Linux shell container.</p>
+
+    <h2>1. Nmap — Network Port Scanning</h2>
+    <p>Use Nmap to discover open TCP ports, versions of running software, and target operating systems.</p>
+    <span class="cmd-label">Basic SYN Stealth Scan + OS Fingerprint</span>
+    <pre>nmap -sS -sV -O &lt;target_ip&gt;</pre>
+    <ul>
+      <li><code>-sS</code>: Tells Nmap to perform a TCP SYN stealth scan.</li>
+      <li><code>-sV</code>: Tells Nmap to probe ports and retrieve service banner versions.</li>
+      <li><code>-O</code>: Triggers operating system stack detection.</li>
+    </ul>
+
+    <h2>2. Dirb — Directory and File Bruteforcing</h2>
+    <p>Use Dirb to scan target web servers for hidden directories, files, or admin panels using a dictionary list.</p>
+    <span class="cmd-label">Simple Path Fuzzing Scan</span>
+    <pre>dirb http://&lt;target_ip&gt; /usr/share/wordlists/dirb/common.txt</pre>
+    <ul>
+      <li><code>/usr/share/wordlists/dirb/common.txt</code>: The default built-in wordlist file loaded in Kali Linux.</li>
+      <li>Look for entries showing status code <code>200 OK</code> or <code>403 Forbidden</code>.</li>
+    </ul>
+
+    <h2>3. Sqlmap — Automated SQL Injection Tool</h2>
+    <p>Scan parameters inside URLs to automatically check for SQL vulnerabilities and extract data tables.</p>
+    <span class="cmd-label">Enumerate Databases</span>
+    <pre>sqlmap -u "http://&lt;target_ip&gt;/item.php?id=1" --dbs</pre>
+    <span class="cmd-label">Dump Target Table Columns & Rows</span>
+    <pre>sqlmap -u "http://&lt;target_ip&gt;/item.php?id=1" -D database_name -T users --dump</pre>
+    <ul>
+      <li><code>-u</code>: Pass the URL parameter container to test.</li>
+      <li><code>--dbs</code>: Discover available database structures.</li>
+      <li><code>--dump</code>: Download database content directly to the terminal.</li>
+    </ul>
+
+    <h2>4. Hydra — Network Password Cracking</h2>
+    <p>Perform high-speed multi-threaded brute-forcing against login services like SSH or FTP.</p>
+    <span class="cmd-label">Crack SSH Passwords</span>
+    <pre>hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://&lt;target_ip&gt;</pre>
+    <ul>
+      <li><code>-l</code>: Specifies a single static username (e.g. <code>admin</code>).</li>
+      <li><code>-P</code>: Points to the famous <code>rockyou.txt</code> wordlist containing millions of passwords.</li>
+      <li><code>ssh://</code>: Tells Hydra to target the SSH service running on port 22.</li>
+    </ul>
+
+    <h2>5. Netcat (nc) — Raw Network Socket Utility</h2>
+    <p>Read, write, and listen across network connections. Perfect for simple connection testing or receiving reverse shell links.</p>
+    <span class="cmd-label">Start Listener on Port 4444</span>
+    <pre>nc -lvp 4444</pre>
+    <span class="cmd-label">Connect / Grab Banners on Web Server Port 80</span>
+    <pre>nc &lt;target_ip&gt; 80</pre>
+    <ul>
+      <li><code>-l</code>: Listen mode.</li>
+      <li><code>-v</code>: Verbose output.</li>
+      <li><code>-p</code>: Port specification.</li>
+    </ul>
+
+    <p style="margin-top: 40px; text-align: center;">
+      <a href="kali-advance-lab.html" style="background:#00ff41; color:#0d1117; padding: 12px 24px; text-decoration:none; font-weight:bold; border-radius:4px;">Back to Practical Room</a>
+    </p>
+  </div>
+</div>
+
+</body>
+</html>
