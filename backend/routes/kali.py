@@ -166,10 +166,14 @@ def start_kali_advance_target():
         except docker.errors.ImageNotFound:
             client.images.build(path=target_path, tag="kali-advance-target:latest", rm=True, forcerm=True)
 
+        web_port = random.randint(18000, 19000)
+        nc_port = random.randint(19001, 20000)
+
         target_container = client.containers.run(
             "kali-advance-target:latest",
             detach=True,
-            remove=True
+            remove=True,
+            ports={"80/tcp": web_port, "4444/tcp": nc_port}
         )
         target_container.reload()
 
@@ -184,7 +188,9 @@ def start_kali_advance_target():
         return jsonify({
             "status": "success",
             "container_id": target_container.id,
-            "target_ip": target_ip
+            "target_ip": target_ip,
+            "web_port": web_port,
+            "nc_port": nc_port
         })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

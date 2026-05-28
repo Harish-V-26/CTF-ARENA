@@ -9,7 +9,7 @@ import re
 conn = sqlite3.connect(":memory:", check_same_thread=False)
 cursor = conn.cursor()
 cursor.execute("CREATE TABLE users (id INTEGER, username TEXT, password TEXT)")
-cursor.execute("INSERT INTO users VALUES (1, 'admin', 'flag{sqlmap_automated_injection_complete}')")
+cursor.execute("INSERT INTO users VALUES (1, 'admin', 'sqlmap_automated_injection_complete')")
 cursor.execute("INSERT INTO users VALUES (2, 'guest', 'guestpassword')")
 cursor.execute("INSERT INTO users VALUES (3, 'user', 'userpassword')")
 conn.commit()
@@ -55,8 +55,8 @@ def handle_port_80(client_socket):
                 "<head><title>Admin Dashboard</title></head>\n"
                 "<body style='font-family: monospace; background: #0d1117; color: #e74c3c; padding: 50px;'>\n"
                 "  <h1>SecureCorp Admin Control Room</h1>\n"
-                "  <p style='color: #00ff41;'>Flag discovered via directory brute forcing!</p>\n"
-                "  <p style='font-size: 20px; font-weight: bold;'>FLAG: flag{dirb_admin_panel_unlocked}</p>\n"
+                "  <p style='color: #00ff41;'>Verification code discovered via directory brute forcing!</p>\n"
+                "  <p style='font-size: 20px; font-weight: bold;'>Verification Code: dirb_admin_panel_unlocked</p>\n"
                 "</body>\n"
                 "</html>\n"
             )
@@ -84,7 +84,7 @@ def handle_port_80(client_socket):
                 "db_host = localhost\n"
                 "db_name = secure_db\n"
                 "db_user = db_admin\n"
-                "db_pass = flag{dirb_config_backup_leak}\n"
+                "db_pass = dirb_config_backup_leak\n"
                 "\n"
                 "[ssh]\n"
                 "note = admin user has standard credentials. test using login tools.\n"

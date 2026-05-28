@@ -115,16 +115,21 @@
       <!-- Target Launch Container -->
       <div class="docker-launch" id="target-panel">
         <h3>Kali Linux Advanced Commands Target Machine</h3>
-        <p>Spin up a target container with secure firewalls, services, and hidden flags running on different ports.</p>
+        <p>Spin up a target container with secure firewalls, services, and hidden verification credentials running on different ports.</p>
         <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Launch Target Machine ⇗</button>
         <button id="target-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopTarget()">Stop Target</button>
         <a href="kali-advance-guide.html" class="btn-launch" style="margin-left: 10px; background: #3498db; color:#fff" target="_blank">Read Walkthrough</a>
         <p id="target-msg" style="display:none;color:var(--accent);font-weight:bold;margin-top:12px"></p>
         <div id="target-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid rgba(255,77,109,.2)">
-          <span style="color:#aaa;font-size:0.9em;">Target is running. Scan the following hostname or IP from your Kali container:</span>
-          <div style="background:#000;color:#2ecc71;padding:10px;border-radius:4px;font-family:var(--font-mono);font-size:.85rem;margin-top:8px;">
+          <span style="color:#aaa;font-size:0.9em;">Target is running. Scan/attack it from within your Kali container:</span>
+          <div style="background:#000;color:#2ecc71;padding:10px;border-radius:4px;font-family:var(--font-mono);font-size:.85rem;margin-top:8px;margin-bottom:12px;">
             <strong>Target Hostname:</strong> <code>target.local</code><br>
             <strong>Target IP:</strong> <span id="target-ip-display"></span>
+          </div>
+          <span style="color:#aaa;font-size:0.9em;">Or practice directly from your host machine (browser / terminal):</span>
+          <div style="background:#000;color:#3498db;padding:10px;border-radius:4px;font-family:var(--font-mono);font-size:.85rem;margin-top:8px;">
+            <strong>Web Application:</strong> <a id="target-web-link" href="#" target="_blank" style="color:#3498db;text-decoration:underline;"></a><br>
+            <strong>Netcat Connection:</strong> <code id="target-nc-command" style="color:#e67e22;background:none;padding:0;"></code>
           </div>
         </div>
       </div>
@@ -209,11 +214,20 @@
         targetIp = data.target_ip;
         sessionStorage.setItem('kali_advance_target_id', currentTargetId);
         sessionStorage.setItem('kali_advance_target_ip', targetIp);
+        sessionStorage.setItem('kali_advance_target_web_port', data.web_port);
+        sessionStorage.setItem('kali_advance_target_nc_port', data.nc_port);
+        
         msg.style.color = 'var(--accent)';
         msg.textContent = 'Target container is ready!';
         stop.style.display = 'inline-block';
         info.style.display = 'block';
         document.getElementById('target-ip-display').textContent = targetIp;
+
+        const webUrl = `http://${host}:${data.web_port}`;
+        const webLink = document.getElementById('target-web-link');
+        webLink.href = webUrl;
+        webLink.textContent = webUrl;
+        document.getElementById('target-nc-command').textContent = `nc ${host} ${data.nc_port}`;
       } else {
         msg.style.color = '#e74c3c';
         msg.textContent = 'Error: ' + data.message;
@@ -243,6 +257,8 @@
       b.textContent = 'Launch Target Machine ⇗';
       sessionStorage.removeItem('kali_advance_target_id');
       sessionStorage.removeItem('kali_advance_target_ip');
+      sessionStorage.removeItem('kali_advance_target_web_port');
+      sessionStorage.removeItem('kali_advance_target_nc_port');
       currentTargetId = null;
       targetIp = null;
     } catch (e) {
@@ -321,6 +337,8 @@
     const savedKali = sessionStorage.getItem('kali_advance_kali_id');
     const savedTarget = sessionStorage.getItem('kali_advance_target_id');
     const savedIp = sessionStorage.getItem('kali_advance_target_ip');
+    const savedWebPort = sessionStorage.getItem('kali_advance_target_web_port');
+    const savedNcPort = sessionStorage.getItem('kali_advance_target_nc_port');
     const host = window.location.hostname || 'localhost';
 
     if (savedTarget) {
@@ -336,6 +354,14 @@
       msg.textContent = 'Target container is active (Restored)';
       document.getElementById('target-info').style.display = 'block';
       document.getElementById('target-ip-display').textContent = targetIp;
+
+      if (savedWebPort && savedNcPort) {
+        const webUrl = `http://${host}:${savedWebPort}`;
+        const webLink = document.getElementById('target-web-link');
+        webLink.href = webUrl;
+        webLink.textContent = webUrl;
+        document.getElementById('target-nc-command').textContent = `nc ${host} ${savedNcPort}`;
+      }
     }
 
     if (savedKali) {
