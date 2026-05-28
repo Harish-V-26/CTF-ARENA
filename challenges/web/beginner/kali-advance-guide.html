@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="../../../css/web-room.css"/>
   <style>
     .guide-container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 40px auto;
       padding: 0 24px;
     }
@@ -32,6 +32,13 @@
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 8px;
       margin-top: 28px;
+    }
+    .guide-card h3 {
+      color: #00ff41;
+      font-size: 1.1rem;
+      margin-top: 20px;
+      margin-bottom: 6px;
+      font-family: var(--font-mono);
     }
     .guide-card p {
       color: var(--text-muted);
@@ -82,65 +89,254 @@
 <div class="guide-container">
   <div class="guide-card">
     <h1>Kali Linux Advanced Commands Walkthrough</h1>
-    <p>This guide provides a comprehensive cheatsheet and step-by-step instructions for utilizing the five foundational command-line security tools loaded in your Kali Linux Attack Box sandbox.</p>
+    <p>This guide serves as a comprehensive study sheet and practical instruction manual for the 70+ essential and advanced command-line utilities configured in your sandbox environment. Practice running these commands within your live attacker box container.</p>
 
     <h2>Connecting to the Live Sandbox</h2>
+    <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
+      <img src="../../../assets/kali_advance_diagram.png" alt="Lab Architecture Map" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+    </div>
     <p>Once you click <strong>Launch Kali Machine ⇗</strong> inside the room interface, copy the generated terminal connection command. It will look like this:</p>
     <pre>docker exec -it [container_id] bash</pre>
     <p>Open a terminal on your host machine, paste the command, and press Enter to drop directly into your live, isolated Kali Linux shell container.</p>
 
-    <h2>1. Nmap — Network Port Scanning</h2>
-    <p>Use Nmap to discover open TCP ports, versions of running software, and target operating systems.</p>
-    <span class="cmd-label">Basic SYN Stealth Scan + OS Fingerprint</span>
-    <pre>nmap -sS -sV -O &lt;target_ip&gt;</pre>
-    <ul>
-      <li><code>-sS</code>: Tells Nmap to perform a TCP SYN stealth scan.</li>
-      <li><code>-sV</code>: Tells Nmap to probe ports and retrieve service banner versions.</li>
-      <li><code>-O</code>: Triggers operating system stack detection.</li>
-    </ul>
+    <h2>1. Text Searching & Stream Manipulation</h2>
+    <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
+      <img src="../../../assets/kali_search_diagram.png" alt="Text Searching and Filtering" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+    </div>
+    <p>Master searching, slicing, translating, and redirecting data streams.</p>
+    
+    <h3>find</h3>
+    <p>Locate files in a directory tree based on criteria like name, size, type, or permissions.</p>
+    <span class="cmd-label">Find python files in /workspace</span>
+    <pre>find /workspace -type f -name "*.py"</pre>
 
-    <h2>2. Dirb — Directory and File Bruteforcing</h2>
-    <p>Use Dirb to scan target web servers for hidden directories, files, or admin panels using a dictionary list.</p>
-    <span class="cmd-label">Simple Path Fuzzing Scan</span>
-    <pre>dirb http://&lt;target_ip&gt; /usr/share/wordlists/dirb/common.txt</pre>
-    <ul>
-      <li><code>/usr/share/wordlists/dirb/common.txt</code>: The default built-in wordlist file loaded in Kali Linux.</li>
-      <li>Look for entries showing status code <code>200 OK</code> or <code>403 Forbidden</code>.</li>
-    </ul>
+    <h3>grep</h3>
+    <p>Global Regular Expression Print. Search files for matching text lines.</p>
+    <span class="cmd-label">Search case-insensitively and recursively for "todo"</span>
+    <pre>grep -ri "todo" /workspace/text_processing/</pre>
 
-    <h2>3. Sqlmap — Automated SQL Injection Tool</h2>
-    <p>Scan parameters inside URLs to automatically check for SQL vulnerabilities and extract data tables.</p>
-    <span class="cmd-label">Enumerate Databases</span>
-    <pre>sqlmap -u "http://&lt;target_ip&gt;/item.php?id=1" --dbs</pre>
-    <span class="cmd-label">Dump Target Table Columns & Rows</span>
-    <pre>sqlmap -u "http://&lt;target_ip&gt;/item.php?id=1" -D database_name -T users --dump</pre>
-    <ul>
-      <li><code>-u</code>: Pass the URL parameter container to test.</li>
-      <li><code>--dbs</code>: Discover available database structures.</li>
-      <li><code>--dump</code>: Download database content directly to the terminal.</li>
-    </ul>
+    <h3>xargs</h3>
+    <p>Build and execute command lines from standard input streams.</p>
+    <span class="cmd-label">Find all files ending in .conf and search them for DB_HOST config</span>
+    <pre>find /workspace -name "*.conf" | xargs grep "DB_HOST"</pre>
 
-    <h2>4. Hydra — Network Password Cracking</h2>
-    <p>Perform high-speed multi-threaded brute-forcing against login services like SSH or FTP.</p>
-    <span class="cmd-label">Crack SSH Passwords</span>
-    <pre>hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://&lt;target_ip&gt;</pre>
-    <ul>
-      <li><code>-l</code>: Specifies a single static username (e.g. <code>admin</code>).</li>
-      <li><code>-P</code>: Points to the famous <code>rockyou.txt</code> wordlist containing millions of passwords.</li>
-      <li><code>ssh://</code>: Tells Hydra to target the SSH service running on port 22.</li>
-    </ul>
+    <h3>cut</h3>
+    <p>Slices out sections from each line of files (columns/fields).</p>
+    <span class="cmd-label">Extract the 2nd field of a comma-separated file</span>
+    <pre>cut -d',' -f2 /workspace/text_processing/employees.txt</pre>
 
-    <h2>5. Netcat (nc) — Raw Network Socket Utility</h2>
-    <p>Read, write, and listen across network connections. Perfect for simple connection testing or receiving reverse shell links.</p>
-    <span class="cmd-label">Start Listener on Port 4444</span>
-    <pre>nc -lvp 4444</pre>
-    <span class="cmd-label">Connect / Grab Banners on Web Server Port 80</span>
-    <pre>nc &lt;target_ip&gt; 80</pre>
-    <ul>
-      <li><code>-l</code>: Listen mode.</li>
-      <li><code>-v</code>: Verbose output.</li>
-      <li><code>-p</code>: Port specification.</li>
-    </ul>
+    <h3>sort & uniq</h3>
+    <p>Organize data lines alphabetically or numerically, and remove duplicates.</p>
+    <span class="cmd-label">Sort logs, extract IP addresses, and count unique occurrences</span>
+    <pre>cut -d' ' -f1 /workspace/text_processing/access.log | sort | uniq -c</pre>
+
+    <h3>tr</h3>
+    <p>Translate, squeeze, or delete characters from standard input streams.</p>
+    <span class="cmd-label">Translate lower to upper case</span>
+    <pre>cat file.txt | tr 'a-z' 'A-Z'</pre>
+
+    <h3>tee</h3>
+    <p>Duplicate standard input, showing it on screen while saving it to a file.</p>
+    <span class="cmd-label">Pipe output to screen and save file</span>
+    <pre>echo "test" | tee output.txt</pre>
+
+    <h2>2. Stream Editing & Structured Data Parsing</h2>
+    <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
+      <img src="../../../assets/kali_stream_diagram.png" alt="Stream Editing and structured JSON data parsing" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+    </div>
+    <p>Advanced manipulation tools for configuration stream editing and JSON structures.</p>
+
+    <h3>sed</h3>
+    <p>Stream Editor. Used to perform basic text transformations on an input stream.</p>
+    <span class="cmd-label">Replace "PORT=8080" with "PORT=9000" globally inline in a file</span>
+    <pre>sed -i 's/PORT=8080/PORT=9000/g' /workspace/text_processing/config/env/dev.conf</pre>
+
+    <h3>awk</h3>
+    <p>Pattern scanning and processing language. Ideal for processing column/database styled text.</p>
+    <span class="cmd-label">Print active employee names and salaries (columns 2 and 4)</span>
+    <pre>awk -F',' '$5 == "Active" {print $2 " earns $" $4}' /workspace/text_processing/employees.txt</pre>
+
+    <h3>jq</h3>
+    <p>Command-line JSON processor. Slices, filters, maps, and transforms JSON data structures.</p>
+    <span class="cmd-label">Extract a nested key value from api_response.json</span>
+    <pre>jq '.data.user.meta.api_token' /workspace/text_processing/api_response.json</pre>
+
+    <h2>3. Network Communication & Data Transfer</h2>
+    <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
+      <img src="../../../assets/kali_network_diagram.png" alt="Network Communication Flow" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+    </div>
+    <p>Utilities to fetch web pages, interact with sockets, and analyze traffic.</p>
+
+    <h3>curl & wget</h3>
+    <p>Transfer data from or to a server, or download files directly.</p>
+    <span class="cmd-label">Retrieve response headers using curl</span>
+    <pre>curl -I http://target.local</pre>
+    <span class="cmd-label">Download a file using wget</span>
+    <pre>wget http://target.local/backup/config.bak -O /tmp/config.bak</pre>
+
+    <h3>ssh, scp & rsync</h3>
+    <p>Secure connections, copying, and directory synchronization over SSH networks.</p>
+    <span class="cmd-label">Login to SSH target machine</span>
+    <pre>ssh admin@target.local</pre>
+    <span class="cmd-label">Copy a local file to remote target machine</span>
+    <pre>scp local.txt admin@target.local:/tmp/</pre>
+    <span class="cmd-label">Synchronize a folder efficiently</span>
+    <pre>rsync -avz /workspace/text_processing/ admin@target.local:/tmp/sync_dir/</pre>
+
+    <h3>nc (Netcat) & socat</h3>
+    <p>Establish raw network socket connections and create bidirectional traffic relays.</p>
+    <span class="cmd-label">Connect to target port 4444</span>
+    <pre>nc target.local 4444</pre>
+    <span class="cmd-label">Relay incoming traffic on port 8080 to target.local port 80</span>
+    <pre>socat TCP4-LISTEN:8080,fork TCP4:target.local:80</pre>
+
+    <h3>tcpdump</h3>
+    <p>Command line packet analyzer (sniffer) that prints network packets details on screen.</p>
+    <span class="cmd-label">Sniff and display port 80 HTTP packet bodies in ASCII</span>
+    <pre>tcpdump -i eth0 -A 'port 80'</pre>
+
+    <h2>4. Network Reconnaissance & Troubleshooting</h2>
+    <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
+      <img src="../../../assets/kali_recon_diagram.png" alt="Network Diagnostics & Reconnaissance" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+    </div>
+    <p>Inspect local network interfaces, open sockets, DNS, and path latency.</p>
+
+    <h3>ss</h3>
+    <p>Socket Statistics. Lists active TCP, UDP, raw, and Unix sockets, replacing older netstat.</p>
+    <span class="cmd-label">Display all listening sockets with PIDs and numeric ports</span>
+    <pre>ss -tulpn</pre>
+
+    <h3>lsof</h3>
+    <p>List Open Files. Linux treats sockets as files, so lsof lists processes using ports.</p>
+    <span class="cmd-label">List processes listening on port 80</span>
+    <pre>lsof -i :80</pre>
+
+    <h3>dig</h3>
+    <p>Domain Information Groper. Query DNS name servers for resource records.</p>
+    <span class="cmd-label">Lookup domain records for target.local</span>
+    <pre>dig target.local ANY</pre>
+
+    <h3>ip</h3>
+    <p>Show and manipulate routing, network devices, interfaces, and policy routing.</p>
+    <span class="cmd-label">Show active network interface configurations</span>
+    <pre>ip addr show</pre>
+
+    <h3>traceroute & mtr</h3>
+    <p>Trace routing pathways and run continuous ping latency checks to diagnostic destinations.</p>
+    <span class="cmd-label">Trace network path</span>
+    <pre>traceroute target.local</pre>
+    <span class="cmd-label">Run interactive network path diagnosis</span>
+    <pre>mtr target.local</pre>
+
+    <h2>5. Process Control & Job Scheduling</h2>
+    <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
+      <img src="../../../assets/kali_process_diagram.png" alt="Process Control & Scheduling" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+    </div>
+    <p>Monitor resources, manage background jobs, terminate tasks, and schedule automation.</p>
+
+    <h3>ps & htop</h3>
+    <p>Inspect running processes via snapshots or dynamic real-time panels.</p>
+    <span class="cmd-label">Print active process tree snapshot</span>
+    <pre>ps auxf</pre>
+
+    <h3>kill & pkill</h3>
+    <p>Terminate processes using signals (default SIGTERM=15, force SIGKILL=9).</p>
+    <span class="cmd-label">Force kill process by PID</span>
+    <pre>kill -9 1234</pre>
+    <span class="cmd-label">Kill processes by name matching</span>
+    <pre>pkill -f daemon_loop</pre>
+
+    <h3>jobs, bg, fg & nohup</h3>
+    <p>Bash job control. Suspend, resume, background, and protect tasks from terminal hangups.</p>
+    <span class="cmd-label">Run a process in the background</span>
+    <pre>sleep 100 &</pre>
+    <span class="cmd-label">Resume suspended job in background</span>
+    <pre>bg %1</pre>
+    <span class="cmd-label">Bring background job to foreground</span>
+    <pre>fg %1</pre>
+    <span class="cmd-label">Run task immune to session close</span>
+    <pre>nohup /workspace/network_practice/daemon_loop.sh &</pre>
+
+    <h3>watch & timeout</h3>
+    <p>Repeated execution monitor and command execution duration enforcement limits.</p>
+    <span class="cmd-label">Monitor file changes every 1 second</span>
+    <pre>watch -n 1 ls -l /workspace/text_processing/</pre>
+    <span class="cmd-label">Force command execution to terminate after 5 seconds</span>
+    <pre>timeout 5s ping target.local</pre>
+
+    <h3>cron & crontab</h3>
+    <p>Schedule scripts to execute periodically in the background.</p>
+    <span class="cmd-label">Edit cron schedules</span>
+    <pre>crontab -e</pre>
+
+    <h2>6. Binary Analysis & Low-Level Diagnostics</h2>
+    <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
+      <img src="../../../assets/kali_binary_diagram.png" alt="Binary Analysis & System Calls" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+    </div>
+    <p>Decompile string assets, inspect byte codes, and trace process kernel system calls.</p>
+
+    <h3>strings</h3>
+    <p>Print the sequences of printable characters in files, especially compiled binaries.</p>
+    <span class="cmd-label">Examine strings inside compiled security_scanner</span>
+    <pre>strings /workspace/binary_analysis/security_scanner</pre>
+
+    <h3>hexdump & xxd</h3>
+    <p>Inspect raw binary files in hexadecimal representations and reverse hex formats.</p>
+    <span class="cmd-label">Examine hexdump output of a file</span>
+    <pre>hexdump -C /workspace/binary_analysis/hex_raw.txt</pre>
+    <span class="cmd-label">Convert hex text back into a raw binary output</span>
+    <pre>xxd -r -p /workspace/binary_analysis/hex_raw.txt</pre>
+
+    <h3>base64</h3>
+    <p>Encode and decode data using base64 representation standard.</p>
+    <span class="cmd-label">Decode a base64 encoded text file</span>
+    <pre>base64 -d /workspace/binary_analysis/b64_encoded.txt</pre>
+
+    <h3>strace & ltrace</h3>
+    <p>Monitor system calls (syscalls) and shared library calls triggered by processes.</p>
+    <span class="cmd-label">Trace kernel actions for file openings or socket bindings</span>
+    <pre>strace /workspace/binary_analysis/security_scanner open_secret</pre>
+
+    <h2>7. Storage, Permissions, Services & Environment</h2>
+    <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
+      <img src="../../../assets/kali_storage_diagram.png" alt="Storage and Permissions" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+    </div>
+    <p>Manage file system access, mount partitions, read kernel logs, and configure paths.</p>
+
+    <h3>chmod, chown, getfacl & setfacl</h3>
+    <p>Govern access controls. Read and write permissions (octal format like 600, 755) and fine-grained user ACLs.</p>
+    <span class="cmd-label">Restrict file access to owner only</span>
+    <pre>chmod 600 secrets.txt</pre>
+    <span class="cmd-label">Check custom file access lists</span>
+    <pre>getfacl /workspace/file_management/permissions/shared.log</pre>
+    <span class="cmd-label">Grant read permission to specific user</span>
+    <pre>setfacl -m u:guest_operator:r /workspace/file_management/permissions/shared.log</pre>
+
+    <h3>tar, gzip & 7z</h3>
+    <p>Archive and compress directories using zip, gzip, or 7z formats.</p>
+    <span class="cmd-label">Extract a tarball archive</span>
+    <pre>tar -xzvf archive.tar.gz</pre>
+
+    <h3>mount, umount, lsblk, fdisk & parted</h3>
+    <p>Inspect physical block storage devices, manage partition structures, and mount partitions.</p>
+    <span class="cmd-label">Display active block storage device list</span>
+    <pre>lsblk</pre>
+
+    <h3>systemctl, journalctl & dmesg</h3>
+    <p>Control systemd daemon services, inspect systemd logs, and view kernel buffer messages.</p>
+    <span class="cmd-label">Display kernel messages</span>
+    <pre>dmesg | tail -n 20</pre>
+
+    <h3>history, alias, env, export & source</h3>
+    <p>View shell command histories, define aliases, print variables, export properties, and evaluate files.</p>
+    <span class="cmd-label">Create a permanent terminal command alias</span>
+    <pre>alias lsa="ls -lah"
+export PATH="/workspace/bin:$PATH"</pre>
+
+    <h3>bash, python3, perl, git & docker</h3>
+    <p>Interact with scripts, source control repositories, and launch containerized services.</p>
+    <span class="cmd-label">Query docker container status from the Kali machine</span>
+    <pre>docker ps</pre>
 
     <p style="margin-top: 40px; text-align: center;">
       <a href="kali-advance-lab.html" style="background:#00ff41; color:#0d1117; padding: 12px 24px; text-decoration:none; font-weight:bold; border-radius:4px;">Back to Practical Room</a>

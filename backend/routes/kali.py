@@ -5,40 +5,88 @@ import docker
 from flask import jsonify, request
 from . import kali_bp
 
-# Connect to the local Docker daemon
-from .docker_client import get_docker_client
-client = get_docker_client()
+# Dynamic Docker client proxy to avoid caching connection failures on startup
+class DockerClientProxy:
+    @property
+    def _client(self):
+        from .docker_client import get_docker_client
+        return get_docker_client()
+
+    def __getattr__(self, name):
+        c = self._client
+        if not c:
+            raise RuntimeError("Docker daemon is not running or accessible.")
+        return getattr(c, name)
+
+    def __bool__(self):
+        return self._client is not None
+
+client = DockerClientProxy()
+
 
 cleanup_timers = {}
 
 
 @kali_bp.route('/api/start-kali', methods=['POST'])
 def start_kali():
-    """Legacy: start a headless Kali container (no terminal UI)."""
+    """Start a headless Kali container and its associated target container."""
     if not client:
         return jsonify({"status": "error", "message": "Docker daemon is not running or accessible."}), 500
     try:
+        # Resolve absolute paths to avoid working directory issues
+        import os
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        kali_path = os.path.join(base_dir, "kalilinux")
+        target_path = os.path.join(base_dir, "docker", "kali-advance-target")
+
         # Build the custom kali-rolling image if it does not exist locally
         try:
             client.images.get("kali-rolling:latest")
         except docker.errors.ImageNotFound:
-            client.images.build(path="./kalilinux", tag="kali-rolling:latest", rm=True, forcerm=True)
+            client.images.build(path=kali_path, tag="kali-rolling:latest", rm=True, forcerm=True)
 
+        # Build the custom target image if it does not exist locally
+        try:
+            client.images.get("kali-advance-target:latest")
+        except docker.errors.ImageNotFound:
+            client.images.build(path=target_path, tag="kali-advance-target:latest", rm=True, forcerm=True)
+
+
+        # Start the target container
+        target_container = client.containers.run(
+            "kali-advance-target:latest",
+            detach=True,
+            remove=True
+        )
+        target_container.reload()
+
+        target_ip = "Unknown"
+        networks = target_container.attrs.get("NetworkSettings", {}).get("Networks", {})
+        for net_info in networks.values():
+            ip = net_info.get("IPAddress")
+            if ip:
+                target_ip = ip
+                break
+
+        # Start the Kali container
         container = client.containers.run(
             "kali-rolling:latest",
             command="tail -f /dev/null",
             detach=True,
             remove=True,
-            extra_hosts={"host.docker.internal": "host-gateway"}
+            extra_hosts={"host.docker.internal": "host-gateway", "target.local": target_ip}
         )
 
         return jsonify({
             "status": "success",
             "container_id": container.id,
-            "message": "Kali container started."
+            "target_container_id": target_container.id,
+            "target_ip": target_ip,
+            "message": "Kali container and target started."
         })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
 
 
 @kali_bp.route('/api/start-kali-terminal', methods=['POST'])
@@ -103,10 +151,99 @@ def start_kali_terminal():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-@kali_bp.route('/api/stop-kali/<container_id>', methods=['POST'])
-def stop_kali(container_id):
+@kali_bp.route('/api/start-kali-advance-target', methods=['POST'])
+def start_kali_advance_target():
     if not client:
-        return jsonify({"status": "error", "message": "Docker not available"}), 500
+        return jsonify({"status": "error", "message": "Docker daemon is not running or accessible."}), 500
+    try:
+        import os
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        target_path = os.path.join(base_dir, "docker", "kali-advance-target")
+
+        # Build the custom target image if it does not exist locally
+        try:
+            client.images.get("kali-advance-target:latest")
+        except docker.errors.ImageNotFound:
+            client.images.build(path=target_path, tag="kali-advance-target:latest", rm=True, forcerm=True)
+
+        target_container = client.containers.run(
+            "kali-advance-target:latest",
+            detach=True,
+            remove=True
+        )
+        target_container.reload()
+
+        target_ip = "Unknown"
+        networks = target_container.attrs.get("NetworkSettings", {}).get("Networks", {})
+        for net_info in networks.values():
+            ip = net_info.get("IPAddress")
+            if ip:
+                target_ip = ip
+                break
+
+        return jsonify({
+            "status": "success",
+            "container_id": target_container.id,
+            "target_ip": target_ip
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@kali_bp.route('/api/stop-kali-advance-target/<container_id>', methods=['POST'])
+def stop_kali_advance_target(container_id):
+    if not client:
+        return jsonify({"status": "error", "message": "Docker not available."}), 500
+    if container_id in cleanup_timers:
+        cleanup_timers[container_id].cancel()
+        cleanup_timers.pop(container_id, None)
+    try:
+        container = client.containers.get(container_id)
+        container.stop()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@kali_bp.route('/api/start-kali-advance-kali', methods=['POST'])
+def start_kali_advance_kali():
+    if not client:
+        return jsonify({"status": "error", "message": "Docker daemon not available."}), 500
+    try:
+        data = request.get_json() or {}
+        target_ip = data.get("target_ip", "127.0.0.1")
+
+        import os
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        kali_path = os.path.join(base_dir, "kalilinux")
+
+        # Build the custom kali-rolling image if it does not exist locally
+        try:
+            client.images.get("kali-rolling:latest")
+        except docker.errors.ImageNotFound:
+            client.images.build(path=kali_path, tag="kali-rolling:latest", rm=True, forcerm=True)
+
+        container = client.containers.run(
+            "kali-rolling:latest",
+            command="tail -f /dev/null",
+            detach=True,
+            remove=True,
+            extra_hosts={"host.docker.internal": "host-gateway", "target.local": target_ip},
+            volumes={"/var/run/docker.sock": {"bind": "/var/run/docker.sock", "mode": "rw"}}
+        )
+
+        return jsonify({
+            "status": "success",
+            "container_id": container.id
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@kali_bp.route('/api/stop-kali-advance-kali/<container_id>', methods=['POST'])
+def stop_kali_advance_kali(container_id):
+    if not client:
+        return jsonify({"status": "error", "message": "Docker not available."}), 500
     if container_id in cleanup_timers:
         cleanup_timers[container_id].cancel()
         cleanup_timers.pop(container_id, None)

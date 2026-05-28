@@ -15,11 +15,11 @@
       color: #ecf0f1;
       text-align: center;
       border: 1px solid var(--border);
-      border-left: 4px solid #00ff41;
+      border-left: 4px solid var(--accent);
     }
     .docker-launch h3 {
       margin-top: 0;
-      color: #00ff41;
+      color: var(--accent);
       font-size: 1rem;
       letter-spacing: .5px;
       font-family: var(--font-mono);
@@ -34,7 +34,7 @@
       padding: 5px 10px;
       border-radius: 4px;
       font-size: 1em;
-      color: #00ff41;
+      color: var(--accent);
       display: inline-block;
       margin: 6px 0;
       font-family: var(--font-mono);
@@ -43,8 +43,8 @@
       display: inline-block;
       margin-top: 8px;
       padding: 10px 20px;
-      background: #00ff41;
-      color: #0d1117;
+      background: var(--accent);
+      color: #fff;
       text-decoration: none;
       border-radius: var(--radius-sm);
       font-weight: bold;
@@ -54,101 +54,11 @@
       cursor: pointer;
     }
     .btn-launch:hover {
-      background: #00cc33;
-      box-shadow: 0 0 20px rgba(0,255,65,.3);
-    }
-    
-    /* Green neon overrides */
-    .overall-progress-fill { background: #00ff41!important; }
-    .overall-progress-pct { color: #00ff41!important; }
-    .nav-item.active { background: rgba(0,255,65,.08)!important; border-left-color: #00ff41!important; }
-    .nav-item.completed .nav-dot { background: #00ff41!important; border-color: #00ff41!important; }
-    .nav-item.active .nav-dot { border-color: #00ff41!important; box-shadow: 0 0 0 3px rgba(0,255,65,.2)!important; }
-    .nav-item.completed .nav-pts { color: #00ff41!important; }
-    .ch-pts { color: #00ff41!important; background: rgba(0,255,65,.1)!important; border-color: rgba(0,255,65,.3)!important; }
-    .step-dot.done { background: #00ff41!important; }
-    .step-dot.current { background: rgba(0,255,65,.5)!important; }
-    .q-num { background: rgba(0,255,65,.1)!important; color: #00ff41!important; }
-    .question-card.correct { border-color: #00ff41!important; }
-    .feedback.correct-msg { background: rgba(0,255,65,.1)!important; color: #00ff41!important; border-color: rgba(0,255,65,.25)!important; }
-    .check-btn { background: #00ff41!important; color: #0d1117!important; }
-    .check-btn:hover { background: #00cc33!important; }
-    .answer-input:focus { border-color: #00ff41!important; }
-    .completion-card { border-color: rgba(0,255,65,0.3)!important; box-shadow: 0 0 60px rgba(0,255,65,0.07)!important; }
-    .score-pill { color: #00ff41!important; background: rgba(0,255,65,0.1)!important; border-color: rgba(0,255,65,0.3)!important; }
-    .module-label.completed .mod-num { background: rgba(0,255,65,0.15)!important; color: #00ff41!important; }
-    .nav-btn.primary { background: #00ff41!important; color: #0d1117!important; border-color: #00ff41!important; }
-    .nav-btn.primary:hover:not(:disabled) { background: #00cc33!important; border-color: #00cc33!important; }
-    .nav-btn:hover:not(:disabled) { border-color: #00ff41!important; color: #00ff41!important; }
-
-    /* Hero section */
-    .kali-hero {
-      background: linear-gradient(135deg, #090e17 0%, #0c1524 50%, #0f233c 100%);
-      border-bottom: 1px solid rgba(0, 255, 65, 0.2);
-      padding: 40px 48px 32px;
-      position: relative;
-      overflow: hidden;
-    }
-    .kali-hero::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 65, 0.03) 2px, rgba(0, 255, 65, 0.03) 4px);
-      pointer-events: none;
-    }
-    .kali-hero h1 {
-      font-family: var(--font-mono);
-      font-size: 28px;
-      color: #00ff41;
-      margin-bottom: 8px;
-      text-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
-    }
-    .kali-hero p {
-      color: var(--text-muted);
-      font-size: 14px;
-      max-width: 600px;
-      line-height: 1.6;
-    }
-    .kali-hero .badge-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    .kali-badge {
-      background: rgba(0, 255, 65, 0.1);
-      color: #00ff41;
-      border: 1px solid rgba(0, 255, 65, 0.3);
-      border-radius: 999px;
-      padding: 4px 12px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      background: var(--accent-hover);
+      box-shadow: 0 0 20px rgba(255, 77, 109, 0.3);
     }
 
-    /* Terminal logs */
-    .live-logs {
-      background: #0a0a0a;
-      border: 1px solid rgba(0, 255, 65, 0.15);
-      border-radius: 8px;
-      padding: 14px;
-      margin-top: 16px;
-      max-height: 150px;
-      overflow: hidden;
-      position: relative;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: rgba(0, 255, 65, 0.5);
-      line-height: 1.7;
-    }
-    .live-logs::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 40px;
-      background: linear-gradient(transparent, #0a0a0a);
-    }
+
   </style>
 </head>
 <body>
@@ -189,16 +99,7 @@
   <!-- MAIN -->
   <div class="room-main">
 
-    <!-- Hero -->
-    <div class="kali-hero">
-      <div class="badge-row">
-        <span class="kali-badge">Kali Linux</span>
-        <span class="kali-badge">Beginner</span>
-        <span class="kali-badge">5 Lessons</span>
-      </div>
-      <h1>$ Advanced Commands Lab_</h1>
-      <p>Explore the most powerful terminal-based commands in Kali Linux. Practice port scanning with Nmap, directory fuzzing with Dirb, automated SQL injection with Sqlmap, brute forcing with Hydra, and networking with Netcat.</p>
-    </div>
+
 
     <div class="challenge-header">
       <div class="ch-breadcrumb">Web Challenges › Beginner Level › <span id="ch-crumb">Lesson 1</span></div>
@@ -211,31 +112,43 @@
 
     <div class="room-body" id="room-body">
 
-      <!-- Kali Launch Container -->
-      <div class="docker-launch" id="kali-panel">
-        <h3> Kali Linux — Live Attack Sandbox</h3>
-        <p>Spin up your private, containerized Kali environment to execute and practice these tools in real-time.</p>
-        <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Launch Kali Machine ⇗</button>
-        <button id="kali-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopKali()">Stop Kali</button>
+      <!-- Target Launch Container -->
+      <div class="docker-launch" id="target-panel">
+        <h3>Kali Linux Advanced Commands Target Machine</h3>
+        <p>Spin up a target container with secure firewalls, services, and hidden flags running on different ports.</p>
+        <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Launch Target Machine ⇗</button>
+        <button id="target-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopTarget()">Stop Target</button>
         <a href="kali-advance-guide.html" class="btn-launch" style="margin-left: 10px; background: #3498db; color:#fff" target="_blank">Read Walkthrough</a>
-        <p id="kali-msg" style="display:none;color:#00ff41;font-weight:bold;margin-top:12px"></p>
-        <div id="kali-terminal-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid rgba(0,255,65,.2)">
-          <p style="color:var(--text-muted);margin-top:0;font-size:.85rem">Your Kali container is ready. Connect via terminal:</p>
-          <code id="kali-command" style="display:block;background:#000;color:#00ff41;padding:10px;margin-top:8px;border-radius:4px;user-select:all;font-family:var(--font-mono);font-size:.85rem"></code>
+        <p id="target-msg" style="display:none;color:var(--accent);font-weight:bold;margin-top:12px"></p>
+        <div id="target-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid rgba(255,77,109,.2)">
+          <span style="color:#aaa;font-size:0.9em;">Target is running. Scan the following hostname or IP from your Kali container:</span>
+          <div style="background:#000;color:#2ecc71;padding:10px;border-radius:4px;font-family:var(--font-mono);font-size:.85rem;margin-top:8px;">
+            <strong>Target Hostname:</strong> <code>target.local</code><br>
+            <strong>Target IP:</strong> <span id="target-ip-display"></span>
+          </div>
         </div>
       </div>
 
-      <!-- Live Log Stream -->
-      <div class="live-logs" id="live-logs">
-        <div>[INFO] Advanced Kali Command lab initialized</div>
-        <div>[SYS] Attack container ready to run...</div>
+      <!-- Kali Launch Container -->
+      <div class="docker-launch" id="kali-panel">
+        <h3>Kali Linux — Attack Box</h3>
+        <p>Spin up your private, containerized Kali environment pre-loaded with scanning and penetration testing tools.</p>
+        <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Launch Kali Machine ⇗</button>
+        <button id="kali-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopKali()">Stop Kali</button>
+        <p id="kali-msg" style="display:none;color:var(--accent);font-weight:bold;margin-top:12px"></p>
+        <div id="kali-terminal-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid rgba(255,77,109,.2)">
+          <p style="color:var(--text-muted);margin-top:0;font-size:.85rem">Your Kali container is ready. Connect via terminal:</p>
+          <code id="kali-command" style="display:block;background:#000;color:#2ecc71;padding:10px;margin-top:8px;border-radius:4px;user-select:all;font-family:var(--font-mono);font-size:.85rem"></code>
+        </div>
       </div>
+
+
 
       <!-- Lesson Panel -->
       <div id="lesson-panel">
         <div class="reading-panel">
           <div class="reading-label"><span></span> Instructions &amp; Tasks</div>
-          <div class="reading-text" id="reading-text" style="white-space:pre-wrap"></div>
+          <div class="reading-text" id="reading-text" style="white-space: normal;"></div>
         </div>
         <div class="qa-section" id="qa-section">
           <div class="qa-heading">Check Your Understanding</div>
@@ -246,16 +159,16 @@
       <!-- Completion -->
       <div class="completion-card" id="completion-card">
         <div class="trophy-icon"></div>
-        <h2 style="color:#00ff41">Kali Linux Mastered!</h2>
-        <p>Congratulations! You have completed the Kali Linux Advanced Commands Room. You have learned the foundations of network scanning, directory fuzzing, SQL automation, brute forcing, and raw network sockets.</p>
-        <div class="score-pill" id="score-pill">0 / 250 pts</div>
-        <a href="../../../challenges.html" class="btn btn-primary" style="background:#00ff41;color:#0d1117">← Back to Challenges</a>
+        <h2 style="color:var(--accent)">Kali Linux Mastered!</h2>
+        <p>Congratulations! You have completed the Kali Linux Advanced Commands Room. You have learned the foundations of advanced text searching, stream editing, process management, binary analysis, networking troubleshooting, storage management, and environment automation.</p>
+        <div class="score-pill" id="score-pill">0 / 350 pts</div>
+        <a href="../../../challenges.html" class="btn btn-primary" style="background:var(--accent);color:#fff">← Back to Challenges</a>
       </div>
 
     </div>
 
     <div class="room-footer-nav">
-      <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">5</span></div>
+      <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">7</span></div>
       <div class="nav-btns">
         <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Previous</button>
         <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
@@ -268,33 +181,74 @@
 <script src="kali-advance-data.js"></script>
 <script>
   let currentKaliId = null;
+  let currentTargetId = null;
+  let targetIp = null;
 
-  // Fake logs animation
-  const logMessages = [
-    '[SCAN] Initializing Nmap scan...',
-    '[SCAN] Port 22: open (ssh)',
-    '[SCAN] Port 80: open (http)',
-    '[DIRB] Fuzzing directory paths...',
-    '[DIRB] Found: /admin (200 OK)',
-    '[DIRB] Found: /backup (200 OK)',
-    '[SQL] Running sqlmap on parameters...',
-    '[SQL] Vulnerability: union-based detected',
-    '[SQL] Table extracted: members',
-    '[HYDRA] Launching brute-force threads...',
-    '[HYDRA] Success! admin : password123',
-    '[NETCAT] Starting local socket listener...',
-    '[NETCAT] Connection received from 10.10.10.20'
-  ];
-  let logIdx = 0;
-  setInterval(() => {
-    const el = document.getElementById('live-logs');
-    if (!el) return;
-    const div = document.createElement('div');
-    div.textContent = logMessages[logIdx % logMessages.length];
-    el.appendChild(div);
-    if (el.children.length > 8) el.removeChild(el.firstChild);
-    logIdx++;
-  }, 3000);
+
+
+  // Target Container controls
+  async function launchTarget() {
+    const btn = document.getElementById('target-launch-btn');
+    const stop = document.getElementById('target-stop-btn');
+    const msg = document.getElementById('target-msg');
+    const info = document.getElementById('target-info');
+    
+    btn.style.display = 'none';
+    stop.style.display = 'none';
+    info.style.display = 'none';
+    msg.style.display = 'block';
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Spinning up target container...';
+
+    try {
+      const host = window.location.hostname || 'localhost';
+      const res = await fetch(`http://${host}:5000/api/start-kali-advance-target`, { method: 'POST' });
+      const data = await res.json();
+      if (data.status === 'success') {
+        currentTargetId = data.container_id;
+        targetIp = data.target_ip;
+        sessionStorage.setItem('kali_advance_target_id', currentTargetId);
+        sessionStorage.setItem('kali_advance_target_ip', targetIp);
+        msg.style.color = 'var(--accent)';
+        msg.textContent = 'Target container is ready!';
+        stop.style.display = 'inline-block';
+        info.style.display = 'block';
+        document.getElementById('target-ip-display').textContent = targetIp;
+      } else {
+        msg.style.color = '#e74c3c';
+        msg.textContent = 'Error: ' + data.message;
+        btn.style.display = 'inline-block';
+      }
+    } catch (e) {
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Failed to reach backend.';
+      btn.style.display = 'inline-block';
+    }
+  }
+
+  async function stopTarget() {
+    if (!currentTargetId) return;
+    const host = window.location.hostname || 'localhost';
+    const msg = document.getElementById('target-msg');
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Stopping target...';
+    try {
+      await fetch(`http://${host}:5000/api/stop-kali-advance-target/${currentTargetId}`, { method: 'POST' });
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Target stopped safely.';
+      document.getElementById('target-stop-btn').style.display = 'none';
+      document.getElementById('target-info').style.display = 'none';
+      const b = document.getElementById('target-launch-btn');
+      b.style.display = 'inline-block';
+      b.textContent = 'Launch Target Machine ⇗';
+      sessionStorage.removeItem('kali_advance_target_id');
+      sessionStorage.removeItem('kali_advance_target_ip');
+      currentTargetId = null;
+      targetIp = null;
+    } catch (e) {
+      msg.textContent = 'Error stopping container.';
+    }
+  }
 
   // Kali Container controls
   async function launchKali() {
@@ -310,14 +264,20 @@
     msg.style.color = '#e67e22';
     msg.textContent = 'Spinning up Kali container...';
 
+    const currentTargetIp = sessionStorage.getItem('kali_advance_target_ip') || '127.0.0.1';
+
     try {
       const host = window.location.hostname || 'localhost';
-      const res = await fetch(`http://${host}:5000/api/start-kali`, { method: 'POST' });
+      const res = await fetch(`http://${host}:5000/api/start-kali-advance-kali`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target_ip: currentTargetIp })
+      });
       const data = await res.json();
       if (data.status === 'success') {
         currentKaliId = data.container_id;
-        sessionStorage.setItem('kali_advance_container_id', currentKaliId);
-        msg.style.color = '#00ff41';
+        sessionStorage.setItem('kali_advance_kali_id', currentKaliId);
+        msg.style.color = 'var(--accent)';
         msg.textContent = 'Kali Linux container is ready!';
         stop.style.display = 'inline-block';
         info.style.display = 'block';
@@ -341,7 +301,7 @@
     msg.style.color = '#e67e22';
     msg.textContent = 'Stopping Kali...';
     try {
-      await fetch(`http://${host}:5000/api/stop-kali/${currentKaliId}`, { method: 'POST' });
+      await fetch(`http://${host}:5000/api/stop-kali-advance-kali/${currentKaliId}`, { method: 'POST' });
       msg.style.color = '#e74c3c';
       msg.textContent = 'Kali stopped safely.';
       document.getElementById('kali-stop-btn').style.display = 'none';
@@ -349,7 +309,7 @@
       const b = document.getElementById('kali-launch-btn');
       b.style.display = 'inline-block';
       b.textContent = 'Launch Kali Machine ⇗';
-      sessionStorage.removeItem('kali_advance_container_id');
+      sessionStorage.removeItem('kali_advance_kali_id');
       currentKaliId = null;
     } catch (e) {
       msg.textContent = 'Error stopping container.';
@@ -358,17 +318,35 @@
 
   // Restore container session state on reload
   window.addEventListener('load', function() {
-    const saved = sessionStorage.getItem('kali_advance_container_id');
-    if (saved) {
-      currentKaliId = saved;
-      const host = window.location.hostname || 'localhost';
-      fetch(`http://${host}:5000/api/cancel-stop-kali/${saved}`, { method: 'POST' }).catch(() => {});
+    const savedKali = sessionStorage.getItem('kali_advance_kali_id');
+    const savedTarget = sessionStorage.getItem('kali_advance_target_id');
+    const savedIp = sessionStorage.getItem('kali_advance_target_ip');
+    const host = window.location.hostname || 'localhost';
+
+    if (savedTarget) {
+      currentTargetId = savedTarget;
+      targetIp = savedIp;
+      fetch(`http://${host}:5000/api/cancel-stop-kali/${savedTarget}`, { method: 'POST' }).catch(() => {});
+      
+      document.getElementById('target-launch-btn').style.display = 'none';
+      document.getElementById('target-stop-btn').style.display = 'inline-block';
+      const msg = document.getElementById('target-msg');
+      msg.style.display = 'block';
+      msg.style.color = 'var(--accent)';
+      msg.textContent = 'Target container is active (Restored)';
+      document.getElementById('target-info').style.display = 'block';
+      document.getElementById('target-ip-display').textContent = targetIp;
+    }
+
+    if (savedKali) {
+      currentKaliId = savedKali;
+      fetch(`http://${host}:5000/api/cancel-stop-kali/${savedKali}`, { method: 'POST' }).catch(() => {});
       
       document.getElementById('kali-launch-btn').style.display = 'none';
       document.getElementById('kali-stop-btn').style.display = 'inline-block';
       const msg = document.getElementById('kali-msg');
       msg.style.display = 'block';
-      msg.style.color = '#00ff41';
+      msg.style.color = 'var(--accent)';
       msg.textContent = 'Kali Linux is active (Restored)';
       document.getElementById('kali-terminal-info').style.display = 'block';
       document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
@@ -380,6 +358,9 @@
     const host = window.location.hostname || 'localhost';
     if (currentKaliId) {
       navigator.sendBeacon(`http://${host}:5000/api/stop-kali-delayed/${currentKaliId}`);
+    }
+    if (currentTargetId) {
+      navigator.sendBeacon(`http://${host}:5000/api/stop-kali-delayed/${currentTargetId}`);
     }
   });
 
@@ -415,10 +396,10 @@
     document.getElementById('cur-num').textContent = idx+1;
     document.getElementById('reading-text').innerHTML = l.html;
 
-    // Show/hide Kali launcher box on lesson pages
+    // Show/hide Target and Kali launcher boxes on lesson pages
     const showHeader = (idx === 0);
+    document.getElementById('target-panel').style.display = showHeader ? 'block' : 'none';
     document.getElementById('kali-panel').style.display = showHeader ? 'block' : 'none';
-    document.getElementById('live-logs').style.display = showHeader ? 'block' : 'none';
 
     document.getElementById('questions-container').innerHTML = l.questions.map((q, qi) => `
       <div class="question-card${answered[idx][qi]?' correct':''}" id="qc-${idx}-${qi}">
@@ -522,14 +503,14 @@
 
   function showCompletion() {
     document.getElementById('lesson-panel').style.display = 'none';
+    document.getElementById('target-panel').style.display = 'none';
     document.getElementById('kali-panel').style.display = 'none';
-    document.getElementById('live-logs').style.display = 'none';
     
     let score = 0;
     for (let i = 0; i < TOTAL; i++) {
       if (lessonDone(i)) score += LESSONS[i].points;
     }
-    document.getElementById('score-pill').textContent = `${score} / 250 pts`;
+    document.getElementById('score-pill').textContent = `${score} / 350 pts`;
     document.getElementById('completion-card').classList.add('show');
     document.getElementById('btn-next').disabled = true;
     document.getElementById('btn-prev').disabled = true;

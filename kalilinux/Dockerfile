@@ -1,14 +1,40 @@
 # Use official Kali Linux base image
 FROM kalilinux/kali-rolling
 
-# Update and install common tools
+# Update and install common tools and utilities
 RUN apt-get update --fix-missing && \
-    apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing \
     net-tools \
     iputils-ping \
     curl \
     wget \
     vim \
+    git \
+    python3 \
+    perl \
+    tmux \
+    screen \
+    jq \
+    rsync \
+    socat \
+    tcpdump \
+    lsof \
+    dnsutils \
+    traceroute \
+    mtr \
+    cron \
+    procps \
+    htop \
+    strace \
+    ltrace \
+    binutils \
+    xxd \
+    acl \
+    p7zip-full \
+    fdisk \
+    parted \
+    iproute2 \
+    docker.io \
     nmap \
     metasploit-framework \
     sqlmap \
@@ -19,13 +45,22 @@ RUN apt-get update --fix-missing && \
     whatweb \
     netcat-traditional \
     dirb \
-    wordlists
+    wordlists && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /workspace
 
+# Copy workspace setup script and execute it
+COPY setup_practice.sh /tmp/setup_practice.sh
+RUN chmod +x /tmp/setup_practice.sh && \
+    /tmp/setup_practice.sh && \
+    rm /tmp/setup_practice.sh
+
 # Extract rockyou wordlist since it comes zipped by default in kali
-RUN gzip -d /usr/share/wordlists/rockyou.txt.gz
+RUN gzip -d /usr/share/wordlists/rockyou.txt.gz || true
 
 # Default command
 CMD ["/bin/bash"]
+
