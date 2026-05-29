@@ -50,7 +50,6 @@ RUN apt-get update --fix-missing && \
     netcat-traditional \
     dirb \
     wordlists \
-    nano \
     python3-pip \
     python3-requests \
     python-is-python3 && \
