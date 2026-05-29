@@ -1,17 +1,14 @@
 # Use official Kali Linux base image
 FROM kalilinux/kali-rolling
 
-<<<<<<< HEAD
 # Overwrite sources.list to use stable main archive, bypassing broken regional mirrors
 RUN echo "deb http://archive.kali.org/kali kali-rolling main contrib non-free non-free-firmware" > /etc/apt/sources.list
 
-# Update and install common tools
-=======
 # Update and install common tools and utilities
->>>>>>> refs/remotes/origin/main
 RUN apt-get update --fix-missing && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --fix-missing \
     net-tools \
+    nano \
     iputils-ping \
     curl \
     wget \
@@ -52,18 +49,13 @@ RUN apt-get update --fix-missing && \
     whatweb \
     netcat-traditional \
     dirb \
-<<<<<<< HEAD
     wordlists \
     nano \
-    python3 \
     python3-pip \
     python3-requests \
-    python-is-python3
-=======
-    wordlists && \
+    python-is-python3 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
->>>>>>> refs/remotes/origin/main
 
 # Set working directory
 WORKDIR /workspace
@@ -79,4 +71,3 @@ RUN gzip -d /usr/share/wordlists/rockyou.txt.gz || true
 
 # Default command
 CMD ["/bin/bash"]
-
