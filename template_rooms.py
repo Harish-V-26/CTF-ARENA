@@ -303,6 +303,8 @@ def get_room_html(room):
   buildDots();
   renderLesson(0);
 </script>
+<script src="http://127.0.0.1:5500/js/firebase-config.js"></script>
+<script src="http://127.0.0.1:5500/js/auth-state.js"></script>
 </body>
 </html>
 """

@@ -409,8 +409,10 @@ def view_room(room_id):
   buildDots();
   renderLesson(0);
 </script>
+<script src="http://127.0.0.1:5500/js/firebase-config.js"></script>
+<script src="http://127.0.0.1:5500/js/auth-state.js"></script>
 </body>
 </html>
 """
     return html
-    return render_template_string(html)
+
