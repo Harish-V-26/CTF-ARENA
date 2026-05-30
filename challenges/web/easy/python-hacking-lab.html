@@ -60,7 +60,51 @@
       letter-spacing: 0.5px;
       margin: 0 4px 8px 0;
     }
-  </style>
+  
+  /* Dropdown CSS from global.css */
+  .dropdown { position: relative; display: inline-block; margin-left: 20px;}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding-top: 14px;
+    background: transparent;
+    min-width: 180px;
+    z-index: 200;
+  }
+  .dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-elevated, #161b22);
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--border, #30363d);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  .dropdown-content a {
+    display: block;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border, #30363d);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    color: var(--text-primary, #c9d1d9);
+    text-decoration: none;
+  }
+  .dropdown-content a:first-child { border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0; }
+  .dropdown-content a:last-child  { border-bottom: none; border-radius: 0 0 var(--radius-md, 8px) var(--radius-md, 8px); }
+  .dropdown-content a:hover {
+    background: var(--accent, #ff3366);
+    color: #000;
+  }
+  .dropdown:hover .dropdown-content { display: block; }
+
+</style>
 </head>
 <body>
 
@@ -70,6 +114,7 @@
     <a href="../../../index.html">Home</a>
     <a href="../../../learn.html">Learn</a>
     <a href="../../../challenges.html" class="active">Challenges</a>
+        
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown">
       <a href="#" aria-haspopup="true">Profile </a>
@@ -159,6 +204,7 @@
         <p>You've successfully solved the scripting challenge and captured the flag!</p>
         <div class="score-pill" id="score-pill">0 / 260 pts</div>
         <a href="../../../learn.html" class="btn btn-primary">← Back to Learn Path</a>
+        <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px" onclick="reattemptRoom()">↻ Reattempt</button>
       </div>
 
     </div><!-- /room-body -->
@@ -395,7 +441,7 @@ window.addEventListener('beforeunload', () => {
     const qc = document.getElementById(`qc-${lesson}-${qi}`);
 
     if (ok) {
-      answered[lesson][qi] = true;
+      answered[lesson][qi]=true; if(window.ctfTrackCorrect) window.ctfTrackCorrect(); localStorage.setItem(storageKey, JSON.stringify(answered));
       qc.classList.add('correct');
       fb.className  = 'feedback correct-msg show';
       fb.textContent = ' Correct! ' + correct;
@@ -403,7 +449,7 @@ window.addEventListener('beforeunload', () => {
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
-      qc.classList.add('wrong');
+      qc.classList.add('wrong'); if(window.ctfTrackFailed) window.ctfTrackFailed();
       fb.className  = 'feedback wrong-msg show';
       fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
@@ -449,6 +495,7 @@ window.addEventListener('beforeunload', () => {
   }
 
   function showCompletion() {
+  if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
     document.getElementById('lesson-panel').style.display      = 'none';
     document.getElementById('target-panel').style.display       = 'none';
     document.getElementById('kali-panel').style.display         = 'none';
@@ -465,7 +512,19 @@ window.addEventListener('beforeunload', () => {
   buildSidebar();
   buildDots();
   renderLesson(0);
+
+  function reattemptRoom() {
+    if (confirm("Are you sure you want to reset your progress for this room?")) {
+      const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+      localStorage.removeItem(storageKey);
+      window.location.reload();
+    }
+  }
 </script>
 
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
 </body>
 </html>

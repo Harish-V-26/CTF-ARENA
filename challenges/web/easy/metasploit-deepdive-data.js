@@ -8,7 +8,7 @@ const LESSONS = [
   {
     title: "Meterpreter — Advanced Post-Exploitation",
     points: 50,
-    icon: "",
+    icon: "../../../assets/metasploit_intro_nologo_1779434453492.png",
     practical: false,
     content: `METERPRETER — THE HACKER'S SWISS ARMY KNIFE
 
@@ -57,7 +57,7 @@ TASK: Answer the questions below.`,
   {
     title: "Post-Exploitation Modules & Persistence",
     points: 50,
-    icon: "",
+    icon: "../../../assets/metasploit_basics_nologo_1779673940162.png",
     practical: false,
     content: `POST-EXPLOITATION MODULES — DIGGING DEEPER
 
@@ -129,7 +129,7 @@ TASK: Answer the questions below.`,
   {
     title: "Pivoting & Port Forwarding",
     points: 60,
-    icon: "",
+    icon: "../../../assets/metasploit_commands_nologo_1779673954712.png",
     practical: false,
     content: `PIVOTING — JUMPING THROUGH NETWORKS
 
@@ -197,7 +197,7 @@ TASK: Answer the questions below.`,
   {
     title: "Evasion — Encoders, Packers & AV Bypass",
     points: 60,
-    icon: "",
+    icon: "../../../assets/metasploit_terminal_nologo_1779673970904.png",
     practical: false,
     content: `EVASION TECHNIQUES — BECOMING INVISIBLE
 
@@ -273,7 +273,7 @@ TASK: Answer the questions below.`,
   {
     title: "Resource Scripts & Handler Automation",
     points: 50,
-    icon: "",
+    icon: "../../../assets/metasploit_challenge_nologo_1779673986381.png",
     practical: false,
     content: `RESOURCE SCRIPTS — AUTOMATING METASPLOIT
 
@@ -357,7 +357,7 @@ TASK: Answer the questions below.`,
   {
     title: "Practical — Advanced Exploitation Chain",
     points: 60,
-    icon: "",
+    icon: "../../../assets/metasploit_intro_nologo_1779434453492.png",
     practical: true,
     content: `PRACTICAL CHALLENGE — ADVANCED EXPLOITATION CHAIN
 
@@ -483,7 +483,7 @@ the simpler curl method above.)`,
   {
     title: " Capture the Flag",
     points: 30,
-    icon: "",
+    icon: "../../../assets/metasploit_basics_nologo_1779673940162.png",
     practical: false,
     content: ` FLAG SUBMISSION
 

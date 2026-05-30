@@ -20,7 +20,51 @@
     .step-body code{background:rgba(243,156,18,.15);color:#f39c12;padding:2px 7px;border-radius:4px;font-family:monospace}
     .step-body pre{background:#0d1117;color:#e6e6e6;border:1px solid #333;border-radius:6px;padding:12px 16px;margin:10px 0;font-family:monospace;font-size:.88em;overflow-x:auto;white-space:pre}
     .badge.orange{background:#f39c12;color:#fff;border-radius:4px;padding:2px 10px;font-size:.85em;font-weight:bold}
-  </style>
+  
+  /* Dropdown CSS from global.css */
+  .dropdown { position: relative; display: inline-block; margin-left: 20px;}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding-top: 14px;
+    background: transparent;
+    min-width: 180px;
+    z-index: 200;
+  }
+  .dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-elevated, #161b22);
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--border, #30363d);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  .dropdown-content a {
+    display: block;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border, #30363d);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    color: var(--text-primary, #c9d1d9);
+    text-decoration: none;
+  }
+  .dropdown-content a:first-child { border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0; }
+  .dropdown-content a:last-child  { border-bottom: none; border-radius: 0 0 var(--radius-md, 8px) var(--radius-md, 8px); }
+  .dropdown-content a:hover {
+    background: var(--accent, #ff3366);
+    color: #000;
+  }
+  .dropdown:hover .dropdown-content { display: block; }
+
+</style>
 </head>
 <body>
 
@@ -30,6 +74,7 @@
     <a href="../../../index.html">Home</a>
     <a href="../../../learn.html" class="active">Learn</a>
     <a href="../../../challenges.html">Challenges</a>
+        
     <a href="../../../rules.html">Rules</a>
     <div class="dropdown"><a href="#" aria-haspopup="true">Profile </a><div class="dropdown-content"><a href="#">Dashboard</a><a href="#">Settings</a><a href="#">Logout</a></div></div>
   </div>
@@ -63,7 +108,8 @@
         <div class="reading-panel"><div class="reading-label"><span></span> Instructions & Tasks</div><div class="reading-text" id="reading-text" style="white-space:normal"></div></div>
         <div class="qa-section" id="qa-section"><div class="qa-heading"> Check Your Understanding & Submit Flags</div><div id="questions-container"></div></div>
       </div>
-      <div class="completion-card" id="completion-card"><div class="trophy-icon"></div><h2>Lab Complete!</h2><p>You've mastered Security Logging & Monitoring!</p><div class="score-pill" id="score-pill">0 / 160 pts</div><a href="owasp-part2-hub.html" class="btn btn-primary">← Back to Hub</a></div>
+      <div class="completion-card" id="completion-card"><div class="trophy-icon"></div><h2>Lab Complete!</h2><p>You've mastered Security Logging & Monitoring!</p><div class="score-pill" id="score-pill">0 / 160 pts</div><a href="owasp-part2-hub.html" class="btn btn-primary">← Back to Hub</a>
+        <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px" onclick="reattemptRoom()">↻ Reattempt</button></div>
     </div>
 
     <div class="room-footer-nav">
@@ -89,13 +135,16 @@ window.addEventListener('beforeunload', function() {
 </script>
 <script src="logging-failures-data.js"></script>
 <script>
-let cur=0;const TOTAL=LESSONS.length;const answered=LESSONS.map(l=>l.questions.map(()=>false));
+let cur=0;const TOTAL=LESSONS.length;const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+  const savedStr = localStorage.getItem(storageKey);
+  let answered = savedStr ? JSON.parse(savedStr) : LESSONS.map(l=>l.questions.map(()=>false));
+  if(answered.length !== LESSONS.length) { answered = LESSONS.map(l=>l.questions.map(()=>false)); }
 function buildSidebar(){document.getElementById('sidebar-nav').innerHTML=LESSONS.map((l,i)=>`<div class="module-group"><div class="module-label" id="mod-${i}"><span class="mod-num">${String(i+1).padStart(2,'0')}</span> ${l.title}</div><div class="nav-item${i===0?' active':''}" id="nav-${i}" onclick="goTo(${i})"><div class="nav-dot"></div><span class="nav-label">${l.title}</span><span class="nav-pts">${l.points} pts</span></div></div>`).join('')}
 function buildDots(){document.getElementById('step-dots').innerHTML=LESSONS.map((_,i)=>`<div class="step-dot${i===0?' current':''}" id="dot-${i}"></div>`).join('');document.getElementById('tot-num').textContent=TOTAL}
 function renderLesson(idx){const l=LESSONS[idx];document.getElementById('ch-title').textContent=l.title;document.getElementById('ch-pts').textContent=l.points+' pts';document.getElementById('ch-crumb').textContent=`Lesson ${idx+1}`;document.getElementById('cur-num').textContent=idx+1;document.getElementById('reading-text').innerHTML=l.html||'';const qc=document.getElementById('questions-container');qc.innerHTML=l.questions.map((q,qi)=>`<div class="question-card${answered[idx][qi]?' correct':''}" id="qc-${idx}-${qi}"><div class="question-text"><span class="q-num">Q${qi+1}</span>${q.q}</div><div class="answer-row"><input class="answer-input" id="ans-${idx}-${qi}" type="text" placeholder="Type your answer…" autocomplete="off" ${answered[idx][qi]?'disabled':''} onkeydown="onEnter(event,${idx},${qi})"/><button class="check-btn" id="btn-${idx}-${qi}" onclick="checkAnswer(${idx},${qi})" ${answered[idx][qi]?'disabled':''}>Check</button></div><div class="feedback${answered[idx][qi]?' correct-msg show':''}" id="fb-${idx}-${qi}">${answered[idx][qi]?' Correct! '+l.questions[qi].a:''}</div></div>`).join('')}
 function updateNav(f,t){const fe=document.getElementById(`nav-${f}`);fe.classList.remove('active');document.getElementById(`dot-${f}`).classList.remove('current');document.getElementById(`dot-${f}`).classList.toggle('done',lessonDone(f));if(lessonDone(f))fe.classList.add('completed');document.getElementById(`nav-${t}`).classList.add('active');document.getElementById(`dot-${t}`).classList.add('current')}
 function normalise(s){return s.trim().toLowerCase().replace(/\s+/g,' ')}
-function checkAnswer(lesson,qi){if(answered[lesson][qi])return;const input=document.getElementById(`ans-${lesson}-${qi}`);const cn=normalise(LESSONS[lesson].questions[qi].a);const un=normalise(input.value);const ok=un===cn||cn.includes(un)||un.includes(cn.split(' ')[0]);const fb=document.getElementById(`fb-${lesson}-${qi}`);const qc=document.getElementById(`qc-${lesson}-${qi}`);if(ok){answered[lesson][qi]=true;qc.classList.add('correct');fb.className='feedback correct-msg show';fb.textContent=' Correct! '+LESSONS[lesson].questions[qi].a;input.disabled=true;document.getElementById(`btn-${lesson}-${qi}`).disabled=true;updateProgress()}else{qc.classList.add('wrong');fb.className='feedback wrong-msg show';fb.textContent=' Not quite — try again.';setTimeout(()=>{qc.classList.remove('wrong');fb.classList.remove('show')},2000)}}
+function checkAnswer(lesson,qi){if(answered[lesson][qi])return;const input=document.getElementById(`ans-${lesson}-${qi}`);const cn=normalise(LESSONS[lesson].questions[qi].a);const un=normalise(input.value);const ok=un===cn||cn.includes(un)||un.includes(cn.split(' ')[0]);const fb=document.getElementById(`fb-${lesson}-${qi}`);const qc=document.getElementById(`qc-${lesson}-${qi}`);if(ok){answered[lesson][qi]=true; if(window.ctfTrackCorrect) window.ctfTrackCorrect(); localStorage.setItem(storageKey, JSON.stringify(answered));qc.classList.add('correct');fb.className='feedback correct-msg show';fb.textContent=' Correct! '+LESSONS[lesson].questions[qi].a;input.disabled=true;document.getElementById(`btn-${lesson}-${qi}`).disabled=true;updateProgress()}else{qc.classList.add('wrong'); if(window.ctfTrackFailed) window.ctfTrackFailed();fb.className='feedback wrong-msg show';fb.textContent=' Not quite — try again.';setTimeout(()=>{qc.classList.remove('wrong');fb.classList.remove('show')},2000)}}
 function onEnter(e,l,q){if(e.key==='Enter')checkAnswer(l,q)}
 function lessonDone(i){return answered[i].every(Boolean)}
 function totalDone(){return answered.flat().filter(Boolean).length}
@@ -103,8 +152,21 @@ function totalQs(){return answered.flat().length}
 function updateProgress(){const p=Math.round(totalDone()/totalQs()*100);document.getElementById('overall-fill').style.width=p+'%';document.getElementById('overall-pct').textContent=p+'%';for(let i=0;i<TOTAL;i++){if(lessonDone(i)){document.getElementById(`nav-${i}`).classList.add('completed');document.getElementById(`mod-${i}`).classList.add('completed')}}if(totalDone()===totalQs())showCompletion()}
 function goTo(idx){updateNav(cur,idx);cur=idx;renderLesson(cur);document.getElementById('btn-prev').disabled=cur===0;document.getElementById('btn-next').textContent=cur===TOTAL-1?'Finish →':'Next →';document.querySelector('.room-body').scrollTop=0}
 function navigate(dir){const next=cur+dir;if(next>=0&&next<TOTAL)goTo(next);else if(dir===1)showCompletion()}
-function showCompletion(){document.getElementById('lesson-panel').style.display='none';document.querySelector('.docker-launch').style.display='none';document.getElementById('score-pill').textContent='160 / 160 pts';document.getElementById('completion-card').classList.add('show');document.getElementById('btn-next').disabled=true;document.getElementById('btn-prev').disabled=true;document.getElementById('overall-fill').style.width='100%';document.getElementById('overall-pct').textContent='100%';document.querySelector('.room-body').scrollTop=0}
-buildSidebar();buildDots();renderLesson(0);
+function showCompletion(){
+    if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);document.getElementById('lesson-panel').style.display='none';document.querySelector('.docker-launch').style.display='none';document.getElementById('score-pill').textContent='160 / 160 pts';document.getElementById('completion-card').classList.add('show');document.getElementById('btn-next').disabled=true;document.getElementById('btn-prev').disabled=true;document.getElementById('overall-fill').style.width='100%';document.getElementById('overall-pct').textContent='100%';document.querySelector('.room-body').scrollTop=0}
+buildSidebar();buildDots();renderLesson(0);updateProgress();
+
+  function reattemptRoom() {
+    if (confirm("Are you sure you want to reset your progress for this room?")) {
+      const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+      localStorage.removeItem(storageKey);
+      window.location.reload();
+    }
+  }
 </script>
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
 </body>
 </html>

@@ -28,6 +28,7 @@ from routes.integrity_failures import integrity_failures_bp
 from routes.logging_failures import logging_failures_bp
 from routes.error_handling import error_handling_bp
 from routes.owasp_top5 import owasp_top5_bp
+from routes.owasp_top5_challenge import owasp_top5_challenge_bp
 from routes.gauntlet import gauntlet_bp
 
 app = Flask(__name__)
@@ -53,6 +54,7 @@ app.register_blueprint(integrity_failures_bp)
 app.register_blueprint(logging_failures_bp)
 app.register_blueprint(error_handling_bp)
 app.register_blueprint(owasp_top5_bp)
+app.register_blueprint(owasp_top5_challenge_bp)
 app.register_blueprint(gauntlet_bp)
 
 if __name__ == '__main__':

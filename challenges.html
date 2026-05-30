@@ -25,8 +25,8 @@
       <div class="dropdown" role="navigation" aria-label="Profile menu">
         <a href="#" aria-haspopup="true">Profile </a>
         <div class="dropdown-content" role="menu">
-          <a href="#" role="menuitem">Dashboard</a>
-          <a href="#" role="menuitem">Settings</a>
+          <a href="dashboard.html" role="menuitem">Dashboard</a>
+          <a href="settings.html" role="menuitem">Settings</a>
           <a href="#" role="menuitem">Logout</a>
         </div>
       </div>
@@ -87,6 +87,27 @@
             <span class="points">500 pts</span>
             <span class="solve-count"> Live Target</span>
             <a href="challenges/web/beginner/operation-shadow-gate-lab.html" class="start-btn" id="start-shadow-gate">Start →</a>
+          </div>
+        </div>
+
+        <!-- OWASP Top 10 Part 1 (1-5) -->
+        <div class="challenge-card" data-category="web" id="card-owasp-top5-challenge"
+          onclick="window.location.href='challenges/web/easy/owasp-top5-challenge-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(90deg, #ff9f43, #ff6b6b, #ee5253);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy" style="background: rgba(255,159,67,0.15); color: #ff9f43;">Easy</span>
+            </div>
+            <div class="challenge-title">OWASP Top 10 Part 1 (1-5)</div>
+            <div class="challenge-desc">
+              Compromise the SecureCorp Staging Portal by exploiting the first five OWASP Top 10 vulnerabilities: Broken Access Control, Cryptographic Failures, SQL Injection, Security Misconfiguration, and Software Supply Chain Failures.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">250 pts</span>
+            <span class="solve-count"> Live Target</span>
+            <a href="challenges/web/easy/owasp-top5-challenge-lab.html" class="start-btn" id="start-owasp-top5-challenge">Start →</a>
           </div>
         </div>
 
@@ -268,5 +289,8 @@
       }
     });
   </script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth-state.js"></script>
+  <script src="js/analytics-tracker.js"></script>
 </body>
 </html>

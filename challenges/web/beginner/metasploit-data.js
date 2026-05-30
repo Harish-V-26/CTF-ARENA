@@ -7,7 +7,7 @@ const LESSONS = [
   {
     title: "Introduction — What is Penetration Testing?",
     points: 30,
-    icon: "",
+    icon: "../../../assets/metasploit_intro_nologo_1779434453492.png",
     content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_intro_nologo_1779434453492.png" alt="Metasploit Introduction"></div>WELCOME TO THE METASPLOIT INTRODUCTION LAB
 
 What is a Penetration Testing Framework?
@@ -48,7 +48,7 @@ NEVER run these commands against real systems without authorization!`,
   {
     title: "What is Metasploit?",
     points: 40,
-    icon: "",
+    icon: "../../../assets/metasploit_basics_nologo_1779673940162.png",
     content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_basics_nologo_1779673940162.png" alt="Metasploit Basics"></div>METASPLOIT FRAMEWORK — THE BASICS
 
 What is Metasploit?
@@ -102,7 +102,7 @@ Visual Flow
   {
     title: "Core Commands — msfconsole",
     points: 50,
-    icon: "",
+    icon: "../../../assets/metasploit_commands_nologo_1779673954712.png",
     content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_commands_nologo_1779673954712.png" alt="Essential Metasploit Commands"></div>ESSENTIAL METASPLOIT COMMANDS
 
 msfconsole
@@ -212,7 +212,7 @@ Why it matters: When in doubt, always check help!`,
   {
     title: "Interactive Terminal — Practice Commands",
     points: 60,
-    icon: "",
+    icon: "../../../assets/metasploit_terminal_nologo_1779673970904.png",
     content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_terminal_nologo_1779673970904.png" alt="Interactive Terminal Practice"></div>INTERACTIVE TERMINAL PRACTICE
 
 You now have access to a SIMULATED Kali Linux terminal below!
@@ -266,7 +266,7 @@ Complete the practice challenge in the next lesson to earn the flag!`,
   {
     title: "Practice Challenge — Find the FTP Scanner",
     points: 70,
-    icon: "",
+    icon: "../../../assets/metasploit_challenge_nologo_1779673986381.png",
     content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_challenge_nologo_1779673986381.png" alt="Practice Challenge"></div>PRACTICE CHALLENGE — EARN THE FLAG!
 
 OBJECTIVE:

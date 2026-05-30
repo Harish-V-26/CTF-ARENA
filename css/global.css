@@ -113,21 +113,79 @@ body {
   width: 100%;
 }
 
+/* ── Dropdown trigger pill (shows user name when logged in) ── */
+.dropdown > a[aria-haspopup] {
+  color: var(--accent);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  /* Hide the hardcoded "Profile" text until auth-state.js populates it */
+  font-size: 0 !important;
+  color: transparent !important;
+}
+
+.dropdown > a[aria-haspopup] > * {
+  font-size: 14px !important;
+  color: var(--text-primary) !important;
+}
+
+.dropdown > a[aria-haspopup]::after {
+  /* Override the underline pseudo from .nav-links a::after */
+  content: none !important;
+}
+
+/* Chevron indicator */
+.dropdown > a[aria-haspopup]::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-right: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  order: 2;
+}
+
+.dropdown:hover > a[aria-haspopup]::before {
+  transform: rotate(-135deg) translateY(-2px);
+}
+
 /*  DROPDOWN  */
-.dropdown { position: relative; }
+
+.dropdown {
+  position: relative;
+  display: none; /* Hide by default to prevent flashing before auth loads */
+}
 
 .dropdown-content {
   display: none;
   position: absolute;
-  top: calc(100% + 14px);
+  /* Start flush with the bottom of the navbar trigger — no gap */
+  top: 100%;
   right: 0;
-  background: var(--bg-elevated);
+  /* Invisible padding-top acts as a hover bridge so mouse can travel into the panel */
+  padding-top: 14px;
+  background: transparent;
   min-width: 180px;
+  z-index: 200;
+  animation: fadeDown 0.2s ease;
+}
+
+/* The visible card sits inside the padding bridge */
+.dropdown-content::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-elevated);
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
-  overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  animation: fadeDown 0.2s ease;
+  z-index: -1;
 }
 
 @keyframes fadeDown {
@@ -140,9 +198,12 @@ body {
   padding: 13px 18px;
   border-bottom: 1px solid var(--border);
   font-size: 14px;
+  position: relative;
+  z-index: 1;
 }
 
-.dropdown-content a:last-child { border-bottom: none; }
+.dropdown-content a:first-child { border-radius: var(--radius-md) var(--radius-md) 0 0; }
+.dropdown-content a:last-child  { border-bottom: none; border-radius: 0 0 var(--radius-md) var(--radius-md); }
 
 .dropdown-content a:hover {
   background: var(--accent);
@@ -152,6 +213,7 @@ body {
 .dropdown-content a:hover::after { display: none; }
 
 .dropdown:hover .dropdown-content { display: block; }
+
 
 /*  SHARED SECTION HEADER  */
 .section-header {
@@ -290,3 +352,29 @@ footer a:hover { text-decoration: underline; }
   overflow: hidden;
   clip: rect(0,0,0,0);
 }
+
+/* Navbar Login Button Styling */
+.nav-links .auth-btn {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  transition: all var(--transition);
+  text-shadow: 0 0 10px rgba(255, 77, 109, 0.35);
+  box-shadow: 0 0 12px rgba(255, 77, 109, 0.1);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-links .auth-btn:hover {
+  background: var(--accent);
+  color: #000;
+  text-shadow: none;
+  box-shadow: 0 0 20px rgba(255, 77, 109, 0.5);
+  transform: translateY(-1px);
+}
+

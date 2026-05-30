@@ -76,6 +76,7 @@
         <p>You've mastered Command Injection — from exploiting shell operators and blind injection techniques to preventing RCE with safe APIs and input validation!</p>
         <div class="score-pill" id="score-pill">0 / 60 pts</div>
         <a href="../../../learn.html" class="btn btn-primary">← Back to Learn</a>
+        <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px" onclick="reattemptRoom()">↻ Reattempt</button>
       </div>
     </div>
 
@@ -173,7 +174,7 @@
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
-      qc.classList.add('wrong');
+      qc.classList.add('wrong'); if(window.ctfTrackFailed) window.ctfTrackFailed();
       fb.className = 'feedback wrong-msg show';
       fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
@@ -217,6 +218,7 @@
   }
 
   function showCompletion() {
+  if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
     document.getElementById('lesson-panel').style.display = 'none';
     const pts = totalDone() * 2;
     document.getElementById('score-pill').textContent = `${pts} / 60 pts`;
@@ -231,7 +233,19 @@
   buildSidebar();
   buildDots();
   renderLesson(0);
+
+  function reattemptRoom() {
+    if (confirm("Are you sure you want to reset your progress for this room?")) {
+      const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+      localStorage.removeItem(storageKey);
+      window.location.reload();
+    }
+  }
 </script>
 
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
 </body>
 </html>

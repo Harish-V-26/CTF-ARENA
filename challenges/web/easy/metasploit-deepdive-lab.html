@@ -75,7 +75,51 @@
     }
     /* Hide docker panels by default — JS shows them only on practical lessons */
     .docker-panels { display: none; }
-  </style>
+  
+  /* Dropdown CSS from global.css */
+  .dropdown { position: relative; display: inline-block; margin-left: 20px;}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding-top: 14px;
+    background: transparent;
+    min-width: 180px;
+    z-index: 200;
+  }
+  .dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-elevated, #161b22);
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--border, #30363d);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  .dropdown-content a {
+    display: block;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border, #30363d);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    color: var(--text-primary, #c9d1d9);
+    text-decoration: none;
+  }
+  .dropdown-content a:first-child { border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0; }
+  .dropdown-content a:last-child  { border-bottom: none; border-radius: 0 0 var(--radius-md, 8px) var(--radius-md, 8px); }
+  .dropdown-content a:hover {
+    background: var(--accent, #ff3366);
+    color: #000;
+  }
+  .dropdown:hover .dropdown-content { display: block; }
+
+</style>
 </head>
 <body>
 
@@ -178,6 +222,7 @@
         <p>Congratulations! You have mastered Advanced Metasploit concepts including Meterpreter post-exploitation, pivoting & port forwarding, evasion techniques, persistence mechanisms, resource script automation, and practical exploitation chains.</p>
         <div class="score-pill" id="score-pill">0 / 360 pts</div>
         <a href="../../../challenges.html" class="btn btn-primary">← Back to Challenges</a>
+        <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px" onclick="reattemptRoom()">↻ Reattempt</button>
       </div>
 
     </div><!-- /room-body -->
@@ -224,7 +269,6 @@
         msg.style.color = '#2ecc71';
         msg.textContent = 'Target Server is ready!';
         stopBtn.style.display = 'inline-block';
-        
         info.style.display = 'block';
         document.getElementById('target-ip').textContent = data.ip_address;
       } else {
@@ -290,7 +334,6 @@
         msg.style.color = '#2ecc71';
         msg.textContent = 'Kali Linux container is ready!';
         stopBtn.style.display = 'inline-block';
-        
         info.style.display = 'block';
         document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
       } else {
@@ -478,7 +521,7 @@
     const qc  = document.getElementById(`qc-${lesson}-${qi}`);
 
     if (ok) {
-      answered[lesson][qi] = true;
+      answered[lesson][qi]=true; if(window.ctfTrackCorrect) window.ctfTrackCorrect(); localStorage.setItem(storageKey, JSON.stringify(answered));
       qc.classList.add('correct');
       fb.className = 'feedback correct-msg show';
       fb.textContent = ' Correct! ' + correct;
@@ -486,7 +529,7 @@
       document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
-      qc.classList.add('wrong');
+      qc.classList.add('wrong'); if(window.ctfTrackFailed) window.ctfTrackFailed();
       fb.className = 'feedback wrong-msg show';
       fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
@@ -532,6 +575,7 @@
   }
 
   function showCompletion() {
+  if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
     document.getElementById('lesson-panel').style.display = 'none';
     document.getElementById('docker-panels').style.display = 'none';
     
@@ -551,7 +595,19 @@
   buildSidebar();
   buildDots();
   renderLesson(0);
+
+  function reattemptRoom() {
+    if (confirm("Are you sure you want to reset your progress for this room?")) {
+      const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+      localStorage.removeItem(storageKey);
+      window.location.reload();
+    }
+  }
 </script>
 
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
 </body>
 </html>

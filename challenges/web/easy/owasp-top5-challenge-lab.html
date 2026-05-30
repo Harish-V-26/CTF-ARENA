@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CTF LABS — OWASP Top 5 Gauntlet</title>
+  <link rel="stylesheet" href="../../../css/global.css"/>
+  <link rel="stylesheet" href="../../../css/web-room.css"/>
+  <style>
+    .challenge-briefing {
+      background: #1a252f;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-top: 4px solid #e74c3c;
+    }
+    .challenge-briefing h2 {
+      margin-top: 0;
+      color: #fff;
+    }
+    .challenge-briefing p {
+      color: #bdc3c7;
+      line-height: 1.6;
+    }
+    .challenge-briefing ul {
+      color: #bdc3c7;
+      line-height: 1.6;
+    }
+    
+    .docker-launch {
+      background: #2c3e50;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      color: #ecf0f1;
+      text-align: center;
+      border-left: 4px solid #3498db;
+    }
+    .docker-launch h3 { margin-top: 0; color: #fff; }
+    .btn-launch {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #e74c3c;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-launch:hover { background: #c0392b; }
+    
+    .hints-section {
+      background: #2c3e50;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .hint-btn {
+      display: inline-block;
+      margin: 5px;
+      padding: 10px 15px;
+      background: #34495e;
+      color: #ecf0f1;
+      border: 1px solid #7f8c8d;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .hint-btn:hover {
+      background: #465c71;
+    }
+    .hint-btn.unlocked {
+      background: #f39c12;
+      color: #fff;
+      border-color: #d68910;
+    }
+    .hint-content {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      background: #1a252f;
+      border-left: 3px solid #f39c12;
+      color: #ecf0f1;
+      border-radius: 4px;
+      font-style: italic;
+    }
+    
+    .flag-submission {
+      background: #1a252f;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .flag-input {
+      padding: 12px;
+      width: 60%;
+      max-width: 400px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #7f8c8d;
+      background: #2c3e50;
+      color: #fff;
+      margin-right: 10px;
+      font-family: monospace;
+    }
+    .flag-btn {
+      padding: 12px 25px;
+      font-size: 16px;
+      background: #2ecc71;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .flag-btn:hover {
+      background: #27ae60;
+    }
+    .flag-result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.1em;
+      display: none;
+    }
+    .flag-result.success {
+      color: #2ecc71;
+      display: block;
+    }
+    .flag-result.error {
+      color: #e74c3c;
+      display: block;
+    }
+  
+  /* Dropdown CSS from global.css */
+  .dropdown { position: relative; display: inline-block; margin-left: 20px;}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding-top: 14px;
+    background: transparent;
+    min-width: 180px;
+    z-index: 200;
+  }
+  .dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-elevated, #161b22);
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--border, #30363d);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  .dropdown-content a {
+    display: block;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border, #30363d);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    color: var(--text-primary, #c9d1d9);
+    text-decoration: none;
+  }
+  .dropdown-content a:first-child { border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0; }
+  .dropdown-content a:last-child  { border-bottom: none; border-radius: 0 0 var(--radius-md, 8px) var(--radius-md, 8px); }
+  .dropdown-content a:hover {
+    background: var(--accent, #ff3366);
+    color: #000;
+  }
+  .dropdown:hover .dropdown-content { display: block; }
+
+</style>
+</head>
+<body>
+
+<nav class="navbar" aria-label="Main navigation">
+  <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+  <div class="nav-links">
+    <a href="../../../index.html">Home</a>
+    <a href="../../../learn.html">Learn</a>
+    <a href="../../../challenges.html" class="active">Challenges</a>
+    <a href="../../../rules.html">Rules</a>
+    <div class="dropdown">
+      <a href="#" aria-haspopup="true">Profile </a>
+      <div class="dropdown-content">
+        <a href="#">Dashboard</a>
+        <a href="#">Settings</a>
+        <a href="#">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="room-wrapper">
+  <!-- SIDEBAR (Required for Grid Layout) -->
+  <aside class="room-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Gauntlet Status</div>
+      <div class="overall-progress-wrap" style="margin-top: 10px;">
+        <div class="overall-progress-bar">
+          <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
+        </div>
+        <div class="overall-progress-pct" id="overall-pct">0%</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <div class="module-group">
+        <div class="module-label" id="mod-0">
+          <span class="mod-num">01</span> OWASP Top 5 Gauntlet
+        </div>
+        <div class="nav-item active" id="nav-0">
+          <div class="nav-dot"></div>
+          <span class="nav-label">Chained Exploitation Room</span>
+          <span class="nav-pts">1000 pts</span>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="room-main">
+    
+    <div class="challenge-header">
+      <div class="ch-breadcrumb">Web Challenges › Easy Level › Challenge</div>
+      <div class="ch-meta">
+        <span class="ch-title" id="ch-title">OWASP Top 5 Gauntlet</span>
+        <span class="ch-pts" id="ch-pts">1000 pts</span>
+      </div>
+    </div>
+
+    <div class="room-body" id="room-body" style="padding: 20px 0;">
+
+      <!-- Briefing -->
+      <div class="challenge-briefing">
+        <h2>Mission Briefing</h2>
+        <p>You have discovered a highly secure corporate staging environment hosting multiple internal portals. Your objective is to gain unauthorized access, escalate your privileges, bypass input filters, and extract the secret flag hidden piece by piece.</p>
+        <p>This is a pure CTF scenario. There are no step-by-step walkthroughs. You must combine the following techniques you have learned in the OWASP Top 10 Part 1 modules:</p>
+        <ul>
+          <li>A01: Broken Access Control</li>
+          <li>A02: Cryptographic Failures</li>
+          <li>A03: Injection</li>
+          <li>A05: Security Misconfiguration</li>
+          <li>A08: Software Supply Chain Failures</li>
+        </ul>
+        <p>Each service you compromise will lead you to the next vulnerability in the chain. Collect all flag pieces along your journey and concatenate them together to construct the final flag.</p>
+        <p><strong>Goal:</strong> Submit the complete combined flag, in the format <code>CTF{...}</code>.</p>
+      </div>
+
+      <!-- Environment Launchers -->
+      <div class="docker-launch" id="target-panel">
+        <h3> Gauntlet Target Server</h3>
+        <p>Launch the vulnerable portal containing all chained OWASP services.</p>
+        <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Deploy Target Portal ⇗</button>
+      </div>
+
+      <!-- Hints -->
+      <div class="hints-section" id="hints-container">
+        <h3 style="margin-top: 0; color: #fff; margin-bottom: 15px;">Need a Hint?</h3>
+        <p style="color: #bdc3c7; font-size: 0.9em; margin-bottom: 20px;">Stuck on the exploit chain? You can unlock clues for each segment separately in the boxes below.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+          <!-- Hint Card 1 -->
+          <div style="background: #1a252f; border: 1px solid #3498db; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.05);">
+            <div style="font-weight: bold; color: #3498db; margin-bottom: 10px; font-family: monospace; font-size: 0.95em;">Clue 1 (A01)</div>
+            <div id="hint-text-0" style="font-style: italic; color: #bdc3c7; font-size: 0.9em; display: none; margin-bottom: 10px; line-height: 1.4;"></div>
+            <button id="hint-btn-0" class="hint-btn" onclick="unlockHintBox(0)" style="margin: 0; width: 100%; border-color: #3498db; color: #3498db;">Unlock Clue</button>
+          </div>
+          
+          <!-- Hint Card 2 -->
+          <div style="background: #1a252f; border: 1px solid #3498db; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.05);">
+            <div style="font-weight: bold; color: #3498db; margin-bottom: 10px; font-family: monospace; font-size: 0.95em;">Clue 2 (A02)</div>
+            <div id="hint-text-1" style="font-style: italic; color: #bdc3c7; font-size: 0.9em; display: none; margin-bottom: 10px; line-height: 1.4;"></div>
+            <button id="hint-btn-1" class="hint-btn" onclick="unlockHintBox(1)" style="margin: 0; width: 100%; border-color: #3498db; color: #3498db;">Unlock Clue</button>
+          </div>
+          
+          <!-- Hint Card 3 -->
+          <div style="background: #1a252f; border: 1px solid #3498db; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.05);">
+            <div style="font-weight: bold; color: #3498db; margin-bottom: 10px; font-family: monospace; font-size: 0.95em;">Clue 3 (A03)</div>
+            <div id="hint-text-2" style="font-style: italic; color: #bdc3c7; font-size: 0.9em; display: none; margin-bottom: 10px; line-height: 1.4;"></div>
+            <button id="hint-btn-2" class="hint-btn" onclick="unlockHintBox(2)" style="margin: 0; width: 100%; border-color: #3498db; color: #3498db;">Unlock Clue</button>
+          </div>
+          
+          <!-- Hint Card 4 -->
+          <div style="background: #1a252f; border: 1px solid #3498db; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.05);">
+            <div style="font-weight: bold; color: #3498db; margin-bottom: 10px; font-family: monospace; font-size: 0.95em;">Clue 4 (A05/A08)</div>
+            <div id="hint-text-3" style="font-style: italic; color: #bdc3c7; font-size: 0.9em; display: none; margin-bottom: 10px; line-height: 1.4;"></div>
+            <button id="hint-btn-3" class="hint-btn" onclick="unlockHintBox(3)" style="margin: 0; width: 100%; border-color: #3498db; color: #3498db;">Unlock Clue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flag Submission -->
+      <div class="flag-submission">
+        <h3 style="margin-top: 0; color: #fff; margin-bottom: 20px;">Submit Flag</h3>
+        <div style="display: flex; justify-content: center;">
+          <input type="text" id="flag-input" class="flag-input" placeholder="CTF{...}" onkeydown="if(event.key==='Enter') submitFlag()">
+          <button class="flag-btn" onclick="submitFlag()">Submit</button>
+        </div>
+        <div id="flag-result" class="flag-result"></div>
+      </div>
+
+      <!-- Completion -->
+      <div class="completion-card" id="completion-card" style="display: none; text-align: center; background: #1a252f; padding: 40px; border-radius: 8px; border: 2px solid #2ecc71;">
+        <h2 style="color:#2ecc71; font-size: 2em; margin-top: 0;">Gauntlet Conquered!</h2>
+        <p style="color: #bdc3c7; font-size: 1.1em;">You have successfully chained multiple OWASP vulnerabilities to fully compromise the portal.</p>
+        <div class="score-pill" style="font-size: 1.5em; padding: 10px 20px; background: #000; color: #f1c40f; display: inline-block; margin: 20px 0; border-radius: 30px;">1000 / 1000 pts</div>
+        <br>
+        <a href="../../../challenges.html" class="btn-launch" style="background: #3498db;">Return to Challenges</a>
+        <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px" onclick="reattemptRoom()">↻ Reattempt</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="owasp-top5-challenge-data.js"></script>
+<script>
+function initChallenge() {
+  const storageKey = 'ctf_progress_' + window.location.pathname.split('/').pop().replace('.html', '');
+  const isCompleted = localStorage.getItem(storageKey) === 'true';
+
+  if (isCompleted) {
+    document.getElementById('overall-fill').style.width = '100%';
+    document.getElementById('overall-pct').textContent = '100%';
+    document.getElementById('nav-0').className = 'nav-item completed';
+    document.getElementById('mod-0').className = 'module-label completed';
+    showCompletion();
+  } else {
+    document.getElementById('overall-fill').style.width = '0%';
+    document.getElementById('overall-pct').textContent = '0%';
+  }
+}
+
+function unlockHintBox(idx) {
+  const textDiv = document.getElementById(`hint-text-${idx}`);
+  const btn = document.getElementById(`hint-btn-${idx}`);
+  
+  if (textDiv && btn) {
+    textDiv.innerHTML = CHALLENGE.hints[idx];
+    textDiv.style.display = 'block';
+    btn.style.display = 'none';
+  }
+}
+
+function submitFlag() {
+  const input = document.getElementById('flag-input');
+  const result = document.getElementById('flag-result');
+  const userFlag = input.value.trim();
+  
+  if (userFlag === CHALLENGE.flag) {
+    result.className = 'flag-result success'; if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+    result.textContent = 'Success! Correct flag submitted. Gauntlet conquered!';
+    
+    // Save completion
+    const storageKey = 'ctf_progress_' + window.location.pathname.split('/').pop().replace('.html', '');
+    localStorage.setItem(storageKey, 'true');
+
+    // Fill progress bar to 100%
+    document.getElementById('overall-fill').style.width = '100%';
+    document.getElementById('overall-pct').textContent = '100%';
+    document.getElementById('nav-0').className = 'nav-item completed';
+    document.getElementById('mod-0').className = 'module-label completed';
+    
+    setTimeout(() => {
+      showCompletion();
+    }, 1500);
+  } else {
+    result.className = 'flag-result error'; if(window.ctfTrackFailed) window.ctfTrackFailed();
+    result.textContent = 'Incorrect flag. Please check the flag format and make sure you have concatenated all fragments correctly.';
+    setTimeout(() => {
+      result.className = 'flag-result';
+    }, 3000);
+  }
+}
+
+function showCompletion() {
+  if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+  document.querySelector('.flag-submission').style.display = 'none';
+  document.getElementById('hints-container').style.display = 'none';
+  document.getElementById('target-panel').style.display = 'none';
+  document.querySelector('.challenge-briefing').style.display = 'none';
+  document.getElementById('completion-card').style.display = 'block';
+}
+
+function launchTarget() {
+  const host = window.location.hostname || "localhost";
+  const targetUrl = `http://${host}:5000/api/owasp-top5-challenge-lab/`;
+  window.open(targetUrl, '_blank');
+}
+
+// Init on load
+document.addEventListener('DOMContentLoaded', () => {
+  initChallenge();
+});
+
+  function reattemptRoom() {
+    if (confirm("Are you sure you want to reset your progress for this room?")) {
+      const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+      localStorage.removeItem(storageKey);
+      window.location.reload();
+    }
+  }
+</script>
+
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+</body>
+</html>

@@ -1,0 +1,694 @@
+/* ================================================
+   CTF LABS — Premium Login & Signup Stylesheet
+   Split-panel: Left Branding | Right Form
+   ================================================ */
+
+/* ── Full-screen layout ── */
+body.login-body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body.login-body .navbar {
+  flex-shrink: 0;
+}
+
+.auth-page-container {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 70px);
+  overflow: hidden;
+}
+
+/* ─────────────────────────────────────────
+   LEFT BRANDING PANEL
+───────────────────────────────────────── */
+.auth-left-panel {
+  width: 48%;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  background: #0a0e14;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 52px;
+}
+
+/* Deep layered gradient */
+.auth-left-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(255, 77, 109, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 60% at 80% 70%, rgba(88, 166, 255, 0.10) 0%, transparent 60%),
+    linear-gradient(160deg, #0d1117 0%, #0a0e14 100%);
+  z-index: 0;
+}
+
+/* Animated scanline sweep */
+.auth-left-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(255, 77, 109, 0.018) 3px,
+    rgba(255, 77, 109, 0.018) 4px
+  );
+  z-index: 1;
+  pointer-events: none;
+  animation: scanlineMove 8s linear infinite;
+}
+
+@keyframes scanlineMove {
+  0%   { background-position: 0 0; }
+  100% { background-position: 0 200px; }
+}
+
+/* Cyber grid on left panel */
+.panel-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(48, 54, 61, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(48, 54, 61, 0.07) 1px, transparent 1px);
+  background-size: 36px 36px;
+}
+
+/* Floating particle nodes */
+.particle-node {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: 2;
+  animation: floatNode var(--dur, 8s) ease-in-out infinite alternate;
+  opacity: var(--op, 0.35);
+}
+
+@keyframes floatNode {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(var(--dx, 20px), var(--dy, -20px)); }
+}
+
+/* Node connector lines (SVG-like effect using pseudo) */
+.panel-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  max-width: 440px;
+}
+
+.panel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(255, 77, 109, 0.1);
+  border: 1px solid rgba(255, 77, 109, 0.25);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.panel-badge::before {
+  content: '';
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+.panel-headline {
+  font-size: clamp(34px, 3.5vw, 52px);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+  color: var(--text-primary);
+}
+
+.panel-headline span {
+  display: block;
+  background: linear-gradient(135deg, var(--accent) 0%, #ff8c9e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.panel-desc {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 380px;
+}
+
+/* Feature pills row */
+.panel-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.feature-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.25s ease;
+}
+
+.feature-pill:hover {
+  border-color: rgba(255, 77, 109, 0.4);
+  color: var(--text-primary);
+  background: rgba(255, 77, 109, 0.07);
+}
+
+.feature-pill-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Decorative corner accent */
+.panel-corner-tl,
+.panel-corner-br {
+  position: absolute;
+  z-index: 3;
+  width: 60px;
+  height: 60px;
+}
+
+.panel-corner-tl {
+  top: 24px;
+  left: 24px;
+  border-top: 2px solid rgba(255, 77, 109, 0.4);
+  border-left: 2px solid rgba(255, 77, 109, 0.4);
+}
+
+.panel-corner-br {
+  bottom: 24px;
+  right: 24px;
+  border-bottom: 2px solid rgba(255, 77, 109, 0.4);
+  border-right: 2px solid rgba(255, 77, 109, 0.4);
+}
+
+/* Glowing orb on left */
+.panel-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.panel-orb-1 {
+  width: 360px;
+  height: 360px;
+  background: rgba(255, 77, 109, 0.22);
+  top: -80px;
+  right: -80px;
+  animation: orbFloat1 14s ease-in-out infinite alternate;
+}
+
+.panel-orb-2 {
+  width: 280px;
+  height: 280px;
+  background: rgba(88, 166, 255, 0.14);
+  bottom: -60px;
+  left: -40px;
+  animation: orbFloat2 18s ease-in-out infinite alternate;
+}
+
+@keyframes orbFloat1 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30px, 50px) scale(1.12); }
+}
+
+@keyframes orbFloat2 {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-20px, -40px) scale(1.08); }
+}
+
+/* ─────────────────────────────────────────
+   RIGHT FORM PANEL
+───────────────────────────────────────── */
+.auth-right-panel {
+  flex: 1;
+  background: var(--bg-base);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Subtle noise texture overlay */
+.auth-right-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 80% 20%, rgba(255, 77, 109, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 20% 80%, rgba(88, 166, 255, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Vertical separator line */
+.auth-divider {
+  position: absolute;
+  left: 0;
+  top: 5%;
+  height: 90%;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 77, 109, 0.25) 30%, rgba(255, 77, 109, 0.25) 70%, transparent);
+}
+
+/* ── Form Card (no border, clean) ── */
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  padding: 48px 44px;
+}
+
+/* ── Mode Banner ── */
+.mode-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 193, 7, 0.07);
+  border: 1px solid rgba(255, 193, 7, 0.18);
+  color: rgba(255, 193, 7, 0.85);
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 28px;
+  font-family: var(--font-mono);
+}
+
+.mode-banner.firebase-active {
+  background: rgba(46, 204, 113, 0.07);
+  border-color: rgba(46, 204, 113, 0.18);
+  color: rgba(46, 204, 113, 0.9);
+}
+
+.mode-banner span {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 6px currentColor;
+  animation: pulseDot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* ── Form Slider ── */
+.auth-slider {
+  display: flex;
+  width: 200%;
+  transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.auth-slider.show-signup {
+  transform: translateX(-50%);
+}
+
+.form-wrapper {
+  width: 50%;
+  transition: opacity 0.35s ease;
+}
+
+.auth-slider:not(.show-signup) .signup-wrapper {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.auth-slider.show-signup .login-wrapper {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Auth Header ── */
+.auth-header {
+  margin-bottom: 36px;
+}
+
+.auth-header h2 {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.auth-header h2 em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.auth-header p {
+  color: var(--text-muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+/* ── Form Groups & Floating Labels ── */
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-input-container {
+  position: relative;
+}
+
+.form-group label {
+  position: absolute;
+  left: 16px;
+  top: 20px;
+  color: var(--text-muted);
+  font-size: 15px;
+  font-weight: 500;
+  pointer-events: none;
+  transition: transform 0.22s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.22s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform-origin: left top;
+  z-index: 1;
+}
+
+.form-group input {
+  width: 100%;
+  background: rgba(13, 17, 23, 0.55);
+  border: 1.5px solid rgba(48, 54, 61, 0.9);
+  border-radius: 10px;
+  padding: 26px 16px 10px 16px;
+  font-size: 15px;
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  outline: none;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+
+/* Floating label — lifted state */
+.form-group input:focus ~ label,
+.form-group input:not(:placeholder-shown) ~ label,
+.form-group input:autofill ~ label,
+.form-group input:-webkit-autofill ~ label {
+  transform: translateY(-12px) scale(0.75);
+  color: var(--accent);
+}
+
+/* Maintain dark style during autofill */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover, 
+.form-group input:-webkit-autofill:focus, 
+.form-group input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #0a0e14 inset !important;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.form-group input:focus {
+  border-color: var(--accent);
+  background: rgba(13, 17, 23, 0.85);
+  box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.12), 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* ── Input icon slot (right side) ── */
+.input-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ── Error States ── */
+.form-group input.invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.1);
+}
+
+.form-group input.invalid ~ label {
+  color: var(--danger);
+}
+
+.error-message {
+  color: var(--danger);
+  font-size: 11.5px;
+  margin-top: 5px;
+  display: none;
+  font-family: var(--font-mono);
+  padding-left: 4px;
+  opacity: 0.9;
+}
+
+/* ── Submit Button ── */
+.auth-btn-submit {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  margin-bottom: 22px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  background: linear-gradient(135deg, #ff4d6d 0%, #e0364d 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  box-shadow:
+    0 4px 15px rgba(255, 77, 109, 0.35),
+    0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.auth-btn-submit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.auth-btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(255, 77, 109, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.auth-btn-submit:hover::before {
+  opacity: 1;
+}
+
+.auth-btn-submit:active {
+  transform: translateY(0);
+}
+
+/* ── Toggle link ── */
+.auth-toggle-link {
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.auth-toggle-link a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.auth-toggle-link a::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.25s ease;
+}
+
+.auth-toggle-link a:hover::after {
+  width: 100%;
+}
+
+/* ── Divider with OR text ── */
+.auth-separator {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 4px 0 18px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.auth-separator::before,
+.auth-separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ─────────────────────────────────────────
+   TOAST NOTIFICATIONS
+───────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  top: 90px;
+  right: 28px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  background: rgba(22, 27, 34, 0.96);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  color: var(--text-primary);
+  padding: 14px 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.03);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 300px;
+  max-width: 380px;
+  animation: toastIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  font-size: 13.5px;
+  line-height: 1.5;
+  pointer-events: all;
+}
+
+.toast.success { border-left-color: #2ecc71; }
+.toast.error   { border-left-color: var(--danger); }
+
+@keyframes toastIn {
+  from { transform: translateX(120%) scale(0.9); opacity: 0; }
+  to   { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+.toast.fade-out {
+  animation: toastOut 0.3s ease forwards;
+}
+
+@keyframes toastOut {
+  from { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(120%); opacity: 0; }
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE — stack vertically on mobile
+───────────────────────────────────────── */
+@media (max-width: 900px) {
+  body.login-body { overflow: auto; }
+  .auth-page-container {
+    flex-direction: column;
+    height: auto;
+    min-height: calc(100vh - 70px);
+  }
+
+  .auth-left-panel {
+    width: 100%;
+    padding: 48px 32px 40px;
+  }
+
+  .panel-headline { font-size: 36px; }
+
+  .auth-divider { display: none; }
+
+  .auth-right-panel {
+    padding: 40px 24px;
+  }
+
+  .auth-card {
+    padding: 32px 28px;
+    max-width: 480px;
+  }
+}
+
+/* ── Google login button ── */
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.25s ease;
+  font-family: var(--font-main);
+}
+.google-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 77, 109, 0.4);
+}
+.google-btn svg {
+  flex-shrink: 0;
+}

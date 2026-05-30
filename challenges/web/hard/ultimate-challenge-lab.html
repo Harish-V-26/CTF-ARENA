@@ -149,7 +149,51 @@
       color: #e74c3c;
       display: block;
     }
-  </style>
+  
+  /* Dropdown CSS from global.css */
+  .dropdown { position: relative; display: inline-block; margin-left: 20px;}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding-top: 14px;
+    background: transparent;
+    min-width: 180px;
+    z-index: 200;
+  }
+  .dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-elevated, #161b22);
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--border, #30363d);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  .dropdown-content a {
+    display: block;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border, #30363d);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    color: var(--text-primary, #c9d1d9);
+    text-decoration: none;
+  }
+  .dropdown-content a:first-child { border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0; }
+  .dropdown-content a:last-child  { border-bottom: none; border-radius: 0 0 var(--radius-md, 8px) var(--radius-md, 8px); }
+  .dropdown-content a:hover {
+    background: var(--accent, #ff3366);
+    color: #000;
+  }
+  .dropdown:hover .dropdown-content { display: block; }
+
+</style>
 </head>
 <body>
 
@@ -279,6 +323,7 @@
         <div class="score-pill" style="font-size: 1.5em; padding: 10px 20px; background: #000; color: #f1c40f; display: inline-block; margin: 20px 0; border-radius: 30px;">1000 / 1000 pts</div>
         <br>
         <a href="../../../challenges.html" class="btn-launch" style="background: #3498db;">Return to Challenges</a>
+        <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px" onclick="reattemptRoom()">↻ Reattempt</button>
       </div>
 
     </div>
@@ -491,7 +536,19 @@ window.addEventListener('beforeunload', () => {
 document.addEventListener('DOMContentLoaded', () => {
   initHints();
 });
+
+  function reattemptRoom() {
+    if (confirm("Are you sure you want to reset your progress for this room?")) {
+      const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+      localStorage.removeItem(storageKey);
+      window.location.reload();
+    }
+  }
 </script>
 
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
 </body>
 </html>

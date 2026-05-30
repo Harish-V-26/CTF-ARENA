@@ -11,7 +11,51 @@
     .reading-text h3 { color: #f39c12; margin-top: 24px; margin-bottom: 12px; font-size: 1.1em; }
     .reading-text p { line-height: 1.7; margin-bottom: 12px; }
     .reading-text code { background: rgba(243, 156, 18, 0.15); color: #f39c12; padding: 2px 7px; border-radius: 4px; font-family: monospace; }
-  </style>
+  
+  /* Dropdown CSS from global.css */
+  .dropdown { position: relative; display: inline-block; margin-left: 20px;}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding-top: 14px;
+    background: transparent;
+    min-width: 180px;
+    z-index: 200;
+  }
+  .dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-elevated, #161b22);
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--border, #30363d);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  .dropdown-content a {
+    display: block;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border, #30363d);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    color: var(--text-primary, #c9d1d9);
+    text-decoration: none;
+  }
+  .dropdown-content a:first-child { border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0; }
+  .dropdown-content a:last-child  { border-bottom: none; border-radius: 0 0 var(--radius-md, 8px) var(--radius-md, 8px); }
+  .dropdown-content a:hover {
+    background: var(--accent, #ff3366);
+    color: #000;
+  }
+  .dropdown:hover .dropdown-content { display: block; }
+
+</style>
 </head>
 <body>
 <nav class="navbar" aria-label="Main navigation">
@@ -70,6 +114,7 @@
         <p>You've mastered the advanced OWASP vulnerabilities, from Insecure Design and Authentication Failures to Logging and Error Handling. Great job!</p>
         <div class="score-pill" id="score-pill">0 / 100 pts</div>
         <a href="../../../learn.html" class="btn btn-primary">← Back to Learn</a>
+        <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px" onclick="reattemptRoom()">↻ Reattempt</button>
       </div>
     </div>
     <div class="room-footer-nav">
@@ -144,7 +189,7 @@
       input.disabled = true; document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
       updateProgress();
     } else {
-      qc.classList.add('wrong'); fb.className = 'feedback wrong-msg show'; fb.textContent = ' Not quite — try again.';
+      qc.classList.add('wrong'); if(window.ctfTrackFailed) window.ctfTrackFailed(); fb.className = 'feedback wrong-msg show'; fb.textContent = ' Not quite — try again.';
       setTimeout(() => { qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
     }
   }
@@ -172,6 +217,7 @@
     if (next >= 0 && next < TOTAL) { goTo(next); } else if (dir === 1) { showCompletion(); }
   }
   function showCompletion() {
+  if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
     document.getElementById('lesson-panel').style.display = 'none';
     const pts = 100;
     document.getElementById('score-pill').textContent = `${pts} / 100 pts`;
@@ -181,6 +227,18 @@
     document.querySelector('.room-body').scrollTop = 0;
   }
   buildSidebar(); buildDots(); renderLesson(0);
+
+  function reattemptRoom() {
+    if (confirm("Are you sure you want to reset your progress for this room?")) {
+      const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+      localStorage.removeItem(storageKey);
+      window.location.reload();
+    }
+  }
 </script>
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
 </body>
 </html>
