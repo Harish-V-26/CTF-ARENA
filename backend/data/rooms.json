@@ -1,0 +1,148 @@
+{
+    "basic-pen-testing-": {
+        "roomName": "Basic pen-testing ",
+        "description": "basic only",
+        "roomType": "Walkthrough",
+        "difficulty": "Easy",
+        "visibility": "Private",
+        "tasks": [
+            {
+                "id": 1780032419522,
+                "title": "Task 1",
+                "description": "",
+                "isExpanded": true,
+                "questions": [
+                    {
+                        "id": 1780032419523,
+                        "text": "hi ",
+                        "answer": "bye",
+                        "points": 10,
+                        "hint": ""
+                    }
+                ]
+            }
+        ],
+        "files": [
+            {
+                "name": "pentest.jpg",
+                "size": "0.05 MB",
+                "id": 1780032502219.261
+            }
+        ],
+        "vm": {
+            "osType": "Linux",
+            "osVersion": "",
+            "ram": "1GB",
+            "cpu": 1
+        },
+        "tags": [],
+        "avatar": "data:image/png;base64,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",
+        "categories": [
+            "Web"
+        ]
+    },
+    "pentesting-": {
+        "roomName": "pentesting ",
+        "description": "basic",
+        "roomType": "Walkthrough",
+        "difficulty": "Easy",
+        "visibility": "Private",
+        "tasks": [
+            {
+                "id": 1780032937659,
+                "title": "Task 1",
+                "description": "",
+                "isExpanded": true,
+                "questions": [
+                    {
+                        "id": 1780032937660,
+                        "text": "hi",
+                        "answer": "bye",
+                        "points": 10,
+                        "hint": ""
+                    }
+                ]
+            }
+        ],
+        "files": [
+            {
+                "name": "pentest.jpg",
+                "size": "0.05 MB",
+                "id": 1780032985334.2761
+            }
+        ],
+        "vm": {
+            "osType": "Linux",
+            "osVersion": "",
+            "ram": "1GB",
+            "cpu": 1
+        },
+        "tags": [],
+        "avatar": "data:image/png;base64,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",
+        "categories": [
+            "Web"
+        ]
+    },
+    "test1": {
+        "roomName": "Test Room",
+        "description": "type bye",
+        "roomCode": "test1",
+        "completionTime": 60,
+        "difficulty": "Medium",
+        "cloning": false,
+        "visibility": "Private",
+        "privateMessage": "",
+        "bannerUrl": "",
+        "avatarUrl": "",
+        "video1": null,
+        "video2": null,
+        "tasks": [
+            {
+                "id": 12345,
+                "title": "Task 1",
+                "description": "type bye",
+                "questions": [
+                    {
+                        "id": 12346,
+                        "text": "hi",
+                        "answer": "bye",
+                        "points": 10,
+                        "answer_hash": "scrypt:32768:8:1$GsxFVS0i3EWqWUkT$0e45e3f56f0638921024f46fa0f1a26f5aac3f401ec71c1254f8053843f14c587bce82f9be91800547464f8c25f58dd41ce688685f02c78d4416b10b455d54f3"
+                    }
+                ]
+            }
+        ],
+        "categories": []
+    },
+    "pentesting4s": {
+        "roomName": "Pentesting",
+        "description": "testing",
+        "roomCode": "pentesting4s",
+        "completionTime": 60,
+        "difficulty": "Info",
+        "cloning": false,
+        "visibility": "Private",
+        "privateMessage": "",
+        "bannerUrl": "",
+        "avatarUrl": "https://api.dicebear.com/7.x/identicon/svg?seed=0.10721272554202665",
+        "video1": null,
+        "video2": null,
+        "tasks": [
+            {
+                "id": 1780048444786,
+                "title": "New Task",
+                "description": "hi everyone",
+                "questions": [
+                    {
+                        "id": 1780048448646,
+                        "text": "hi",
+                        "answer": "bye",
+                        "points": 10,
+                        "answer_hash": "scrypt:32768:8:1$B4Qw2rAFoWz4J4CH$737ad17d68a8337c26999eac94aa2fa081d75c161a684b5aa4fcd2aea0771ee813cd9374b5a11b54da7cea96622183903edf371bc9d956a9db3ed8a589fa4691"
+                    }
+                ]
+            }
+        ],
+        "categories": []
+    }
+}

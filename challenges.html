@@ -21,6 +21,7 @@
       <a href="learn.html">Learn</a>
       <a href="challenges.html" class="active">Challenges</a>
       <a href="rules.html">Rules</a>
+      <a href="create-room.html">Create Room</a>
 
       <div class="dropdown" role="navigation" aria-label="Profile menu">
         <a href="#" aria-haspopup="true">Profile </a>
@@ -90,6 +91,7 @@
           </div>
         </div>
 
+<<<<<<< HEAD
         <!-- OWASP Top 10 Part 1 (1-5) -->
         <div class="challenge-card" data-category="web" id="card-owasp-top5-challenge"
           onclick="window.location.href='challenges/web/easy/owasp-top5-challenge-lab.html'" style="cursor: pointer;">
@@ -108,6 +110,26 @@
             <span class="points">250 pts</span>
             <span class="solve-count"> Live Target</span>
             <a href="challenges/web/easy/owasp-top5-challenge-lab.html" class="start-btn" id="start-owasp-top5-challenge">Start →</a>
+=======
+        <!-- OWASP Top 10 Part 2 Chain -->
+        <div class="challenge-card" data-category="web" id="card-owasp-part2-ctf"
+          onclick="window.location.href='challenges/web/beginner/owasp-part2-ctf-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #f39c12, #e74c3c, #9b59b6, #3498db);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: rgba(255,77,109,0.15); color: #ff4d6d;">Multi-Stage</span>
+            </div>
+            <div class="challenge-title">OWASP Part 2 Chained CTF</div>
+            <div class="challenge-desc">
+              Chain 5 critical vulnerabilities: Verbose Errors, User Enumeration/Brute Force, Predictable Sessions, Cookie Tampering, and Insecure Deserialization to compromise the SecureCorp Infrastructure.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">600 pts</span>
+            <span class="solve-count"> Live Target</span>
+            <a href="challenges/web/beginner/owasp-part2-ctf-lab.html" class="start-btn" id="start-owasp-part2-ctf">Start →</a>
+>>>>>>> f106b15dec87e160b1b29fdb0554b36070be2e3e
           </div>
         </div>
 
@@ -255,6 +277,14 @@
           learnList = ["Directory Fuzzing (ffuf)", "Tech Stack Discovery (Wappalyzer)", "Attack Surface Mapping"];
       } else if (title.includes("Brute Force")) {
           learnList = ["Dictionary Attacks", "Credential Stuffing", "Rate Limiting Bypass", "Using Hydra & Burp Suite"];
+      } else if (title.includes("OWASP Part 2")) {
+          learnList = [
+              "Mishandling of Exceptional Conditions (Verbose Errors)",
+              "Insecure Design (Predictable Admin URL & Stackable Coupons)",
+              "Identification & Authentication Failures (Enumeration & MD5 Forgery)",
+              "Software & Data Integrity Failures (Insecure Deserialization)",
+              "Security Logging & Monitoring Failures (Log Injection & Alert Disabling)"
+          ];
       } else if (title.includes("OWASP")) {
           learnList = ["Broken Access Control", "Cryptographic Failures", "Injection Attacks", "Insecure Design Principles"];
       } else if (title.includes("Web Security")) {

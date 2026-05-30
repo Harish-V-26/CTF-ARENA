@@ -30,6 +30,8 @@ from routes.error_handling import error_handling_bp
 from routes.owasp_top5 import owasp_top5_bp
 from routes.owasp_top5_challenge import owasp_top5_challenge_bp
 from routes.gauntlet import gauntlet_bp
+from routes.owasp_part2_ctf import owasp_part2_ctf_bp
+from routes.rooms import rooms_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -56,6 +58,8 @@ app.register_blueprint(error_handling_bp)
 app.register_blueprint(owasp_top5_bp)
 app.register_blueprint(owasp_top5_challenge_bp)
 app.register_blueprint(gauntlet_bp)
+app.register_blueprint(owasp_part2_ctf_bp)
+app.register_blueprint(rooms_bp)
 
 if __name__ == '__main__':
     # Run the server

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="OWASP Top 10 Part 2 CTF Challenge — Practice Insecure Design, Auth Failures, Software Integrity, Logging Failures, and Verbose Errors."/>
+  <title>CTF LABS — OWASP Part 2 CTF Challenge</title>
+  <link rel="stylesheet" href="../../../css/global.css"/>
+  <style>
+    .ctf-container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .ctf-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .ctf-header h1 {
+      font-size: 2.5rem;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .ctf-header .badge {
+      background: rgba(255, 77, 109, 0.15);
+      color: #ff4d6d;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    
+    .ctf-briefing {
+      background: #161b22;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      border-top: 4px solid var(--accent);
+    }
+    .ctf-briefing h2 {
+      margin-top: 0;
+      color: var(--accent);
+      font-size: 1.4rem;
+    }
+    .ctf-briefing p {
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .ctf-briefing ul {
+      color: var(--text-muted);
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    .ctf-briefing li {
+      margin-bottom: 6px;
+    }
+
+    /* Docker Launch Panels */
+    .docker-panels {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .docker-launch {
+      flex: 1;
+      background: #0d1117;
+      border-radius: 10px;
+      padding: 24px;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+    .docker-launch h3 { 
+      margin-top: 0; 
+      color: #fff; 
+      font-size: 1.2rem; 
+    }
+    .docker-launch p { 
+      color: var(--text-muted); 
+      font-size: 0.9rem; 
+      margin: 10px 0 20px; 
+    }
+    .btn-launch {
+      display: inline-block;
+      padding: 12px 20px;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-launch:hover { background: var(--accent-dim); }
+    .btn-stop { background: #c0392b; display: none; }
+    .btn-stop:hover { background: #a5281b; }
+
+    .terminal-box {
+      display: none;
+      margin-top: 20px;
+      background: #000;
+      border: 1px solid #30363d;
+      padding: 16px;
+      border-radius: 6px;
+      text-align: left;
+    }
+    .terminal-box p {
+      color: var(--text-muted);
+      margin: 0 0 10px;
+      font-size: 0.85rem;
+    }
+    .terminal-box code {
+      display: block;
+      color: #00ff66;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      word-break: break-all;
+    }
+
+    /* Hints Section */
+    .hints-section {
+      background: #161b22;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+    .hints-section h3 {
+      margin-top: 0;
+      color: #fff;
+      font-size: 1.25rem;
+      margin-bottom: 15px;
+    }
+    .hint-accordion {
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .hint-header {
+      background: #0d1117;
+      padding: 12px 18px;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+    .hint-header:hover {
+      background: #1c2128;
+    }
+    .hint-header::after {
+      content: '+';
+      font-size: 1.2rem;
+      color: var(--accent);
+      transition: transform 0.2s;
+    }
+    .hint-accordion.active .hint-header::after {
+      content: '-';
+    }
+    .hint-content {
+      display: none;
+      padding: 15px 18px;
+      background: #161b22;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+    .hint-accordion.active .hint-content {
+      display: block;
+    }
+
+    /* Flag Submission */
+    .flag-submission {
+      background: #161b22;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+    }
+    .flag-submission h3 {
+      margin-top: 0;
+      color: #fff;
+      font-size: 1.4rem;
+    }
+    .flag-input-group {
+      display: flex;
+      max-width: 500px;
+      margin: 20px auto 0;
+      gap: 10px;
+    }
+    .flag-input {
+      flex: 1;
+      padding: 12px 15px;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+    }
+    .flag-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+    .btn-submit {
+      padding: 12px 24px;
+      background: #2ecc71;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .btn-submit:hover { background: #27ae60; }
+    
+    .feedback-msg {
+      margin-top: 15px;
+      font-weight: bold;
+      display: none;
+    }
+    .feedback-msg.success { color: #2ecc71; display: block; }
+    .feedback-msg.error { color: #e74c3c; display: block; }
+
+    @media (max-width: 768px) {
+      .docker-panels { flex-direction: column; }
+      .flag-input-group { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar" aria-label="Main navigation">
+  <a href="../../../index.html" class="logo">CTF<span>LABS</span></a>
+  <div class="nav-links">
+    <a href="../../../index.html">Home</a>
+    <a href="../../../learn.html">Learn</a>
+    <a href="../../../challenges.html" class="active">Challenges</a>
+    <a href="../../../rules.html">Rules</a>
+      <a href="../../../create-room.html">Create Room</a>
+  </div>
+</nav>
+
+<div class="ctf-container">
+  
+  <div class="ctf-header">
+    <div class="badge">OWASP Chain Challenge</div>
+    <h1>OWASP Top 10 Part 2</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem;">Chain vulnerabilities #6 through #10 to extract the Master Flag.</p>
+  </div>
+
+  <div class="ctf-briefing">
+    <h2>Mission Briefing</h2>
+    <p>AGENT, a high-value targets server running within an isolated Docker environment contains sensitive operational plans. Your mission is to compromise the server using a chain of vulnerabilities corresponding to categories 6 through 10 of the OWASP Top 10:</p>
+    <ul>
+      <li><strong>Mishandling of Exceptional Conditions (OWASP #10):</strong> Extract verbose diagnostic data that discloses system paths and db credentials.</li>
+      <li><strong>Insecure Design (OWASP #6):</strong> Discover a hidden administrative path that was obscured rather than properly protected.</li>
+      <li><strong>Authentication Failures (OWASP #7):</strong> Enumerate valid usernames and brute force the operator password.</li>
+      <li><strong>Predictable Sessions (OWASP #7):</strong> Analyze session cookies, identify the signature mechanism, and forge an administrator token.</li>
+      <li><strong>Software & Data Integrity Failures (OWASP #8):</strong> Submit unsigned, serialized configurations to achieve remote command execution (RCE).</li>
+      <li><strong>Logging & Monitoring Failures (OWASP #9):</strong> Inject fake logging payloads to hide tracks or audit alert notifications.</li>
+    </ul>
+    <p>Launch the target and the offensive terminal environment below, trace the vulnerabilities, and locate the master flag in <code>/app/flag.txt</code>.</p>
+  </div>
+
+  <div class="docker-panels">
+    <!-- Target Server -->
+    <div class="docker-launch">
+      <h3>Vulnerable Target Portal</h3>
+      <p>Start the target web application sandbox containing all 5 vulnerabilities.</p>
+      <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Launch Target ⇗</button>
+      <button id="target-stop-btn" class="btn-launch btn-stop" onclick="stopTarget()">Stop Target</button>
+      <p id="target-msg" style="display:none; margin-top:15px; font-weight:bold;"></p>
+      <div class="terminal-box" id="target-info">
+        <p>Target is online! Access the web portal at:</p>
+        <code id="target-url"></code>
+      </div>
+    </div>
+
+    <!-- Kali Linux -->
+    <div class="docker-launch">
+      <h3>Kali Linux Shell</h3>
+      <p>Launch your offensive toolkit containing command scanners and dictionary lists.</p>
+      <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Launch Kali ⇗</button>
+      <button id="kali-stop-btn" class="btn-launch btn-stop" onclick="stopKali()">Stop Kali</button>
+      <p id="kali-msg" style="display:none; margin-top:15px; font-weight:bold;"></p>
+      <div class="terminal-box" id="kali-info">
+        <p>Kali is ready! Run this in your local terminal to attach:</p>
+        <code id="kali-command">docker exec -it [id] bash</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- HINTS SECTION -->
+  <div class="hints-section">
+    <h3>Challenge Hints</h3>
+    
+    <!-- Hint 1 -->
+    <div class="hint-accordion">
+      <div class="hint-header" onclick="toggleHint(this)">Hint 1 — Verbose Errors & Secret Paths</div>
+      <div class="hint-content">
+        Look closely at the landing page of the Target portal. There is a button to test the database connection status. If you click it, the system encounters an unhandled exception and spits out a verbose error traceback (OWASP #10). Read the traceback lines carefully — they disclose internal parameters, database passwords, and the path to a hidden login portal.
+      </div>
+    </div>
+
+    <!-- Hint 2 -->
+    <div class="hint-accordion">
+      <div class="hint-header" onclick="toggleHint(this)">Hint 2 — User Enumeration & Authentication Bypasses</div>
+      <div class="hint-content">
+        Once you navigate to the hidden path, analyze how the login interface behaves. Try common usernames like <code>admin</code> or <code>guest</code>. Does the error message change depending on whether a username exists in the system (OWASP #7)? Check if there's an account lockout limit. You can brute-force the password using the DB password leaked in Hint 1.
+      </div>
+    </div>
+
+    <!-- Hint 3 -->
+    <div class="hint-accordion">
+      <div class="hint-header" onclick="toggleHint(this)">Hint 3 — Predictable Session Forgery</div>
+      <div class="hint-content">
+        Log in as the low-privilege user <code>guest</code> with the password <code>guestpassword</code>. Look at the cookie set in your browser (DevTools -> Application -> Cookies). What is the cookie value? Run it through a hash identifier. It's just a simple MD5 hash of the username! Can you compute the MD5 of the administrator username <code>sysadmin</code> (e.g. using online tools or <code>echo -n sysadmin | md5sum</code>) and replace your cookie value with it to escalate privileges?
+      </div>
+    </div>
+
+    <!-- Hint 4 -->
+    <div class="hint-accordion">
+      <div class="hint-header" onclick="toggleHint(this)">Hint 4 — Insecure Deserialization & RCE</div>
+      <div class="hint-content">
+        Once logged in as <code>sysadmin</code>, you will find the admin dashboard. In the custom plugin loader (OWASP #8), the backend processes Base64-encoded JSON files. Because the code does not verify digital signatures or HMACs, it decodes and executes payload JSON values directly. Submit a base64-encoded JSON payload containing a key called <code>cmd</code> with a command like <code>cat /app/flag.txt</code> to extract the master flag!
+      </div>
+    </div>
+  </div>
+
+  <div class="flag-submission">
+    <h3>Submit the Master Flag</h3>
+    <p style="color: var(--text-muted); margin-bottom: 0;">Once you compromise the target and read <code>/app/flag.txt</code>, submit it here.</p>
+    <div class="flag-input-group">
+      <input type="text" id="flag-input" class="flag-input" placeholder="CTF{...}" autocomplete="off" />
+      <button class="btn-submit" onclick="submitFlag()">Submit Flag</button>
+    </div>
+    <div id="flag-feedback" class="feedback-msg"></div>
+  </div>
+
+</div>
+
+<!-- ACCORDION SCRIPTS -->
+<script>
+  function toggleHint(header) {
+    const parent = header.parentElement;
+    parent.classList.toggle('active');
+  }
+</script>
+
+<!-- DOCKER MANAGEMENT SCRIPTS -->
+<script>
+  let currentTargetId = null;
+  let currentKaliId = null;
+
+  async function launchTarget() {
+    const btn = document.getElementById('target-launch-btn');
+    const stopBtn = document.getElementById('target-stop-btn');
+    const msg = document.getElementById('target-msg');
+    const info = document.getElementById('target-info');
+    
+    btn.style.display = 'none';
+    info.style.display = 'none';
+    msg.style.display = 'block';
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Booting Vulnerable Target Portal...';
+
+    try {
+      const host = window.location.hostname || "localhost";
+      const response = await fetch(`http://${host}:5000/api/start-owasp-part2-ctf`, { method: 'POST' });
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        currentTargetId = data.container_id;
+        sessionStorage.setItem('owasp_part2_target_container', currentTargetId);
+        sessionStorage.setItem('owasp_part2_target_port', data.port);
+
+        msg.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+        info.style.display = 'block';
+        document.getElementById('target-url').textContent = `http://${host}:${data.port}`;
+      } else {
+        msg.style.color = '#e74c3c';
+        msg.textContent = 'Error: ' + data.message;
+        btn.style.display = 'inline-block';
+      }
+    } catch (err) {
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Failed to reach backend docker agent.';
+      btn.style.display = 'inline-block';
+    }
+  }
+
+  async function stopTarget() {
+    if (!currentTargetId) return;
+    const msg = document.getElementById('target-msg');
+    const info = document.getElementById('target-info');
+    const stopBtn = document.getElementById('target-stop-btn');
+    const launchBtn = document.getElementById('target-launch-btn');
+
+    info.style.display = 'none';
+    stopBtn.style.display = 'none';
+    msg.style.display = 'block';
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Stopping Target...';
+    
+    try {
+      const host = window.location.hostname || "localhost";
+      await fetch(`http://${host}:5000/api/stop-owasp-part2-ctf/${currentTargetId}`, { method: 'POST' });
+      
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Target stopped safely.';
+      setTimeout(() => msg.style.display = 'none', 3000);
+      
+      launchBtn.style.display = 'inline-block';
+      sessionStorage.removeItem('owasp_part2_target_container');
+      sessionStorage.removeItem('owasp_part2_target_port');
+      currentTargetId = null;
+    } catch (e) {
+      msg.textContent = 'Error stopping Target container.';
+      stopBtn.style.display = 'inline-block';
+    }
+  }
+
+  async function launchKali() {
+    const btn = document.getElementById('kali-launch-btn');
+    const stopBtn = document.getElementById('kali-stop-btn');
+    const msg = document.getElementById('kali-msg');
+    const info = document.getElementById('kali-info');
+    
+    btn.style.display = 'none';
+    info.style.display = 'none';
+    msg.style.display = 'block';
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Spinning up Kali container...';
+
+    try {
+      const host = window.location.hostname || "localhost";
+      const response = await fetch(`http://${host}:5000/api/start-kali`, { method: 'POST' });
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        currentKaliId = data.container_id;
+        sessionStorage.setItem('owasp_part2_kali_container', currentKaliId);
+
+        msg.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+        info.style.display = 'block';
+        document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
+      } else {
+        msg.style.color = '#e74c3c';
+        msg.textContent = 'Error: ' + data.message;
+        btn.style.display = 'inline-block';
+      }
+    } catch (err) {
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Failed to reach backend docker agent.';
+      btn.style.display = 'inline-block';
+    }
+  }
+
+  async function stopKali() {
+    if (!currentKaliId) return;
+    const msg = document.getElementById('kali-msg');
+    const info = document.getElementById('kali-info');
+    const stopBtn = document.getElementById('kali-stop-btn');
+    const launchBtn = document.getElementById('kali-launch-btn');
+
+    info.style.display = 'none';
+    stopBtn.style.display = 'none';
+    msg.style.display = 'block';
+    msg.style.color = '#e67e22';
+    msg.textContent = 'Stopping Kali...';
+    
+    try {
+      const host = window.location.hostname || "localhost";
+      await fetch(`http://${host}:5000/api/stop-kali/${currentKaliId}`, { method: 'POST' });
+      
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Kali stopped safely.';
+      setTimeout(() => msg.style.display = 'none', 3000);
+      
+      launchBtn.style.display = 'inline-block';
+      sessionStorage.removeItem('owasp_part2_kali_container');
+      currentKaliId = null;
+    } catch (e) {
+      msg.textContent = 'Error stopping Kali container.';
+      stopBtn.style.display = 'inline-block';
+    }
+  }
+
+  // Restore state on reload
+  window.addEventListener('load', function() {
+    const host = window.location.hostname || "localhost";
+    
+    const savedTarget = sessionStorage.getItem('owasp_part2_target_container');
+    const savedPort = sessionStorage.getItem('owasp_part2_target_port');
+    if (savedTarget && savedPort) {
+      currentTargetId = savedTarget;
+      fetch(`http://${host}:5000/api/cancel-stop-owasp-part2-ctf/${savedTarget}`, { method: 'POST' }).catch(()=>{});
+      
+      document.getElementById('target-launch-btn').style.display = 'none';
+      document.getElementById('target-stop-btn').style.display = 'inline-block';
+      document.getElementById('target-info').style.display = 'block';
+      document.getElementById('target-url').textContent = `http://${host}:${savedPort}`;
+    }
+
+    const savedKali = sessionStorage.getItem('owasp_part2_kali_container');
+    if (savedKali) {
+      currentKaliId = savedKali;
+      fetch(`http://${host}:5000/api/cancel-stop-kali/${savedKali}`, { method: 'POST' }).catch(()=>{});
+      
+      document.getElementById('kali-launch-btn').style.display = 'none';
+      document.getElementById('kali-stop-btn').style.display = 'inline-block';
+      document.getElementById('kali-info').style.display = 'block';
+      document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
+    }
+  });
+
+  window.addEventListener('beforeunload', function() {
+    const host = window.location.hostname || "localhost";
+    if (currentTargetId) {
+      navigator.sendBeacon(`http://${host}:5000/api/stop-owasp-part2-ctf-delayed/${currentTargetId}`);
+    }
+    if (currentKaliId) {
+      navigator.sendBeacon(`http://${host}:5000/api/stop-kali-delayed/${currentKaliId}`);
+    }
+  });
+
+  // Flag Validation
+  function submitFlag() {
+    const input = document.getElementById('flag-input').value.trim();
+    const fb = document.getElementById('flag-feedback');
+    const CORRECT_FLAG = "CTF{owasp_part2_compl3t3_chain_auth_integrity_errors_design_logging}";
+    
+    if (input === CORRECT_FLAG) {
+      fb.textContent = " ACCESS GRANTED. Challenge Complete! You have mastered the OWASP Top 10 Part 2 chain.";
+      fb.className = "feedback-msg success";
+    } else {
+      fb.textContent = " INCORRECT FLAG. Access Denied.";
+      fb.className = "feedback-msg error";
+    }
+  }
+</script>
+
+</body>
+</html>
