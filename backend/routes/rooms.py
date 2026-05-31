@@ -20,6 +20,7 @@ def load_rooms():
             return {}
 
 def save_rooms(rooms):
+    os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
     with open(DATA_FILE, 'w') as f:
         json.dump(rooms, f, indent=4)
 
@@ -71,6 +72,19 @@ def update_room(room_id):
     save_rooms(rooms)
     return jsonify({'success': True, 'room_id': room_id})
 
+@rooms_bp.route('/api/rooms/<room_id>', methods=['DELETE'])
+def delete_room(room_id):
+    rooms = load_rooms()
+    if room_id not in rooms:
+        return jsonify({'error': 'Not found'}), 404
+        
+    try:
+        del rooms[room_id]
+        save_rooms(rooms)
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @rooms_bp.route('/api/rooms/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
@@ -116,8 +130,8 @@ def view_room(room_id):
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CTF LABS — {room_name}</title>
-  <link rel="stylesheet" href="http://127.0.0.1:5500/css/global.css"/>
-  <link rel="stylesheet" href="http://127.0.0.1:5500/css/web-room.css"/>
+  <link rel="stylesheet" href="http://127.0.0.1:5501/css/global.css"/>
+  <link rel="stylesheet" href="http://127.0.0.1:5501/css/web-room.css"/>
   <style>
      .machine-panel {{
          background: var(--surface);
@@ -140,13 +154,13 @@ def view_room(room_id):
 </head>
 <body>
 <nav class="navbar" aria-label="Main navigation">
-  <a href="http://127.0.0.1:5500/index.html" class="logo">CTF<span>LABS</span></a>
+  <a href="http://127.0.0.1:5501/index.html" class="logo">CTF<span>LABS</span></a>
   <div class="nav-links">
-    <a href="http://127.0.0.1:5500/index.html">Home</a>
-    <a href="http://127.0.0.1:5500/learn.html">Learn</a>
-    <a href="http://127.0.0.1:5500/challenges.html">Challenges</a>
-    <a href="http://127.0.0.1:5500/rules.html">Rules</a>
-    <a href="http://127.0.0.1:5500/create-room.html">Create Room</a>
+    <a href="http://127.0.0.1:5501/index.html">Home</a>
+    <a href="http://127.0.0.1:5501/learn.html">Learn</a>
+    <a href="http://127.0.0.1:5501/challenges.html">Challenges</a>
+    <a href="http://127.0.0.1:5501/rules.html">Rules</a>
+    <a href="http://127.0.0.1:5501/create-room.html">Create Room</a>
     <div class="dropdown" role="navigation" aria-label="Profile menu">
       <a href="#" aria-haspopup="true">Profile </a>
       <div class="dropdown-content" role="menu">
@@ -213,7 +227,7 @@ def view_room(room_id):
         <h2>Room Complete!</h2>
         <p>Congratulations! You have completed all tasks in this room.</p>
         <div class="score-pill" id="score-pill">0 / 0 pts</div>
-        <a href="http://127.0.0.1:5500/create-room.html" class="btn btn-primary">← Back to Manage Rooms</a>
+        <a href="http://127.0.0.1:5501/create-room.html" class="btn btn-primary">← Back to Manage Rooms</a>
       </div>
     </div>
 
@@ -409,8 +423,8 @@ def view_room(room_id):
   buildDots();
   renderLesson(0);
 </script>
-<script src="http://127.0.0.1:5500/js/firebase-config.js"></script>
-<script src="http://127.0.0.1:5500/js/auth-state.js"></script>
+<script src="http://127.0.0.1:5501/js/firebase-config.js"></script>
+<script src="http://127.0.0.1:5501/js/auth-state.js"></script>
 </body>
 </html>
 """
