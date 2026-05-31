@@ -156,9 +156,9 @@
                 }
             }, [activeTab]);
             const [formData, setFormData] = useState({
-                title: 'Pentesting',
-                description: 'testing',
-                roomCode: 'pentesting4s',
+                title: '',
+                description: '',
+                roomCode: '',
                 completionTime: 60,
                 difficulty: 'Medium',
                 cloning: false,
@@ -182,6 +182,7 @@
             const [showCreateModal, setShowCreateModal] = useState(false); // To mock the create modal screenshot
             const [showSuccessModal, setShowSuccessModal] = useState(false);
             const [savedRoomId, setSavedRoomId] = useState(null);
+            const [isEditingRoomCode, setIsEditingRoomCode] = useState(false);
             const navItems = [
                 { name: 'General Settings' },
                 { name: 'Design' },
@@ -271,7 +272,14 @@
                     {/* Left Sidebar */}
                     <div className="w-64 flex-shrink-0">
                         <div className="bg-thm-elevated border border-thm-border text-thm-textPrimary px-4 py-3 rounded mb-6 text-sm font-bold flex items-center justify-between shadow-lg">
-                            <span className="flex items-center gap-2"><span className="text-thm-accent">🔒</span> Private room</span>
+                            <select 
+                                className="bg-transparent text-thm-textPrimary font-bold focus:outline-none cursor-pointer border-none"
+                                value={formData.access ? "public" : "private"}
+                                onChange={(e) => setFormData({...formData, access: e.target.value === "public"})}
+                            >
+                                <option className="bg-thm-surface text-thm-textPrimary" value="private">Private room</option>
+                                <option className="bg-thm-surface text-thm-textPrimary" value="public">Public room</option>
+                            </select>
                             <button onClick={() => setActiveTab('ManageRooms')} className="text-xs bg-thm-accent text-white px-2 py-1 rounded hover:bg-thm-accentDim">History</button>
                         </div>
                         
@@ -332,8 +340,8 @@
                                     <div>
                                         <label className="text-xs font-bold text-thm-textMuted block mb-1">Room code*</label>
                                         <div className="flex">
-                                            <input type="text" className="flex-1 bg-thm-elevated border border-thm-border rounded-l p-2 text-sm text-thm-textMuted" disabled value={formData.roomCode} />
-                                            <button className="bg-thm-accent text-white px-4 py-2 rounded-r text-sm font-bold hover:bg-thm-accentDim">Edit</button>
+                                            <input type="text" className={`flex-1 ${isEditingRoomCode ? 'bg-thm-base text-thm-textPrimary' : 'bg-thm-elevated text-thm-textMuted'} border border-thm-border rounded-l p-2 text-sm focus:outline-none focus:border-thm-accent`} disabled={!isEditingRoomCode} value={formData.roomCode} onChange={e => setFormData({...formData, roomCode: e.target.value})} />
+                                            <button onClick={() => setIsEditingRoomCode(!isEditingRoomCode)} className="bg-thm-accent text-white px-4 py-2 rounded-r text-sm font-bold hover:bg-thm-accentDim">{isEditingRoomCode ? 'Save' : 'Edit'}</button>
                                         </div>
                                     </div>
 
@@ -415,16 +423,16 @@
                                         </div>
                                         <div className="border-t border-thm-border mb-6"></div>
 
-                                        {/* Private Room Message */}
+                                        {/* Room Message */}
                                         <div className="flex justify-between items-start mb-6">
                                             <div className="w-1/2 pr-8">
-                                                <h3 className="font-bold text-thm-textPrimary mb-1">Private room message</h3>
-                                                <p className="text-sm text-thm-textMuted">Optional message shown to users when the room is private. Leave blank to use the default message.</p>
+                                                <h3 className="font-bold text-thm-textPrimary mb-1">{formData.access ? 'Public room message' : 'Private room message'}</h3>
+                                                <p className="text-sm text-thm-textMuted">Optional message shown to users when the room is {formData.access ? 'public' : 'private'}. Leave blank to use the default message.</p>
                                             </div>
                                             <div className="w-1/2">
-                                                <label className="text-xs font-bold text-thm-textMuted block mb-1">Private room message</label>
+                                                <label className="text-xs font-bold text-thm-textMuted block mb-1">{formData.access ? 'Public room message' : 'Private room message'}</label>
                                                 <textarea className="w-full bg-thm-base border border-thm-border rounded p-2 text-sm h-20 text-thm-textPrimary focus:outline-none focus:border-thm-accent" 
-                                                    placeholder="e.g. This room is private for a scheduled event..."
+                                                    placeholder={`e.g. This room is ${formData.access ? 'public' : 'private'} for a scheduled event...`}
                                                     value={formData.privateMessage} onChange={e => setFormData({...formData, privateMessage: e.target.value})}></textarea>
                                             </div>
                                         </div>

@@ -167,7 +167,7 @@
     const fb  = document.getElementById(`fb-${lesson}-${qi}`);
     const qc  = document.getElementById(`qc-${lesson}-${qi}`);
     if (ok) {
-      answered[lesson][qi] = true;
+      answered[lesson][qi] = true; if(window.ctfTrackCorrect) window.ctfTrackCorrect();
       qc.classList.add('correct');
       fb.className = 'feedback correct-msg show';
       fb.textContent = ' Correct! ' + correct;

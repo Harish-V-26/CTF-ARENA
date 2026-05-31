@@ -384,6 +384,9 @@
     msg.textContent = 'Booting Vulnerable Target Portal...';
 
     try {
+      // Force clear the session token to prevent leftover authentication from previous instances
+      document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      
       const host = window.location.hostname || "localhost";
       const response = await fetch(`http://${host}:5000/api/start-owasp-part2-ctf`, { method: 'POST' });
       const data = await response.json();
@@ -423,6 +426,9 @@
     msg.textContent = 'Stopping Target...';
     
     try {
+      // Clear the target's session cookie so next launch starts fresh
+      document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      
       const host = window.location.hostname || "localhost";
       await fetch(`http://${host}:5000/api/stop-owasp-part2-ctf/${currentTargetId}`, { method: 'POST' });
       
@@ -538,6 +544,7 @@
   window.addEventListener('beforeunload', function() {
     const host = window.location.hostname || "localhost";
     if (currentTargetId) {
+      document.cookie = "session_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       navigator.sendBeacon(`http://${host}:5000/api/stop-owasp-part2-ctf-delayed/${currentTargetId}`);
     }
     if (currentKaliId) {
@@ -554,9 +561,12 @@
     if (input === CORRECT_FLAG) {
       fb.textContent = " ACCESS GRANTED. Challenge Complete! You have mastered the OWASP Top 10 Part 2 chain.";
       fb.className = "feedback-msg success";
+      if (window.ctfTrackCorrect) window.ctfTrackCorrect();
+      if (window.ctfTrackRoomComplete) window.ctfTrackRoomComplete("OWASP Top 10 Part 2 CTF");
     } else {
       fb.textContent = " INCORRECT FLAG. Access Denied.";
       fb.className = "feedback-msg error";
+      if (window.ctfTrackFailed) window.ctfTrackFailed();
     }
   }
 </script>

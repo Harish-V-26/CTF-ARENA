@@ -381,6 +381,8 @@ function submitFlag() {
   if (userFlag === CHALLENGE.flag) {
     result.className = 'flag-result success';
     result.textContent = 'Correct! Flag accepted.';
+    if (window.ctfTrackCorrect) window.ctfTrackCorrect();
+    if (window.ctfTrackRoomComplete) window.ctfTrackRoomComplete("The Ultimate Gauntlet");
     
     // Show completion
     document.querySelector('.flag-submission').style.display = 'none';
@@ -394,6 +396,7 @@ function submitFlag() {
   } else {
     result.className = 'flag-result error';
     result.textContent = 'Incorrect flag. Try again.';
+    if (window.ctfTrackFailed) window.ctfTrackFailed();
     setTimeout(() => {
       result.className = 'flag-result';
     }, 3000);

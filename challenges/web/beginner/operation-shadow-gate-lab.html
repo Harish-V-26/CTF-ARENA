@@ -516,9 +516,12 @@
     if (input === CORRECT_FLAG) {
       fb.textContent = " ACCESS GRANTED. Challenge Complete! Congratulations, Agent.";
       fb.className = "feedback-msg success";
+      if (window.ctfTrackCorrect) window.ctfTrackCorrect();
+      if (window.ctfTrackRoomComplete) window.ctfTrackRoomComplete("Operation Shadow Gate");
     } else {
       fb.textContent = " INCORRECT FLAG. Access Denied.";
       fb.className = "feedback-msg error";
+      if (window.ctfTrackFailed) window.ctfTrackFailed();
     }
   }
 
