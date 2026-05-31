@@ -15,8 +15,9 @@ def start():
         try: client.images.get("ctflabs/owasp-auth-failures:latest")
         except docker.errors.ImageNotFound:
             client.images.build(path="./docker/owasp-auth-failures", tag="ctflabs/owasp-auth-failures:latest", rm=True, forcerm=True)
-        port = random.randint(9600, 9999)
-        c = client.containers.run("ctflabs/owasp-auth-failures:latest", detach=True, ports={'80/tcp': port}, remove=True)
+        c = client.containers.run("ctflabs/owasp-auth-failures:latest", detach=True, ports={'80/tcp': None}, remove=True)
+        c.reload()
+        port = int(c.attrs['NetworkSettings']['Ports']['80/tcp'][0]['HostPort'])
         return jsonify({"status": "success", "container_id": c.id, "port": port})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

@@ -11,18 +11,18 @@
 
   <h2>Challenge 1: Debug Mode in Production</h2>
   <div class="step"><div class="step-n">1</div><div class="step-b">Log in with <code>developer / dev2026</code>. The DEBUG=True warning is displayed immediately.</div></div>
-  <div class="flag">CTF{d3bug_m0d3_1n_pr0d}</div>
+  <div class="flag">CTF{...}</div>
 
   <h2>Challenge 2: Verbose Error Leakage</h2>
   <div class="step"><div class="step-n">1</div><div class="step-b">In User Lookup, enter <code>abc</code> — a ValueError leaks the DB connection string.</div></div>
-  <div class="flag">CTF{v3rb0s3_3rr0r_l34k}</div>
+  <div class="flag">CTF{...}</div>
   <div class="step"><div class="step-n">2</div><div class="step-b">Enter <code>999</code> — an IndexError leaks table names and credentials.</div></div>
   <div class="step"><div class="step-n">3</div><div class="step-b">Click <strong>Test Connection</strong> — the full DB connection string with password is exposed.</div></div>
-  <div class="flag">CTF{db_cr3d3nt14ls_l34k3d}</div>
+  <div class="flag">CTF{...}</div>
 
   <h2>Challenge 3: Stack Trace & Path Disclosure</h2>
   <div class="step"><div class="step-n">1</div><div class="step-b">In File Reader, enter <code>/nonexistent</code> — the error reveals the full stack trace, working directory, and Python path.</div></div>
-  <div class="flag">CTF{st4ck_tr4c3_3xp0s3d}</div>
+  <div class="flag">CTF{...}</div>
 
   <a href="error-handling-lab.html" class="back">← Back to Lab</a>
 </div>

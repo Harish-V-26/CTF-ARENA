@@ -107,7 +107,7 @@
             <li class="rule-item">
               <span class="rule-num">Step 3</span>
               <span class="rule-text">
-                <strong>Find Part 1.</strong> Look through the search results until you find an HTML comment <code>&lt;!-- --&gt;</code>. You will find Part 1 hidden in the comment: <code>flag_part1{dev_tools_</code>
+                <strong>Find Part 1.</strong> Look through the search results until you find an HTML comment <code>&lt;!-- --&gt;</code>. You will find Part 1 hidden in the comment: <code>flag_part1{...}</code>
               </span>
             </li>
           </ul>
@@ -135,7 +135,7 @@
             <li class="rule-item">
               <span class="rule-num">Step 3</span>
               <span class="rule-text">
-                <strong>Find Part 2.</strong> Look at the <strong>Response Headers</strong> section. Look for a custom HTTP header starting with "X-". You will find the header <code>X-Flag-Part2</code>. Its value is Part 2: <code>power_</code>
+                <strong>Find Part 2.</strong> Look at the <strong>Response Headers</strong> section. Look for a custom HTTP header starting with "X-". You will find the header <code>X-Flag-Part2</code>. Its value is Part 2: <code>...</code>
               </span>
             </li>
           </ul>
@@ -163,14 +163,14 @@
             <li class="rule-item">
               <span class="rule-num">Step 3</span>
               <span class="rule-text">
-                <strong>Find Part 3.</strong> You will find a hardcoded variable named <code>finalPiece</code> containing the last part of the flag. The value of this variable is Part 3: <code>user}</code>
+                <strong>Find Part 3.</strong> You will find a hardcoded variable named <code>finalPiece</code> containing the last part of the flag. The value of this variable is Part 3: <code>...}</code>
               </span>
             </li>
             <li class="rule-item warn">
               <span class="rule-num">Step 4</span>
               <span class="rule-text">
                 <strong>Combine the Pieces.</strong> Combine all three parts together to form the complete flag:
-                <div class="code-block">Part 1 + Part 2 + Part 3 = flag_part1{dev_tools_power_user}</div>
+                <div class="code-block">Part 1 + Part 2 + Part 3 = flag_part1{...}</div>
               </span>
             </li>
           </ul>

@@ -131,9 +131,9 @@ Once you find Part 3, you have all the pieces!`,
     content: `OBJECTIVE: Combine all three parts and submit the complete flag.
 
 THE THREE PARTS YOU FOUND:
-  Part 1 (Inspector):      flag_part1{dev_tools_
-  Part 2 (Network):        power_
-  Part 3 (Sources):        user}
+  Part 1 (Inspector):      flag_part1{...}
+  Part 2 (Network):        ...
+  Part 3 (Sources):        ...}
 
 THE COMPLETE FLAG:
 Combine them in order: Part 1 + Part 2 + Part 3

@@ -13,10 +13,13 @@ def start_recon():
         container = client.containers.run(
             "recon-ng:latest",
             detach=True,
-            ports={'80/tcp': 80},
+            ports={'80/tcp': None},
             remove=True
         )
-        return jsonify({"status": "success", "container_id": container.id, "port": 80})
+        container.reload()
+        ports = container.attrs['NetworkSettings']['Ports']
+        user_port = int(ports['80/tcp'][0]['HostPort'])
+        return jsonify({"status": "success", "container_id": container.id, "port": user_port})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 

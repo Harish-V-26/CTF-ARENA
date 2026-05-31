@@ -144,5 +144,21 @@
             }
         ],
         "categories": []
+    },
+    "": {
+        "roomName": "",
+        "description": "",
+        "roomCode": "",
+        "completionTime": 60,
+        "difficulty": "Medium",
+        "cloning": false,
+        "visibility": "Private",
+        "privateMessage": "",
+        "bannerUrl": "",
+        "avatarUrl": "",
+        "video1": null,
+        "video2": null,
+        "tasks": [],
+        "categories": []
     }
 }

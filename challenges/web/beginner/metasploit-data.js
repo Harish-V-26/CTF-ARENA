@@ -270,7 +270,7 @@ Complete the practice challenge in the next lesson to earn the flag!`,
     content: `<div class="htb-diagram-container"><img src="../../../assets/metasploit_challenge_nologo_1779673986381.png" alt="Practice Challenge"></div>PRACTICE CHALLENGE — EARN THE FLAG!
 
 OBJECTIVE:
-Complete the following workflow in the terminal to earn FLAG{MSF_BEGINNER_COMPLETE}
+Complete the following workflow in the terminal to earn FLAG{...}
 
 CHALLENGE GOAL:
   1. Open the Metasploit console

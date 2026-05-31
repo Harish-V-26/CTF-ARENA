@@ -12,18 +12,18 @@
   <h2>Challenge 1: User Enumeration</h2>
   <div class="step"><div class="step-n">1</div><div class="step-b">Try logging in with username <code>fakeperson</code> — observe "does not exist" message.</div></div>
   <div class="step"><div class="step-n">2</div><div class="step-b">Try <code>admin</code> with wrong password — observe "incorrect password" message. Different errors confirm user existence!</div></div>
-  <div class="flag">CTF{us3r_3num3r4t10n_l34k}</div>
+  <div class="flag">CTF{...}</div>
 
   <h2>Challenge 2: No Rate Limiting</h2>
   <div class="step"><div class="step-n">1</div><div class="step-b">Try 5+ wrong passwords for <code>admin</code>. No lockout occurs.</div></div>
   <div class="step"><div class="step-n">2</div><div class="step-b">Log in with <code>admin / admin123</code>.</div></div>
-  <div class="flag">CTF{n0_r4t3_l1m1t_br00t}</div>
+  <div class="flag">CTF{...}</div>
 
   <h2>Challenge 3: Predictable Sessions</h2>
   <div class="step"><div class="step-n">1</div><div class="step-b">Login as <code>alice / password</code>. Note the session token is MD5 of "alice".</div></div>
   <div class="step"><div class="step-n">2</div><div class="step-b">Compute MD5 of "admin": <code>21232f297a57a5a743894a0e4a801fc3</code>. Change the <code>session_token</code> cookie. Refresh.</div></div>
-  <div class="flag">CTF{pr3d1ct4bl3_s3ss10n_t0k3n}</div>
-  <div class="flag">CTF{4uth_f41lur3_4dm1n_4cc3ss}</div>
+  <div class="flag">CTF{...}</div>
+  <div class="flag">CTF{...}</div>
 
   <a href="auth-failures-lab.html" class="back">← Back to Lab</a>
 </div>

@@ -20,13 +20,15 @@ def start_python_hacking():
         except docker.errors.ImageNotFound:
             client.images.build(path="./docker/python-hacking-target", tag="ctflabs/python-hacking-target:latest", rm=True, forcerm=True)
 
-        user_port = random.randint(9001, 9500)
         container = client.containers.run(
             "ctflabs/python-hacking-target:latest",
             detach=True,
-            ports={'5000/tcp': user_port},
+            ports={'5000/tcp': None},
             remove=True
         )
+        container.reload()
+        ports = container.attrs['NetworkSettings']['Ports']
+        user_port = int(ports['5000/tcp'][0]['HostPort'])
         return jsonify({"status": "success", "container_id": container.id, "port": user_port})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

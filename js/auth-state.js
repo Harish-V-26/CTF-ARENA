@@ -19,9 +19,10 @@
      AUTH SERVICE — public interface
   ═══════════════════════════════════════════════ */
   const authService = {
-    isMock:      !isConfigured,
-    currentUser: null,
-    _callbacks:  [],
+    isMock:          !isConfigured,
+    currentUser:     null,
+    authInitialized: false,
+    _callbacks:      [],
 
     /* ── Bootstrap ── */
     init: function () {
@@ -81,6 +82,7 @@
             this.currentUser = null;
             localStorage.removeItem("ctf_active_user_session");
           }
+          this.authInitialized = true;
           this._notify();
         });
 
@@ -112,6 +114,7 @@
       } else {
         localStorage.removeItem("ctf_active_user_session");
       }
+      this.authInitialized = true;
       setTimeout(() => this._notify(), 60);
     },
 
@@ -132,6 +135,19 @@
     _notify: function () {
       this._callbacks.forEach(cb => { try { cb(this.currentUser); } catch (_) {} });
       this._updateNavbar();
+
+      // Enforce global authentication redirect
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login.html") || path.endsWith("/login");
+      if (this.authInitialized && !this.currentUser && !isLoginPage) {
+        let prefix = "";
+        if (path.includes("/challenges/")) {
+          const part = path.substring(path.indexOf("/challenges/"));
+          const slashes = (part.match(/\//g) || []).length;
+          prefix = "../".repeat(slashes - 1);
+        }
+        window.location.href = prefix + "login.html";
+      }
     },
 
     /* ═══════════════════════════════════════════════
@@ -291,6 +307,33 @@
         const part = path.substring(path.indexOf("/challenges/"));
         const slashes = (part.match(/\//g) || []).length;
         prefix = "../".repeat(slashes - 1);
+
+        // Adjust active navbar tab for rooms (Learn vs Challenges)
+        let learnLink = null;
+        let challengesLink = null;
+        navLinks.querySelectorAll("a").forEach(a => {
+          const text = a.textContent.trim().toLowerCase();
+          if (text === "learn") {
+            learnLink = a;
+          } else if (text === "challenges") {
+            challengesLink = a;
+          }
+        });
+
+        const isChallengeRoom = path.includes("ultimate-challenge-lab") ||
+                                path.includes("shadow-gate") ||
+                                path.includes("challenge-lab") ||
+                                path.includes("ctf-lab");
+
+        if (learnLink && challengesLink) {
+          if (isChallengeRoom) {
+            challengesLink.classList.add("active");
+            learnLink.classList.remove("active");
+          } else {
+            learnLink.classList.add("active");
+            challengesLink.classList.remove("active");
+          }
+        }
       }
 
       // Remove any previously inserted Login button

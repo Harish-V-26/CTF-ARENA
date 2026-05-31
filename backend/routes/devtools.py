@@ -13,14 +13,15 @@ def start_devtools_guided():
         return jsonify({"status": "error", "message": "Docker daemon is not running or accessible."}), 500
 
     try:
-        user_port = random.randint(9001, 9500)
-
         container = client.containers.run(
             "ctflabs/devtools-guided:latest",
             detach=True,
-            ports={'80/tcp': user_port},
+            ports={'80/tcp': None},
             remove=True
         )
+        container.reload()
+        ports = container.attrs['NetworkSettings']['Ports']
+        user_port = int(ports['80/tcp'][0]['HostPort'])
 
         return jsonify({
             "status": "success",
@@ -49,14 +50,15 @@ def start_devtools_fieldtest():
         return jsonify({"status": "error", "message": "Docker daemon is not running or accessible."}), 500
 
     try:
-        user_port = random.randint(9501, 9999)
-
         container = client.containers.run(
             "ctflabs/devtools-fieldtest:latest",
             detach=True,
-            ports={'80/tcp': user_port},
+            ports={'80/tcp': None},
             remove=True
         )
+        container.reload()
+        ports = container.attrs['NetworkSettings']['Ports']
+        user_port = int(ports['80/tcp'][0]['HostPort'])
 
         return jsonify({
             "status": "success",

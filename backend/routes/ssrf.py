@@ -28,13 +28,15 @@ def start_ssrf():
                 forcerm=True
             )
 
-        user_port = random.randint(9600, 9999)
         container = client.containers.run(
             "ctflabs/ssrf-lab:latest",
             detach=True,
-            ports={'80/tcp': user_port},
+            ports={'80/tcp': None},
             remove=True
         )
+        container.reload()
+        ports = container.attrs['NetworkSettings']['Ports']
+        user_port = int(ports['80/tcp'][0]['HostPort'])
         return jsonify({"status": "success", "container_id": container.id, "port": user_port})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500

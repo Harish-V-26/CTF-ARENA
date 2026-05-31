@@ -258,7 +258,7 @@ const LESSONS = [
           Go to the deserializer page in the portal at:<br>
           <code>/api/owasp-top5-lab/yaml-load</code><br><br>
           Send the following payload into the text area and click process:<br>
-          <pre>!!python/object/apply:os.system ["echo flag{supply_chain_integrity_vuln}"]</pre>
+          <pre>!!python/object/apply:os.system ["echo flag{...}"]</pre>
           The parser will deserialize the object, execute the system command, and print the flag output.
         </div>
       </div>

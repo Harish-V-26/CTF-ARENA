@@ -8,11 +8,11 @@ HOW TO OPEN IT:
 Right-click any element on a page and select "Inspect", or press F12 and click the "Elements" / "Inspector" tab.
 
 WHERE TO FIND A FLAG:
-  • Hidden HTML comments: &lt;!-- flag{you_found_the_comment} --&gt;
-  • Hidden elements: &lt;div style="display:none;"&gt;flag{hidden_div}&lt;/div&gt;
-  • Invisible text: &lt;p style="color: white; background: white;"&gt;flag{invisible_text}&lt;/p&gt;
+  • Hidden HTML comments: &lt;!-- flag{...} --&gt;
+  • Hidden elements: &lt;div style="display:none;"&gt;flag{...}&lt;/div&gt;
+  • Invisible text: &lt;p style="color: white; background: white;"&gt;flag{...}&lt;/p&gt;
   • Disabled buttons: &lt;button disabled&gt;Submit&lt;/button&gt;
-  • Input fields with type="hidden": &lt;input type="hidden" name="token" value="flag{secret_token}"&gt;
+  • Input fields with type="hidden": &lt;input type="hidden" name="token" value="flag{...}"&gt;
 
 EXPLOITATION TECHNIQUE — BYPASSING CLIENT-SIDE RESTRICTIONS:
 Client-side restrictions are NOT security controls. They only exist for user convenience.
@@ -146,7 +146,7 @@ Press F12 and click the "Network" tab. Refresh the page (F5) to start recording 
 
 WHERE TO FIND A FLAG:
   • Response Body: Click on any request → "Response" tab. Check API calls (XHR/Fetch) for JSON data containing flags that the UI doesn't display.
-  • Response Headers: A flag might be in a custom header: X-Flag: flag{check_the_headers}
+  • Response Headers: A flag might be in a custom header: X-Flag: flag{...}
   • Redirects: A 302 redirect's Location header might contain a flag URL.
   • Request Headers: Custom headers like Authorization: Bearer &lt;token&gt; reveal authentication tokens.
   • Query Parameters: GET requests with ?token=flag{...} in the URL.
@@ -384,7 +384,7 @@ The classic CSS pattern for visually hiding text while keeping it accessible:
   }
 
 An element with this class is invisible on screen but read aloud by screen readers. A flag might be:
-  &lt;span class="sr-only"&gt;flag{accessibility_is_security}&lt;/span&gt;
+  &lt;span class="sr-only"&gt;flag{...}&lt;/span&gt;
 
 HOW TO FIND IT:
   1. Open the Accessibility panel and browse the Accessibility Tree.
@@ -393,7 +393,7 @@ HOW TO FIND IT:
 
 ARIA ATTRIBUTES:
 Accessible Rich Internet Applications (ARIA) attributes add semantic meaning to elements:
-  • aria-label="flag{aria_label_secret}" — A label not shown visually.
+  • aria-label="flag{...}" — A label not shown visually.
   • aria-describedby="hidden-desc" — Points to an element with the description.
   • aria-hidden="true" — Hides an element FROM screen readers (the opposite trick).
 
@@ -404,7 +404,7 @@ EXPLOITATION TECHNIQUE:
 
 ALT TEXT ON IMAGES:
 Flags can be hidden in the alt attribute of images:
-  &lt;img src="logo.png" alt="flag{alt_text_treasure}"&gt;
+  &lt;img src="logo.png" alt="flag{...}"&gt;
 The alt text is read by screen readers and shown in the Accessibility panel, but not displayed visually (unless the image fails to load).
 
 PRO TIP:
