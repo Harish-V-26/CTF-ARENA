@@ -284,7 +284,13 @@ def get_room_html(room):
   function navigate(dir) {{
     const next = cur + dir;
     if (next >= 0 && next < TOTAL) {{ goTo(next); }}
-    else if (dir === 1)            {{ showCompletion(); }}
+    else if (dir === 1) {{
+      if (typeof totalDone === 'function' && typeof totalQs === 'function' && totalDone() !== totalQs()) {{
+        alert('Please complete all questions before finishing the room.');
+      }} else {{
+        showCompletion();
+      }}
+    }}
   }}
 
   function showCompletion() {{
