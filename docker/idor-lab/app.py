@@ -47,6 +47,7 @@ def dashboard():
     return render_template('dashboard.html', user=user, invoices=user_invoices)
 
 @app.route('/invoice/<int:invoice_id>')
+@app.route('/dashboard/invoice/<int:invoice_id>')
 def view_invoice(invoice_id):
     if 'user_id' not in session:
         return redirect(url_for('index'))
