@@ -78,10 +78,10 @@
         <p>Spin up a private Kali container pre-loaded with Nmap and all recon tools.</p>
         <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Launch Kali Machine ⇗</button>
         <button id="kali-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopKali()">Stop Kali </button>
-        <p id="kali-msg" style="display:none;color:#00ff41;font-weight:bold;margin-top:12px"></p>
+        <p id="kali-msg" style="display:none;color:var(--accent);font-weight:bold;margin-top:12px"></p>
         <div id="kali-terminal-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid rgba(0,255,65,.2)">
           <p style="color:var(--text-muted);margin-top:0;font-size:.85rem">Your Kali container is ready. Connect via terminal:</p>
-          <code id="kali-command" style="display:block;background:#000;color:#00ff41;padding:10px;margin-top:8px;border-radius:4px;user-select:all;font-family:var(--font-mono);font-size:.85rem"></code>
+          <code id="kali-command" style="display:block;background:#000;color:var(--accent);padding:10px;margin-top:8px;border-radius:4px;user-select:all;font-family:var(--font-mono);font-size:.85rem"></code>
         </div>
       </div>
 
@@ -124,10 +124,10 @@
       <!-- Completion -->
       <div class="completion-card" id="completion-card">
         <div class="trophy-icon"></div>
-        <h2 style="color:#00ff41">Reconnaissance Complete!</h2>
-        <p>You've mastered the fundamentals of Nmap! You earned the <strong style="color:#00ff41">Recon Beginner</strong> achievement.</p>
+        <h2 style="color:var(--accent)">Reconnaissance Complete!</h2>
+        <p>You've mastered the fundamentals of Nmap! You earned the <strong style="color:var(--accent)">Recon Beginner</strong> achievement.</p>
         <div class="score-pill" id="score-pill">0 / 320 pts</div>
-        <a href="../../../challenges.html" class="btn btn-primary" style="background:#00ff41;color:#0d1117">← Back to Challenges</a>
+        <a href="../../../challenges.html" class="btn btn-primary" style="background:var(--accent);color:#0d1117">← Back to Challenges</a>
         <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px" onclick="reattemptRoom()">↻ Reattempt</button>
       </div>
 
@@ -220,7 +220,7 @@ async function launchKali(){
     const data=await res.json();
     if(data.status==='success'){
       currentKaliId=data.container_id;
-      msg.style.color='#00ff41';msg.textContent='Kali Linux is ready!';
+      msg.style.color='var(--accent)';msg.textContent='Kali Linux is ready!';
       stop.style.display='inline-block';info.style.display='block';
       document.getElementById('kali-command').textContent=`docker exec -it ${currentKaliId.substring(0,12)} bash`;
     }else{msg.style.color='#e74c3c';msg.textContent='Error: '+data.message;btn.style.display='inline-block'}
