@@ -10,18 +10,18 @@ const LESSONS = [
       <style>
         .command-card {
           background: #0d1117;
-          border: 1px solid rgba(0, 255, 65, 0.2);
+          border: 1px solid rgba(255, 77, 109, 0.2);
           border-radius: 8px;
           padding: 16px;
           margin: 16px 0;
           transition: all 0.3s ease;
         }
         .command-card:hover {
-          border-color: #00ff41;
-          box-shadow: 0 0 10px rgba(0, 255, 65, 0.15);
+          border-color: var(--accent);
+          box-shadow: 0 0 10px rgba(255, 77, 109, 0.15);
         }
         .command-card h4 {
-          color: #00ff41;
+          color: var(--accent);
           margin-top: 0;
           margin-bottom: 10px;
           font-family: var(--font-mono);
@@ -48,7 +48,7 @@ const LESSONS = [
       </div>
       <p>In Linux, complex tasks are accomplished by combining small, specialized tools together. These tools read and write streams of text, passing data from one to the next like a conveyor belt.</p>
 
-      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(0, 255, 65, 0.05); border-left: 4px solid #00ff41; border-radius: 4px;">
+      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(255, 77, 109, 0.05); border-left: 4px solid var(--accent); border-radius: 4px;">
         <strong>The Conveyor Belt Analogy:</strong><br>
         Imagine a factory assembly line:
         <ul style="margin-top: 8px; padding-left: 20px;">
@@ -180,7 +180,7 @@ grep -r "todo" /workspace/text_processing/</pre>
       </div>
       <p>Standard text filters operate line-by-line, but advanced diagnostics require modifying streams inline or parsing complex hierarchical data structures like JSON files directly on the CLI.</p>
 
-      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(0, 255, 65, 0.05); border-left: 4px solid #00ff41; border-radius: 4px;">
+      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(255, 77, 109, 0.05); border-left: 4px solid var(--accent); border-radius: 4px;">
         <strong>The Surgeon & The Translator Analogy:</strong><br>
         <ul style="margin-top: 8px; padding-left: 20px;">
           <li><code>sed</code> is like a surgeon's scalpel, quickly swapping text lines or replacing words inside files inline.</li>
@@ -260,7 +260,7 @@ grep -r "todo" /workspace/text_processing/</pre>
       </div>
       <p>To audit or administer network applications, you must know how to pull web assets, transfer files securely, relay raw sockets, and intercept packets on network interfaces.</p>
 
-      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(0, 255, 65, 0.05); border-left: 4px solid #00ff41; border-radius: 4px;">
+      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(255, 77, 109, 0.05); border-left: 4px solid var(--accent); border-radius: 4px;">
         <strong>The Network Courier & The Wiretap Analogy:</strong><br>
         <ul style="margin-top: 8px; padding-left: 20px;">
           <li><code>curl</code> and <code>wget</code> are network couriers retrieving files from web servers.</li>
@@ -388,7 +388,7 @@ grep -r "todo" /workspace/text_processing/</pre>
       </div>
       <p>When services fail to load, you must determine if the local port is listening, what process owns that port, how domain names are resolving, and which router is dropping packages.</p>
 
-      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(0, 255, 65, 0.05); border-left: 4px solid #00ff41; border-radius: 4px;">
+      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(255, 77, 109, 0.05); border-left: 4px solid var(--accent); border-radius: 4px;">
         <strong>The Switchboard Operator Analogy:</strong><br>
         <ul style="margin-top: 8px; padding-left: 20px;">
           <li><code>ss</code> lets you inspect all connections currently plugged into your machine.</li>
@@ -498,7 +498,7 @@ grep -r "todo" /workspace/text_processing/</pre>
       </div>
       <p>Linux is multitasking. You must manage processes running in the background, terminate hung jobs, monitor real-time resource exhaustion, and automate scripts to run at specific times.</p>
 
-      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(0, 255, 65, 0.05); border-left: 4px solid #00ff41; border-radius: 4px;">
+      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(255, 77, 109, 0.05); border-left: 4px solid var(--accent); border-radius: 4px;">
         <strong>The Stage Manager Analogy:</strong><br>
         <ul style="margin-top: 8px; padding-left: 20px;">
           <li>Foreground processes (<code>fg</code>) are actors performing on stage.</li>
@@ -646,7 +646,7 @@ kill -9 [PID]</pre>
       </div>
       <p>When auditing closed-source software or troubleshooting crashes, you need to read plain-text strings embedded inside binary files, inspect raw hex codes, and monitor direct calls to the operating system.</p>
 
-      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(0, 255, 65, 0.05); border-left: 4px solid #00ff41; border-radius: 4px;">
+      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(255, 77, 109, 0.05); border-left: 4px solid var(--accent); border-radius: 4px;">
         <strong>The X-Ray Machine Analogy:</strong><br>
         <ul style="margin-top: 8px; padding-left: 20px;">
           <li>Looking at an executable binary is like looking at a closed black box.</li>
@@ -765,7 +765,7 @@ kill -9 [PID]</pre>
       </div>
       <p>To safely govern a Linux system, you must know how to adjust permissions and ACLs, package directories, mount file systems, view kernel logs, control services, and configure shell variables.</p>
 
-      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(0, 255, 65, 0.05); border-left: 4px solid #00ff41; border-radius: 4px;">
+      <div class="analogy-box" style="margin-bottom: 24px; padding: 16px; background: rgba(255, 77, 109, 0.05); border-left: 4px solid var(--accent); border-radius: 4px;">
         <strong>The System Gatekeeper Analogy:</strong><br>
         <ul style="margin-top: 8px; padding-left: 20px;">
           <li><code>chmod</code> and <code>chown</code> set who can enter which rooms in the castle.</li>

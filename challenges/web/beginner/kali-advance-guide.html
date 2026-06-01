@@ -20,7 +20,7 @@
       margin-bottom: 30px;
     }
     .guide-card h1 {
-      color: #00ff41;
+      color: var(--accent);
       font-size: 2rem;
       margin-top: 0;
       margin-bottom: 8px;
@@ -34,7 +34,7 @@
       margin-top: 28px;
     }
     .guide-card h3 {
-      color: #00ff41;
+      color: var(--accent);
       font-size: 1.15rem;
       margin-top: 24px;
       margin-bottom: 8px;
@@ -46,7 +46,7 @@
     }
     .guide-card code {
       background: #0d1117;
-      color: #00ff41;
+      color: var(--accent);
       padding: 2px 6px;
       border-radius: 4px;
       font-family: var(--font-mono);
@@ -54,13 +54,13 @@
     }
     .guide-card pre {
       background: #0a0a0a;
-      border: 1px solid rgba(0, 255, 65, 0.2);
+      border: 1px solid rgba(255, 77, 109, 0.2);
       border-radius: 8px;
       padding: 16px;
       overflow-x: auto;
       font-family: var(--font-mono);
       font-size: 0.9em;
-      color: #00ff41;
+      color: var(--accent);
       line-height: 1.6;
       margin: 16px 0;
     }
@@ -106,7 +106,7 @@
 
     <h2>Connecting to the Live Sandbox</h2>
     <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
-      <img src="../../../assets/kali_advance_diagram.png" alt="Lab Architecture Map" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+      <img src="../../../assets/kali_advance_diagram.png" alt="Lab Architecture Map" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255, 77, 109, 0.2);">
     </div>
     <p>Once you click <strong>Launch Kali Machine ⇗</strong> inside the room interface, copy the generated terminal connection command. It will look like this:</p>
     <pre>docker exec -it [container_id] bash</pre>
@@ -114,7 +114,7 @@
 
     <h2>1. Text Searching & Stream Manipulation</h2>
     <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
-      <img src="../../../assets/kali_search_diagram.png" alt="Text Searching and Filtering" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+      <img src="../../../assets/kali_search_diagram.png" alt="Text Searching and Filtering" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255, 77, 109, 0.2);">
     </div>
 
     <h3>find</h3>
@@ -175,7 +175,7 @@
 
     <h2>2. Stream Editing & Structured Data Parsing</h2>
     <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
-      <img src="../../../assets/kali_stream_diagram.png" alt="Stream Editing and structured JSON data parsing" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+      <img src="../../../assets/kali_stream_diagram.png" alt="Stream Editing and structured JSON data parsing" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255, 77, 109, 0.2);">
     </div>
 
     <h3>sed</h3>
@@ -201,7 +201,7 @@
 
     <h2>3. Network Communication & Data Transfer</h2>
     <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
-      <img src="../../../assets/kali_network_diagram.png" alt="Network Communication Flow" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+      <img src="../../../assets/kali_network_diagram.png" alt="Network Communication Flow" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255, 77, 109, 0.2);">
     </div>
 
     <h3>curl</h3>
@@ -262,7 +262,7 @@
 
     <h2>4. Network Reconnaissance & Troubleshooting</h2>
     <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
-      <img src="../../../assets/kali_recon_diagram.png" alt="Network Diagnostics & Reconnaissance" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+      <img src="../../../assets/kali_recon_diagram.png" alt="Network Diagnostics & Reconnaissance" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255, 77, 109, 0.2);">
     </div>
 
     <h3>ss</h3>
@@ -309,7 +309,7 @@
 
     <h2>5. Process Control & Job Scheduling</h2>
     <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
-      <img src="../../../assets/kali_process_diagram.png" alt="Process Control & Scheduling" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+      <img src="../../../assets/kali_process_diagram.png" alt="Process Control & Scheduling" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255, 77, 109, 0.2);">
     </div>
 
     <h3>ps</h3>
@@ -384,7 +384,7 @@
 
     <h2>6. Binary Analysis & Low-Level Diagnostics</h2>
     <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
-      <img src="../../../assets/kali_binary_diagram.png" alt="Binary Analysis & System Calls" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+      <img src="../../../assets/kali_binary_diagram.png" alt="Binary Analysis & System Calls" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255, 77, 109, 0.2);">
     </div>
 
     <h3>strings</h3>
@@ -431,7 +431,7 @@
 
     <h2>7. Storage, Permissions, Services & Environment</h2>
     <div class="htb-diagram-container" style="text-align: center; margin: 20px 0;">
-      <img src="../../../assets/kali_storage_diagram.png" alt="Storage and Permissions" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(0, 255, 65, 0.2);">
+      <img src="../../../assets/kali_storage_diagram.png" alt="Storage and Permissions" style="max-width: 100%; border-radius: 8px; border: 1px solid rgba(255, 77, 109, 0.2);">
     </div>
 
     <h3>chmod</h3>
@@ -582,7 +582,7 @@
     </ul>
 
     <p style="margin-top: 40px; text-align: center;">
-      <a href="kali-advance-lab.html" style="background:#00ff41; color:#0d1117; padding: 12px 24px; text-decoration:none; font-weight:bold; border-radius:4px;">Back to Practical Room</a>
+      <a href="kali-advance-lab.html" style="background:var(--accent); color:#0d1117; padding: 12px 24px; text-decoration:none; font-weight:bold; border-radius:4px;">Back to Practical Room</a>
     </p>
   </div>
 </div>

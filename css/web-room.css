@@ -546,3 +546,394 @@
   border-radius: 4px;
 }
 
+/* ================================================
+   COMMON CHALLENGE ROOM COMPONENTS
+   ================================================ */
+
+/*  DOCKER LAUNCH PANEL  */
+.docker-launch {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border) !important;
+  border-left: 4px solid var(--accent) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 24px !important;
+  margin-bottom: 24px !important;
+  color: var(--text-primary) !important;
+  text-align: center !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.docker-launch h3 {
+  margin-top: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  margin-bottom: 12px !important;
+}
+
+.docker-launch p {
+  color: var(--text-muted) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  margin-bottom: 16px !important;
+}
+
+.docker-launch code {
+  background: var(--bg-base) !important;
+  border: 1px solid var(--border) !important;
+  padding: 6px 12px !important;
+  border-radius: var(--radius-sm) !important;
+  font-size: 0.95em !important;
+  color: var(--accent) !important;
+  display: inline-block !important;
+  margin: 10px 0 !important;
+  font-family: var(--font-mono) !important;
+}
+
+.btn-launch:not([style*="background"]) {
+  background: var(--accent) !important;
+  color: #000000 !important;
+}
+
+.btn-launch {
+  display: inline-block !important;
+  margin-top: 15px !important;
+  padding: 10px 24px !important;
+  text-decoration: none !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 700 !important;
+  transition: all var(--transition) !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-family: var(--font-main) !important;
+}
+
+.btn-launch:hover:not(:disabled) {
+  opacity: 0.9 !important;
+  box-shadow: 0 0 15px var(--accent-glow) !important;
+}
+
+.btn-launch:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* For stopping/danger buttons that have inline backgrounds */
+.btn-launch[style*="background"] {
+  color: #ffffff !important;
+}
+
+.terminal-box {
+  display: none;
+  margin-top: 20px !important;
+  background: #000000 !important;
+  border: 1px solid var(--border) !important;
+  padding: 16px !important;
+  border-radius: var(--radius-sm) !important;
+  text-align: left !important;
+}
+
+.terminal-box p {
+  color: var(--text-muted) !important;
+  margin: 0 0 10px 0 !important;
+  font-size: 13px !important;
+}
+
+.terminal-box code {
+  display: block !important;
+  color: #00ff66 !important;
+  font-family: var(--font-mono) !important;
+  font-size: 14px !important;
+  word-break: break-all !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/*  INSTRUCTIONAL / STEP BLOCKS  */
+.step-block {
+  display: flex !important;
+  gap: 14px !important;
+  align-items: flex-start !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 16px !important;
+  margin-bottom: 14px !important;
+}
+
+.step-num {
+  background: var(--accent) !important;
+  color: #000000 !important;
+  border-radius: 4px !important;
+  padding: 4px 10px !important;
+  font-weight: 700 !important;
+  font-size: 0.8em !important;
+  white-space: nowrap !important;
+  height: fit-content !important;
+}
+
+.step-body {
+  flex: 1 !important;
+  line-height: 1.7 !important;
+  font-size: 14.5px !important;
+  color: var(--text-muted) !important;
+}
+
+.step-body code {
+  background: var(--accent-glow) !important;
+  color: var(--accent) !important;
+  padding: 2px 7px !important;
+  border-radius: 4px !important;
+  font-family: var(--font-mono) !important;
+}
+
+.step-body pre {
+  background: var(--bg-base) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 12px 16px !important;
+  margin: 10px 0 !important;
+  font-family: var(--font-mono) !important;
+  font-size: 13px !important;
+  overflow-x: auto !important;
+  white-space: pre !important;
+}
+
+.analogy-box {
+  background: rgba(88, 166, 255, 0.08) !important;
+  border-left: 4px solid var(--info) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 14px 18px !important;
+  margin: 18px 0 8px !important;
+  font-size: 0.93em !important;
+  line-height: 1.6 !important;
+}
+
+.analogy-box p {
+  color: var(--text-primary) !important;
+}
+
+.badge.orange {
+  background: var(--accent-glow) !important;
+  color: var(--accent) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 2px 10px !important;
+  font-size: 0.85em !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(255, 77, 109, 0.3) !important;
+}
+
+/*  HINT SECTION (For Challenge Rooms)  */
+.hints-section {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 24px !important;
+  margin-bottom: 24px !important;
+}
+
+.hints-section h3 {
+  margin-top: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 18px !important;
+  margin-bottom: 15px !important;
+}
+
+.hint-accordion {
+  margin-bottom: 12px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+  overflow: hidden !important;
+}
+
+.hint-header {
+  background: var(--bg-base) !important;
+  padding: 12px 18px !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  transition: background var(--transition) !important;
+  color: var(--text-primary) !important;
+}
+
+.hint-header:hover {
+  background: var(--bg-elevated) !important;
+}
+
+.hint-header::after {
+  content: '+' !important;
+  font-size: 18px !important;
+  color: var(--accent) !important;
+  transition: transform 0.2s !important;
+}
+
+.hint-accordion.active .hint-header::after {
+  content: '-' !important;
+}
+
+.hint-content {
+  display: none;
+  padding: 15px 18px !important;
+  background: var(--bg-surface) !important;
+  border-top: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+}
+
+.hint-accordion.active .hint-content {
+  display: block !important;
+}
+
+/* For rooms using old button-based hints like OWASP Top 5 Gauntlet */
+.hint-btn {
+  display: inline-block !important;
+  margin: 5px !important;
+  padding: 10px 18px !important;
+  background: var(--bg-base) !important;
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+  cursor: pointer !important;
+  font-weight: 700 !important;
+  transition: all var(--transition) !important;
+  font-family: var(--font-main) !important;
+}
+
+.hint-btn:hover {
+  border-color: var(--accent) !important;
+  color: var(--text-primary) !important;
+}
+
+.hint-btn.unlocked {
+  background: var(--accent-glow) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+/*  FLAG SUBMISSION CARD  */
+.flag-submission {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 28px !important;
+  text-align: center !important;
+}
+
+.flag-submission h3 {
+  margin-top: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  margin-bottom: 8px !important;
+}
+
+.flag-submission p {
+  color: var(--text-muted) !important;
+  font-size: 14px !important;
+  margin-bottom: 20px !important;
+}
+
+.flag-input-group {
+  display: flex !important;
+  max-width: 500px !important;
+  margin: 20px auto 0 !important;
+  gap: 10px !important;
+}
+
+.flag-input {
+  flex: 1 !important;
+  padding: 12px 16px !important;
+  background: var(--bg-base) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 15px !important;
+  outline: none !important;
+  transition: border-color var(--transition) !important;
+}
+
+.flag-input:focus {
+  border-color: var(--accent) !important;
+}
+
+/* Main submit button (usually green) */
+.btn-submit, .flag-btn {
+  padding: 12px 28px !important;
+  background: #2ecc71 !important;
+  color: #000000 !important;
+  border: none !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+  transition: all var(--transition) !important;
+  font-family: var(--font-main) !important;
+}
+
+.btn-submit:hover, .flag-btn:hover {
+  background: #27ae60 !important;
+  box-shadow: 0 0 15px rgba(46, 204, 113, 0.25) !important;
+}
+
+.feedback-msg, .flag-result {
+  margin-top: 15px !important;
+  font-weight: 700 !important;
+  font-size: 14.5px !important;
+  display: none;
+}
+
+.feedback-msg.success, .flag-result.success {
+  color: #2ecc71 !important;
+  display: block !important;
+}
+
+.feedback-msg.error, .flag-result.error {
+  color: var(--danger) !important;
+  display: block !important;
+}
+
+/* Pure CTF challenge Briefing block */
+.ctf-briefing, .challenge-briefing {
+  background: var(--bg-surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 30px !important;
+  margin-bottom: 30px !important;
+  border-top: 4px solid var(--accent) !important;
+}
+
+.ctf-briefing h2, .challenge-briefing h2 {
+  margin-top: 0 !important;
+  color: var(--accent) !important;
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  margin-bottom: 12px !important;
+}
+
+.ctf-briefing p, .challenge-briefing p {
+  color: var(--text-muted) !important;
+  line-height: 1.7 !important;
+  font-size: 14.5px !important;
+  margin-bottom: 14px !important;
+}
+
+.ctf-briefing ul, .challenge-briefing ul {
+  color: var(--text-muted) !important;
+  line-height: 1.7 !important;
+  font-size: 14.5px !important;
+  padding-left: 20px !important;
+  margin-bottom: 14px !important;
+}
+
+.ctf-briefing li, .challenge-briefing li {
+  margin-bottom: 8px !important;
+}
+
