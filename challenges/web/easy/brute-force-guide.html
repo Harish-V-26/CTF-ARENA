@@ -113,11 +113,24 @@
               <span class="rule-text">
                 <strong>Run the Hydra Attack.</strong> Since you are attacking the host server from inside a Docker container, you must target <code>host.docker.internal</code>. Run this exact command inside your Kali terminal:
                 <div class="code-block">hydra -l admin -P /usr/share/wordlists/rockyou.txt -f host.docker.internal -s 5000 http-post-form "/api/brute-force-target:username=^USER^&amp;password=^PASS^:Invalid username or password"</div>
+                <div style="margin-top: 15px; background: var(--bg-elevated); padding: 15px; border-radius: 6px; border: 1px solid var(--border);">
+                  <strong style="color: var(--accent); margin-bottom: 10px; display: block;">Command Breakdown:</strong>
+                  <ul style="padding-left: 20px; color: var(--text-muted); font-size: 0.95rem;">
+                    <li style="margin-bottom: 6px;"><strong>hydra</strong>: This wakes up the robot program.</li>
+                    <li style="margin-bottom: 6px;"><strong>-l admin</strong>: The <strong>l</strong> (login). We are telling Hydra to only try logging into the account named <strong>admin</strong>.</li>
+                    <li style="margin-bottom: 6px;"><strong>-P /usr/share/.../rockyou.txt</strong>: The <strong>P</strong> (Password file). We give Hydra a dictionary of passwords to try.</li>
+                    <li style="margin-bottom: 6px;"><strong>-f</strong>: The <strong>f</strong> (fast-exit). Stop the attack immediately once a correct password is found.</li>
+                    <li style="margin-bottom: 6px;"><strong>host.docker.internal</strong>: This is the <em>address</em> of the target.</li>
+                    <li style="margin-bottom: 6px;"><strong>-s 5000</strong>: The <strong>s</strong> (server port). Knock on door number 5000.</li>
+                    <li style="margin-bottom: 6px;"><strong>http-post-form</strong>: The <em>kind</em> of door it is (a website login form).</li>
+                    <li style="margin-bottom: 6px;"><strong>"/api/...:username=...:Invalid..."</strong>: This is the map for the door (The URL, the Data format, and the Failure message).</li>
+                  </ul>
+                </div>
               </span>
             </li>
             <li class="rule-item">
               <span class="rule-num">Step 5</span>
-              <span class="rule-text"><strong>Login.</strong> Hydra will test thousands of passwords. Within seconds, it will find the correct password (<code>qwerty</code>). Go back to the Target Page in your browser, and login with <code>admin / qwerty</code>.</span>
+              <span class="rule-text"><strong>Login.</strong> Hydra will test thousands of passwords. Within seconds, it will find the correct password for the admin user. Go back to the Target Page in your browser, and login using those credentials to reveal the flag.</span>
             </li>
           </ul>
         </div>

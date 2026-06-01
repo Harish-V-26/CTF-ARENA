@@ -27,11 +27,19 @@ If you are trying to open that giant treasure chest, guessing numbers with your 
 To attack the login page, you can use the following syntax:
 \`hydra -l admin -P /usr/share/wordlists/rockyou.txt <Target_IP> -s 5000 http-post-form "/api/brute-force-target:username=^USER^&password=^PASS^:Invalid username or password"\`
 
-* \`-l admin\`: Specifies the single username 'admin'.
-* \`-P <file>\`: Specifies the password list (in this case, the pre-installed rockyou.txt).
-* \`http-post-form\`: The protocol.
-* \`"/api/...:username=^USER^&...:Invalid..."\`: The path, form data, and the failure message that Hydra uses to know if a guess was wrong.
-* \`-s 5000\`: Specifies the port.`,
+<ul style="margin-top: 10px; margin-bottom: 15px; padding-left: 20px;">
+  <li style="margin-bottom: 8px;"><strong>hydra</strong>: This wakes up the robot program.</li>
+  <li style="margin-bottom: 8px;"><strong>-l admin</strong>: The <strong>l</strong> (login). We are telling Hydra, "Only try to log in to the account named <strong>admin</strong>."</li>
+  <li style="margin-bottom: 8px;"><strong>-P /usr/share/.../rockyou.txt</strong>: The <strong>P</strong> (Password file). We give Hydra a giant dictionary book full of passwords to try.</li>
+  <li style="margin-bottom: 8px;"><strong>&lt;Target_IP&gt;</strong>: This is the <em>address</em> of the target house we want to break into.</li>
+  <li style="margin-bottom: 8px;"><strong>-s 5000</strong>: The <strong>s</strong> (server port). It tells Hydra exactly which door (port 5000) to knock on.</li>
+  <li style="margin-bottom: 8px;"><strong>http-post-form</strong>: This tells Hydra what <em>kind</em> of door it is (a standard website login form).</li>
+  <li style="margin-bottom: 8px;"><strong>"/api/...:username=...:Invalid..."</strong>: This is the secret map for the door. It has 3 parts separated by colons (:):
+    <br>1) <em>The URL</em>: <code>/api/brute-force-target</code> (where the form lives).
+    <br>2) <em>The Data</em>: <code>username=^USER^&amp;password=^PASS^</code> (Hydra plugs in the guesses here).
+    <br>3) <em>The Failure Message</em>: <code>Invalid username or password</code> (If Hydra sees this, it knows the guess failed and tries the next one!).
+  </li>
+</ul>`,
     questions: [
       { q: "What flag in Hydra is used to specify a single username?", a: "-l" },
       { q: "What flag in Hydra is used to specify a file containing a list of passwords?", a: "-P" },
@@ -50,7 +58,7 @@ Run the command using the pre-installed rockyou.txt wordlist.
 
 Once you crack the password, log in to the target page to view your success.`,
     questions: [
-      { q: "What is the correct password you found for the admin user?", a: "qwerty" },
+      { q: "What is the secret flag revealed after logging in as admin?", a: "CTF{brut3_f0rc3_m4st3r}" },
       { q: "Did the server return a 200 OK status code upon successful login? (yes/no)", a: "yes" },
       { q: "What tool did you end up using to crack the password?", a: "Hydra" }
     ]
