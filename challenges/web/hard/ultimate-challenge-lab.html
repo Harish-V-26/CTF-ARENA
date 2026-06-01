@@ -274,7 +274,7 @@
         <h3> Gauntlet Target Server</h3>
         <p>Spin up the vulnerable server environment containing all chained services.</p>
         <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Deploy Target ⇗</button>
-        <button id="target-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopTarget()">Stop Target</button>
+        
         <p id="target-msg" style="display:none;color:#e67e22;font-weight:bold;margin-top:15px"></p>
         
         <div id="target-info" class="target-details">
@@ -290,7 +290,7 @@
         <h3> Kali Linux Attack Box</h3>
         <p>Your penetration testing environment.</p>
         <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Deploy Attack Box ⇗</button>
-        <button id="kali-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopKali()">Stop Attack Box</button>
+        
         <p id="kali-msg" style="display:none;color:#e67e22;font-weight:bold;margin-top:15px"></p>
         
         <div id="kali-info" class="target-details">
@@ -411,7 +411,7 @@ async function launchTarget(){
   const info=document.getElementById('target-info');
   
   btn.style.display='none';
-  stop.style.display='none';
+  
   info.style.display='none';
   msg.style.display='block';
   msg.style.color='#e67e22';
@@ -426,7 +426,10 @@ async function launchTarget(){
       currentTargetId = data.container_id;
       msg.style.color = '#3498db';
       msg.textContent = 'Gauntlet environment is ready!';
-      stop.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Machine';
+            btn.style.background = '#c0392b';
+            btn.onclick = (btn.id.includes('kali') ? stopKali : (typeof stopTarget === 'function' ? stopTarget : stopLab));
       
       if(data.ports) {
           document.getElementById('target-ports').textContent = `${data.ports.ftp}, ${data.ports.http}, ${data.ports.idor}, ${data.ports.upload}`;
@@ -459,7 +462,7 @@ async function stopTarget(){
     await fetch(`http://${host}:5000/api/stop-gauntlet-target/${currentTargetId}`, {method:'POST'});
     msg.style.color = '#e74c3c';
     msg.textContent = 'Target stopped.';
-    document.getElementById('target-stop-btn').style.display = 'none';
+    
     document.getElementById('target-info').style.display = 'none';
     const btn = document.getElementById('target-launch-btn');
     btn.style.display = 'inline-block';
@@ -477,7 +480,7 @@ async function launchKali(){
   const info = document.getElementById('kali-info');
   
   btn.style.display = 'none';
-  stop.style.display = 'none';
+  
   info.style.display = 'none';
   msg.style.display = 'block';
   msg.style.color = '#e67e22';
@@ -492,7 +495,10 @@ async function launchKali(){
       currentKaliId = data.container_id;
       msg.style.color = '#00f0ff';
       msg.textContent = 'Kali Attack Box is ready!';
-      stop.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Machine';
+            btn.style.background = '#c0392b';
+            btn.onclick = (btn.id.includes('kali') ? stopKali : (typeof stopTarget === 'function' ? stopTarget : stopLab));
       info.style.display = 'block';
       document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0,12)} bash`;
     } else {
@@ -519,7 +525,7 @@ async function stopKali(){
     await fetch(`http://${host}:5000/api/stop-kali/${currentKaliId}`, {method:'POST'});
     msg.style.color = '#e74c3c';
     msg.textContent = 'Kali stopped.';
-    document.getElementById('kali-stop-btn').style.display = 'none';
+    
     document.getElementById('kali-info').style.display = 'none';
     const btn = document.getElementById('kali-launch-btn');
     btn.style.display = 'inline-block';

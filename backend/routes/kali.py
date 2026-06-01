@@ -74,7 +74,7 @@ def start_kali():
             command="tail -f /dev/null",
             detach=True,
             remove=True,
-            extra_hosts={"host.docker.internal": "host-gateway", "target.local": target_ip}
+            extra_hosts={"host.docker.internal": "host-gateway", "target.local": target_ip}, cap_add=["NET_ADMIN", "NET_RAW"]
         )
 
         return jsonify({
@@ -84,6 +84,17 @@ def start_kali():
             "target_ip": target_ip,
             "message": "Kali container and target started."
         })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@kali_bp.route('/api/stop-kali/<container_id>', methods=['POST'])
+def stop_kali(container_id):
+    if not client:
+        return jsonify({"status": "error", "message": "Docker not available."}), 500
+    try:
+        container = client.containers.get(container_id)
+        container.stop()
+        return jsonify({"status": "success"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
@@ -234,7 +245,7 @@ def start_kali_advance_kali():
             command="tail -f /dev/null",
             detach=True,
             remove=True,
-            extra_hosts={"host.docker.internal": "host-gateway", "target.local": target_ip},
+            extra_hosts={"host.docker.internal": "host-gateway", "target.local": target_ip}, cap_add=["NET_ADMIN", "NET_RAW"],
             volumes={"/var/run/docker.sock": {"bind": "/var/run/docker.sock", "mode": "rw"}}
         )
 

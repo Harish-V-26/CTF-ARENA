@@ -111,7 +111,7 @@ async function launchLab() {
     const stopBtn = document.getElementById('stop-btn');
 
     btn.style.display = 'none';
-    stopBtn.style.display = 'none';
+    
     msg.style.display = 'block';
 
     try {
@@ -127,7 +127,10 @@ async function launchLab() {
             msg.textContent = 'Lab started successfully! Opening...';
             const labUrl = `http://${host}:${data.port}`;
 
-            stopBtn.style.display = 'inline-block';
+            btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
 
             setTimeout(() => {
                 window.open(labUrl, '_blank');
@@ -157,11 +160,13 @@ async function stopLab() {
         await fetch(`http://${host}:5000/api/stop-devtools-guided/${currentContainerId}`, { method: 'POST' });
         msg.style.color = '#ff4d6d';
         msg.textContent = 'Lab stopped and destroyed safely.';
-        document.getElementById('stop-btn').style.display = 'none';
+        
 
         const launchBtn = document.getElementById('launch-btn');
         launchBtn.style.display = 'inline-block';
-        launchBtn.textContent = 'Relaunch Instance ⇗';
+        launchBtn.textContent = 'Restart Machine ⇗';
+        launchBtn.style.background = '';
+        launchBtn.onclick = (launchBtn.id.includes('kali') ? launchKali : (typeof launchTarget === 'function' ? launchTarget : launchLab));
         currentContainerId = null;
     } catch (e) {
         msg.textContent = 'Error stopping lab.';

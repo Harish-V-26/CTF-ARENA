@@ -197,7 +197,10 @@
         sessionStorage.setItem('shadow_gate_target_ports', JSON.stringify(data.ports));
 
         msg.style.display = 'none';
-        stopBtn.style.display = 'inline-block';
+        btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
         info.style.display = 'block';
         document.getElementById('target-url').textContent = `http://${host}:${data.ports.web}`;
         document.getElementById('port-web').textContent = data.ports.web;
@@ -223,7 +226,7 @@
     const launchBtn = document.getElementById('target-launch-btn');
 
     info.style.display = 'none';
-    stopBtn.style.display = 'none';
+    
     msg.style.display = 'block';
     msg.style.color = '#e67e22';
     msg.textContent = 'Stopping Target...';
@@ -242,7 +245,10 @@
       currentTargetId = null;
     } catch (e) {
       msg.textContent = 'Error stopping Target container.';
-      stopBtn.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
     }
   }
 
@@ -268,7 +274,10 @@
         sessionStorage.setItem('shadow_gate_kali_container', currentKaliId);
 
         msg.style.display = 'none';
-        stopBtn.style.display = 'inline-block';
+        btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
         info.style.display = 'block';
         document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
       } else {
@@ -291,7 +300,7 @@
     const launchBtn = document.getElementById('kali-launch-btn');
 
     info.style.display = 'none';
-    stopBtn.style.display = 'none';
+    
     msg.style.display = 'block';
     msg.style.color = '#e67e22';
     msg.textContent = 'Stopping Kali...';
@@ -309,7 +318,10 @@
       currentKaliId = null;
     } catch (e) {
       msg.textContent = 'Error stopping Kali container.';
-      stopBtn.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
     }
   }
 
@@ -325,8 +337,13 @@
       const savedPorts = JSON.parse(savedPortsStr);
       fetch(`http://${host}:5000/api/cancel-stop-shadow-gate/${savedTarget}`, { method: 'POST' }).catch(()=>{});
       
-      document.getElementById('target-launch-btn').style.display = 'none';
-      document.getElementById('target-stop-btn').style.display = 'inline-block';
+      const targetBtn = document.getElementById('target-launch-btn');
+      if (targetBtn) {
+          targetBtn.style.display = 'inline-block';
+          targetBtn.textContent = 'Stop Machine';
+          targetBtn.style.background = '#c0392b';
+          targetBtn.onclick = (typeof stopTarget === 'function' ? stopTarget : stopLab);
+      }
       document.getElementById('target-info').style.display = 'block';
       document.getElementById('target-url').textContent = `http://${host}:${savedPorts.web}`;
       document.getElementById('port-web').textContent = savedPorts.web;
@@ -339,8 +356,13 @@
       currentKaliId = savedKali;
       fetch(`http://${host}:5000/api/cancel-stop-kali/${savedKali}`, { method: 'POST' }).catch(()=>{});
       
-      document.getElementById('kali-launch-btn').style.display = 'none';
-      document.getElementById('kali-stop-btn').style.display = 'inline-block';
+      const kaliBtn = document.getElementById('kali-launch-btn');
+      if (kaliBtn) {
+          kaliBtn.style.display = 'inline-block';
+          kaliBtn.textContent = 'Stop Kali';
+          kaliBtn.style.background = '#c0392b';
+          kaliBtn.onclick = stopKali;
+      }
       document.getElementById('kali-info').style.display = 'block';
       document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
     }

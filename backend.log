@@ -1,0 +1,22 @@
+ * Serving Flask app 'app'
+ * Debug mode: on
+[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.21:5000
+[33mPress CTRL+C to quit[0m
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 105-277-489
+127.0.0.1 - - [01/Jun/2026 12:02:11] "POST /api/start-nmap-deepdive-target HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jun/2026 12:02:13] "POST /api/stop-nmap-deepdive-target/48e625dd61f676848fac21136418168131cf080d9dc8bdad63d0db655be29fd3 HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jun/2026 12:02:14] "POST /api/start-nmap-deepdive-target HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jun/2026 12:02:15] "POST /api/stop-nmap-deepdive-target/e88e4dac528a1938834ba12b9edabaca35d967890e7d83aa3243280a75996f2b HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jun/2026 12:02:18] "POST /api/start-nmap-deepdive-target HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jun/2026 12:02:19] "POST /api/stop-nmap-deepdive-target/2673369d4622f68895f46787f229936780aa562b83f97973fa48e5f91ec72f37 HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jun/2026 12:02:52] "POST /api/start-kali HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jun/2026 12:02:53] "POST /api/stop-kali/7c4b97a6fb413f6a7092c05456bb53db09666a00e881859a6251a026454318de HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jun/2026 12:05:55] "POST /api/start-nmap-deepdive-target HTTP/1.1" 200 -
+127.0.0.1 - - [01/Jun/2026 12:05:57] "POST /api/stop-nmap-deepdive-target/9592bd9e255d1f24c55f3e8b4d1edb59640c1c722380ae22537a8a0204bccc41 HTTP/1.1" 200 -
+/usr/lib/python3.14/multiprocessing/resource_tracker.py:396: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown: {'/mp-b6cgaed1'}
+  warnings.warn(

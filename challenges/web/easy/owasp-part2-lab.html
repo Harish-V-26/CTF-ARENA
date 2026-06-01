@@ -69,7 +69,7 @@ async function launchSpecific(containerName) {
   const msg = document.getElementById(`msg-${containerName}`);
   
   btn.style.display = 'none';
-  stopBtn.style.display = 'none';
+  
   msg.style.display = 'block';
   msg.style.color = '#e67e22';
   msg.textContent = 'Spinning up container...';
@@ -86,7 +86,10 @@ async function launchSpecific(containerName) {
       
       msg.style.color = '#2ecc71';
       msg.textContent = 'Lab started! Opening...';
-      stopBtn.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
       
       setTimeout(() => {
         window.open(`http://${h}:${d.port}`, '_blank');
@@ -121,7 +124,7 @@ async function stopSpecific(containerName) {
     
     msg.style.color = '#e74c3c';
     msg.textContent = 'Lab stopped.';
-    stopBtn.style.display = 'none';
+    
     
     delete activeContainers[containerName];
     sessionStorage.removeItem(`owasp_${containerName}_id`);
@@ -144,7 +147,10 @@ function checkRestored(containerName) {
     const stopBtn = document.getElementById(`btn-stop-${containerName}`);
     const msg = document.getElementById(`msg-${containerName}`);
     if (btn) btn.style.display = 'none';
-    if (stopBtn) stopBtn.style.display = 'inline-block';
+    if (stopBtn) btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
     if (msg) {
       msg.style.display = 'block';
       msg.style.color = '#2ecc71';

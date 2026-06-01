@@ -63,7 +63,7 @@
         <h3 style="color:#3498db"> Nmap Target Machine</h3>
         <p>Spin up a private target machine with multiple hidden ports and services to perform reconnaissance against.</p>
         <button id="target-launch-btn" class="btn-launch" style="background:#3498db;color:#fff" onclick="launchTarget()">Launch Target Machine ⇗</button>
-        <button id="target-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopTarget()">Stop Target </button>
+        
         <a href="nmap-guide.html" class="btn-launch" style="margin-left: 10px; background: #3498db; color:#fff" target="_blank"> Read Walkthrough</a>
         <p id="target-msg" style="display:none;color:#3498db;font-weight:bold;margin-top:12px"></p>
         <div id="target-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid rgba(52,152,219,.2)">
@@ -77,7 +77,7 @@
         <h3> Kali Linux — Attack Box</h3>
         <p>Spin up a private Kali container pre-loaded with Nmap and all recon tools.</p>
         <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Launch Kali Machine ⇗</button>
-        <button id="kali-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px" onclick="stopKali()">Stop Kali </button>
+        
         <p id="kali-msg" style="display:none;color:var(--accent);font-weight:bold;margin-top:12px"></p>
         <div id="kali-terminal-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid rgba(0,255,65,.2)">
           <p style="color:var(--text-muted);margin-top:0;font-size:.85rem">Your Kali container is ready. Connect via terminal:</p>
@@ -182,7 +182,7 @@ let currentTargetId=null;
 
 async function launchTarget(){
   const btn=document.getElementById('target-launch-btn'),stop=document.getElementById('target-stop-btn'),msg=document.getElementById('target-msg'),info=document.getElementById('target-info');
-  btn.style.display='none';stop.style.display='none';info.style.display='none';
+  btn.style.display='none';info.style.display='none';
   msg.style.display='block';msg.style.color='#e67e22';msg.textContent='Spinning up target container (building if first run)...';
   try{
     const host=window.location.hostname||'localhost';
@@ -191,7 +191,10 @@ async function launchTarget(){
     if(data.status==='success'){
       currentTargetId=data.container_id;
       msg.style.color='#3498db';msg.textContent='Target container is ready!';
-      stop.style.display='inline-block';info.style.display='block';
+      btn.style.display='inline-block';
+      btn.textContent='Stop Machine';
+      btn.style.background='#c0392b';
+      btn.onclick=(btn.id.includes('kali') ? stopKali : (typeof stopTarget === 'function' ? stopTarget : stopLab));info.style.display='block';
     }else{msg.style.color='#e74c3c';msg.textContent='Error: '+data.message;btn.style.display='inline-block'}
   }catch(e){msg.style.color='#e74c3c';msg.textContent='Failed to reach backend.';btn.style.display='inline-block'}
 }
@@ -203,7 +206,7 @@ async function stopTarget(){
   try{
     await fetch(`http://${host}:5000/api/stop-nmap-target/${currentTargetId}`,{method:'POST'});
     msg.style.color='#e74c3c';msg.textContent='Target stopped.';
-    document.getElementById('target-stop-btn').style.display='none';
+    
     document.getElementById('target-info').style.display='none';
     const b=document.getElementById('target-launch-btn');b.style.display='inline-block';b.textContent='Restart Target ⇗';
     currentTargetId=null;
@@ -212,7 +215,7 @@ async function stopTarget(){
 
 async function launchKali(){
   const btn=document.getElementById('kali-launch-btn'),stop=document.getElementById('kali-stop-btn'),msg=document.getElementById('kali-msg'),info=document.getElementById('kali-terminal-info');
-  btn.style.display='none';stop.style.display='none';info.style.display='none';
+  btn.style.display='none';info.style.display='none';
   msg.style.display='block';msg.style.color='#e67e22';msg.textContent='Spinning up Kali container...';
   try{
     const host=window.location.hostname||'localhost';
@@ -221,7 +224,10 @@ async function launchKali(){
     if(data.status==='success'){
       currentKaliId=data.container_id;
       msg.style.color='var(--accent)';msg.textContent='Kali Linux is ready!';
-      stop.style.display='inline-block';info.style.display='block';
+      btn.style.display='inline-block';
+      btn.textContent='Stop Machine';
+      btn.style.background='#c0392b';
+      btn.onclick=(btn.id.includes('kali') ? stopKali : (typeof stopTarget === 'function' ? stopTarget : stopLab));info.style.display='block';
       document.getElementById('kali-command').textContent=`docker exec -it ${currentKaliId.substring(0,12)} bash`;
     }else{msg.style.color='#e74c3c';msg.textContent='Error: '+data.message;btn.style.display='inline-block'}
   }catch(e){msg.style.color='#e74c3c';msg.textContent='Failed to reach backend.';btn.style.display='inline-block'}
@@ -234,7 +240,7 @@ async function stopKali(){
   try{
     await fetch(`http://${host}:5000/api/stop-kali/${currentKaliId}`,{method:'POST'});
     msg.style.color='#e74c3c';msg.textContent='Kali stopped.';
-    document.getElementById('kali-stop-btn').style.display='none';
+    
     document.getElementById('kali-terminal-info').style.display='none';
     const b=document.getElementById('kali-launch-btn');b.style.display='inline-block';b.textContent='Restart Kali ⇗';
     currentKaliId=null;

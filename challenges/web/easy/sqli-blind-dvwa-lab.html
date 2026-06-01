@@ -62,7 +62,7 @@
         <h3> Docker Lab Environment</h3>
         <p>Click the button below to dynamically spin up your private lab instance on our Python backend.</p>
         <button id="launch-btn" class="btn-launch" onclick="launchLab()">Launch DVWA Instance ⇗</button>
-        <button id="stop-btn" class="btn-launch" style="display:none; background: #c0392b; margin-left: 10px;" onclick="stopLab()">Stop Lab </button>
+        
         <a href="sqli-blind-dvwa-guide.html" class="btn-launch" style="margin-left: 10px;" target="_blank"> Read Walkthrough</a>
         <p id="loading-msg" style="display:none; color: #e67e22; font-weight: bold; margin-top: 15px;">Spinning up your private lab...</p>
       </div>
@@ -110,7 +110,7 @@ async function launchLab() {
     const stopBtn = document.getElementById('stop-btn');
     
     btn.style.display = 'none';
-    stopBtn.style.display = 'none';
+    
     msg.style.display = 'block';
 
     try {
@@ -129,7 +129,10 @@ async function launchLab() {
             msg.textContent = 'Lab started successfully! Opening...';
             const labUrl = `http://${host}:${data.port}`;
             
-            stopBtn.style.display = 'inline-block';
+            btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
             
             setTimeout(() => {
                 window.open(labUrl, '_blank');
@@ -159,12 +162,14 @@ async function stopLab() {
         await fetch(`http://${host}:5000/api/stop-dvwa/${currentContainerId}`, { method: 'POST' });
         msg.style.color = '#e74c3c';
         msg.textContent = 'Lab stopped and destroyed safely.';
-        document.getElementById('stop-btn').style.display = 'none';
+        
         sessionStorage.removeItem('sqli_blind_dvwa_container');
         sessionStorage.removeItem('sqli_blind_dvwa_port');
         const launchBtn = document.getElementById('launch-btn');
         launchBtn.style.display = 'inline-block';
-        launchBtn.textContent = 'Relaunch Instance ⇗';
+        launchBtn.textContent = 'Restart Machine ⇗';
+        launchBtn.style.background = '';
+        launchBtn.onclick = (launchBtn.id.includes('kali') ? launchKali : (typeof launchTarget === 'function' ? launchTarget : launchLab));
         currentContainerId = null;
     } catch (e) {
         msg.textContent = 'Error stopping lab.';
@@ -185,7 +190,10 @@ window.addEventListener('load', function() {
         const stopBtn = document.getElementById('stop-btn');
         const msg = document.getElementById('loading-msg');
         launchBtn.style.display = 'none';
-        stopBtn.style.display = 'inline-block';
+        btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
         msg.style.display = 'block';
         msg.style.color = '#2ecc71';
         msg.textContent = `Lab is already running at http://${host}:${savedDvwaPort} (Restored)`;

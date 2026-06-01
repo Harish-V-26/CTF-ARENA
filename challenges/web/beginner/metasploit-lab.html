@@ -63,7 +63,7 @@
         <h3> Metasploit Target Server</h3>
         <p>Spin up a dedicated, vulnerable target server to practice your scans against.</p>
         <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Launch Target Server ⇗</button>
-        <button id="target-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopTarget()">Stop Server </button>
+        
         <p id="target-msg" style="display:none; color:#e67e22; font-weight:bold; margin-top:12px;"></p>
         <div id="target-info" style="display:none; margin-top:12px; background:#1a252f; border-radius:6px; padding:10px 16px; text-align:left;">
           <span style="color:#aaa; font-size:0.9em;">Target is up! Set RHOSTS to this IP:</span>
@@ -76,7 +76,7 @@
         <h3> Kali Linux Environment</h3>
         <p>Need a Kali Linux machine to practice Metasploit? Spin up a private, isolated container pre-loaded with msfconsole and target tools.</p>
         <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Start Kali Container ⇗</button>
-        <button id="kali-stop-btn" class="btn-launch" style="display:none; background:#c0392b; margin-left:10px;" onclick="stopKali()">Stop Kali </button>
+        
         <a href="metasploit-guide.html" class="btn-launch" style="margin-left: 10px; background: #3498db;" target="_blank"> Read Walkthrough</a>
         <p id="kali-msg" style="display:none; color:#e67e22; font-weight:bold; margin-top:12px;"></p>
         
@@ -132,7 +132,7 @@
     const info = document.getElementById('target-info');
     
     btn.style.display = 'none';
-    stopBtn.style.display = 'none';
+    
     info.style.display = 'none';
     msg.style.display = 'block';
     msg.style.color = '#e67e22';
@@ -150,7 +150,10 @@
 
         msg.style.color = '#2ecc71';
         msg.textContent = 'Target Server is ready!';
-        stopBtn.style.display = 'inline-block';
+        btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
         
         info.style.display = 'block';
         document.getElementById('target-ip').textContent = data.ip_address;
@@ -178,12 +181,14 @@
       
       msg.style.color = '#e74c3c';
       msg.textContent = 'Target stopped safely.';
-      document.getElementById('target-stop-btn').style.display = 'none';
+      
       document.getElementById('target-info').style.display = 'none';
       
       const launchBtn = document.getElementById('target-launch-btn');
       launchBtn.style.display = 'inline-block';
-      launchBtn.textContent = 'Launch Target Server ⇗';
+      launchBtn.textContent = 'Restart Machine ⇗';
+        launchBtn.style.background = '';
+        launchBtn.onclick = (launchBtn.id.includes('kali') ? launchKali : (typeof launchTarget === 'function' ? launchTarget : launchLab));
       sessionStorage.removeItem('metasploit_target_container');
       sessionStorage.removeItem('metasploit_target_ip');
       currentTargetId = null;
@@ -199,7 +204,7 @@
     const info = document.getElementById('kali-terminal-info');
     
     btn.style.display = 'none';
-    stopBtn.style.display = 'none';
+    
     info.style.display = 'none';
     msg.style.display = 'block';
     msg.style.color = '#e67e22';
@@ -216,7 +221,10 @@
 
         msg.style.color = '#2ecc71';
         msg.textContent = 'Kali Linux container is ready!';
-        stopBtn.style.display = 'inline-block';
+        btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
         
         info.style.display = 'block';
         document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
@@ -244,12 +252,14 @@
       
       msg.style.color = '#e74c3c';
       msg.textContent = 'Kali stopped safely.';
-      document.getElementById('kali-stop-btn').style.display = 'none';
+      
       document.getElementById('kali-terminal-info').style.display = 'none';
       
       const launchBtn = document.getElementById('kali-launch-btn');
       launchBtn.style.display = 'inline-block';
-      launchBtn.textContent = 'Start Kali Container ⇗';
+      launchBtn.textContent = 'Restart Machine ⇗';
+        launchBtn.style.background = '';
+        launchBtn.onclick = (launchBtn.id.includes('kali') ? launchKali : (typeof launchTarget === 'function' ? launchTarget : launchLab));
       sessionStorage.removeItem('metasploit_kali_container');
       currentKaliId = null;
     } catch (e) {
@@ -274,7 +284,10 @@
       const info = document.getElementById('target-info');
       
       launchBtn.style.display = 'none';
-      stopBtn.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
       msg.style.display = 'block';
       msg.style.color = '#2ecc71';
       msg.textContent = 'Target Server is ready! (Restored)';
@@ -296,7 +309,10 @@
       const info = document.getElementById('kali-terminal-info');
       
       launchBtn.style.display = 'none';
-      stopBtn.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
       msg.style.display = 'block';
       msg.style.color = '#2ecc71';
       msg.textContent = 'Kali Linux container is ready! (Restored)';

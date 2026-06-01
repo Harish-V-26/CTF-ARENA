@@ -238,7 +238,10 @@
         sessionStorage.setItem('owasp_part2_target_port', data.port);
 
         msg.style.display = 'none';
-        stopBtn.style.display = 'inline-block';
+        btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
         info.style.display = 'block';
         document.getElementById('target-url').textContent = `http://${host}:${data.port}`;
       } else {
@@ -261,7 +264,7 @@
     const launchBtn = document.getElementById('target-launch-btn');
 
     info.style.display = 'none';
-    stopBtn.style.display = 'none';
+    
     msg.style.display = 'block';
     msg.style.color = '#e67e22';
     msg.textContent = 'Stopping Target...';
@@ -283,7 +286,10 @@
       currentTargetId = null;
     } catch (e) {
       msg.textContent = 'Error stopping Target container.';
-      stopBtn.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
     }
   }
 
@@ -309,7 +315,10 @@
         sessionStorage.setItem('owasp_part2_kali_container', currentKaliId);
 
         msg.style.display = 'none';
-        stopBtn.style.display = 'inline-block';
+        btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
         info.style.display = 'block';
         document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
       } else {
@@ -332,7 +341,7 @@
     const launchBtn = document.getElementById('kali-launch-btn');
 
     info.style.display = 'none';
-    stopBtn.style.display = 'none';
+    
     msg.style.display = 'block';
     msg.style.color = '#e67e22';
     msg.textContent = 'Stopping Kali...';
@@ -350,7 +359,10 @@
       currentKaliId = null;
     } catch (e) {
       msg.textContent = 'Error stopping Kali container.';
-      stopBtn.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
     }
   }
 
@@ -365,8 +377,13 @@
       currentTargetId = savedTarget;
       fetch(`http://${host}:5000/api/cancel-stop-owasp-part2-ctf/${savedTarget}`, { method: 'POST' }).catch(()=>{});
       
-      document.getElementById('target-launch-btn').style.display = 'none';
-      document.getElementById('target-stop-btn').style.display = 'inline-block';
+      const targetBtn = document.getElementById('target-launch-btn');
+      if (targetBtn) {
+          targetBtn.style.display = 'inline-block';
+          targetBtn.textContent = 'Stop Machine';
+          targetBtn.style.background = '#c0392b';
+          targetBtn.onclick = (typeof stopTarget === 'function' ? stopTarget : stopLab);
+      }
       document.getElementById('target-info').style.display = 'block';
       document.getElementById('target-url').textContent = `http://${host}:${savedPort}`;
     }
@@ -376,8 +393,13 @@
       currentKaliId = savedKali;
       fetch(`http://${host}:5000/api/cancel-stop-kali/${savedKali}`, { method: 'POST' }).catch(()=>{});
       
-      document.getElementById('kali-launch-btn').style.display = 'none';
-      document.getElementById('kali-stop-btn').style.display = 'inline-block';
+      const kaliBtn = document.getElementById('kali-launch-btn');
+      if (kaliBtn) {
+          kaliBtn.style.display = 'inline-block';
+          kaliBtn.textContent = 'Stop Kali';
+          kaliBtn.style.background = '#c0392b';
+          kaliBtn.onclick = stopKali;
+      }
       document.getElementById('kali-info').style.display = 'block';
       document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
     }

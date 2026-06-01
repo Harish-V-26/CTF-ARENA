@@ -71,7 +71,7 @@
         <h3> Kali Linux Environment</h3>
         <p>Need a Kali machine? Spin up a private container loaded with attack tools (curl, netcat, gobuster, nmap, msfvenom).</p>
         <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Start Kali Container ⇗</button>
-        <button id="kali-stop-btn" class="btn-launch" style="display:none;background:#c0392b;margin-left:10px;" onclick="stopKali()">Stop Kali </button>
+        
         <p id="kali-msg" style="display:none;color:#e67e22;font-weight:bold;margin-top:15px;"></p>
         <div id="kali-terminal-info" style="display:none;margin-top:15px;background:#1a252f;padding:15px;border-radius:4px;text-align:left;">
           <p style="color:#ecf0f1;margin-top:0;">Your Kali container is running! To access it, run this command in your host terminal:</p>
@@ -151,7 +151,7 @@ async function launchKali() {
   const info    = document.getElementById('kali-terminal-info');
 
   btn.style.display = 'none';
-  stopBtn.style.display = 'none';
+  
   info.style.display = 'none';
   msg.style.display = 'block';
   msg.style.color = '#e67e22';
@@ -166,7 +166,10 @@ async function launchKali() {
       currentKaliId = data.container_id;
       msg.style.color = '#2ecc71';
       msg.textContent = 'Kali Linux container is ready!';
-      stopBtn.style.display = 'inline-block';
+      btn.style.display = 'inline-block';
+            btn.textContent = 'Stop Kali';
+            btn.style.background = '#c0392b';
+            btn.onclick = stopKali;
       info.style.display = 'block';
       document.getElementById('kali-command').textContent =
         `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
@@ -192,11 +195,13 @@ async function stopKali() {
     await fetch(`http://${host}:5000/api/stop-kali/${currentKaliId}`, { method: 'POST' });
     msg.style.color = '#e74c3c';
     msg.textContent = 'Kali stopped safely.';
-    document.getElementById('kali-stop-btn').style.display = 'none';
+    
     document.getElementById('kali-terminal-info').style.display = 'none';
     const launchBtn = document.getElementById('kali-launch-btn');
     launchBtn.style.display = 'inline-block';
-    launchBtn.textContent = 'Restart Kali ⇗';
+    launchBtn.textContent = 'Restart Machine ⇗';
+        launchBtn.style.background = '';
+        launchBtn.onclick = (launchBtn.id.includes('kali') ? launchKali : (typeof launchTarget === 'function' ? launchTarget : launchLab));
     currentKaliId = null;
   } catch (e) {
     msg.textContent = 'Error stopping Kali.';

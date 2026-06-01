@@ -136,5 +136,36 @@
             }
         ],
         "categories": []
+    },
+    "12345": {
+        "roomName": "New",
+        "description": "hi",
+        "roomCode": "12345",
+        "completionTime": 60,
+        "difficulty": "Easy",
+        "cloning": false,
+        "visibility": "Public",
+        "privateMessage": "try this",
+        "bannerUrl": "",
+        "avatarUrl": "https://api.dicebear.com/7.x/identicon/svg?seed=0.8952937060917182",
+        "video1": null,
+        "video2": null,
+        "tasks": [
+            {
+                "id": 1780292071018,
+                "title": "New Task",
+                "description": "Try this Questions",
+                "questions": [
+                    {
+                        "id": 1780292083610,
+                        "text": "What is flag?",
+                        "answer": "CTF{flag}",
+                        "points": 10,
+                        "answer_hash": "scrypt:32768:8:1$iykwIMglQ87HmqB6$c672aa95d0f49353e92cde92189dac786cec07ec638c11e13b86ec6f441a7763236ba62322f22f781824a35fc336be092adee00037a822712cdf8f12b456a03d"
+                    }
+                ]
+            }
+        ],
+        "categories": []
     }
 }
