@@ -139,7 +139,8 @@
       // Enforce global authentication redirect
       const path = window.location.pathname.replace(/\\/g, "/");
       const isLoginPage = path.endsWith("/login.html") || path.endsWith("/login");
-      if (this.authInitialized && !this.currentUser && !isLoginPage) {
+      const isRoomPage = path.startsWith("/room/");
+      if (this.authInitialized && !this.currentUser && !isLoginPage && !isRoomPage) {
         let prefix = "";
         if (path.includes("/challenges/")) {
           const part = path.substring(path.indexOf("/challenges/"));
@@ -334,6 +335,8 @@
             challengesLink.classList.remove("active");
           }
         }
+      } else if (path.startsWith("/room/")) {
+        prefix = "http://127.0.0.1:5501/";
       }
 
       // Remove any previously inserted Login button

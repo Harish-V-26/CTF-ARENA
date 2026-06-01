@@ -107,13 +107,16 @@
     </div>
   </div>
 
+  <script src="file-upload-dvwa-data.js"></script>
   <script>
     // Global state
     let cur = 0;
     let kaliId = null;
-    const LESSONS = [];
-    // placeholder data – actual lesson content should be populated from a separate JSON (like brute-force-data.js)
-    // For now we keep it empty; the UI will still work.
+    const storageKey = 'file_upload_virtual_lab_progress';
+    let answered = JSON.parse(localStorage.getItem(storageKey)) || {};
+    if(typeof LESSONS !== 'undefined') {
+      LESSONS.forEach((_, i) => { if(!answered[i]) answered[i] = {}; });
+    }
 
     function launchDVWA() {
       const host = window.location.hostname || 'localhost';
@@ -219,11 +222,34 @@
       document.getElementById(`nav-${to}`).classList.add('active');
       document.getElementById(`dot-${to}`).classList.add('current');
     }
-    function lessonDone(idx){return true;} // placeholder – integrate real answer tracking
-    function totalDone(){return 0;}
-    function totalQs(){return 1;}
+    function lessonDone(idx){
+      if(!LESSONS[idx] || !LESSONS[idx].questions) return true;
+      const qLen = LESSONS[idx].questions.length;
+      if(qLen===0) return true;
+      for(let i=0; i<qLen; i++){
+        if(!answered[idx] || !answered[idx][i]) return false;
+      }
+      return true;
+    }
+    function totalDone(){
+      let d=0;
+      LESSONS.forEach((l,i)=>{
+        if(!l.questions) return;
+        l.questions.forEach((_,qi)=>{
+          if(answered[i] && answered[i][qi]) d++;
+        });
+      });
+      return d;
+    }
+    function totalQs(){
+      let t=0;
+      LESSONS.forEach(l=>{ if(l.questions) t+=l.questions.length; });
+      return t;
+    }
     function updateProgress(){
-      const pct = 0; // placeholder
+      const t = totalQs();
+      const d = totalDone();
+      const pct = t===0 ? 0 : Math.round((d/t)*100);
       document.getElementById('overall-fill').style.width = pct+'%';
       document.getElementById('overall-pct').textContent = pct+'%';
     }
@@ -237,12 +263,16 @@
     function navigate(dir){
       const next = cur + dir;
       if(next>=0 && next<LESSONS.length) goTo(next);
-      else if(dir===1) showCompletion();
+      else if(dir===1) {
+        showCompletion();
+      }
     }
     function showCompletion(){
+      if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
       document.getElementById('lesson-panel').style.display='none';
       document.querySelector('.docker-launch').style.display='none';
-      document.getElementById('score-pill').textContent='200 / 200 pts';
+      const pts = LESSONS.reduce((sum, l) => sum + (l.points||0), 0);
+      document.getElementById('score-pill').textContent = pts + ' / ' + pts + ' pts';
       document.getElementById('completion-card').classList.add('show');
       document.getElementById('btn-next').disabled=true;
       document.getElementById('btn-prev').disabled=true;
@@ -250,7 +280,37 @@
       document.getElementById('overall-pct').textContent='100%';
     }
     function onEnter(e,lesson,qi){if(e.key==='Enter') checkAnswer(lesson,qi);}
-    function checkAnswer(lesson,qi){/* placeholder – implement answer checking */}
+    function normalise(str) {
+      return (str||'').toLowerCase().replace(/[^a-z0-9_\-\.\s]/g, '').trim();
+    }
+    function checkAnswer(lesson,qi){
+      if(answered[lesson] && answered[lesson][qi]) return;
+      const input = document.getElementById(`ans-${lesson}-${qi}`);
+      const cn = normalise(LESSONS[lesson].questions[qi].a);
+      const un = normalise(input.value);
+      const ok = un === cn || cn.includes(un) || un.includes(cn.split(' ')[0]);
+      const fb = document.getElementById(`fb-${lesson}-${qi}`);
+      const qc = document.getElementById(`qc-${lesson}-${qi}`);
+      if(ok) {
+        if(!answered[lesson]) answered[lesson] = {};
+        answered[lesson][qi] = true;
+        if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+        localStorage.setItem(storageKey, JSON.stringify(answered));
+        qc.classList.add('correct');
+        fb.className = 'feedback correct-msg show';
+        fb.textContent = 'Correct!';
+        input.disabled = true;
+        document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
+        updateProgress();
+        if(lessonDone(lesson)) document.getElementById(`mod-${lesson}`).classList.add('completed');
+      } else {
+        qc.classList.add('wrong');
+        if(window.ctfTrackFailed) window.ctfTrackFailed();
+        fb.className = 'feedback wrong-msg show';
+        fb.textContent = 'Not quite — try again.';
+        setTimeout(()=>{ qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
+      }
+    }
 
     // Init UI
     window.addEventListener('load',()=>{
