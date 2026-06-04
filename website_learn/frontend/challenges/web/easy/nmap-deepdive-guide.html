@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF ARENA — Official walkthrough for Nmap Deep Dive." />
+  <title>CTF ARENA — Nmap Deep Dive Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #0d1117;
+      color: #2ecc71;
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8000/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8000/index.html">Home</a>
+      <a href="http://localhost:8000/learn.html">Learn</a>
+      <a href="http://localhost:8000/rules.html">Rules</a>
+      <a href="http://localhost:8000/rooms/index.html">Create Room</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8000/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8000/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        Nmap Deep Dive <span style="color:var(--accent);">Guide.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:640px;margin:0 auto 8px;">
+        A step-by-step walkthrough for the Nmap Deep Dive challenge. Learn advanced scanning techniques, firewall evasion, and the Nmap Scripting Engine.
+      </p>
+    </div>
+
+    <div class="rules-section" id="rules-section">
+
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro"     class="active" id="nav-intro"> Introduction</a></li>
+          <li><a href="#stealth"   id="nav-stealth"> Stealth Scans</a></li>
+          <li><a href="#evasion"   id="nav-evasion"> Firewall Evasion</a></li>
+          <li><a href="#nse"       id="nav-nse"> NSE Scripts</a></li>
+          <li><a href="#flag"      id="nav-flag"> Capture the Flag</a></li>
+        </ul>
+      </aside>
+
+      <main class="rules-content" id="rules-content">
+
+        <!-- Intro -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Introduction</h2><p>Beyond the basics</p></div>
+          </div>
+          <p style="color:var(--text-muted);line-height:1.7;font-size:1.05rem;">
+            While basic SYN and Connect scans are great for standard reconnaissance, modern networks deploy firewalls and Intrusion Detection Systems (IDS) that can easily detect and block these probes. In this guide, we dive deep into the advanced features of Nmap designed to bypass these defenses and extract sensitive information using automated scripts.
+          </p>
+        </div>
+
+        <!-- Stealth Scans -->
+        <div class="rules-block" id="stealth">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Stealth Scans</h2><p>Exploiting the TCP RFC</p></div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text">Understand the theory: If a packet without standard connection flags (SYN, ACK) is sent to an open port, the port ignores it. If sent to a closed port, the port responds with a Reset (RST). We can use this to map out listening services.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text">Null Scan: Send a packet with no flags set.
+                <div class="code-block">nmap -sN host.docker.internal</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">FIN Scan: Send a packet with only the FIN flag set.
+                <div class="code-block">nmap -sF host.docker.internal</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 4</span>
+              <span class="rule-text">Xmas Scan: Light the packet up like a Christmas tree by setting FIN, PSH, and URG.
+                <div class="code-block">nmap -sX host.docker.internal</div>
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Note</span>
+              <span class="rule-text">These scans bypass simple stateless firewalls but are often ineffective against Windows targets.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Evasion -->
+        <div class="rules-block" id="evasion">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Firewall Evasion</h2><p>Fragmentation, Decoys, and Spoofing</p></div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Fragmentation</span>
+              <span class="rule-text">Split packets into tiny chunks to confuse IDS signatures. Use <code>-f</code> for 8-byte chunks, or <code>-ff</code> for 16-byte chunks.
+                <div class="code-block">nmap -f host.docker.internal</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Decoys</span>
+              <span class="rule-text">Hide your real IP by spoofing dozens of fake source IPs alongside your own.
+                <div class="code-block">nmap -D RND:10 host.docker.internal</div>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- NSE -->
+        <div class="rules-block" id="nse">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Nmap Scripting Engine</h2><p>Automating enumeration</p></div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text">The NSE allows you to run Lua scripts to automate tasks like vulnerability checking and brute forcing. Scripts are found in <code>/usr/share/nmap/scripts/</code>.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text">To test a specific service, like checking if an FTP server allows anonymous login, use the <code>--script</code> flag.
+                <div class="code-block">nmap --script ftp-anon -p 2121 host.docker.internal</div>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Flag -->
+        <div class="rules-block" id="flag">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Capture the Flag</h2><p>Combine your skills</p></div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text">Start the Deep Dive Target container and Kali container from the lab interface.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text">Connect to the Kali terminal and scan all ports to discover hidden services:
+                <div class="code-block">nmap -p- host.docker.internal</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">You will find ports 2121 (FTP) and 54321 (Secret Server) open. Since you only have Nmap tools available, use the banner grabbing script to extract the first flag from the FTP server:
+                <div class="code-block">nmap -p 2121 --script banner host.docker.internal</div>
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 4</span>
+              <span class="rule-text">Use Nmap's banner script to connect to the high-security port and retrieve the second part of the flag:
+                <div class="code-block">nmap -p 54321 --script banner host.docker.internal</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 5</span>
+              <span class="rule-text">Combine Flag Part 1 and Flag Part 2 into the format <code>CTF{...}</code> and submit it to complete the lab!</span>
+            </li>
+          </ul>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 <a href="http://localhost:8000/index.html">CTF ARENA</a> · Internship Project Demo</p>
+  </footer>
+
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+
+  <!-- COMPLETION TRACKING INJECTED -->
+  <div style="text-align: center; margin: 40px 0; padding-bottom: 40px;">
+    <button id="btn-complete-guide" onclick="markGuideComplete()" style="background: #2ecc71; color: white; border: none; padding: 12px 24px; font-size: 1.1em; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Mark as Complete</button>
+    <p id="completion-msg" style="display:none; color: #2ecc71; font-weight: bold; margin-top: 10px;">✓ Marked as Complete</p>
+  </div>
+  <script>
+    function markGuideComplete() {
+      if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+      if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+      document.getElementById('btn-complete-guide').style.display = 'none';
+      document.getElementById('completion-msg').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

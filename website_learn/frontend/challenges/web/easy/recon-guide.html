@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF ARENA — Official walkthrough for Web Reconnaissance Fundamentals." />
+  <title>CTF ARENA — Recon Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #0d1117;
+      color: #2ecc71;
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+      border: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8000/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8000/index.html">Home</a>
+      <a href="http://localhost:8000/learn.html">Learn</a>
+      <a href="http://localhost:8000/rules.html">Rules</a>
+      <a href="http://localhost:8000/rooms/index.html">Create Room</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8000/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8000/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        Web Recon <span style="color:var(--accent);">Guide.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:640px;margin:0 auto 8px;">
+        A step-by-step walkthrough for LAB 4 — Web Reconnaissance Fundamentals. Tools used: <strong>ffuf</strong>, <strong>WhatWeb</strong>, <strong>Wappalyzer</strong>.
+      </p>
+    </div>
+
+    <div class="rules-section" id="rules-section">
+
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro"     class="active" id="nav-intro"> Introduction</a></li>
+          <li><a href="#robots"    id="nav-robots"> Robots & Sitemap</a></li>
+          <li><a href="#whatweb"   id="nav-whatweb"> WhatWeb Fingerprint</a></li>
+          <li><a href="#wappalyzer" id="nav-wappalyzer"> Wappalyzer Tool</a></li>
+          <li><a href="#ffuf"      id="nav-ffuf"> ffuf Directory Fuzzing</a></li>
+          <li><a href="#subdomains" id="nav-subdomains"> Subdomain Recon</a></li>
+          <li><a href="#summary"    id="nav-summary"> Connecting the Dots</a></li>
+          <li><a href="#flag"      id="nav-flag"> Capture the Flag</a></li>
+          <li><a href="#faq"       id="nav-faq"> FAQ</a></li>
+        </ul>
+      </aside>
+
+      <main class="rules-content" id="rules-content">
+
+        <!-- Intro -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Introduction</h2><p>What is Web Reconnaissance?</p></div>
+          </div>
+          <p style="color:var(--text-muted);line-height:1.7;font-size:1.05rem;">
+            Before any attack, a professional penetration tester performs <strong>reconnaissance</strong> — passively and actively gathering information about the target. This lab teaches you to map the attack surface using open-source tools without needing Burp Suite.
+          </p>
+        </div>
+
+        <!-- Robots & Sitemap -->
+        <div class="rules-block" id="robots">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>robots.txt & sitemap.xml</h2><p>Find what the server is trying to hide</p></div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text">Launch the target server above, then open its URL in your browser.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text">Navigate to <code>/robots.txt</code> — look for any <code>Disallow</code> entries. These are paths the admin is trying to hide from search engines (and accidentally revealing to you).</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">Navigate to <code>/sitemap.xml</code> — this gives you a complete map of all URLs the site exposes.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 4</span>
+              <span class="rule-text">Note the disallowed path. You will use it in the final CTF step!</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- WhatWeb -->
+        <div class="rules-block" id="whatweb">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Tech Stack Fingerprinting</h2><p>WhatWeb & Wappalyzer</p></div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text">Start your Kali container and connect via your host terminal using the displayed command.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text">Run WhatWeb against the target:
+                <div class="code-block">whatweb http://host.docker.internal</div>
+              </span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">For more details, use the verbose flag:
+                <div class="code-block">whatweb -v http://host.docker.internal</div>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Wappalyzer -->
+        <div class="rules-block" id="wappalyzer">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Wappalyzer Browser Tool</h2><p>Conceptual Guide</p></div>
+          </div>
+          <p style="color:var(--text-muted);line-height:1.7;font-size:1.05rem;">
+            Wappalyzer is the industry standard for fast, visual technology detection. It is available as a browser extension for Chrome, Firefox, and Edge.
+          </p>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text">In a real-world scenario, you would install the extension and click the icon while visiting a site.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text">It instantly detects CMS (WordPress, Drupal), Frameworks (React, Vue), and Backend technologies (Node.js, PHP, Flask).</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">While we use terminal tools like WhatWeb for this lab, knowing how to use Wappalyzer is crucial for quick reconnaissance during initial discovery.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ffuf -->
+        <div class="rules-block" id="ffuf">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Directory Fuzzing with ffuf</h2><p>Discover hidden paths</p></div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text">Inside your Kali terminal, run this command to fuzz for directories:
+                <div class="code-block">ffuf -u http://host.docker.internal/FUZZ -w /usr/share/wordlists/dirb/common.txt -fc 404</div>
+                <code>FUZZ</code> is the placeholder — ffuf replaces it with each word from the wordlist.
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text">Look for any paths that return HTTP <strong>200</strong> or <strong>301</strong>. These are valid endpoints worth investigating.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">Cross-reference your ffuf results with the paths you found in <code>robots.txt</code>. They should match!</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Subdomains -->
+        <div class="rules-block" id="subdomains">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Subdomain Enumeration</h2><p>Virtual host fuzzing</p></div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text">To discover virtual hosts, fuzz the <code>Host</code> header with ffuf:
+                <div class="code-block">ffuf -u http://host.docker.internal -H "Host: FUZZ.target.local" -w /usr/share/wordlists/dirb/common.txt -fw 1</div>
+              </span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text">The <code>-fw 1</code> flag filters results by word count, removing identical "not found" responses so only unique results show up.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Connecting the Dots -->
+        <div class="rules-block" id="summary">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Connecting the Dots</h2><p>How to use your findings</p></div>
+          </div>
+          <p style="color:var(--text-muted);line-height:1.7;font-size:1.05rem;">
+            At this point, you should have two key pieces of information:
+          </p>
+          <div class="penalty-box" style="margin-top:16px;">
+            <p>
+              1. <strong>From robots.txt:</strong> You saw a path like <code>/staging</code> or <code>/admin</code> that the server admin explicitly wants to hide.<br>
+              2. <strong>From ffuf:</strong> You ran a fuzzing scan and confirmed that a path (like <code>/staging</code>) actually exists and returns a <code>200 OK</code> status.
+            </p>
+          </div>
+          <p style="color:var(--text-muted);line-height:1.7;font-size:1.05rem;margin-top:16px;">
+            The presence of a "disallowed" path in robots.txt that is confirmed to exist by ffuf is a massive red flag. These are often forgotten development areas or internal portals containing sensitive data — in our case, the <strong>CTF Flag</strong>.
+          </p>
+        </div>
+
+        <div class="rules-block" id="flag">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Capture the Flag</h2><p>Put it all together</p></div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text">Use the information you gathered from <code>robots.txt</code> and your <code>ffuf</code> scan to identify the hidden path on the target server.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text">Browse directly to that hidden path in your browser while the target server is running. The page will display the flag if you found the correct location.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">Enter the flag you discovered into the final quiz question in the lab to earn your points. The flag follows the <code>CTF{...}</code> format — find it yourself!</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- FAQ -->
+        <div class="rules-block" id="faq">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div><h2>Frequently Asked Questions</h2></div>
+          </div>
+          <div class="penalty-box" style="margin-top:24px;">
+            <span class="penalty-icon"></span>
+            <p><strong>Why no Burp Suite in this lab?</strong><br>
+              This lab focuses on command-line OSINT and fuzzing tools that work entirely from the terminal. This is a more realistic workflow when working on remote servers or headless environments.
+            </p>
+          </div>
+          <div class="penalty-box" style="margin-top:16px; background:rgba(231,76,60,0.1); border-color:rgba(231,76,60,0.3);">
+            <span class="penalty-icon"></span>
+            <p><strong>My ffuf isn't finding anything?</strong><br>
+              Make sure the target server is running first! Also confirm you are using <code>host.docker.internal</code> as the hostname, not <code>localhost</code>, since you are connecting from inside a Docker container.
+            </p>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2026 <a href="http://localhost:8000/index.html">CTF ARENA</a> · Internship Project Demo</p>
+  </footer>
+
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+
+  <!-- COMPLETION TRACKING INJECTED -->
+  <div style="text-align: center; margin: 40px 0; padding-bottom: 40px;">
+    <button id="btn-complete-guide" onclick="markGuideComplete()" style="background: #2ecc71; color: white; border: none; padding: 12px 24px; font-size: 1.1em; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Mark as Complete</button>
+    <p id="completion-msg" style="display:none; color: #2ecc71; font-weight: bold; margin-top: 10px;">✓ Marked as Complete</p>
+  </div>
+  <script>
+    function markGuideComplete() {
+      if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+      if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+      document.getElementById('btn-complete-guide').style.display = 'none';
+      document.getElementById('completion-msg').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

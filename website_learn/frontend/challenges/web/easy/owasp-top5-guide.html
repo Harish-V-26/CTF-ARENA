@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF ARENA Guide — Official walkthrough for OWASP Top 10 Part 1 (1-5) Challenge." />
+  <title>CTF ARENA — OWASP Top 10 (1-5) Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #1a252f;
+      color: #3498db;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8000/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8000/index.html">Home</a>
+      <a href="http://localhost:8000/learn.html">Learn</a>
+      <a href="http://localhost:8000/rules.html">Rules</a>
+      <a href="http://localhost:8000/rooms/index.html">Create Room</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8000/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8000/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE INTRO  -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
+      <h1 style="font-size:clamp(32px,5vw,56px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        OWASP Top 10 Part 1 <span style="color:var(--accent);">Walkthrough.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
+        A complete step-by-step walkthrough to help you approach, analyze, and solve the OWASP Top 10 Part 1 (1 to 5) lab.
+      </p>
+    </div>
+
+    <!--  TWO-COLUMN LAYOUT  -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro" class="active" id="nav-intro"> Introduction</a></li>
+          <li><a href="#bac" id="nav-bac"> 1. Broken Access Control</a></li>
+          <li><a href="#crypto" id="nav-crypto"> 2. Cryptographic Failures</a></li>
+          <li><a href="#injection" id="nav-injection"> 3. Injection</a></li>
+          <li><a href="#misconfig" id="nav-misconfig"> 4. Security Misconfiguration</a></li>
+          <li><a href="#supply" id="nav-supply"> 5. Software Supply Chain</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!--  Intro  -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Introduction</h2>
+              <p>How this multi-vulnerability lab works</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Welcome to the OWASP Top 10 Part 1 practical room! In this challenge, you will explore the first 5 vulnerabilities from the OWASP Top 10 list (2025 update). This guide will take you step-by-step through each topic, explaining the exploit methodology to help you retrieve the flags on your own.
+          </p>
+        </div>
+
+        <!--  Broken Access Control  -->
+        <div class="rules-block" id="bac">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 1</h2>
+              <p>Broken Access Control (A01:2025)</p>
+            </div>
+          </div>
+
+          <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
+            The objective of this challenge is to perform an Insecure Direct Object Reference (IDOR) to access another user's profile information.
+          </p>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Launch Target & Go to Profile.</strong> Open the target lab and click the <strong>Broken Access Control</strong> module. This opens <code>/api/owasp-top5-lab/profile?id=101</code>.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Modify User ID.</strong> Change the <code>id</code> parameter in the URL from <code>101</code> to <code>100</code> and press Enter.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Find the Flag.</strong> Look at the <strong>Access Secret</strong> field in the profile table of the administrator. Copy the secret flag that starts with <code>flag{...}</code>.
+              </span>
+            </li>
+          </ul>
+        </div>
+        
+        <!--  Cryptographic Failures  -->
+        <div class="rules-block" id="crypto">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 2</h2>
+              <p>Cryptographic Failures (A04:2025)</p>
+            </div>
+          </div>
+
+          <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
+            This challenge demonstrates sensitive data exposure through weak password hashes and deprecated ciphers.
+          </p>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Open the Database Dump.</strong> Click the <strong>Cryptographic Failures</strong> module. You will be shown a leaked database backup.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Identify the Hash Algorithm.</strong> The admin's password hash is a 32-character hexadecimal digest. Recognize this format to answer the first question.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Crack the ROT13 Flag.</strong> The flag column shows a scrambled ciphertext. Shift the alphabetical characters back by 13 positions (ROT13) using an online decoder (like CyberChef or rot13.com) to reveal the plaintext flag.
+              </span>
+            </li>
+          </ul>
+        </div>
+        
+        <!--  Injection  -->
+        <div class="rules-block" id="injection">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 3</h2>
+              <p>Injection (A05:2025)</p>
+            </div>
+          </div>
+
+          <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
+            This challenge requires exploiting SQL Injection by inputting a tautology payload that forces the database query to return all rows.
+          </p>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Go to the User Search Directory.</strong> Open the <strong>Injection</strong> module from the target portal dashboard.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Submit the Tautology.</strong> In the search box, input the classic payload: <code>' OR '1'='1</code> and click Search.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Extract the Flag.</strong> The page dumps the full table of users. Look at the last entry for user <code>flag_holder</code> to find and copy the flag.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Security Misconfiguration  -->
+        <div class="rules-block" id="misconfig">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 4</h2>
+              <p>Security Misconfiguration (A02:2025)</p>
+            </div>
+          </div>
+
+          <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
+            This challenge exposes a configuration file backup due to enabled directory browsing.
+          </p>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Exposed Directory.</strong> Access the <strong>Security Misconfiguration</strong> module, loading `/api/owasp-top5-lab/backup/`.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Locate the Backup File.</strong> Observe that the Apache index directory is fully visible. Open the <code>.bak</code> file shown in the file list.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Extract the Password.</strong> Inside the configuration file, locate the database password value (<code>DB_PASS</code>) to find the flag.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Software Supply Chain Failures  -->
+        <div class="rules-block" id="supply">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 5</h2>
+              <p>Software Supply Chain Failures (A03:2025)</p>
+            </div>
+          </div>
+
+          <p style="color: var(--text-muted); line-height: 1.6; margin-bottom: 20px;">
+            This challenge focuses on vulnerable third-party modules. PyYAML 3.12 is vulnerable to insecure deserialization.
+          </p>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Identify Dependencies.</strong> Open the <strong>Software Supply Chain</strong> module to fetch the JSON dependency list. The vulnerable library is <code>PyYAML==3.12</code>.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Find CVE ID.</strong> Look up the arbitrary code execution CVE for PyYAML version 3.12. (Format: CVE-YYYY-XXXXX).</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Submit Exploit Payload.</strong> Navigate to the deserializer page in the target portal and input the Python execution string:
+                <pre>!!python/object/apply:os.system ["echo flag{...}"]</pre>
+                Click Process YAML to trigger the execution on the server and retrieve the flag.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+      </main>
+    </div><!-- /rules-section -->
+  </div><!-- /container -->
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>© 2026 <a href="http://localhost:8000/index.html">CTF ARENA</a> · Internship Project Demo</p>
+  </footer>
+
+  <!-- Active sidebar highlighting on scroll -->
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+
+  <!-- COMPLETION TRACKING INJECTED -->
+  <div style="text-align: center; margin: 40px 0; padding-bottom: 40px;">
+    <button id="btn-complete-guide" onclick="markGuideComplete()" style="background: #2ecc71; color: white; border: none; padding: 12px 24px; font-size: 1.1em; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Mark as Complete</button>
+    <p id="completion-msg" style="display:none; color: #2ecc71; font-weight: bold; margin-top: 10px;">✓ Marked as Complete</p>
+  </div>
+  <script>
+    function markGuideComplete() {
+      if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+      if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+      document.getElementById('btn-complete-guide').style.display = 'none';
+      document.getElementById('completion-msg').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

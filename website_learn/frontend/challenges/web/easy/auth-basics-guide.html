@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF ARENA Guide — Official walkthrough for Auth Basics Challenge." />
+  <title>CTF ARENA — Auth Basics Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #1a252f;
+      color: #3498db;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8000/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8000/index.html">Home</a>
+      <a href="http://localhost:8000/learn.html">Learn</a>
+      <a href="http://localhost:8000/rules.html">Rules</a>
+      <a href="http://localhost:8000/rooms/index.html">Create Room</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8000/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8000/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE INTRO  -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        Auth Basics <span style="color:var(--accent);">Walkthrough.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
+        A complete step-by-step walkthrough to help you approach, analyze, and solve the Authentication Basics lab.
+      </p>
+    </div>
+
+    <!--  TWO-COLUMN LAYOUT  -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro" class="active" id="nav-intro"> Introduction</a></li>
+          <li><a href="#login" id="nav-login"> 1. Login Analysis</a></li>
+          <li><a href="#cookies" id="nav-cookies"> 2. Exploring Cookies</a></li>
+          <li><a href="#jwt" id="nav-jwt"> 3. Decoding JWT</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!--  Intro  -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Introduction</h2>
+              <p>How the practical labs work</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Welcome to the practical side of CTF ARENA! In this lab, you'll be using Developer Tools (DevTools) to analyze login flows, extract session cookies, and decode JSON Web Tokens (JWT).
+          </p>
+        </div>
+
+        <!--  Login Analysis  -->
+        <div class="rules-block" id="login">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 1</h2>
+              <p>Login Analysis</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Open DevTools.</strong> In the target tab, open DevTools (F12) and go to the <strong>Network</strong> tab.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Invalid Login.</strong> Submit the form with bad credentials (e.g., test/test). The Network request will return a <strong>401 Unauthorized</strong> status code.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Valid Login.</strong> Log in using <code>admin</code> / <code>admin123</code>. The Network request will return a <strong>200 OK</strong> status code.
+              </span>
+            </li>
+          </ul>
+        </div>
+        
+        <!--  Cookies  -->
+        <div class="rules-block" id="cookies">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 2</h2>
+              <p>Exploring Cookies</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Go to Application Tab.</strong> Navigate to the <strong>Application</strong> tab (Chrome) or <strong>Storage</strong> tab (Firefox) in DevTools.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Find Cookies.</strong> Expand "Cookies" and click your domain.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>View Tokens.</strong> You will see the server set <code>session_id</code> and <code>auth_token</code> cookies.
+              </span>
+            </li>
+          </ul>
+        </div>
+        
+        <!--  JWT  -->
+        <div class="rules-block" id="jwt">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 3</h2>
+              <p>Decoding JWT</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Copy Token.</strong> Copy the value of the <code>auth_token</code> cookie.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Decode.</strong> Go to <a href="https://jwt.io" target="_blank" style="color: #f39c12; text-decoration: underline;">jwt.io</a> and paste the token.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text">
+                <strong>Find Flag.</strong> In the decoded Payload section on the right, you will see the secret flag: <strong>flag{...}</strong>.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+      </main>
+    </div><!-- /rules-section -->
+  </div><!-- /container -->
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>© 2026 <a href="http://localhost:8000/index.html">CTF ARENA</a> · Internship Project Demo</p>
+  </footer>
+
+  <!-- Active sidebar highlighting on scroll -->
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+
+  <!-- COMPLETION TRACKING INJECTED -->
+  <div style="text-align: center; margin: 40px 0; padding-bottom: 40px;">
+    <button id="btn-complete-guide" onclick="markGuideComplete()" style="background: #2ecc71; color: white; border: none; padding: 12px 24px; font-size: 1.1em; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Mark as Complete</button>
+    <p id="completion-msg" style="display:none; color: #2ecc71; font-weight: bold; margin-top: 10px;">✓ Marked as Complete</p>
+  </div>
+  <script>
+    function markGuideComplete() {
+      if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+      if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+      document.getElementById('btn-complete-guide').style.display = 'none';
+      document.getElementById('completion-msg').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

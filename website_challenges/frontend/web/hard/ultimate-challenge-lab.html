@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CTF ARENA — The Ultimate Gauntlet</title>
+  <link rel="stylesheet" href="../../../css/global.css"/>
+  <link rel="stylesheet" href="../../../css/web-room.css"/>
+  <style>
+    .challenge-briefing {
+      background: #1a252f;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-top: 4px solid #e74c3c;
+    }
+    .challenge-briefing h2 {
+      margin-top: 0;
+      color: #fff;
+    }
+    .challenge-briefing p {
+      color: #bdc3c7;
+      line-height: 1.6;
+    }
+    .challenge-briefing ul {
+      color: #bdc3c7;
+      line-height: 1.6;
+    }
+    
+    .docker-launch {
+      background: #2c3e50;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      color: #ecf0f1;
+      text-align: center;
+      border-left: 4px solid #3498db;
+    }
+    .docker-launch h3 { margin-top: 0; color: #fff; }
+    .btn-launch {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #e74c3c;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-launch:hover { background: #c0392b; }
+    
+    .target-details {
+      display: none;
+      margin-top: 20px;
+      background: #0f161c;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: left;
+    }
+    .target-details code {
+      color: #2ecc71;
+      font-size: 1.1em;
+      margin-left: 5px;
+    }
+    
+    .hints-section {
+      background: #2c3e50;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .hint-btn {
+      display: inline-block;
+      margin: 5px;
+      padding: 10px 15px;
+      background: #34495e;
+      color: #ecf0f1;
+      border: 1px solid #7f8c8d;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .hint-btn:hover {
+      background: #465c71;
+    }
+    .hint-btn.unlocked {
+      background: #f39c12;
+      color: #fff;
+      border-color: #d68910;
+    }
+    .hint-content {
+      display: none;
+      margin-top: 15px;
+      padding: 15px;
+      background: #1a252f;
+      border-left: 3px solid #f39c12;
+      color: #ecf0f1;
+      border-radius: 4px;
+      font-style: italic;
+    }
+    
+    .flag-submission {
+      background: #1a252f;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .flag-input {
+      padding: 12px;
+      width: 60%;
+      max-width: 400px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #7f8c8d;
+      background: #2c3e50;
+      color: #fff;
+      margin-right: 10px;
+      font-family: monospace;
+    }
+    .flag-btn {
+      padding: 12px 25px;
+      font-size: 16px;
+      background: #2ecc71;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .flag-btn:hover {
+      background: #27ae60;
+    }
+    .flag-result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.1em;
+      display: none;
+    }
+    .flag-result.success {
+      color: #2ecc71;
+      display: block;
+    }
+    .flag-result.error {
+      color: #e74c3c;
+      display: block;
+    }
+  
+  /* Dropdown CSS from global.css */
+  .dropdown { position: relative; display: inline-block; margin-left: 20px;}
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    padding-top: 14px;
+    background: transparent;
+    min-width: 180px;
+    z-index: 200;
+  }
+  .dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-elevated, #161b22);
+    border-radius: var(--radius-md, 8px);
+    border: 1px solid var(--border, #30363d);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  .dropdown-content a {
+    display: block;
+    padding: 13px 18px;
+    border-bottom: 1px solid var(--border, #30363d);
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    color: var(--text-primary, #c9d1d9);
+    text-decoration: none;
+  }
+  .dropdown-content a:first-child { border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0; }
+  .dropdown-content a:last-child  { border-bottom: none; border-radius: 0 0 var(--radius-md, 8px) var(--radius-md, 8px); }
+  .dropdown-content a:hover {
+    background: var(--accent, #ff3366);
+    color: #000;
+  }
+  .dropdown:hover .dropdown-content { display: block; }
+
+</style>
+</head>
+<body>
+
+<nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8002/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8002/index.html">Home</a>
+      <a href="http://localhost:8002/challenges.html" class="active">Challenges</a>
+      <a href="http://localhost:8002/rules.html">Rules</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8002/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8002/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+<div class="room-wrapper">
+  <!-- SIDEBAR (Required for Grid Layout) -->
+  <aside class="room-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Gauntlet Status</div>
+      <div class="overall-progress-wrap" style="margin-top: 10px;">
+        <div class="overall-progress-bar">
+          <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
+        </div>
+        <div class="overall-progress-pct" id="overall-pct">0%</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <div class="module-group">
+        <div class="module-label" id="mod-0">
+          <span class="mod-num">01</span> The Ultimate Gauntlet
+        </div>
+        <div class="nav-item active" id="nav-0">
+          <div class="nav-dot"></div>
+          <span class="nav-label">Challenge Phase</span>
+          <span class="nav-pts">1000 pts</span>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="room-main">
+    
+    <div class="challenge-header">
+      <div class="ch-breadcrumb">Web Challenges › Hard Level › Challenge</div>
+      <div class="ch-meta">
+        <span class="ch-title" id="ch-title">The Ultimate Gauntlet</span>
+        <span class="ch-pts" id="ch-pts">1000 pts</span>
+      </div>
+    </div>
+
+    <div class="room-body" id="room-body" style="padding: 20px 0;">
+
+      <!-- Briefing -->
+      <div class="challenge-briefing">
+        <h2>Mission Briefing</h2>
+        <p>You have discovered a highly secure corporate server hosting multiple internal services. Your objective is to gain unauthorized access, escalate your privileges, and extract the secret flag hidden deep within the system.</p>
+        <p>This is a pure CTF scenario. There are no step-by-step walkthroughs. You must combine the following techniques you have learned:</p>
+        <ul>
+          <li>Advanced Network Scanning (Nmap/Metasploit)</li>
+          <li>Web Reconnaissance (Directory fuzzing, robots.txt)</li>
+          <li>Insecure Direct Object Reference (IDOR)</li>
+          <li>File Upload vulnerabilities</li>
+        </ul>
+        <p><strong>Goal:</strong> Find the final composed flag, in the format <code>CTF{...}</code>.</p>
+      </div>
+
+      <!-- Environment Launchers -->
+      <div class="docker-launch" id="target-panel">
+        <h3> Gauntlet Target Server</h3>
+        <p>Spin up the vulnerable server environment containing all chained services.</p>
+        <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Deploy Target ⇗</button>
+        
+        <p id="target-msg" style="display:none;color:#e67e22;font-weight:bold;margin-top:15px"></p>
+        
+        <div id="target-info" class="target-details">
+          <p style="margin-top:0; color:#aaa;">Target is running. Scan the following hostname and mapped ports from your Kali container:</p>
+          <div style="background:#000; padding:10px; border-radius:4px; margin-bottom:10px; line-height:1.5;">
+            Target Host: <code id="target-hostname">host.docker.internal</code><br>
+            Target Ports: <code id="target-ports">Loading...</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="docker-launch" id="kali-panel">
+        <h3> Kali Linux Attack Box</h3>
+        <p>Your penetration testing environment.</p>
+        <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Deploy Attack Box ⇗</button>
+        
+        <p id="kali-msg" style="display:none;color:#e67e22;font-weight:bold;margin-top:15px"></p>
+        
+        <div id="kali-info" class="target-details">
+          <p style="margin-top:0; color:#aaa;">Kali is ready. Connect via terminal:</p>
+          <code id="kali-command" style="display:block; padding:10px; background:#000; user-select:all;">docker exec -it [id] bash</code>
+        </div>
+      </div>
+
+      <!-- Hints -->
+      <div class="hints-section" id="hints-container">
+        <h3 style="margin-top: 0; color: #fff;">Need a Hint?</h3>
+        <p style="color: #bdc3c7; font-size: 0.9em;">Stuck? You can unlock hints, but use them wisely.</p>
+        <div id="hint-buttons"></div>
+        <div id="hint-display" class="hint-content"></div>
+      </div>
+
+      <!-- Flag Submission -->
+      <div class="flag-submission">
+        <h3 style="margin-top: 0; color: #fff; margin-bottom: 20px;">Submit Flag</h3>
+        <div style="display: flex; justify-content: center;">
+          <input type="text" id="flag-input" class="flag-input" placeholder="CTF{...}" onkeydown="if(event.key==='Enter') submitFlag()">
+          <button class="flag-btn" onclick="submitFlag()">Submit</button>
+        </div>
+        <div id="flag-result" class="flag-result"></div>
+      </div>
+
+      <!-- Completion -->
+      <div class="completion-card" id="completion-card" style="display: none; text-align: center; background: #1a252f; padding: 40px; border-radius: 8px; border: 2px solid #2ecc71;">
+        <h2 style="color:#2ecc71; font-size: 2em; margin-top: 0;">Gauntlet Conquered!</h2>
+        <p style="color: #bdc3c7; font-size: 1.1em;">You have successfully chained multiple vulnerabilities to fully compromise the server.</p>
+        <div class="score-pill" style="font-size: 1.5em; padding: 10px 20px; background: #000; color: #f1c40f; display: inline-block; margin: 20px 0; border-radius: 30px;">1000 / 1000 pts</div>
+        <br>
+        <a href="http://localhost:8002/index.html" class="btn-launch" style="background: #3498db;">Return to Challenges</a>
+        <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px" onclick="reattemptRoom()">↻ Reattempt</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="ultimate-challenge-data.js"></script>
+<script>
+let currentKaliId = null;
+let currentTargetId = null;
+
+// Initialize Hints
+function initHints() {
+  const container = document.getElementById('hint-buttons');
+  container.innerHTML = '';
+  
+  CHALLENGE.hints.forEach((hint, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'hint-btn';
+    btn.id = `hint-btn-${index}`;
+    btn.textContent = `Unlock Hint ${index + 1}`;
+    btn.onclick = () => unlockHint(index);
+    container.appendChild(btn);
+  });
+}
+
+function unlockHint(index) {
+  const hint = CHALLENGE.hints[index];
+  const btn = document.getElementById(`hint-btn-${index}`);
+  const display = document.getElementById('hint-display');
+  
+  if (hint.locked) {
+    if (confirm("Are you sure you want to unlock this hint?")) {
+      hint.locked = false;
+      btn.classList.add('unlocked');
+      btn.textContent = hint.title;
+      display.innerHTML = `<strong>${hint.title}:</strong><br><br>${hint.content}`;
+      display.style.display = 'block';
+    }
+  } else {
+    // Already unlocked, just show it
+    display.innerHTML = `<strong>${hint.title}:</strong><br><br>${hint.content}`;
+    display.style.display = 'block';
+  }
+}
+
+// Flag Submission
+function submitFlag() {
+  const input = document.getElementById('flag-input');
+  const result = document.getElementById('flag-result');
+  const userFlag = input.value.trim();
+  
+  if (userFlag === CHALLENGE.flag) {
+    result.className = 'flag-result success';
+    result.textContent = 'Correct! Flag accepted.';
+    if (window.ctfTrackCorrect) window.ctfTrackCorrect();
+    if (window.ctfTrackRoomComplete) window.ctfTrackRoomComplete("The Ultimate Gauntlet");
+    
+    // Show completion
+    document.querySelector('.flag-submission').style.display = 'none';
+    document.getElementById('hints-container').style.display = 'none';
+    document.getElementById('completion-card').style.display = 'block';
+    
+    document.getElementById('overall-fill').style.width = '100%';
+    document.getElementById('overall-pct').textContent = '100%';
+    document.getElementById('mod-0').classList.add('completed');
+    document.getElementById('nav-0').classList.add('completed');
+  } else {
+    result.className = 'flag-result error';
+    result.textContent = 'Incorrect flag. Try again.';
+    if (window.ctfTrackFailed) window.ctfTrackFailed();
+    setTimeout(() => {
+      result.className = 'flag-result';
+    }, 3000);
+  }
+}
+
+// Docker Management
+async function launchTarget(){
+  const btn=document.getElementById('target-launch-btn');
+  const stop=document.getElementById('target-stop-btn');
+  const msg=document.getElementById('target-msg');
+  const info=document.getElementById('target-info');
+  
+  btn.style.display='none';
+  
+  info.style.display='none';
+  msg.style.display='block';
+  msg.style.color='#e67e22';
+  msg.textContent='Spinning up the gauntlet container (this may take a minute if building)...';
+  
+  try{
+    const host = window.location.hostname || 'localhost';
+    const res = await fetch(`http://${host}:5002/api/start-gauntlet-target`, {method:'POST'});
+    const data = await res.json();
+    
+    if(data.status === 'success'){
+        btn.style.display = 'inline-block';
+        btn.textContent = 'Stop Target';
+        btn.style.background = '#c0392b';
+        btn.onclick = stopTarget;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+      currentTargetId = data.container_id;
+      msg.style.color = '#3498db';
+      msg.textContent = 'Gauntlet environment is ready!';
+      
+            
+            
+            
+      
+      if(data.ports) {
+          document.getElementById('target-ports').textContent = `${data.ports.ftp}, ${data.ports.http}, ${data.ports.idor}, ${data.ports.upload}`;
+      } else {
+      btn.style.display = 'inline-block';
+        btn.textContent = 'Launch Target ⇗';
+        btn.style.background = '';
+        btn.onclick = launchTarget;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+          document.getElementById('target-ports').textContent = `21, 80, 8080, 9090`;
+      }
+      
+      info.style.display = 'block';
+    } else {
+      btn.style.display = 'inline-block';
+        btn.textContent = 'Launch Target ⇗';
+        btn.style.background = '';
+        btn.onclick = launchTarget;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Error: ' + data.message;
+      
+    }
+  }catch(e){
+      btn.style.display = 'inline-block';
+        btn.textContent = 'Launch Target ⇗';
+        btn.style.background = '';
+        btn.onclick = launchTarget;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+    msg.style.color = '#e74c3c';
+    msg.textContent = 'Failed to reach backend API.';
+    
+  }
+}
+
+async function stopTarget(){
+  if(!currentTargetId) return;
+  const host = window.location.hostname || 'localhost';
+  const msg = document.getElementById('target-msg');
+  
+  msg.style.color = '#e67e22';
+  msg.textContent = 'Stopping target...';
+  
+  try{
+    await fetch(`http://${host}:5002/api/stop-gauntlet-target/${currentTargetId}`, {method:'POST'});
+    msg.style.color = '#e74c3c';
+    msg.textContent = 'Target stopped.';
+    
+    document.getElementById('target-info').style.display = 'none';
+    const btn = document.getElementById('target-launch-btn');
+    
+    
+    currentTargetId = null;
+  
+      btn.style.display = 'inline-block';
+      btn.textContent = 'Restart Target ⇗';
+      btn.style.background = '';
+      btn.onclick = launchTarget;
+      if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+    }catch(e){
+      btn.style.display = 'inline-block';
+      btn.textContent = 'Stop Target';
+      btn.style.background = '#c0392b';
+      btn.onclick = stopTarget;
+      if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+    msg.textContent = 'Error stopping target.';
+  }
+}
+
+async function launchKali(){
+  const btn = document.getElementById('kali-launch-btn');
+  const stop = document.getElementById('kali-stop-btn');
+  const msg = document.getElementById('kali-msg');
+  const info = document.getElementById('kali-info');
+  
+  btn.style.display = 'none';
+  
+  info.style.display = 'none';
+  msg.style.display = 'block';
+  msg.style.color = '#e67e22';
+  msg.textContent = 'Spinning up Kali Attack Box...';
+  
+  try{
+    const host = window.location.hostname || 'localhost';
+    const res = await fetch(`http://${host}:5002/api/start-kali`, {method:'POST'});
+    const data = await res.json();
+    
+    if(data.status === 'success'){
+        btn.style.display = 'inline-block';
+        btn.textContent = 'Stop Kali';
+        btn.style.background = '#c0392b';
+        btn.onclick = stopKali;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+      currentKaliId = data.container_id;
+      msg.style.color = '#00f0ff';
+      msg.textContent = 'Kali Attack Box is ready!';
+      
+            
+            
+            
+      info.style.display = 'block';
+      document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0,12)} bash`;
+    } else {
+      btn.style.display = 'inline-block';
+        btn.textContent = 'Start Kali Container ⇗';
+        btn.style.background = '';
+        btn.onclick = launchKali;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Error: ' + data.message;
+      
+    }
+  }catch(e){
+      btn.style.display = 'inline-block';
+        btn.textContent = 'Start Kali Container ⇗';
+        btn.style.background = '';
+        btn.onclick = launchKali;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+    msg.style.color = '#e74c3c';
+    msg.textContent = 'Failed to reach backend API.';
+    
+  }
+}
+
+async function stopKali(){
+  if(!currentKaliId) return;
+  const host = window.location.hostname || 'localhost';
+  const msg = document.getElementById('kali-msg');
+  
+  msg.style.color = '#e67e22';
+  msg.textContent = 'Stopping Kali...';
+  
+  try{
+    await fetch(`http://${host}:5002/api/stop-kali/${currentKaliId}`, {method:'POST'});
+    msg.style.color = '#e74c3c';
+    msg.textContent = 'Kali stopped.';
+    
+    document.getElementById('kali-info').style.display = 'none';
+    const btn = document.getElementById('kali-launch-btn');
+    
+    
+    currentKaliId = null;
+  
+      btn.style.display = 'inline-block';
+      btn.textContent = 'Restart Kali ⇗';
+      btn.style.background = '';
+      btn.onclick = launchKali;
+      if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+    }catch(e){
+      btn.style.display = 'inline-block';
+      btn.textContent = 'Stop Kali';
+      btn.style.background = '#c0392b';
+      btn.onclick = stopKali;
+      if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+    msg.textContent = 'Error stopping Kali.';
+  }
+}
+
+window.addEventListener('beforeunload', () => {
+  const host = window.location.hostname || 'localhost';
+  if(currentKaliId) navigator.sendBeacon(`http://${host}:5002/api/stop-kali/${currentKaliId}`);
+  if(currentTargetId) navigator.sendBeacon(`http://${host}:5002/api/stop-gauntlet-target/${currentTargetId}`);
+});
+
+// Init on load
+document.addEventListener('DOMContentLoaded', () => {
+  initHints();
+});
+
+  function reattemptRoom() {
+    if (confirm("Are you sure you want to reset your progress for this room?")) {
+      const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+      localStorage.removeItem(storageKey);
+      window.location.reload();
+    }
+  }
+</script>
+
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+</body>
+</html>

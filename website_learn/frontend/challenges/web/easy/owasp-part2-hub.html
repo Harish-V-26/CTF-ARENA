@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF ARENA — OWASP Part 2 (6-10) Hub" />
+  <title>CTF ARENA — OWASP Part 2</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/challenges.css" />
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8000/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8000/index.html">Home</a>
+      <a href="http://localhost:8000/learn.html">Learn</a>
+      <a href="http://localhost:8000/rules.html">Rules</a>
+      <a href="http://localhost:8000/rooms/index.html">Create Room</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8000/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8000/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE HERO  -->
+  <div class="page-hero" id="challenges-hero">
+    <div class="page-hero-content">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Learning path</span>
+      <h1><span class="accent">OWASP Part 2.</span></h1>
+      <p>Master vulnerabilities #6 through #10 with hands-on, practical Docker environments.</p>
+      <a href="http://localhost:8000/learn.html" class="btn" style="background: rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); margin-top:20px; display:inline-block; padding:10px 20px; text-decoration:none; border-radius:4px;">← Back to Main Modules</a>
+    </div>
+  </div>
+
+  <!--  CHALLENGES SECTION  -->
+  <section class="challenges-section">
+    <div class="container">
+      <h2 style="margin-bottom: 20px;">Select a Vulnerability</h2>
+      <div class="challenges-grid" id="challenges-grid-easy-practical">
+
+        <!-- Insecure Design (OWASP #4) -->
+        <div class="challenge-card" data-category="web" id="card-learn-insecure-design"
+          onclick="window.location.href='insecure-design-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e74c3c, #f39c12);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Insecure Design</div>
+            <div class="challenge-desc">
+              Exploit architectural design flaws in a shopping app. Brute-force coupon codes without rate limiting, abuse business logic to stack discounts, and discover unprotected admin panels.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">160 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="insecure-design-lab.html" class="start-btn" id="start-learn-insecure-design">Start →</a>
+          </div>
+        </div>
+
+        <!-- Authentication Failures (OWASP #7) -->
+        <div class="challenge-card" data-category="web" id="card-learn-auth-failures"
+          onclick="window.location.href='auth-failures-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #3498db, #2c3e50);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Authentication Failures</div>
+            <div class="challenge-desc">
+              Exploit authentication weaknesses: enumerate valid users via error messages, bypass missing rate limits, forge predictable MD5 session tokens, and hijack admin sessions.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">180 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="auth-failures-lab.html" class="start-btn" id="start-learn-auth-failures">Start →</a>
+          </div>
+        </div>
+
+        <!-- Software Integrity Failures (OWASP #8) -->
+        <div class="challenge-card" data-category="web" id="card-learn-integrity-failures"
+          onclick="window.location.href='integrity-failures-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #9b59b6, #e74c3c);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Software Integrity Failures</div>
+            <div class="challenge-desc">
+              Hack a CI/CD pipeline: exploit unsigned packages, perform insecure deserialization via Base64 plugin loading, and tamper with unprotected cookies to escalate privileges.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">160 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="integrity-failures-lab.html" class="start-btn" id="start-learn-integrity-failures">Start →</a>
+          </div>
+        </div>
+
+        <!-- Logging & Monitoring Failures (OWASP #9) -->
+        <div class="challenge-card" data-category="web" id="card-learn-logging-failures"
+          onclick="window.location.href='logging-failures-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #2ecc71, #1a5c2e);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Logging & Monitoring Failures</div>
+            <div class="challenge-desc">
+              Infiltrate a SOC console: perform undetected brute force attacks, discover disabled alert systems, inject fake entries into security logs, and learn SIEM best practices.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">160 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="logging-failures-lab.html" class="start-btn" id="start-learn-logging-failures">Start →</a>
+          </div>
+        </div>
+
+        <!-- Error Handling -->
+        <div class="challenge-card" data-category="web" id="card-learn-error-handling"
+          onclick="window.location.href='error-handling-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e67e22, #c0392b);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: #e67e22;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Error Handling Failures</div>
+            <div class="challenge-desc">
+              Extract secrets from verbose error messages: exploit debug mode in production, leak database credentials from stack traces, and discover filesystem paths from unhandled exceptions.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">180 pts</span>
+            <span class="solve-count"> Docker Lab</span>
+            <a href="error-handling-lab.html" class="start-btn" id="start-learn-error-handling">Start →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+
+  <!-- COMPLETION TRACKING INJECTED -->
+  <div style="text-align: center; margin: 40px 0; padding-bottom: 40px;">
+    <button id="btn-complete-guide" onclick="markGuideComplete()" style="background: #2ecc71; color: white; border: none; padding: 12px 24px; font-size: 1.1em; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Mark as Complete</button>
+    <p id="completion-msg" style="display:none; color: #2ecc71; font-weight: bold; margin-top: 10px;">✓ Marked as Complete</p>
+  </div>
+  <script>
+    function markGuideComplete() {
+      if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+      if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+      document.getElementById('btn-complete-guide').style.display = 'none';
+      document.getElementById('completion-msg').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

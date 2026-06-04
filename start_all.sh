@@ -1,29 +1,45 @@
 #!/bin/bash
 
-echo "Starting Backend API (Port 5000)..."
-cd backend
+echo "Starting Website Learn Backend API (Port 5000)..."
+cd website_learn/backend
 python3 app.py &
-BACKEND_PID=$!
-cd ..
+LEARN_BACKEND_PID=$!
+cd ../..
 
-echo "Starting Learning App (Port 8000)..."
+echo "Starting Website Learn Frontend (Port 8000)..."
+cd website_learn/frontend
 python3 -m http.server 8000 &
-LEARN_PID=$!
+LEARN_FRONTEND_PID=$!
+cd ../..
 
-echo "Starting CTF Arena / Challenges (Port 8085)..."
-cd ../CTF-CHALLENGES-WEBSITE
-python3 -m http.server 8085 &
-CHALLENGE_PID=$!
-cd - > /dev/null
+echo "Starting Website Challenges Backend API (Port 5002)..."
+cd website_challenges/backend
+python3 app.py &
+CHALL_BACKEND_PID=$!
+cd ../..
+
+echo "Starting Website Challenges Frontend (Port 8002)..."
+cd website_challenges/frontend
+python3 -m http.server 8002 &
+CHALL_FRONTEND_PID=$!
+cd ../..
+
+LOCAL_IP=$(hostname -I | awk '{print $1}')
+if [ -z "$LOCAL_IP" ]; then
+  LOCAL_IP="localhost"
+fi
 
 echo "================================================="
-echo "All services are running in the background!"
-echo "Learning Website:  http://localhost:8000"
-echo "CTF Arena:         http://localhost:8085"
-echo "Backend API:       http://localhost:5000"
+echo "All separate websites are running!"
+echo "Local Access:"
+echo "  Learn Website:      http://localhost:8000"
+echo "  Challenges Website: http://localhost:8002"
+echo "Network Access (for other users on the same network):"
+echo "  Learn Website:      http://$LOCAL_IP:8000"
+echo "  Challenges Website: http://$LOCAL_IP:8002"
 echo "================================================="
 echo "Press [CTRL+C] to stop all services."
 
-# Wait for user to press CTRL+C, then kill all background processes
-trap "kill $BACKEND_PID $LEARN_PID $CHALLENGE_PID; echo 'All services stopped.';" EXIT
+# Graceful cleanup on exit
+trap "kill $LEARN_BACKEND_PID $LEARN_FRONTEND_PID $CHALL_BACKEND_PID $CHALL_FRONTEND_PID; echo 'All services stopped.';" EXIT
 wait

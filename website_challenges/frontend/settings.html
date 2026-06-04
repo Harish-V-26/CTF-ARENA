@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF ARENA — Manage your account settings, update your display name, and change your password." />
+  <title>CTF ARENA — Settings</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <style>
+    .settings-hero {
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0 32px;
+      background: linear-gradient(135deg, rgba(255,77,109,0.06) 0%, transparent 60%);
+    }
+    .settings-hero h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+    .settings-hero h1 span { color: var(--accent); }
+    .settings-hero p { color: var(--text-muted); font-size: 14px; }
+
+    .settings-body { padding: 48px 0 80px; }
+
+    .settings-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* ── Sidebar nav ── */
+    .settings-nav {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .settings-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .settings-nav a:last-child { border-bottom: none; }
+    .settings-nav a.active,
+    .settings-nav a:hover {
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+    .settings-nav a .nav-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+    .settings-nav a.active .nav-dot { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+    /* ── Panels ── */
+    .settings-panel { display: none; flex-direction: column; gap: 20px; }
+    .settings-panel.active { display: flex; }
+
+    .settings-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 28px 32px;
+    }
+    .settings-card h2 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .settings-card .card-desc {
+      color: var(--text-muted);
+      font-size: 13.5px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Form fields ── */
+    .field-group { margin-bottom: 20px; }
+    .field-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .field-group input {
+      width: 100%;
+      background: rgba(13,17,23,0.6);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      outline: none;
+      transition: all 0.25s ease;
+      box-sizing: border-box;
+    }
+    .field-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255,77,109,0.12);
+      background: rgba(13,17,23,0.9);
+    }
+    .field-group input[readonly] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .field-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .field-error {
+      font-size: 12px;
+      color: var(--danger);
+      margin-top: 6px;
+      display: none;
+      font-family: var(--font-mono);
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 4px;
+    }
+    .btn-save {
+      padding: 11px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      background: var(--accent);
+      color: #000;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(255,77,109,0.3);
+    }
+    .btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(255,77,109,0.4); }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .save-status {
+      font-size: 13px;
+      font-weight: 600;
+      display: none;
+    }
+    .save-status.success { color: #2ecc71; display: block; }
+    .save-status.error   { color: var(--danger); display: block; }
+
+
+    .btn-danger {
+      padding: 10px 22px;
+      font-size: 13.5px;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--danger);
+      border: 1.5px solid var(--danger);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .btn-danger:hover { background: var(--danger); color: #fff; }
+
+    /* ── Account info panel ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .info-block label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .info-block span {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-family: var(--font-mono);
+    }
+    .avatar-choice-item {
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      background: rgba(13, 17, 23, 0.4);
+      transition: all 0.2s ease;
+      width: 48px;
+      height: 48px;
+    }
+    .avatar-choice-item:hover {
+      border-color: var(--accent);
+      background: rgba(255, 77, 109, 0.05);
+    }
+    .avatar-choice-item.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      background: rgba(255, 77, 109, 0.1);
+    }
+    .avatar-choice-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8002/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8002/index.html">Home</a>
+      <a href="http://localhost:8002/challenges.html">Challenges</a>
+      <a href="http://localhost:8002/rules.html">Rules</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8002/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8002/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="settings-hero">
+    <div class="container">
+      <h1>Account <span>Settings</span></h1>
+      <p>Manage your profile, security, and preferences.</p>
+    </div>
+  </div>
+
+  <!-- SETTINGS BODY -->
+  <div class="settings-body">
+    <div class="container">
+      <div class="settings-layout">
+
+        <!-- Sidebar Nav -->
+        <nav class="settings-nav" aria-label="Settings sections">
+          <a class="active" data-panel="profile" onclick="switchPanel('profile')">
+            <span class="nav-dot"></span> Profile
+          </a>
+          <a data-panel="security" onclick="switchPanel('security')">
+            <span class="nav-dot"></span> Security
+          </a>
+          <a data-panel="account" onclick="switchPanel('account')">
+            <span class="nav-dot"></span> Account Info
+          </a>
+        </nav>
+
+        <!-- Panels -->
+        <div>
+
+          <!-- ══ PROFILE PANEL ══ -->
+          <div class="settings-panel active" id="panel-profile">
+            <div class="settings-card">
+              <h2>Profile Information</h2>
+              <p class="card-desc">Update your display name shown across the platform.</p>
+
+              <div class="field-group">
+                <label for="profile-name">Display Name</label>
+                <input type="text" id="profile-name" placeholder="Your name" />
+                <div class="field-error" id="profile-name-error"></div>
+              </div>
+
+              <!-- Hidden field to store selected avatar URL -->
+              <input type="hidden" id="profile-photo-url" />
+
+              <div class="field-group">
+                <label>Current Avatar Status</label>
+                <div style="display: flex; align-items: center; gap: 15px; margin-top: 8px;">
+                  <div id="current-avatar-preview" style="width: 54px; height: 54px; border-radius: 50%; border: 2px solid var(--border); overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(13, 17, 23, 0.4);">
+                    <!-- Dynamically drawn preview -->
+                  </div>
+                  <button class="btn-danger" style="padding: 10px 18px; border-radius: var(--radius-sm); border: 1px solid var(--danger); background: transparent; color: var(--danger); cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='var(--danger)'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='var(--danger)';" onclick="removeProfilePhoto(event)">Reset to Initials</button>
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label style="color: var(--accent); font-size: 13px;">Male Cartoon Avatars</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;" id="avatar-grid-male">
+                  <!-- Male avatars dynamically populated -->
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label style="color: var(--accent); font-size: 13px;">Female Cartoon Avatars</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;" id="avatar-grid-female">
+                  <!-- Female avatars dynamically populated -->
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label style="color: var(--accent); font-size: 13px;">Cyber &amp; Robot Avatars</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px;" id="avatar-grid-robots">
+                  <!-- Cyber/Robot avatars dynamically populated -->
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="profile-email">Email Address</label>
+                <input type="email" id="profile-email" readonly />
+                <div class="field-hint">Email cannot be changed here.</div>
+              </div>
+
+              <div class="form-actions">
+                <button class="btn-save" id="btn-save-profile" onclick="saveProfile()">Save Changes</button>
+                <span class="save-status" id="profile-status"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ SECURITY PANEL ══ -->
+          <div class="settings-panel" id="panel-security">
+            <div class="settings-card">
+              <h2>Change Password</h2>
+              <p class="card-desc">Use a strong password with at least 6 characters.</p>
+
+              <div id="password-fields-container">
+                <div class="field-group">
+                  <label for="current-password">Current Password</label>
+                  <input type="password" id="current-password" placeholder="Enter current password" />
+                  <div class="field-error" id="current-password-error"></div>
+                </div>
+
+                <div class="field-group">
+                  <label for="new-password">New Password</label>
+                  <input type="password" id="new-password" placeholder="At least 6 characters" />
+                  <div class="field-error" id="new-password-error"></div>
+                </div>
+
+                <div class="field-group">
+                  <label for="confirm-new-password">Confirm New Password</label>
+                  <input type="password" id="confirm-new-password" placeholder="Repeat new password" />
+                  <div class="field-error" id="confirm-new-password-error"></div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn-save" id="btn-save-password" onclick="savePassword()">Update Password</button>
+                  <span class="save-status" id="password-status"></span>
+                </div>
+              </div>
+
+              <!-- Message for Google users -->
+              <div id="google-user-message" style="display: none; padding: 18px; background: rgba(88, 166, 255, 0.07); border: 1px solid rgba(88, 166, 255, 0.2); border-radius: var(--radius-sm); margin-top: 10px; margin-bottom: 20px;">
+                <p style="margin: 0; color: var(--text-muted); font-size: 13.5px; line-height: 1.6;">
+                  <strong style="color: var(--accent); display: block; margin-bottom: 6px; font-size: 14px;">Google Account Security</strong>
+                  Your account is securely managed using Google authentication. You do not have a password stored on this platform. If you want to manage your credentials or security settings, please visit your <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer" style="color: #4285F4; text-decoration: underline; font-weight: 700;">Google Account Page</a>.
+                </p>
+              </div>
+
+              <!-- Create local password container for Google/provider users -->
+              <div id="set-password-container" style="display: none;">
+                <h2 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Create Local Password</h2>
+                <p class="card-desc" style="color: var(--text-muted); font-size: 13.5px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+                  Set a local password to link your email address, allowing you to sign in using either Google or your email/password in the future.
+                </p>
+
+                <div class="field-group">
+                  <label for="create-password">New Password</label>
+                  <input type="password" id="create-password" placeholder="At least 6 characters" />
+                  <div class="field-error" id="create-password-error"></div>
+                </div>
+
+                <div class="field-group">
+                  <label for="confirm-create-password">Confirm Password</label>
+                  <input type="password" id="confirm-create-password" placeholder="Repeat new password" />
+                  <div class="field-error" id="confirm-create-password-error"></div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn-save" id="btn-create-password" onclick="createPassword()">Create Password</button>
+                  <span class="save-status" id="create-status"></span>
+                </div>
+              </div>
+
+              <!-- Professional Sign Out button -->
+              <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                <button class="btn-danger" onclick="doLogout()">Sign Out</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ══ ACCOUNT INFO PANEL ══ -->
+          <div class="settings-panel" id="panel-account">
+            <div class="settings-card">
+              <h2>Account Information</h2>
+              <p class="card-desc">Read-only details about your CTF ARENA account.</p>
+              <div class="info-grid">
+                <div class="info-block">
+                  <label>Email</label>
+                  <span id="info-email">—</span>
+                </div>
+                <div class="info-block">
+                  <label>Auth Provider</label>
+                  <span id="info-provider">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /panels -->
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 CTF ARENA &middot; Internship Project Demo</p>
+  </footer>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth-state.js"></script>
+  <script>
+    /* ── Panel switching ── */
+    function switchPanel(id) {
+      document.querySelectorAll(".settings-panel").forEach(p => p.classList.remove("active"));
+      document.querySelectorAll(".settings-nav a").forEach(a => a.classList.remove("active"));
+      document.getElementById("panel-" + id).classList.add("active");
+      document.querySelector(".settings-nav a[data-panel='" + id + "']").classList.add("active");
+    }
+
+    /* ── Populate fields on load ── */
+    function waitForAuth(cb) {
+      if (window.authService) { window.authService.onAuthStateChanged(cb); }
+      else { setTimeout(() => waitForAuth(cb), 80); }
+    }
+
+    function updateAvatarPreview(user) {
+      const preview = document.getElementById("current-avatar-preview");
+      if (!preview) return;
+      if (user.photoURL) {
+        preview.innerHTML = `<img src="${user.photoURL}" style="width:100%; height:100%; object-fit:cover;" referrerpolicy="no-referrer" alt="Avatar">`;
+      } else {
+        const initials = (user.displayName || "U").split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2);
+        preview.innerHTML = `<div style="width:100%; height:100%; background:#ff3366; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:16px;">${initials}</div>`;
+      }
+    }
+
+    waitForAuth(function (user) {
+      if (!user) { window.location.href = "login/index.html"; return; }
+
+      document.getElementById("profile-name").value  = user.displayName || "";
+      document.getElementById("profile-photo-url").value = user.photoURL || "";
+      document.getElementById("profile-email").value = user.email || "";
+      document.getElementById("info-email").textContent    = user.email;
+      let providerName = window.authService.isMock ? "Local Mock Mode" : "Secure Cloud Auth";
+      if (!window.authService.isMock && user.providerData && user.providerData.length > 0) {
+        const providers = [...new Set(user.providerData.map(p => {
+          if (p.providerId === "google.com") return "Google";
+          if (p.providerId === "password") return "Password";
+          return p.providerId;
+        }))];
+        providerName = providers.join(" + ");
+      }
+      document.getElementById("info-provider").textContent = providerName;
+
+      // Handle Password Change visibility: show password form if the account has a local password provider linked, otherwise show set password form
+      const hasLocalPassword = (!window.authService.isMock && user.providerData && user.providerData.some(p => p.providerId === "password")) || (window.authService.isMock && user.uid !== "mock_google_123");
+      if (hasLocalPassword) {
+        document.getElementById("password-fields-container").style.display = "block";
+        document.getElementById("google-user-message").style.display = "none";
+        document.getElementById("set-password-container").style.display = "none";
+      } else {
+        document.getElementById("password-fields-container").style.display = "none";
+        document.getElementById("google-user-message").style.display = "block";
+        document.getElementById("set-password-container").style.display = "block";
+      }
+
+      // Render Current Avatar Preview
+      updateAvatarPreview(user);
+
+      // Render cartoon avatar choices
+      function renderGrid(gridId, itemsList, style) {
+        const grid = document.getElementById(gridId);
+        if (!grid) return;
+        grid.innerHTML = "";
+        itemsList.forEach(itemInfo => {
+          const seed = typeof itemInfo === "string" ? itemInfo : itemInfo.seed;
+          const params = typeof itemInfo === "object" && itemInfo.params ? "&" + itemInfo.params : "";
+          const url = `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}${params}`;
+          const item = document.createElement("div");
+          item.className = "avatar-choice-item" + (user.photoURL === url ? " selected" : "");
+          item.innerHTML = `<img src="${url}" alt="${seed}">`;
+          item.onclick = function() {
+            document.querySelectorAll(".avatar-choice-item").forEach(el => el.classList.remove("selected"));
+            item.classList.add("selected");
+            document.getElementById("profile-photo-url").value = url;
+            saveProfile();
+          };
+          grid.appendChild(item);
+        });
+      }
+
+      // Male Avatars using avataaars with clear masculine features
+      const maleAvatars = [
+        { seed: "Jack", params: "top=shortCurly&facialHairProbability=0" },
+        { seed: "Oliver", params: "top=shortFlat&facialHairProbability=100" },
+        { seed: "Alexander", params: "top=sides&facialHairProbability=0" },
+        { seed: "James", params: "top=frizzle&facialHairProbability=100" },
+        { seed: "Lucas", params: "top=theCaesar&facialHairProbability=0" },
+        { seed: "Aiden", params: "top=shortRound&facialHairProbability=100" }
+      ];
+
+      // Female Avatars using avataaars with clear feminine features
+      const femaleAvatars = [
+        { seed: "Lily", params: "top=longButNotTooLong&facialHairProbability=0" },
+        { seed: "Sophia", params: "top=bob&facialHairProbability=0" },
+        { seed: "Zoe", params: "top=curly&facialHairProbability=0" },
+        { seed: "Mia", params: "top=straight02&facialHairProbability=0" },
+        { seed: "Ruby", params: "top=straight01&facialHairProbability=0" },
+        { seed: "Emily", params: "top=curvy&facialHairProbability=0" }
+      ];
+
+      // Robots using bottts
+      const robotAvatars = ["Shadow", "Matrix", "Wizard", "Cypher", "Ghost", "Ninja"];
+
+      renderGrid("avatar-grid-male", maleAvatars, "avataaars");
+      renderGrid("avatar-grid-female", femaleAvatars, "avataaars");
+      renderGrid("avatar-grid-robots", robotAvatars, "bottts");
+    });
+
+    /* ── Save display name and photoURL ── */
+    async function saveProfile() {
+      const nameInput  = document.getElementById("profile-name");
+      const photoInput = document.getElementById("profile-photo-url");
+      const nameErr    = document.getElementById("profile-name-error");
+      const statusEl   = document.getElementById("profile-status");
+      const btn        = document.getElementById("btn-save-profile");
+      const name       = nameInput.value.trim();
+      const photoURL   = photoInput.value.trim();
+
+      nameErr.style.display = "none";
+      statusEl.className    = "save-status";
+      statusEl.textContent  = "";
+
+      if (name.length < 2) {
+        nameErr.textContent   = "Name must be at least 2 characters.";
+        nameErr.style.display = "block";
+        return;
+      }
+
+      btn.disabled     = true;
+      btn.textContent  = "Saving...";
+
+      try {
+        const FIREBASE_VERSION = "12.14.0";
+        if (!window.authService.isMock) {
+          const { getAuth }      = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-auth.js`);
+          const { updateProfile } = await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-auth.js`);
+          const auth = getAuth();
+          await updateProfile(auth.currentUser, { displayName: name, photoURL: photoURL || null });
+          // Update stored metadata
+          const uid = auth.currentUser.uid;
+          const meta = JSON.parse(localStorage.getItem(`ctf_user_meta_${uid}`) || "{}");
+          meta.name = name;
+          meta.photoURL = photoURL || "none";
+          localStorage.setItem(`ctf_user_meta_${uid}`, JSON.stringify(meta));
+        } else {
+          // Update mock session
+          const session = JSON.parse(localStorage.getItem("mock_auth_session") || "{}");
+          session.displayName = name;
+          session.photoURL = photoURL || "none";
+          localStorage.setItem("mock_auth_session", JSON.stringify(session));
+          // Update users db
+          const users = JSON.parse(localStorage.getItem("mock_users_db") || "[]");
+          const idx = users.findIndex(u => u.uid === session.uid);
+          if (idx !== -1) { users[idx].name = name; localStorage.setItem("mock_users_db", JSON.stringify(users)); }
+          // Update local metadata
+          const meta = JSON.parse(localStorage.getItem(`ctf_user_meta_${session.uid}`) || "{}");
+          meta.name = name;
+          meta.photoURL = photoURL || "none";
+          localStorage.setItem(`ctf_user_meta_${session.uid}`, JSON.stringify(meta));
+        }
+        // Update current user in service
+        if (window.authService.currentUser) {
+          window.authService.currentUser.displayName = name;
+          window.authService.currentUser.photoURL = photoURL || null;
+          localStorage.setItem("ctf_active_user_session", JSON.stringify(window.authService.currentUser));
+        }
+        updateAvatarPreview({ displayName: name, photoURL: photoURL || null });
+        window.authService._updateNavbar(); // Force navbar refresh
+
+        statusEl.className   = "save-status success";
+        statusEl.textContent = "Profile updated successfully.";
+      } catch (err) {
+        statusEl.className   = "save-status error";
+        statusEl.textContent = err.message || "Failed to update profile.";
+      }
+
+      btn.disabled    = false;
+      btn.textContent = "Save Changes";
+    }
+
+    function removeProfilePhoto(e) {
+      if (e) e.preventDefault();
+      document.getElementById("profile-photo-url").value = "";
+      document.querySelectorAll(".avatar-choice-item").forEach(el => el.classList.remove("selected"));
+      saveProfile();
+    }
+
+    /* ── Change password ── */
+    async function savePassword() {
+      const cur     = document.getElementById("current-password");
+      const np      = document.getElementById("new-password");
+      const cp      = document.getElementById("confirm-new-password");
+      const curErr  = document.getElementById("current-password-error");
+      const npErr   = document.getElementById("new-password-error");
+      const cpErr   = document.getElementById("confirm-new-password-error");
+      const statusEl = document.getElementById("password-status");
+      const btn     = document.getElementById("btn-save-password");
+
+      [curErr, npErr, cpErr].forEach(e => e.style.display = "none");
+      statusEl.className   = "save-status";
+      statusEl.textContent = "";
+
+      let ok = true;
+      if (!cur.value) { curErr.textContent = "Current password is required."; curErr.style.display = "block"; ok = false; }
+      if (np.value.length < 6) { npErr.textContent = "New password must be at least 6 characters."; npErr.style.display = "block"; ok = false; }
+      if (np.value !== cp.value) { cpErr.textContent = "Passwords do not match."; cpErr.style.display = "block"; ok = false; }
+      if (!ok) return;
+
+      btn.disabled    = true;
+      btn.textContent = "Updating...";
+
+      try {
+        if (!window.authService.isMock) {
+          const FIREBASE_VERSION = "12.14.0";
+          const { getAuth, reauthenticateWithCredential, EmailAuthProvider, updatePassword } =
+            await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-auth.js`);
+          const auth  = getAuth();
+          const cred  = EmailAuthProvider.credential(auth.currentUser.email, cur.value);
+          await reauthenticateWithCredential(auth.currentUser, cred);
+          await updatePassword(auth.currentUser, np.value);
+        } else {
+          // Mock mode — update password in users db
+          const session = JSON.parse(localStorage.getItem("mock_auth_session") || "{}");
+          const users   = JSON.parse(localStorage.getItem("mock_users_db") || "[]");
+          const user    = users.find(u => u.uid === session.uid);
+          if (!user || user.password !== cur.value) throw new Error("Current password is incorrect.");
+          user.password = np.value;
+          localStorage.setItem("mock_users_db", JSON.stringify(users));
+        }
+        cur.value = ""; np.value = ""; cp.value = "";
+        statusEl.className   = "save-status success";
+        statusEl.textContent = "Password updated successfully.";
+      } catch (err) {
+        const msg = err.code === "auth/wrong-password" || err.code === "auth/invalid-credential"
+          ? "Current password is incorrect."
+          : err.message;
+        statusEl.className   = "save-status error";
+        statusEl.textContent = msg;
+      }
+
+      btn.disabled    = false;
+      btn.textContent = "Update Password";
+    }
+
+    /* ── Link/Create Password for Federated Provider Accounts ── */
+    async function createPassword() {
+      const np      = document.getElementById("create-password");
+      const cp      = document.getElementById("confirm-create-password");
+      const npErr   = document.getElementById("create-password-error");
+      const cpErr   = document.getElementById("confirm-create-password-error");
+      const statusEl = document.getElementById("create-status");
+      const btn     = document.getElementById("btn-create-password");
+
+      [npErr, cpErr].forEach(e => e.style.display = "none");
+      statusEl.className   = "save-status";
+      statusEl.textContent = "";
+
+      let ok = true;
+      if (np.value.length < 6) { npErr.textContent = "Password must be at least 6 characters."; npErr.style.display = "block"; ok = false; }
+      if (np.value !== cp.value) { cpErr.textContent = "Passwords do not match."; cpErr.style.display = "block"; ok = false; }
+      if (!ok) return;
+
+      btn.disabled    = true;
+      btn.textContent = "Creating...";
+
+      try {
+        if (!window.authService.isMock) {
+          const FIREBASE_VERSION = "12.14.0";
+          const { getAuth, linkWithCredential, EmailAuthProvider } =
+            await import(`https://www.gstatic.com/firebasejs/${FIREBASE_VERSION}/firebase-auth.js`);
+          const auth = getAuth();
+          const user = auth.currentUser;
+          const cred = EmailAuthProvider.credential(user.email, np.value);
+          await linkWithCredential(user, cred);
+          
+          // Force update local session provider metadata
+          if (window.authService.currentUser) {
+            window.authService.currentUser.providerData = auth.currentUser.providerData;
+            localStorage.setItem("ctf_active_user_session", JSON.stringify(window.authService.currentUser));
+          }
+        } else {
+          // Mock mode: add password to mock user db
+          const session = JSON.parse(localStorage.getItem("mock_auth_session") || "{}");
+          const users   = JSON.parse(localStorage.getItem("mock_users_db") || "[]");
+          const userIndex = users.findIndex(u => u.uid === session.uid);
+          
+          if (userIndex !== -1) {
+            users[userIndex].password = np.value;
+          } else {
+            users.push({
+              uid: session.uid,
+              name: session.displayName,
+              email: session.email,
+              password: np.value
+            });
+          }
+          localStorage.setItem("mock_users_db", JSON.stringify(users));
+          
+          session.uid = "mock_" + Date.now(); // convert mock to password user
+          localStorage.setItem("mock_auth_session", JSON.stringify(session));
+        }
+
+        statusEl.className   = "save-status success";
+        statusEl.textContent = "Password linked successfully!";
+        
+        // Clear inputs and reload page to switch view to standard Change Password form
+        np.value = ""; cp.value = "";
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+
+      } catch (err) {
+        statusEl.className   = "save-status error";
+        statusEl.textContent = err.message || "Failed to link password.";
+      }
+
+      btn.disabled    = false;
+      btn.textContent = "Create Password";
+    }
+
+    /* ── Logout ── */
+    function doLogout() {
+      if (window.authService) {
+        window.authService.logout(() => { window.location.href = "login/index.html"; });
+      }
+    }
+  </script>
+  <script src="js/analytics-tracker.js"></script>
+</body>
+</html>

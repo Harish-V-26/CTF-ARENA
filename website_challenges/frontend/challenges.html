@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF ARENA Web Challenges — Start with the SQL Injection Lab." />
+  <title>CTF ARENA — Challenges</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/challenges.css" />
+</head>
+
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8002/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8002/index.html">Home</a>
+      <a href="http://localhost:8002/challenges.html" class="active">Challenges</a>
+      <a href="http://localhost:8002/rules.html">Rules</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8002/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8002/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE HERO  -->
+  <div class="page-hero" id="challenges-hero">
+    <div class="page-hero-content">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Practice Arena</span>
+      <h1><span class="accent">Challenges.</span></h1>
+      <p>Put your knowledge to the test in isolated hands-on Docker containers and real exploit targets.</p>
+    </div>
+  </div>
+
+  <!--  CHALLENGES SECTION  -->
+  <section class="challenges-section">
+    <div class="container">
+
+      <h2 style="margin-bottom: 20px;">Beginner Level — CTF Challenges</h2>
+      <div class="challenges-grid" id="challenges-grid">
+
+        <!-- The Ultimate Gauntlet -->
+        <div class="challenge-card" id="ch-ultimate-gauntlet" data-category="web" onclick="window.location.href='web/hard/ultimate-challenge-lab.html'">
+          <div class="card-top"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <div>
+                <span class="category-tag">Web</span>
+                <span class="difficulty-tag diff-hard">Hard</span>
+              </div>
+              <span class="points">1000 pts</span>
+            </div>
+            <div class="challenge-title">The Ultimate Gauntlet</div>
+            <div class="challenge-desc">A brutal CTF challenge combining Nmap, Web Recon, IDOR, File Upload, and Metasploit.</div>
+          </div>
+          <div class="card-footer">
+            <span class="solve-count"> Practical Docker Lab</span>
+            <button class="start-btn">Start ⇗</button>
+          </div>
+        </div>
+
+        <!-- Operation Shadow Gate -->
+        <div class="challenge-card" data-category="web" id="card-operation-shadow-gate"
+          onclick="window.location.href='web/beginner/operation-shadow-gate-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(90deg, #ff4d6d, #e67e22, #f39c12, #9b59b6, #3498db, #2ecc71);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: rgba(255,77,109,0.15); color: #ff4d6d;">Multi-Stage</span>
+            </div>
+            <div class="challenge-title">Operation Shadow Gate</div>
+            <div class="challenge-desc">
+              Infiltrate NEXUS CORP by combining five attack vectors: Nmap Reconnaissance, Brute Force, SQL Injection, XSS, and Metasploit. Extract the hidden master flag from the server in this pure CTF environment.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">500 pts</span>
+            <span class="solve-count"> Live Target</span>
+            <a href="web/beginner/operation-shadow-gate-lab.html" class="start-btn" id="start-shadow-gate">Start →</a>
+          </div>
+        </div>
+
+        <!-- OWASP Top 10 Part 1 (1-5) -->
+        <div class="challenge-card" data-category="web" id="card-owasp-top5-challenge"
+          onclick="window.location.href='web/easy/owasp-top5-challenge-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(90deg, #ff9f43, #ff6b6b, #ee5253);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-easy" style="background: rgba(255,159,67,0.15); color: #ff9f43;">Easy</span>
+            </div>
+            <div class="challenge-title">OWASP Top 10 Part 1 (1-5)</div>
+            <div class="challenge-desc">
+              Compromise the SecureCorp Staging Portal by exploiting the first five OWASP Top 10 vulnerabilities: Broken Access Control, Cryptographic Failures, SQL Injection, Security Misconfiguration, and Software Supply Chain Failures.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">250 pts</span>
+            <span class="solve-count"> Live Target</span>
+            <a href="web/easy/owasp-top5-challenge-lab.html" class="start-btn" id="start-owasp-top5-challenge">Start →</a>
+          </div>
+        </div>
+
+        <!-- OWASP Top 10 Part 2 Chain -->
+        <div class="challenge-card" data-category="web" id="card-owasp-part2-ctf"
+          onclick="window.location.href='web/beginner/owasp-part2-ctf-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #f39c12, #e74c3c, #9b59b6, #3498db);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Web</span>
+              <span class="difficulty-tag diff-medium" style="background: rgba(255,77,109,0.15); color: #ff4d6d;">Multi-Stage</span>
+            </div>
+            <div class="challenge-title">OWASP Part 2 Chained CTF</div>
+            <div class="challenge-desc">
+              Chain 5 critical vulnerabilities: Verbose Errors, User Enumeration/Brute Force, Predictable Sessions, Cookie Tampering, and Insecure Deserialization to compromise the SecureCorp Infrastructure.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">600 pts</span>
+            <span class="solve-count"> Live Target</span>
+            <a href="web/beginner/owasp-part2-ctf-lab.html" class="start-btn" id="start-owasp-part2-ctf">Start →</a>
+          </div>
+        </div>
+
+      </div><!-- /challenges-grid -->
+
+    </div>
+  </section>
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>© 2026 <a href="http://localhost:8002/index.html">CTF ARENA</a> · Internship Project Demo</p>
+  </footer>
+
+  <!--  CHALLENGE DETAILS MODAL  -->
+  <div id="challenge-modal" class="modal-overlay">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close modal">×</button>
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="category-tag" id="modal-category">Web</span>
+          <span class="difficulty-tag" id="modal-difficulty">Easy</span>
+        </div>
+        <h2 id="modal-title">Challenge Title</h2>
+      </div>
+      <div class="modal-body">
+        <p id="modal-desc" class="modal-desc">Detailed description goes here.</p>
+        
+        <div class="modal-section">
+          <h3> What You Will Learn</h3>
+          <ul id="modal-learn-list" class="modal-list">
+          </ul>
+        </div>
+        
+        <div class="modal-section">
+          <h3> Environment & Expected Result</h3>
+          <div class="env-preview">
+            <div class="env-icon" id="modal-env-icon"></div>
+            <div class="env-text">
+              <strong id="modal-env-title">Docker Lab</strong>
+              <p id="modal-env-desc">You will be dropped into a private container...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <span class="points" id="modal-points">200 pts</span>
+        <a href="#" class="start-btn-large" id="modal-start-btn">Start Challenge →</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const cards = document.querySelectorAll(".challenge-card");
+      
+      cards.forEach(card => {
+        // Extract the URL from onclick
+        const onclickStr = card.getAttribute("onclick");
+        let url = "";
+        if (onclickStr) {
+          const match = onclickStr.match(/window\.location\.href='([^']+)'/);
+          if (match) url = match[1];
+          // Remove the default onclick to prevent immediate navigation
+          card.removeAttribute("onclick");
+        }
+        
+        // Add click event for opening modal
+        card.addEventListener("click", function(e) {
+          // Don't trigger modal if they explicitly clicked the start button (let it navigate)
+          if (e.target.closest('.start-btn')) {
+            window.location.href = url;
+            return;
+          }
+          openModal(card, url);
+        });
+      });
+    });
+
+    function openModal(card, url) {
+      const title = card.querySelector(".challenge-title").textContent;
+      const desc = card.querySelector(".challenge-desc").textContent;
+      const cat = card.querySelector(".category-tag").textContent;
+      const diff = card.querySelector(".difficulty-tag").textContent;
+      const pts = card.querySelector(".points").textContent;
+      
+      let solveCountEl = card.querySelector(".solve-count");
+      const solveCount = solveCountEl ? solveCountEl.textContent : "";
+      
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-desc').textContent = desc.trim();
+      document.getElementById('modal-category').textContent = cat;
+      document.getElementById('modal-difficulty').textContent = diff;
+      document.getElementById('modal-difficulty').className = card.querySelector(".difficulty-tag").className;
+      
+      document.getElementById('modal-points').textContent = pts;
+      document.getElementById('modal-start-btn').href = url || '#';
+      
+      // Infer Environment and "What you will learn" dynamically
+      let envIcon = "";
+      let envTitle = "Theory & Reading Lab";
+      let envDesc = "You will read through a set of lessons and answer knowledge check questions.";
+      let learnList = ["Vulnerability Identification", "Exploitation Techniques", "Mitigation Strategies"];
+      
+      if (diff.includes("Practical") || solveCount.includes("Docker") || title.includes("Gauntlet") || title.includes("Target") || title.includes("DVWA")) {
+          envIcon = "";
+          envTitle = "Live Docker Environment";
+          envDesc = "You will launch a private, isolated Docker container running a vulnerable application target. You'll interact with it like a real-world server.";
+      } else if (desc.includes("guided") || title.includes("Auth") || title.includes("DevTools")) {
+          envIcon = "";
+          envTitle = "Interactive Guided Lab";
+          envDesc = "A split-screen environment with step-by-step instructions on the left and an interactive target/browser view on the right.";
+      } else if (solveCount.includes("Recon")) {
+          envIcon = "";
+          envTitle = "Recon Target";
+          envDesc = "Perform reconnaissance on a simulated infrastructure target using industry standard tools to map the attack surface.";
+      }
+      
+      if (title.includes("SQL")) {
+          learnList = ["SQL Syntax & Payloads", "Authentication Bypass", "UNION-Based Data Extraction", "Error/Blind Injection Techniques"];
+      } else if (title.includes("Shadow Gate") || title.includes("Operation")) {
+          learnList = ["Nmap Reconnaissance", "Brute Force Attack Execution", "SQL Injection", "Cross-Site Scripting (XSS)", "Metasploit Exploitation"];
+          envTitle = "Pure CTF Challenge";
+          envDesc = "A live Docker environment where you must independently apply all five learned techniques to compromise the target and locate the master flag.";
+      } else if (title.includes("XSS")) {
+          learnList = ["Reflected XSS Execution", "Stored XSS Persistence", "DOM-based vulnerabilities", "JavaScript Payload Development"];
+      } else if (title.includes("DevTools") || title.includes("Mastering DevTools")) {
+          learnList = ["Inspector DOM Manipulation", "Console JavaScript Execution", "Network Request Interception", "Cookie/LocalStorage Management"];
+      } else if (title.includes("Auth") || title.includes("Broken Auth")) {
+          learnList = ["Session Cookies Analysis", "JWT Token Decoding & Forgery", "Login Flow Verification", "Brute Force Concepts"];
+      } else if (title.includes("Crypto") || title.includes("Encryption")) {
+          learnList = ["Encryption vs Hashing", "Block vs Stream Ciphers", "Public Key Infrastructure (PKI)", "Key Exchange Protocols"];
+      } else if (title.includes("Directory Traversal")) {
+          learnList = ["Path Traversal Vectors", "Filter Bypassing", "Reading Arbitrary OS Files"];
+      } else if (title.includes("Command Injection")) {
+          learnList = ["OS Command Injection", "Shell Operators chaining", "Input Sanitization failures"];
+      } else if (title.includes("File Upload")) {
+          learnList = ["Web Shell Execution", "Content-Type Bypassing", "Extension Blacklist/Whitelist filters", "Remote Code Execution via Upload"];
+      } else if (title.includes("IDOR")) {
+          learnList = ["Insecure Direct Object References", "Horizontal Privilege Escalation", "Mass Assignment Attacks", "Access Control Bypass"];
+      } else if (title.includes("Deep Dive") || title.includes("Nmap Deep Dive")) {
+          learnList = ["Advanced TCP Scans (Null/FIN/Xmas)", "Packet Fragmentation & MTU", "Decoy Scanning & IP Spoofing", "NSE Script Configuration"];
+      } else if (title.includes("Nmap")) {
+          learnList = ["Host Discovery & Ping Scanning", "Port Scanning & Enumeration", "Service Version Detection", "OS Fingerprinting", "Stealth SYN Scanning", "Saving & Exporting Results"];
+      } else if (title.includes("Reconnaissance")) {
+          learnList = ["Directory Fuzzing (ffuf)", "Tech Stack Discovery (Wappalyzer)", "Attack Surface Mapping"];
+      } else if (title.includes("Brute Force")) {
+          learnList = ["Dictionary Attacks", "Credential Stuffing", "Rate Limiting Bypass", "Using Hydra & Burp Suite"];
+      } else if (title.includes("OWASP Part 2")) {
+          learnList = [
+              "Mishandling of Exceptional Conditions (Verbose Errors)",
+              "Insecure Design (Predictable Admin URL & Stackable Coupons)",
+              "Identification & Authentication Failures (Enumeration & MD5 Forgery)",
+              "Software & Data Integrity Failures (Insecure Deserialization)",
+              "Security Logging & Monitoring Failures (Log Injection & Alert Disabling)"
+          ];
+      } else if (title.includes("Reverse Engineering")) {
+          learnList = ["How Binaries Are Compiled", "Extracting Secrets with strings", "Disassembly with objdump & Ghidra", "Library Call Tracing with ltrace", "CTF Crackme Methodology"];
+          envTitle = "Theory & Simulated Lab";
+          envDesc = "Work through 5 guided lessons covering core RE concepts, simulated command outputs, and knowledge checks. No Docker needed.";
+      } else if (title.includes("OWASP")) {
+          learnList = ["Broken Access Control", "Cryptographic Failures", "Injection Attacks", "Insecure Design Principles"];
+      } else if (title.includes("Web Security")) {
+          learnList = ["CIA Triad in Web", "HTTP Protocol Basics", "Common Vulnerabilities", "Defensive Strategies"];
+      } else if (title.includes("Metasploit Deep Dive")) {
+          learnList = ["PostgreSQL Database Integration", "Workspaces & db_nmap", "Advanced Search Filters", "Staged vs Unstaged Payloads", "Web API Exploitation & RCE"];
+      } else if (title.includes("Metasploit")) {
+          learnList = ["Penetration Testing Frameworks", "Core Metasploit Commands (msfconsole)", "Exploits vs Payloads vs Auxiliary Modules", "Simulated Scanner Execution"];
+      }
+
+      
+      const ul = document.getElementById('modal-learn-list');
+      ul.innerHTML = learnList.map(item => `<li>${item}</li>`).join('');
+      
+      document.getElementById('modal-env-icon').textContent = envIcon;
+      document.getElementById('modal-env-title').textContent = envTitle;
+      document.getElementById('modal-env-desc').textContent = envDesc;
+      
+      document.getElementById('challenge-modal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('challenge-modal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    window.addEventListener('click', function(e) {
+      const modal = document.getElementById('challenge-modal');
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth-state.js"></script>
+  <script src="../js/analytics-tracker.js"></script>
+</body>
+</html>

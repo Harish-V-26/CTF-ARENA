@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>CTF ARENA — File Upload Virtual Lab</title>
+  <link rel="stylesheet" href="../../../css/global.css"/>
+  <link rel="stylesheet" href="../../../css/web-room.css"/>
+</head>
+<body>
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8000/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8000/index.html">Home</a>
+      <a href="http://localhost:8000/learn.html">Learn</a>
+      <a href="http://localhost:8000/rules.html">Rules</a>
+      <a href="http://localhost:8000/rooms/index.html">Create Room</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8000/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8000/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="room-wrapper">
+    <!-- SIDEBAR -->
+    <aside class="room-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">File Upload Lab</div>
+        <div class="overall-progress-wrap">
+          <div class="overall-progress-bar">
+            <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
+          </div>
+          <div class="overall-progress-pct" id="overall-pct">0%</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="room-main">
+      <div class="challenge-header">
+        <div class="ch-breadcrumb">Web Challenges › Easy Level › <span id="ch-crumb">Lab</span></div>
+        <div class="ch-meta">
+          <span class="ch-title" id="ch-title">File Upload – DVWA</span>
+          <span class="ch-pts" id="ch-pts">0 pts</span>
+          <div class="step-dots" id="step-dots"></div>
+        </div>
+      </div>
+
+      <div class="room-body" id="room-body">
+        <!-- DVWA Target launch -->
+        <div class="docker-launch">
+          <h3> DVWA Target Server</h3>
+          <p>Launch the vulnerable DVWA instance in a new tab. Use the Kali container to attack it.</p>
+          <button id="dvwa-launch-btn" class="btn-launch" onclick="launchDVWA()">Open DVWA Target ⇗</button>
+          <a href="file-upload-dvwa-guide.html" class="btn-launch" style="margin-left:10px;background:#e67e22;" target="_blank"> Walkthrough Guide</a>
+        </div>
+
+        <!-- Kali container launch -->
+        <div class="docker-launch">
+          <h3> Kali Linux Environment</h3>
+          <p>Spin up a private Kali container loaded with common pentest tools (Hydra, Burp, Nmap, Gobuster, etc.).</p>
+          <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Start Kali Container ⇗</button>
+          
+          <p id="kali-msg" style="display:none;color:#e67e22;font-weight:bold;margin-top:15px;"></p>
+          <div id="kali-terminal-info" style="display:none;margin-top:15px;background:#1a252f;padding:15px;border-radius:4px;text-align:left;">
+            <p style="color:#ecf0f1;margin-top:0;">Your Kali container is running! Access it with:</p>
+            <code id="kali-command" style="display:block;background:#000;color:#0f0;padding:10px;margin-top:10px;user-select:all;"></code>
+          </div>
+        </div>
+
+        <!-- Lesson panel (same as other rooms) -->
+        <div id="lesson-panel">
+          <div class="reading-panel">
+            <div class="reading-label"><span></span> Instructions & Tasks</div>
+            <div class="reading-text" id="reading-text" style="white-space:pre-wrap;"></div>
+          </div>
+          <div class="qa-section" id="qa-section">
+            <div class="qa-heading"> Check Your Understanding</div>
+            <div id="questions-container"></div>
+          </div>
+        </div>
+
+        <!-- Completion card -->
+        <div class="completion-card" id="completion-card">
+          <div class="trophy-icon"></div>
+          <h2>Lab Complete!</h2>
+          <p>You have finished the File Upload lab.</p>
+          <div class="score-pill" id="score-pill">0 / 200 pts</div>
+          <a href="http://localhost:8002/index.html" class="btn btn-primary">← Back to Challenges</a>
+        </div>
+      </div>
+
+      <div class="room-footer-nav">
+        <div class="challenge-counter">Lesson <span id="cur-num">1</span> of <span id="tot-num">4</span></div>
+        <div class="nav-btns">
+          <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Previous</button>
+          <button class="nav-btn primary" id="btn-next" onclick="navigate(1)">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="file-upload-dvwa-data.js"></script>
+  <script>
+    // Global state
+    let cur = 0;
+    let kaliId = null;
+    const storageKey = 'file_upload_virtual_lab_progress';
+    let answered = JSON.parse(localStorage.getItem(storageKey)) || {};
+    if(typeof LESSONS !== 'undefined') {
+      LESSONS.forEach((_, i) => { if(!answered[i]) answered[i] = {}; });
+    }
+
+    function launchDVWA() {
+      const host = window.location.hostname || 'localhost';
+      const url = `http://${host}:5000/api/start-dvwa`;
+      fetch(url, {method:'POST'}).then(r=>r.json()).then(d=>{
+        if(d.status==='success') {
+          // DVWA runs on a port; open it in a new tab
+          const dvwaPort = d.port;
+          window.open(`http://${host}:${dvwaPort}/dvwa/`, '_blank');
+        } else {
+      btn.style.display = 'inline-block';
+        btn.textContent = 'Open DVWA Target ⇗';
+        btn.style.background = '';
+        btn.onclick = launchDVWA;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+          alert('Failed to start DVWA: '+d.message);
+        }
+      }).catch(()=>alert('Backend unreachable'));
+    }
+
+    async function launchKali(){
+      const btn = document.getElementById('kali-launch-btn');
+      const stopBtn = document.getElementById('kali-stop-btn');
+      const msg = document.getElementById('kali-msg');
+      const info = document.getElementById('kali-terminal-info');
+      btn.style.display='none';
+      msg.style.display='block';
+      msg.textContent='Spinning up Kali container...';
+      msg.style.color='#e67e22';
+      try {
+        btn.style.display = 'inline-block';
+        btn.textContent = 'Stop Kali';
+        btn.style.background = '#c0392b';
+        btn.onclick = stopKali;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+        const host = window.location.hostname || 'localhost';
+        const resp = await fetch(`http://${host}:5000/api/start-kali`,{method:'POST'});
+        const data = await resp.json();
+        if(data.status==='success'){
+          kaliId = data.container_id;
+          msg.textContent='Kali container ready!';
+          msg.style.color='#2ecc71';
+          
+      
+      
+      
+          info.style.display='block';
+          document.getElementById('kali-command').textContent = `docker exec -it ${kaliId.substring(0,12)} bash`;
+        } else {
+      btn.style.display = 'inline-block';
+        btn.textContent = 'Start Kali Container ⇗';
+        btn.style.background = '';
+        btn.onclick = launchKali;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+          msg.textContent='Error: '+data.message;
+          msg.style.color='#e74c3c';
+          
+        }
+      } catch(e){
+      btn.style.display = 'inline-block';
+        btn.textContent = 'Start Kali Container ⇗';
+        btn.style.background = '';
+        btn.onclick = launchKali;
+        if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+        msg.textContent='Failed to reach backend.';
+        msg.style.color='#e74c3c';
+        
+      }
+    }
+
+    async function stopKali(){
+      if(!kaliId) return;
+      const host = window.location.hostname || 'localhost';
+      await fetch(`http://${host}:5000/api/stop-kali/${kaliId}`,{method:'POST'});
+      kaliId = null;
+      
+      document.getElementById('kali-terminal-info').style.display='none';
+      const launchBtn = document.getElementById('kali-launch-btn');
+      
+      
+      document.getElementById('kali-msg').style.display='none';
+    }
+
+    // The rest of the UI (sidebar, progress, navigation) mirrors the Brute‑Force lab.
+    // Minimal implementation – you can plug in your actual lesson data.
+    function buildSidebar(){
+      const nav = document.getElementById('sidebar-nav');
+      nav.innerHTML = LESSONS.map((l,i)=>`
+        <div class="module-group">
+          <div class="module-label" id="mod-${i}">
+            <span class="mod-num">${String(i+1).padStart(2,'0')}</span> ${l.title||'Lesson '+(i+1)}
+          </div>
+          <div class="nav-item${i===0?' active':''}" id="nav-${i}" onclick="goTo(${i})">
+            <div class="nav-dot"></div>
+            <span class="nav-label">${l.title||'Lesson '+(i+1)}</span>
+            <span class="nav-pts">${l.points||0} pts</span>
+          </div>
+        </div>`).join('');
+    }
+    function buildDots(){
+      document.getElementById('step-dots').innerHTML = LESSONS.map((_,i)=>`<div class="step-dot${i===0?' current':''}" id="dot-${i}"></div>`).join('');
+      document.getElementById('tot-num').textContent = LESSONS.length||4; // fallback to 4
+    }
+    function renderLesson(idx){
+      const l = LESSONS[idx]||{title:'Lesson '+(idx+1), points:0, content:'', questions:[]};
+      document.getElementById('ch-title').textContent = l.title;
+      document.getElementById('ch-pts').textContent = l.points+' pts';
+      document.getElementById('ch-crumb').textContent = 'Lesson '+(idx+1);
+      document.getElementById('cur-num').textContent = idx+1;
+      document.getElementById('reading-text').innerText = l.content;
+      const qc = document.getElementById('questions-container');
+      qc.innerHTML = l.questions.map((q,qi)=>`
+        <div class="question-card" id="qc-${idx}-${qi}">
+          <div class="question-text"><span class="q-num">Q${qi+1}</span> ${q.q}</div>
+          <div class="answer-row">
+            <input class="answer-input" id="ans-${idx}-${qi}" type="text" placeholder="Type your answer…" autocomplete="off" onkeydown="onEnter(event,${idx},${qi})"/>
+            <button class="check-btn" id="btn-${idx}-${qi}" onclick="checkAnswer(${idx},${qi})">Check</button>
+          </div>
+          <div class="feedback" id="fb-${idx}-${qi}"></div>
+        </div>`).join('');
+    }
+    function updateNav(from,to){
+      document.getElementById(`nav-${from}`).classList.remove('active');
+      document.getElementById(`dot-${from}`).classList.remove('current');
+      if(lessonDone(from)) document.getElementById(`mod-${from}`).classList.add('completed');
+      document.getElementById(`nav-${to}`).classList.add('active');
+      document.getElementById(`dot-${to}`).classList.add('current');
+    }
+    function lessonDone(idx){
+      if(!LESSONS[idx] || !LESSONS[idx].questions) return true;
+      const qLen = LESSONS[idx].questions.length;
+      if(qLen===0) return true;
+      for(let i=0; i<qLen; i++){
+        if(!answered[idx] || !answered[idx][i]) return false;
+      }
+      return true;
+    }
+    function totalDone(){
+      let d=0;
+      LESSONS.forEach((l,i)=>{
+        if(!l.questions) return;
+        l.questions.forEach((_,qi)=>{
+          if(answered[i] && answered[i][qi]) d++;
+        });
+      });
+      return d;
+    }
+    function totalQs(){
+      let t=0;
+      LESSONS.forEach(l=>{ if(l.questions) t+=l.questions.length; });
+      return t;
+    }
+    function updateProgress(){
+      const t = totalQs();
+      const d = totalDone();
+      const pct = t===0 ? 0 : Math.round((d/t)*100);
+      document.getElementById('overall-fill').style.width = pct+'%';
+      document.getElementById('overall-pct').textContent = pct+'%';
+    }
+    function goTo(idx){
+      updateNav(cur,idx);
+      cur = idx;
+      renderLesson(cur);
+      document.getElementById('btn-prev').disabled = cur===0;
+      document.getElementById('btn-next').textContent = cur=== (LESSONS.length-1) ? 'Finish →' : 'Next →';
+    }
+    function navigate(dir){
+      const next = cur + dir;
+      if(next>=0 && next<LESSONS.length) goTo(next);
+      else if(dir===1) {
+        showCompletion();
+      }
+    }
+    function showCompletion(){
+      if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+      document.getElementById('lesson-panel').style.display='none';
+      document.querySelector('.docker-launch').style.display='none';
+      const pts = LESSONS.reduce((sum, l) => sum + (l.points||0), 0);
+      document.getElementById('score-pill').textContent = pts + ' / ' + pts + ' pts';
+      document.getElementById('completion-card').classList.add('show');
+      document.getElementById('btn-next').disabled=true;
+      document.getElementById('btn-prev').disabled=true;
+      document.getElementById('overall-fill').style.width='100%';
+      document.getElementById('overall-pct').textContent='100%';
+    }
+    function onEnter(e,lesson,qi){if(e.key==='Enter') checkAnswer(lesson,qi);}
+    function normalise(str) {
+      return (str||'').toLowerCase().replace(/[^a-z0-9_\-\.\s]/g, '').trim();
+    }
+    function checkAnswer(lesson,qi){
+      if(answered[lesson] && answered[lesson][qi]) return;
+      const input = document.getElementById(`ans-${lesson}-${qi}`);
+      const cn = normalise(LESSONS[lesson].questions[qi].a);
+      const un = normalise(input.value);
+      const ok = un === cn || cn.includes(un) || un.includes(cn.split(' ')[0]);
+      const fb = document.getElementById(`fb-${lesson}-${qi}`);
+      const qc = document.getElementById(`qc-${lesson}-${qi}`);
+      if(ok) {
+        if(!answered[lesson]) answered[lesson] = {};
+        answered[lesson][qi] = true;
+        if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+        localStorage.setItem(storageKey, JSON.stringify(answered));
+        qc.classList.add('correct');
+        fb.className = 'feedback correct-msg show';
+        fb.textContent = 'Correct!';
+        input.disabled = true;
+        document.getElementById(`btn-${lesson}-${qi}`).disabled = true;
+        updateProgress();
+        if(lessonDone(lesson)) document.getElementById(`mod-${lesson}`).classList.add('completed');
+      } else {
+        qc.classList.add('wrong');
+        if(window.ctfTrackFailed) window.ctfTrackFailed();
+        fb.className = 'feedback wrong-msg show';
+        fb.textContent = 'Not quite — try again.';
+        setTimeout(()=>{ qc.classList.remove('wrong'); fb.classList.remove('show'); }, 2000);
+      }
+    }
+
+    // Init UI
+    window.addEventListener('load',()=>{
+      buildSidebar();
+      buildDots();
+      renderLesson(0);
+    });
+  </script>
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+</body>
+</html>

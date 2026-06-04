@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Access your CTF ARENA account. Sign in or register to launch Docker-based labs and track your cybersecurity progress." />
+  <title>CTF ARENA — Access Portal</title>
+  <link rel="stylesheet" href="../css/global.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+</head>
+<body class="login-body">
+
+  <!-- NAVBAR REMOVED -->
+
+  <!-- FULL-SCREEN SPLIT LAYOUT -->
+  <div class="auth-page-container">
+
+    <!-- ════════ LEFT BRANDING PANEL ════════ -->
+    <div class="auth-left-panel">
+      <div class="panel-grid"></div>
+
+      <!-- Decorative corner brackets -->
+      <div class="panel-corner-tl"></div>
+      <div class="panel-corner-br"></div>
+
+      <!-- Glowing Orbs -->
+      <div class="panel-orb panel-orb-1"></div>
+      <div class="panel-orb panel-orb-2"></div>
+
+      <!-- Floating particle nodes -->
+      <div class="particle-node" style="width:6px;height:6px;top:18%;left:12%;--dur:9s;--dx:18px;--dy:-22px;--op:0.5;"></div>
+      <div class="particle-node" style="width:4px;height:4px;top:55%;left:75%;--dur:12s;--dx:-14px;--dy:20px;--op:0.35;"></div>
+      <div class="particle-node" style="width:8px;height:8px;top:78%;left:22%;--dur:7s;--dx:22px;--dy:-14px;--op:0.3;"></div>
+      <div class="particle-node" style="width:5px;height:5px;top:35%;left:82%;--dur:10s;--dx:-18px;--dy:16px;--op:0.45;"></div>
+      <div class="particle-node" style="width:3px;height:3px;top:88%;left:60%;--dur:15s;--dx:10px;--dy:-28px;--op:0.4;"></div>
+
+      <!-- Branding Content -->
+      <div class="panel-content">
+        <div class="panel-badge">Secure Access Portal</div>
+
+        <div class="panel-headline">
+          Train Like<br>
+          <span>A Real Hacker.</span>
+        </div>
+
+        <p class="panel-desc">
+          Join CTF ARENA to access 20+ isolated Docker labs covering web exploitation, network reconnaissance, OWASP vulnerabilities, and advanced penetration testing techniques.
+        </p>
+
+        <div class="panel-features">
+          <div class="feature-pill"><span class="feature-pill-dot"></span>20+ Live Docker Labs</div>
+          <div class="feature-pill"><span class="feature-pill-dot"></span>OWASP Top 10 Coverage</div>
+          <div class="feature-pill"><span class="feature-pill-dot"></span>Nmap &amp; Metasploit</div>
+          <div class="feature-pill"><span class="feature-pill-dot"></span>Kali Linux Sandbox</div>
+          <div class="feature-pill"><span class="feature-pill-dot"></span>Score Tracking</div>
+          <div class="feature-pill"><span class="feature-pill-dot"></span>Beginner Friendly</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ RIGHT FORM PANEL ════════ -->
+    <div class="auth-right-panel">
+      <div class="auth-divider"></div>
+
+      <div class="auth-card">
+
+        <!-- Overflow clip for the slider -->
+        <div style="overflow:hidden;">
+          <div class="auth-slider" id="auth-slider">
+
+            <!-- ══ LOGIN FORM ══ -->
+            <div class="form-wrapper login-wrapper">
+              <div class="auth-header">
+                <h2>Welcome <em>Back</em></h2>
+                <p>Enter your credentials to resume your hacking session.</p>
+              </div>
+
+              <form id="login-form" novalidate>
+
+                <div class="form-group">
+                  <div class="form-input-container">
+                    <input type="email" id="login-email" placeholder=" " autocomplete="email" required />
+                    <label for="login-email">Gmail Address</label>
+                  </div>
+                  <div class="error-message" id="login-email-error">Must be a valid @gmail.com address.</div>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-input-container">
+                    <input type="password" id="login-password" placeholder=" " autocomplete="current-password" required />
+                    <label for="login-password">Password</label>
+                  </div>
+                  <div class="error-message" id="login-password-error">Password cannot be blank.</div>
+                </div>
+
+                <button type="submit" class="auth-btn-submit">
+                  Authenticate &rarr;
+                </button>
+              </form>
+
+              <div class="auth-separator">or</div>
+              <button type="button" class="google-btn" id="google-login-btn">
+                <svg style="width:18px;height:18px;margin-right:8px;vertical-align:middle;" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Continue with Google
+              </button>
+              <div class="auth-toggle-link" style="margin-top: 15px;">
+                New to CTF ARENA? <a href="#" id="go-to-signup">Create account</a>
+              </div>
+            </div>
+
+            <!-- ══ SIGN UP FORM ══ -->
+            <div class="form-wrapper signup-wrapper">
+              <div class="auth-header">
+                <h2>Create <em>Account</em></h2>
+                <p>Register to start your cybersecurity learning journey.</p>
+              </div>
+
+              <form id="signup-form" novalidate>
+
+                <div class="form-group">
+                  <div class="form-input-container">
+                    <input type="text" id="signup-name" placeholder=" " autocomplete="name" required />
+                    <label for="signup-name">Full Name</label>
+                  </div>
+                  <div class="error-message" id="signup-name-error">Name must be at least 2 characters.</div>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-input-container">
+                    <input type="email" id="signup-email" placeholder=" " autocomplete="email" required />
+                    <label for="signup-email">Gmail Address</label>
+                  </div>
+                  <div class="error-message" id="signup-email-error">Must be a valid @gmail.com address.</div>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-input-container">
+                    <input type="password" id="signup-password" placeholder=" " autocomplete="new-password" required />
+                    <label for="signup-password">Password</label>
+                  </div>
+                  <div class="error-message" id="signup-password-error">Password must be at least 6 characters.</div>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-input-container">
+                    <input type="password" id="signup-confirm-password" placeholder=" " autocomplete="new-password" required />
+                    <label for="signup-confirm-password">Confirm Password</label>
+                  </div>
+                  <div class="error-message" id="signup-confirm-password-error">Passwords do not match.</div>
+                </div>
+
+                <button type="submit" class="auth-btn-submit">
+                  Register Account &rarr;
+                </button>
+              </form>
+
+              <div class="auth-separator">or</div>
+              <button type="button" class="google-btn" id="google-signup-btn">
+                <svg style="width:18px;height:18px;margin-right:8px;vertical-align:middle;" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                Continue with Google
+              </button>
+              <div class="auth-toggle-link" style="margin-top: 15px;">
+                Already registered? <a href="#" id="go-to-login">Sign in</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div><!-- /auth-card -->
+    </div><!-- /auth-right-panel -->
+
+  </div><!-- /auth-page-container -->
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- SCRIPTS -->
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth-state.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const slider      = document.getElementById("auth-slider");
+      const toastCont   = document.getElementById("toast-container");
+
+      /* ── Slide switching ── */
+      document.getElementById("go-to-signup").addEventListener("click", function (e) {
+        e.preventDefault();
+        slider.classList.add("show-signup");
+        clearErrors();
+      });
+      document.getElementById("go-to-login").addEventListener("click", function (e) {
+        e.preventDefault();
+        slider.classList.remove("show-signup");
+        clearErrors();
+      });
+
+      // Redirect if logged in
+      function checkAlreadyLoggedIn() {
+        if (window.authService && window.authService.currentUser) {
+          window.location.href = "../dashboard.html";
+        } else {
+          setTimeout(checkAlreadyLoggedIn, 100);
+        }
+      }
+      checkAlreadyLoggedIn();
+
+      /* ── Toast helper ── */
+      function toast(msg, type) {
+        const el = document.createElement("div");
+        el.className = "toast " + (type || "success");
+        el.innerHTML = "<strong>" + (type === "error" ? "Error" : "Success") + ":</strong>&nbsp;" + msg;
+        toastCont.appendChild(el);
+        setTimeout(() => {
+          el.classList.add("fade-out");
+          el.addEventListener("animationend", () => el.remove(), { once: true });
+        }, 4200);
+      }
+
+      /* ── Validation helpers ── */
+      function setError(input, errEl, msg) {
+        input.classList.add("invalid");
+        errEl.textContent = msg;
+        errEl.style.display = "block";
+      }
+      function clearError(input, errEl) {
+        input.classList.remove("invalid");
+        errEl.style.display = "none";
+      }
+      function clearErrors() {
+        document.querySelectorAll("input.invalid").forEach(i => i.classList.remove("invalid"));
+        document.querySelectorAll(".error-message").forEach(e => e.style.display = "none");
+      }
+
+      /* ── LOGIN ── */
+      const lEmail = document.getElementById("login-email");
+      const lPass  = document.getElementById("login-password");
+      const lEErr  = document.getElementById("login-email-error");
+      const lPErr  = document.getElementById("login-password-error");
+
+      document.getElementById("login-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        let ok = true;
+        const em = lEmail.value.trim();
+        const pw = lPass.value;
+
+        if (!em) {
+          setError(lEmail, lEErr, "Email address is required."); ok = false;
+        } else { clearError(lEmail, lEErr); }
+
+        if (!pw) {
+          setError(lPass, lPErr, "Password cannot be blank."); ok = false;
+        } else { clearError(lPass, lPErr); }
+
+        if (!ok) return;
+
+        window.authService.login(em, pw, function (err, user) {
+          if (err) { toast(err.message, "error"); }
+          else {
+            toast("Welcome back, " + user.displayName + "!", "success");
+            setTimeout(() => { window.location.href = "../index.html"; }, 1400);
+          }
+        });
+      });
+
+      lEmail.addEventListener("input", () => clearError(lEmail, lEErr));
+      lPass.addEventListener("input",  () => clearError(lPass, lPErr));
+
+      /* ── SIGN UP ── */
+      const sName    = document.getElementById("signup-name");
+      const sEmail   = document.getElementById("signup-email");
+      const sPass    = document.getElementById("signup-password");
+      const sConfirm = document.getElementById("signup-confirm-password");
+      const sNErr    = document.getElementById("signup-name-error");
+      const sEErr    = document.getElementById("signup-email-error");
+      const sPErr    = document.getElementById("signup-password-error");
+      const sCErr    = document.getElementById("signup-confirm-password-error");
+
+      document.getElementById("signup-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        let ok = true;
+        const n  = sName.value.trim();
+        const em = sEmail.value.trim();
+        const pw = sPass.value;
+        const cp = sConfirm.value;
+
+        if (n.length < 2)  { setError(sName,    sNErr, "Name must be at least 2 characters."); ok = false; }
+        else                { clearError(sName, sNErr); }
+
+        if (!em.toLowerCase().endsWith("@gmail.com")) {
+          setError(sEmail, sEErr, "Must be a valid @gmail.com address."); ok = false;
+        } else { clearError(sEmail, sEErr); }
+
+        if (pw.length < 6) { setError(sPass,    sPErr, "Password must be at least 6 characters."); ok = false; }
+        else                { clearError(sPass, sPErr); }
+
+        if (pw !== cp)     { setError(sConfirm, sCErr, "Passwords do not match."); ok = false; }
+        else                { clearError(sConfirm, sCErr); }
+
+        if (!ok) return;
+
+        window.authService.signUp(n, em, pw, function (err, user) {
+          if (err) { toast(err.message, "error"); }
+          else {
+            toast("Account created! Welcome, " + user.displayName + ".", "success");
+            setTimeout(() => { window.location.href = "../index.html"; }, 1400);
+          }
+        });
+      });
+
+      sName.addEventListener("input",    () => clearError(sName, sNErr));
+      sEmail.addEventListener("input",   () => clearError(sEmail, sEErr));
+      sPass.addEventListener("input",    () => clearError(sPass, sPErr));
+      sConfirm.addEventListener("input", () => clearError(sConfirm, sCErr));
+
+      /* ── Google Auth Handlers ── */
+      function handleGoogleAuth(e) {
+        if (e) e.preventDefault();
+        window.authService.loginWithGoogle(function (err, user) {
+          if (err) { toast(err.message, "error"); }
+          else {
+            toast("Successfully authenticated with Google!", "success");
+            setTimeout(() => { window.location.href = "../index.html"; }, 1400);
+          }
+        });
+      }
+
+      const googleLoginBtn = document.getElementById("google-login-btn");
+      if (googleLoginBtn) googleLoginBtn.addEventListener("click", handleGoogleAuth);
+
+      const googleSignupBtn = document.getElementById("google-signup-btn");
+      if (googleSignupBtn) googleSignupBtn.addEventListener("click", handleGoogleAuth);
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Walkthrough — Error Handling Lab</title>
+  <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:#0d1117;color:#c9d1d9;padding:40px 20px;line-height:1.8}.container{max-width:860px;margin:0 auto}h1{color:#e67e22;margin-bottom:8px;font-size:1.6em}h2{color:#e67e22;margin-top:32px;margin-bottom:12px;font-size:1.2em;border-bottom:1px solid #30363d;padding-bottom:8px}p{margin-bottom:14px}code{background:rgba(230,126,34,.15);color:#e67e22;padding:2px 7px;border-radius:4px;font-family:monospace}.step{display:flex;gap:14px;align-items:flex-start;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:16px;margin-bottom:14px}.step-n{background:#e67e22;color:#fff;border-radius:6px;padding:4px 12px;font-weight:bold;font-size:.8em;white-space:nowrap}.step-b{flex:1}.flag{background:rgba(230,126,34,.12);border:1px solid rgba(230,126,34,.3);border-radius:6px;padding:12px;font-family:monospace;color:#e67e22;margin:10px 0;text-align:center}a{color:#e67e22}.back{display:inline-block;margin-top:24px;padding:10px 20px;background:#e67e22;color:#fff;border-radius:6px;text-decoration:none;font-weight:bold}</style>
+</head>
+<body>
+<div class="container">
+  <h1>Error Handling Lab — Walkthrough</h1>
+
+  <h2>Challenge 1: Debug Mode in Production</h2>
+  <div class="step"><div class="step-n">1</div><div class="step-b">Log in with <code>developer / dev2026</code>. The DEBUG=True warning is displayed immediately.</div></div>
+  <div class="flag">CTF{...}</div>
+
+  <h2>Challenge 2: Verbose Error Leakage</h2>
+  <div class="step"><div class="step-n">1</div><div class="step-b">In User Lookup, enter <code>abc</code> — a ValueError leaks the DB connection string.</div></div>
+  <div class="flag">CTF{...}</div>
+  <div class="step"><div class="step-n">2</div><div class="step-b">Enter <code>999</code> — an IndexError leaks table names and credentials.</div></div>
+  <div class="step"><div class="step-n">3</div><div class="step-b">Click <strong>Test Connection</strong> — the full DB connection string with password is exposed.</div></div>
+  <div class="flag">CTF{...}</div>
+
+  <h2>Challenge 3: Stack Trace & Path Disclosure</h2>
+  <div class="step"><div class="step-n">1</div><div class="step-b">In File Reader, enter <code>/nonexistent</code> — the error reveals the full stack trace, working directory, and Python path.</div></div>
+  <div class="flag">CTF{...}</div>
+
+  <a href="error-handling-lab.html" class="back">← Back to Lab</a>
+</div>
+
+  <!-- COMPLETION TRACKING INJECTED -->
+  <div style="text-align: center; margin: 40px 0; padding-bottom: 40px;">
+    <button id="btn-complete-guide" onclick="markGuideComplete()" style="background: #2ecc71; color: white; border: none; padding: 12px 24px; font-size: 1.1em; border-radius: 6px; cursor: pointer; font-weight: bold; transition: background 0.3s;">Mark as Complete</button>
+    <p id="completion-msg" style="display:none; color: #2ecc71; font-weight: bold; margin-top: 10px;">✓ Marked as Complete</p>
+  </div>
+  <script>
+    function markGuideComplete() {
+      if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+      if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+      document.getElementById('btn-complete-guide').style.display = 'none';
+      document.getElementById('completion-msg').style.display = 'block';
+    }
+  </script>
+
+  <script src="../../../js/firebase-config.js"></script>
+  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/analytics-tracker.js"></script>
+</body>
+</html>

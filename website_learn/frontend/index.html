@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CTF Platform Demo</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/index.css" />
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8000/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8000/index.html" class="active">Home</a>
+      <a href="http://localhost:8000/learn.html">Learn</a>
+      <a href="http://localhost:8000/rules.html">Rules</a>
+      <a href="http://localhost:8000/rooms/index.html">Create Room</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8000/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8000/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero container">
+    <span class="badge" style="margin-bottom:24px;"> Next-Gen Platform</span>
+    <h1>Interactive <br><span>CTF Training Platform</span></h1>
+    <p>
+      Practice real-world cybersecurity challenges in isolated Docker labs.
+      Learn Web Exploitation, Cryptography, Linux, Reverse Engineering,
+      and Team-based hacking through guided beginner-friendly missions.
+    </p>
+    <div class="hero-buttons">
+      <a href="http://localhost:8000/learn.html" class="btn btn-primary">Start Learning →</a>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features container">
+    <div class="section-header">
+      <h2>Platform Features</h2>
+      <p>Everything you need to master cybersecurity skills from basic to advanced.</p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="card">
+        <h3>Docker Labs</h3>
+        <p>Launch isolated challenge environments instantly using Docker containers.</p>
+      </div>
+      <div class="card">
+        <h3>Hint System</h3>
+        <p>Progressive learning hints help beginners solve challenges step-by-step.</p>
+      </div>
+      <div class="card">
+        <h3>Group Challenges</h3>
+        <p>Collaborate with friends and solve shared multiplayer lab instances.</p>
+      </div>
+      <div class="card">
+        <h3>Performance Dashboard</h3>
+        <p>Track skills, completion rates, strengths, and weaknesses visually.</p>
+      </div>
+      <div class="card">
+        <h3>Write-up Reports</h3>
+        <p>Submit markdown reports and export professional PDF documentation.</p>
+      </div>
+      <div class="card">
+        <h3>Beginner Friendly</h3>
+        <p>Learn concepts with guided explanations, tooltips, and tutorials.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 CTF ARENA | Internship Project Demo</p>
+  </footer>
+
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth-state.js"></script>
+  <script src="js/analytics-tracker.js"></script>
+</body>
+</html>

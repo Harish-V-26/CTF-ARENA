@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CTF ARENA Rules — Competition rules, code of conduct, scoring system, and flag submission guidelines." />
+  <title>CTF ARENA — Rules</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/rules.css" />
+</head>
+<body>
+
+  <!--  NAVBAR  -->
+  <nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8002/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8002/index.html">Home</a>
+      <a href="http://localhost:8002/challenges.html">Challenges</a>
+      <a href="http://localhost:8002/rules.html" class="active">Rules</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8002/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8002/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!--  PAGE INTRO  -->
+  <div class="container">
+    <div style="padding: 60px 0 0; text-align:center;">
+      <span class="badge" style="margin-bottom:20px;display:inline-flex;"> Competition Rules</span>
+      <h1 style="font-size:clamp(40px,5vw,64px);font-weight:900;color:var(--text-primary);letter-spacing:-2px;margin-bottom:14px;">
+        Play Fair. <span style="color:var(--accent);">Hack Hard.</span>
+      </h1>
+      <p style="color:var(--text-muted);font-size:17px;max-width:520px;margin:0 auto 8px;">
+        Read the rules carefully before participating. Violations can result in disqualification.
+      </p>
+    </div>
+
+    <!--  TWO-COLUMN LAYOUT  -->
+    <div class="rules-section" id="rules-section">
+
+      <!-- Sidebar Nav -->
+      <aside class="rules-nav" aria-label="Rules navigation">
+        <div class="rules-nav-title">Jump to Section</div>
+        <ul>
+          <li><a href="#conduct" class="active" id="nav-conduct"> Code of Conduct</a></li>
+          <li><a href="#flag-rules" id="nav-flag"> Flag Submission</a></li>
+          <li><a href="#scoring" id="nav-scoring"> Scoring System</a></li>
+          <li><a href="#team-rules" id="nav-team"> Team Rules</a></li>
+          <li><a href="#infrastructure" id="nav-infra"> Infrastructure</a></li>
+          <li><a href="#violations" id="nav-violations"> Violations</a></li>
+        </ul>
+      </aside>
+
+      <!-- Rules Content -->
+      <main class="rules-content" id="rules-content">
+
+        <!--  Code of Conduct  -->
+        <div class="rules-block" id="conduct">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Code of Conduct</h2>
+              <p>Expected behavior for all participants</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">#01</span>
+              <span class="rule-text">Treat all participants with respect. <strong>Harassment, discrimination, or abuse of any kind is strictly prohibited.</strong></span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#02</span>
+              <span class="rule-text">Do not share flags, solutions, or write-ups <strong>until the challenge is officially retired.</strong></span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#03</span>
+              <span class="rule-text">English is the primary language of communication in public channels. Other languages are welcome in private groups.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">#04</span>
+              <span class="rule-text"><strong>Attacking platform infrastructure</strong> (not part of any challenge) is forbidden and will result in immediate disqualification.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#05</span>
+              <span class="rule-text">You must be registered under your real identity. Participants found using fake accounts will be permanently banned.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Flag Submission  -->
+        <div class="rules-block" id="flag-rules">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Flag Submission</h2>
+              <p>How to submit challenge answers correctly</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">#01</span>
+              <span class="rule-text">All flags follow the format <strong style="font-family:var(--font-mono);color:var(--accent);">CTF{...}</strong> unless the challenge explicitly states otherwise.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#02</span>
+              <span class="rule-text">Flag submission is case-sensitive. Copy the flag exactly as found — do not modify any characters.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">#03</span>
+              <span class="rule-text"><strong>Brute-forcing the flag submission form</strong> is prohibited. After 10 failed attempts, your account will be locked for 15 minutes.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#04</span>
+              <span class="rule-text">Each challenge can only be solved once per account. Submitting a flag you already captured will not award additional points.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Scoring  -->
+        <div class="rules-block" id="scoring">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Scoring System</h2>
+              <p>How points are calculated and awarded</p>
+            </div>
+          </div>
+
+          <table class="point-table" aria-label="Challenge points by difficulty">
+            <thead>
+              <tr>
+                <th>Difficulty</th>
+                <th>Base Points</th>
+                <th>First Blood Bonus</th>
+                <th>Categories</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td> Easy</td>
+                <td class="pts">75 – 150 pts</td>
+                <td class="pts">+50 pts</td>
+                <td>All</td>
+              </tr>
+              <tr>
+                <td> Medium</td>
+                <td class="pts">200 – 350 pts</td>
+                <td class="pts">+100 pts</td>
+                <td>All</td>
+              </tr>
+              <tr>
+                <td> Hard</td>
+                <td class="pts">400 – 600 pts</td>
+                <td class="pts">+200 pts</td>
+                <td>All</td>
+              </tr>
+              <tr>
+                <td> Insane</td>
+                <td class="pts">700 – 1000 pts</td>
+                <td class="pts">+300 pts</td>
+                <td>Special Events</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="penalty-box" style="margin-top:24px;">
+            <span class="penalty-icon"></span>
+            <p>
+              <strong>Hint Penalty:</strong> Using a hint deducts <strong>10–25%</strong> of the challenge base points from your score for that challenge. Hints are optional and cannot be undone.
+            </p>
+          </div>
+        </div>
+
+        <!--  Team Rules  -->
+        <div class="rules-block" id="team-rules">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Team Rules</h2>
+              <p>Guidelines for group participation</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">#01</span>
+              <span class="rule-text">Teams can have a maximum of <strong>4 members.</strong> Solo participation is also permitted.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#02</span>
+              <span class="rule-text">A player may only be a member of <strong>one team</strong> at a time. Switching teams during an active event is not allowed.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#03</span>
+              <span class="rule-text">Team scores are the <strong>sum of all member scores.</strong> The leaderboard ranks teams, not individuals, during events.</span>
+            </li>
+            <li class="rule-item info">
+              <span class="rule-num">#04</span>
+              <span class="rule-text"><strong>Group lab instances</strong> are shared — all team members connect to the same Docker environment simultaneously.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Infrastructure  -->
+        <div class="rules-block" id="infrastructure">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Infrastructure Rules</h2>
+              <p>Responsible use of challenge environments</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item">
+              <span class="rule-num">#01</span>
+              <span class="rule-text">Challenge environments are for <strong>your use only.</strong> Do not share your lab URL or container credentials.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#02</span>
+              <span class="rule-text">Docker labs <strong>auto-terminate after 2 hours.</strong> You can restart them, but progress may not persist unless you save your work.</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num">#03</span>
+              <span class="rule-text"><strong>Do not attempt to break out of the container</strong> or pivot to other platform infrastructure. Scope is limited to the lab environment.</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#04</span>
+              <span class="rule-text">Resource-intensive attacks (e.g., massive brute-forcing, DoS) against lab targets are prohibited and may auto-terminate your instance.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!--  Violations  -->
+        <div class="rules-block" id="violations">
+          <div class="rules-block-header">
+            <div class="block-icon"></div>
+            <div>
+              <h2>Violations & Penalties</h2>
+              <p>Consequences for breaking the rules</p>
+            </div>
+          </div>
+
+          <ul class="rule-list">
+            <li class="rule-item danger">
+              <span class="rule-num"></span>
+              <span class="rule-text"><strong>Flag sharing / spoiling</strong> other participants → Score reset + 7-day ban</span>
+            </li>
+            <li class="rule-item danger">
+              <span class="rule-num"></span>
+              <span class="rule-text"><strong>Attacking platform infrastructure</strong> → Immediate permanent ban + possible legal action</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num"></span>
+              <span class="rule-text"><strong>Abuse of hint system / automation bots</strong> → Score disqualification for that challenge</span>
+            </li>
+            <li class="rule-item warn">
+              <span class="rule-num"></span>
+              <span class="rule-text"><strong>Harassment or toxic behavior</strong> → Warning, then suspension based on severity</span>
+            </li>
+            <li class="rule-item">
+              <span class="rule-num">#01</span>
+              <span class="rule-text">All disputes must be raised via the official Discord support channel within <strong>24 hours</strong> of the incident.</span>
+            </li>
+          </ul>
+        </div>
+
+      </main>
+    </div><!-- /rules-section -->
+  </div><!-- /container -->
+
+  <!--  FOOTER  -->
+  <footer>
+    <p>© 2026 <a href="http://localhost:8002/index.html">CTF ARENA</a> · Internship Project Demo · Built with  for the cybersecurity community</p>
+  </footer>
+
+  <!-- Active sidebar highlighting on scroll -->
+  <script>
+    const sections = document.querySelectorAll('.rules-block');
+    const navLinks = document.querySelectorAll('.rules-nav a');
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-30% 0px -60% 0px' });
+
+    sections.forEach(s => observer.observe(s));
+  </script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth-state.js"></script>
+  <script src="js/analytics-tracker.js"></script>
+</body>
+</html>

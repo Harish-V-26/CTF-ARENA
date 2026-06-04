@@ -1,0 +1,171 @@
+{
+    "test1": {
+        "roomName": "Test Room",
+        "description": "type bye",
+        "roomCode": "test1",
+        "completionTime": 60,
+        "difficulty": "Medium",
+        "cloning": false,
+        "visibility": "Private",
+        "privateMessage": "",
+        "bannerUrl": "",
+        "avatarUrl": "",
+        "video1": null,
+        "video2": null,
+        "tasks": [
+            {
+                "id": 12345,
+                "title": "Task 1",
+                "description": "type bye",
+                "questions": [
+                    {
+                        "id": 12346,
+                        "text": "hi",
+                        "answer": "bye",
+                        "points": 10,
+                        "answer_hash": "scrypt:32768:8:1$GsxFVS0i3EWqWUkT$0e45e3f56f0638921024f46fa0f1a26f5aac3f401ec71c1254f8053843f14c587bce82f9be91800547464f8c25f58dd41ce688685f02c78d4416b10b455d54f3"
+                    }
+                ]
+            }
+        ],
+        "categories": []
+    },
+    "pentesting4s": {
+        "roomName": "Pentesting",
+        "description": "testing",
+        "roomCode": "pentesting4s",
+        "completionTime": 60,
+        "difficulty": "Info",
+        "cloning": false,
+        "visibility": "Private",
+        "privateMessage": "",
+        "bannerUrl": "",
+        "avatarUrl": "https://api.dicebear.com/7.x/identicon/svg?seed=0.10721272554202665",
+        "video1": null,
+        "video2": null,
+        "tasks": [
+            {
+                "id": 1780048444786,
+                "title": "New Task",
+                "description": "hi everyone",
+                "questions": [
+                    {
+                        "id": 1780048448646,
+                        "text": "hi",
+                        "answer": "bye",
+                        "points": 10,
+                        "answer_hash": "scrypt:32768:8:1$B4Qw2rAFoWz4J4CH$737ad17d68a8337c26999eac94aa2fa081d75c161a684b5aa4fcd2aea0771ee813cd9374b5a11b54da7cea96622183903edf371bc9d956a9db3ed8a589fa4691"
+                    }
+                ]
+            }
+        ],
+        "categories": []
+    },
+    "": {
+        "roomName": "",
+        "description": "HI bye",
+        "roomCode": "",
+        "completionTime": 60,
+        "difficulty": "Medium",
+        "cloning": false,
+        "visibility": "Private",
+        "privateMessage": "",
+        "bannerUrl": "",
+        "avatarUrl": "",
+        "video1": null,
+        "video2": null,
+        "tasks": [
+            {
+                "title": "New Task",
+                "description": "",
+                "questions": [
+                    {
+                        "text": "Hi",
+                        "answer": "BYE",
+                        "points": 10,
+                        "answer_hash": "scrypt:32768:8:1$wNvPngxEh9hIuQtU$bf1fc6cb1a73bfc9eef902182aee63309daaad76287b2a53826b8db572ba0611ae6855d30689073c357f8cc4a25fbb57829adb59a9bc07dd23b88cb445ecb693"
+                    }
+                ]
+            }
+        ],
+        "categories": []
+    },
+    "test-room": {
+        "roomName": "",
+        "roomCode": "test-room",
+        "tasks": [
+            {
+                "title": "Task 1",
+                "description": "HI bye",
+                "questions": [
+                    {
+                        "text": "Hi",
+                        "answer": "BYE",
+                        "points": 10,
+                        "answer_hash": "scrypt:32768:8:1$NE3FvVwzwSxqYVcq$b11371374b60fe92a3cd339f6329bd0019e7504f58f3fc109c4331b34ea2445fcdc8563e6b31bfc2d1ed90c7e8d25ad7150d35c05757e62d7f30069ef07f0fad"
+                    }
+                ]
+            }
+        ]
+    },
+    "new-room": {
+        "roomName": "test",
+        "description": "testing \n",
+        "roomCode": "new-room",
+        "completionTime": 60,
+        "difficulty": "Medium",
+        "cloning": false,
+        "visibility": "Private",
+        "privateMessage": "",
+        "video1": null,
+        "video2": null,
+        "tasks": [
+            {
+                "id": 1780247923519,
+                "title": "New Task",
+                "description": "",
+                "questions": [
+                    {
+                        "id": 1780247925544,
+                        "text": "hi",
+                        "answer": "bye",
+                        "points": 10,
+                        "answer_hash": "scrypt:32768:8:1$ENllCfRBSeMOFcc2$4411d9fc3edda3ae0b3ad9c42a1b35d4252d30e4cb9f583595c19284ca951d9ecc020c73640de1c1e2451de9845353f652a2983959b59a0f4950f5334ad6cbee"
+                    }
+                ]
+            }
+        ],
+        "categories": []
+    },
+    "12345": {
+        "roomName": "New",
+        "description": "hi",
+        "roomCode": "12345",
+        "completionTime": 60,
+        "difficulty": "Easy",
+        "cloning": false,
+        "visibility": "Public",
+        "privateMessage": "try this",
+        "bannerUrl": "",
+        "avatarUrl": "https://api.dicebear.com/7.x/identicon/svg?seed=0.8952937060917182",
+        "video1": null,
+        "video2": null,
+        "tasks": [
+            {
+                "id": 1780292071018,
+                "title": "New Task",
+                "description": "Try this Questions",
+                "questions": [
+                    {
+                        "id": 1780292083610,
+                        "text": "What is flag?",
+                        "answer": "CTF{flag}",
+                        "points": 10,
+                        "answer_hash": "scrypt:32768:8:1$iykwIMglQ87HmqB6$c672aa95d0f49353e92cde92189dac786cec07ec638c11e13b86ec6f441a7763236ba62322f22f781824a35fc336be092adee00037a822712cdf8f12b456a03d"
+                    }
+                ]
+            }
+        ],
+        "categories": []
+    }
+}
