@@ -88,6 +88,7 @@
             <a href="challenges/web/beginner/operation-shadow-gate-lab.html" class="start-btn" id="start-shadow-gate">Start →</a>
           </div>
         </div>
+
         <!-- OWASP Top 10 Part 1 (1-5) -->
         <div class="challenge-card" data-category="web" id="card-owasp-top5-challenge"
           onclick="window.location.href='challenges/web/easy/owasp-top5-challenge-lab.html'" style="cursor: pointer;">
@@ -282,6 +283,10 @@
               "Software & Data Integrity Failures (Insecure Deserialization)",
               "Security Logging & Monitoring Failures (Log Injection & Alert Disabling)"
           ];
+      } else if (title.includes("Reverse Engineering")) {
+          learnList = ["How Binaries Are Compiled", "Extracting Secrets with strings", "Disassembly with objdump & Ghidra", "Library Call Tracing with ltrace", "CTF Crackme Methodology"];
+          envTitle = "Theory & Simulated Lab";
+          envDesc = "Work through 5 guided lessons covering core RE concepts, simulated command outputs, and knowledge checks. No Docker needed.";
       } else if (title.includes("OWASP")) {
           learnList = ["Broken Access Control", "Cryptographic Failures", "Injection Attacks", "Insecure Design Principles"];
       } else if (title.includes("Web Security")) {

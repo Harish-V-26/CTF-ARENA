@@ -690,6 +690,28 @@
             <a href="challenges/web/easy/owasp-part2-hub.html" class="start-btn" id="start-learn-owasp-part2">Start →</a>
           </div>
         </div>
+
+        <!-- Intro to Reverse Engineering -->
+        <div class="challenge-card" data-category="web" id="card-learn-reverse-engineering"
+          onclick="window.location.href='challenges/web/easy/reverse-engineering-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #6c5ce7, #a29bfe, #fd79a8);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Reverse Eng.</span>
+              <span class="difficulty-tag diff-medium" style="background: rgba(108,92,231,0.15); color: #a29bfe;">Easy (Practical)</span>
+            </div>
+            <div class="challenge-title">Intro to Reverse Engineering</div>
+            <div class="challenge-desc">
+              Learn how compiled binaries work from the ground up. Use <code>strings</code>, <code>objdump</code>, <code>ltrace</code>, and Ghidra to find hidden flags and understand crackme methodology — no source code needed!
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">300 pts</span>
+            <span class="solve-count"> 5 Lessons</span>
+            <a href="challenges/web/easy/reverse-engineering-lab.html" class="start-btn" id="start-learn-reverse-engineering">Start →</a>
+          </div>
+        </div>
+
       </div><!-- /challenges-grid-easy-practical -->
 
     </div>
@@ -908,6 +930,10 @@
           learnList = ["Dictionary Attacks", "Credential Stuffing", "Rate Limiting Bypass", "Using Hydra & Burp Suite"];
       } else if (title.includes("OWASP Top 10 Part 1")) {
           learnList = ["Broken Access Control (IDOR)", "Cryptographic Failures (ROT13 & Hashing)", "SQL Injection (Tautology Bypass)", "Security Misconfiguration (Directory Listing)", "Software Supply Chain Failures (PyYAML Deserialization)"];
+      } else if (title.includes("Reverse Engineering")) {
+          learnList = ["How Binaries Are Compiled (Source → ELF)", "Extracting Secrets with strings & grep", "Disassembly with objdump (Intel syntax)", "Library Call Tracing with ltrace", "CTF Crackme Methodology & Ghidra"];
+          envTitle = "Docker Lab Environment";
+          envDesc = "Spin up a private Kali Linux Attack Box container pre-loaded with reverse engineering utilities and a target practice binary.";
       } else if (title.includes("OWASP")) {
           learnList = ["Broken Access Control", "Cryptographic Failures", "Injection Attacks", "Insecure Design Principles"];
       } else if (title.includes("Web Security")) {
