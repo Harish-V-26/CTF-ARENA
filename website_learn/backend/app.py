@@ -17,11 +17,7 @@ from routes.nmap_deepdive import nmap_deepdive_bp
 from routes.csrf import csrf_bp
 from routes.ssrf import ssrf_bp
 from routes.python_hacking import python_hacking_bp
-<<<<<<< HEAD:website_learn/backend/app.py
-=======
 from routes.binary_target import binary_target_bp
-
->>>>>>> ff9e750 (binary):backend/app.py
 from routes.insecure_design import insecure_design_bp
 from routes.auth_failures import auth_failures_bp
 from routes.integrity_failures import integrity_failures_bp
