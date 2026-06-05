@@ -267,7 +267,7 @@
       document.getElementById('ch-pts').textContent = l.points + ' pts';
       document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
       document.getElementById('cur-num').textContent = idx+1;
-      document.getElementById('reading-text').innerHTML = l.html || '';
+      document.getElementById('reading-text').innerHTML=l.html||l.content||'';
 
       // Only display the Docker Kali panel on the first lesson page
       const kaliPanel = document.getElementById('kali-panel');

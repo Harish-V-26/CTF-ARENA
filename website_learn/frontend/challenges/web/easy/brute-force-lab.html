@@ -274,7 +274,7 @@ async function stopKali() {
     document.getElementById('ch-pts').textContent = l.points + ' pts';
     document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
     document.getElementById('cur-num').textContent = idx+1;
-    document.getElementById('reading-text').innerHTML = l.content;
+    document.getElementById('reading-text').innerHTML=l.html||l.content||'';
 
     const qc = document.getElementById('questions-container');
     qc.innerHTML = l.questions.map((q, qi) => `

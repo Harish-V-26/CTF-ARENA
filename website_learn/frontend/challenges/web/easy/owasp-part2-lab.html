@@ -195,7 +195,7 @@ let cur=0;const TOTAL=LESSONS.length;const storageKey = "ctf_progress_" + window
   if(answered.length !== LESSONS.length) { answered = LESSONS.map(l=>l.questions.map(()=>false)); }
 function buildSidebar(){document.getElementById('sidebar-nav').innerHTML=LESSONS.map((l,i)=>`<div class="module-group"><div class="module-label" id="mod-${i}"><span class="mod-num">${String(i+1).padStart(2,'0')}</span> ${l.title}</div><div class="nav-item${i===0?' active':''}" id="nav-${i}" onclick="goTo(${i})"><div class="nav-dot"></div><span class="nav-label">${l.title}</span><span class="nav-pts">${l.points} pts</span></div></div>`).join('')}
 function buildDots(){document.getElementById('step-dots').innerHTML=LESSONS.map((_,i)=>`<div class="step-dot${i===0?' current':''}" id="dot-${i}"></div>`).join('');document.getElementById('tot-num').textContent=TOTAL}
-function renderLesson(idx){const l=LESSONS[idx];document.getElementById('ch-title').textContent=l.title;document.getElementById('ch-pts').textContent=l.points+' pts';document.getElementById('ch-crumb').textContent=`Lesson ${idx+1}`;document.getElementById('cur-num').textContent=idx+1;document.getElementById('reading-text').innerHTML=l.html||'';
+function renderLesson(idx){const l=LESSONS[idx];document.getElementById('ch-title').textContent=l.title;document.getElementById('ch-pts').textContent=l.points+' pts';document.getElementById('ch-crumb').textContent=`Lesson ${idx+1}`;document.getElementById('cur-num').textContent=idx+1;document.getElementById('reading-text').innerHTML=l.html||l.content||'';
   
   // Try to restore any active containers if this lesson has a launch button
   ['insecure-design', 'auth-failures', 'integrity-failures', 'logging-failures', 'error-handling'].forEach(checkRestored);
@@ -210,7 +210,7 @@ function totalDone(){return answered.flat().filter(Boolean).length}
 function totalQs(){return answered.flat().length}
 function updateProgress(){const p=Math.round(totalDone()/totalQs()*100);document.getElementById('overall-fill').style.width=p+'%';document.getElementById('overall-pct').textContent=p+'%';for(let i=0;i<TOTAL;i++){if(lessonDone(i)){document.getElementById(`nav-${i}`).classList.add('completed');document.getElementById(`mod-${i}`).classList.add('completed')}}if(totalDone()===totalQs())showCompletion()}
 function goTo(idx){updateNav(cur,idx);cur=idx;renderLesson(cur);document.getElementById('btn-prev').disabled=cur===0;document.getElementById('btn-next').textContent=cur===TOTAL-1?'Finish →':'Next →';document.querySelector('.room-body').scrollTop=0}
-function navigate(dir){const next=cur+dir;if(next>=0&&next<TOTAL)goTo(next);else if(dir===1)showCompletion()}
+function navigate(dir){const next=cur+dir;if(next>=0&&next<TOTAL)goTo(next);else if(dir===1){if(typeof totalDone==='function'&&typeof totalQs==='function'&&totalDone()!==totalQs()){alert('Please complete all questions before finishing the room.');}else{showCompletion();}}}
 function showCompletion(){
     if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);document.getElementById('lesson-panel').style.display='none';document.getElementById('score-pill').textContent='840 / 840 pts';document.getElementById('completion-card').classList.add('show');document.getElementById('btn-next').disabled=true;document.getElementById('btn-prev').disabled=true;document.getElementById('overall-fill').style.width='100%';document.getElementById('overall-pct').textContent='100%';document.querySelector('.room-body').scrollTop=0}
 buildSidebar();buildDots();renderLesson(0);updateProgress();
