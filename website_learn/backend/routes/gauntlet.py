@@ -30,21 +30,27 @@ def start_gauntlet():
             "ctflabs/gauntlet-target:latest",
             detach=True,
             ports={
-                '80/tcp':   8000,
-                '21/tcp':   21,
-                '8080/tcp': 8081,
-                '9090/tcp': 9000,
+                '80/tcp':   None,
+                '21/tcp':   None,
+                '8080/tcp': None,
+                '9090/tcp': None,
             },
             remove=True
         )
+        container.reload()
+        ports = container.attrs['NetworkSettings']['Ports']
+        http_port = int(ports['80/tcp'][0]['HostPort'])
+        ftp_port = int(ports['21/tcp'][0]['HostPort'])
+        idor_port = int(ports['8080/tcp'][0]['HostPort'])
+        upload_port = int(ports['9090/tcp'][0]['HostPort'])
         return jsonify({
             "status": "success",
             "container_id": container.id,
             "ports": {
-                "http":   8000,
-                "ftp":    21,
-                "idor":   8081,
-                "upload": 9000
+                "http":   http_port,
+                "ftp":    ftp_port,
+                "idor":   idor_port,
+                "upload": upload_port
             }
         })
     except Exception as e:
