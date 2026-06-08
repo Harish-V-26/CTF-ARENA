@@ -35,7 +35,7 @@ def start_kali():
     try:
         # Resolve absolute paths to avoid working directory issues
         import os
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
         kali_path = os.path.join(base_dir, "kalilinux")
         target_path = os.path.join(base_dir, "docker", "kali-advance-target")
 
@@ -168,7 +168,7 @@ def start_kali_advance_target():
         return jsonify({"status": "error", "message": "Docker daemon is not running or accessible."}), 500
     try:
         import os
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
         target_path = os.path.join(base_dir, "docker", "kali-advance-target")
 
         # Build the custom target image if it does not exist locally
@@ -231,7 +231,7 @@ def start_kali_advance_kali():
         target_ip = data.get("target_ip", "127.0.0.1")
 
         import os
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
         kali_path = os.path.join(base_dir, "kalilinux")
 
         # Build the custom kali-rolling image if it does not exist locally

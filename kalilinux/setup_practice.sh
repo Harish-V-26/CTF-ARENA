@@ -158,3 +158,27 @@ chmod +x /workspace/network_practice/daemon_loop.sh
 echo "========================================="
 echo "  Kali Lab Practice Files Generated!"
 echo "========================================="
+
+# ==========================================================
+# 5. Malware Analysis Practice (suspicious_bin)
+# ==========================================================
+mkdir -p /workspace/malware_analysis
+
+cat << 'PROG_EOF' > /workspace/malware_analysis/malware.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    // Hardcoded strings for the student to find
+    const char *c2_server = "http://malicious-c2-server.com/drop";
+    const char *registry_key = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Malware";
+    const char *flag = "CTF{st4t1c_4n4lys1s_m4st3r}";
+    
+    printf("Starting system scan...\n");
+    return 0;
+}
+PROG_EOF
+
+gcc -o /workspace/malware_analysis/suspicious_bin /workspace/malware_analysis/malware.c
+rm /workspace/malware_analysis/malware.c
