@@ -2,611 +2,191 @@ const LESSONS = [
   {
     title: "Path Traversal Basics",
     points: 10,
-    content: `Imagine a giant public library. The librarian says, "You can read any book in the 'Children's Section'." When you want a book, you give the librarian a slip of paper with the book's title, and they fetch it from that section. But what if you are a sneaky hacker? Instead of writing a book title, you write, "Go out of the Children's Section, walk into the Staff Only room, and bring me the Secret Employee Rulebook!" If the librarian is acting like a robot and blindly follows your exact instructions without checking the rules, they will actually go grab the secret book and hand it to you! In computers, this is called Directory Traversal. A website might let you ask for an image or a document. But if you type special commands like "../" (which means "go backwards out of this room"), a lazy server will actually walk backwards into its own private folders and hand you its most secret, locked files!
-
-WHAT IS IT?
-Web servers serve files from a specific folder (e.g., /var/www/html). If an app takes a filename from user input without validation:
-  http://site.com/view?file=report.pdf
-
-An attacker traverses directories using ../ (dot-dot-slash):
-  http://site.com/view?file=../../../etc/passwd
-
-Each ../ moves up one directory level in the filesystem tree.
-
-SENSITIVE FILES ON LINUX:
-  /etc/passwd        → System user accounts (world-readable)
-  /etc/shadow        → Password hashes (requires root)
-  /etc/hostname      → Machine hostname
-  /etc/hosts         → Host resolution table
-  /proc/self/environ → Environment variables (may contain secrets/API keys)
-  /proc/self/cmdline → Current process command line
-  ~/.ssh/id_rsa      → SSH private key (if readable)
-  /var/log/apache2/access.log → Web server logs
-
-SENSITIVE FILES ON WINDOWS:
-  C:\\Windows\\win.ini          → Windows configuration
-  C:\\boot.ini                 → Boot configuration (older Windows)
-  C:\\Windows\\System32\\drivers\\etc\\hosts → Host resolution
-  C:\\inetpub\\wwwroot\\web.config → IIS config (may contain DB creds)
-
-REAL-WORLD IMPACT:
-  - Reading source code to find further vulnerabilities
-  - Stealing configuration files with database credentials
-  - Viewing SSH private keys to gain server access
-  - Reading log files to find sensitive information
-
-Modern web frameworks often have built-in protections, but custom file-serving code is frequently vulnerable.`,
     html: `<div class="htb-diagram-container"><img src="../../../assets/dir_basics_diagram.png" alt="Directory Traversal Basics"></div>
-
-Imagine a giant public library. The librarian says, "You can read any book in the 'Children's Section'." When you want a book, you give the librarian a slip of paper with the book's title, and they fetch it from that section. But what if you are a sneaky hacker? Instead of writing a book title, you write, "Go out of the Children's Section, walk into the Staff Only room, and bring me the Secret Employee Rulebook!" If the librarian is acting like a robot and blindly follows your exact instructions without checking the rules, they will actually go grab the secret book and hand it to you! In computers, this is called Directory Traversal. A website might let you ask for an image or a document. But if you type special commands like "../" (which means "go backwards out of this room"), a lazy server will actually walk backwards into its own private folders and hand you its most secret, locked files!
-
-WHAT IS IT?
-Web servers serve files from a specific folder (e.g., /var/www/html). If an app takes a filename from user input without validation:
-  http://site.com/view?file=report.pdf
-
-An attacker traverses directories using ../ (dot-dot-slash):
-  http://site.com/view?file=../../../etc/passwd
-
-Each ../ moves up one directory level in the filesystem tree.
-
-SENSITIVE FILES ON LINUX:
-  /etc/passwd        → System user accounts (world-readable)
-  /etc/shadow        → Password hashes (requires root)
-  /etc/hostname      → Machine hostname
-  /etc/hosts         → Host resolution table
-  /proc/self/environ → Environment variables (may contain secrets/API keys)
-  /proc/self/cmdline → Current process command line
-  ~/.ssh/id_rsa      → SSH private key (if readable)
-  /var/log/apache2/access.log → Web server logs
-
-SENSITIVE FILES ON WINDOWS:
-  C:\\Windows\\win.ini          → Windows configuration
-  C:\\boot.ini                 → Boot configuration (older Windows)
-  C:\\Windows\\System32\\drivers\\etc\\hosts → Host resolution
-  C:\\inetpub\\wwwroot\\web.config → IIS config (may contain DB creds)
-
-REAL-WORLD IMPACT:
-  - Reading source code to find further vulnerabilities
-  - Stealing configuration files with database credentials
-  - Viewing SSH private keys to gain server access
-  - Reading log files to find sensitive information
-
-Modern web frameworks often have built-in protections, but custom file-serving code is frequently vulnerable.`,
+      <h3>What is Directory Traversal?</h3>
+      <p>Directory Traversal (or Path Traversal) is a web security vulnerability that allows an attacker to read arbitrary files on the server that is running an application. By manipulating variables that reference files with "dot-dot-slash" (../) sequences, an attacker can step out of the intended application directory and access sensitive operating system files, configuration files containing passwords, or source code.</p>
+      <p>Imagine a giant public library. The librarian says, "You can read any book in the 'Children's Section'." When you want a book, you give the librarian a slip of paper with the book's title, and they fetch it from that section. But what if you are a sneaky hacker? Instead of writing a book title, you write, "Go out of the Children's Section, walk into the Staff Only room, and bring me the Secret Employee Rulebook!" If the librarian is acting like a robot and blindly follows your exact instructions without checking the rules, they will actually go grab the secret book and hand it to you! In computers, this is called Directory Traversal. A website might let you ask for an image. But if you type special commands like "../" (which means "go backwards out of this room"), a lazy server will actually walk backwards into its own private folders and hand you its most secret, locked files!</p>
+      <h3>How It Works</h3>
+      <div class="step-block">
+        <div class="step-num">Step 1</div>
+        <div class="step-body"><strong>Identify File Parameter</strong><br>An application serves a file based on user input: <code>http://site.com/view?file=report.pdf</code></div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Step 2</div>
+        <div class="step-body"><strong>Inject Traversal Sequence</strong><br>An attacker uses <code>../</code> to move up the directory tree: <code>http://site.com/view?file=../../../etc/passwd</code></div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Step 3</div>
+        <div class="step-body"><strong>Access Sensitive Files</strong><br>The server resolves the path and returns the contents of the target file, completely bypassing access controls.</div>
+      </div>
+      <h3>Sensitive Targets</h3>
+      <ul>
+        <li><strong>Linux:</strong> <code>/etc/passwd</code> (User info), <code>/etc/shadow</code> (Passwords), <code>~/.ssh/id_rsa</code> (SSH Keys)</li>
+        <li><strong>Windows:</strong> <code>C:\\Windows\\win.ini</code>, <code>C:\\inetpub\\wwwroot\\web.config</code> (IIS config)</li>
+      </ul>`,
     questions: [
-      { q: "What symbol sequence is used to move up one directory level in path traversal?", a: "../" },
-      { q: "What Linux file contains system user account information?", a: "/etc/passwd" },
-      { q: "On Windows, what IIS config file may contain database credentials?", a: "web.config" },
-      { q: "What Linux file contains environment variables that may include secrets?", a: "/proc/self/environ" },
-      { q: "Why is path traversal particularly dangerous when combined with configuration files?", a: "Config files often contain database credentials or API keys" }
+      { q: "What symbol sequence is used to move up one directory level in path traversal?", a: "../", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What Linux file contains system user account information?", a: "/etc/passwd", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "On Windows, what IIS config file may contain database credentials?", a: "web.config", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What Linux file contains environment variables that may include secrets?", a: "/proc/self/environ", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Why is path traversal particularly dangerous when combined with configuration files?", a: "Config files often contain database credentials or API keys", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
     title: "Defeating Path Traversal Filters",
     points: 10,
-    content: `Developers try to block path traversal by filtering ../. Attackers have many creative bypass techniques.
-
-BYPASS 1 — URL ENCODING:
-  .  → %2e     /  → %2f     \\ → %5c
-  Example: ../../../etc/passwd → %2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd
-
-BYPASS 2 — DOUBLE URL ENCODING:
-  If the app decodes input twice:
-  %2e → %252e  (% becomes %25 after one decode)
-  ../ → %252e%252e%252f
-
-BYPASS 3 — ABSOLUTE PATHS:
-  Skip traversal entirely: /etc/passwd directly
-  (when the app blindly concatenates base_path + user_input)
-
-BYPASS 4 — NESTED TRAVERSAL:
-  If the filter removes ../ once (non-recursively):
-  ....//  → after one removal becomes ../
-  ..././  → after one removal becomes ../
-
-BYPASS 5 — UNICODE/UTF-8 OVERLONG ENCODING:
-  ..%c0%af  (overlong encoding of / on older systems)
-  ..%ef%bc%8f  (Unicode full-width slash)
-
-BYPASS 6 — NULL BYTE INJECTION (old PHP trick):
-  ../../../etc/passwd%00.jpg
-  The %00 terminates the string; .jpg is ignored.
-
-BYPASS 7 — WINDOWS BACKSLASH:
-  ..\\..\\..\\ (Windows paths)
-  ..//../../  (mixed slashes)
-
-PREVENTION BEST PRACTICES:
-  - Use a whitelist of allowed filenames (never blacklists)
-  - Resolve the canonical path, then check it starts with an allowed base
-  - Avoid passing user input directly to file functions
-  - Use a dedicated file access library with built-in protections`,
     html: `<div class="htb-diagram-container"><img src="../../../assets/dir_filters_diagram.png" alt="Defeating Path Traversal Filters"></div>
-
-Developers try to block path traversal by filtering ../. Attackers have many creative bypass techniques.
-
-BYPASS 1 — URL ENCODING:
-  .  → %2e     /  → %2f     \\ → %5c
-  Example: ../../../etc/passwd → %2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd
-
-BYPASS 2 — DOUBLE URL ENCODING:
-  If the app decodes input twice:
-  %2e → %252e  (% becomes %25 after one decode)
-  ../ → %252e%252e%252f
-
-BYPASS 3 — ABSOLUTE PATHS:
-  Skip traversal entirely: /etc/passwd directly
-  (when the app blindly concatenates base_path + user_input)
-
-BYPASS 4 — NESTED TRAVERSAL:
-  If the filter removes ../ once (non-recursively):
-  ....//  → after one removal becomes ../
-  ..././  → after one removal becomes ../
-
-BYPASS 5 — UNICODE/UTF-8 OVERLONG ENCODING:
-  ..%c0%af  (overlong encoding of / on older systems)
-  ..%ef%bc%8f  (Unicode full-width slash)
-
-BYPASS 6 — NULL BYTE INJECTION (old PHP trick):
-  ../../../etc/passwd%00.jpg
-  The %00 terminates the string; .jpg is ignored.
-
-BYPASS 7 — WINDOWS BACKSLASH:
-  ..\\..\\..\\ (Windows paths)
-  ..//../../  (mixed slashes)
-
-PREVENTION BEST PRACTICES:
-  - Use a whitelist of allowed filenames (never blacklists)
-  - Resolve the canonical path, then check it starts with an allowed base
-  - Avoid passing user input directly to file functions
-  - Use a dedicated file access library with built-in protections`,
+      <h3>Evading Developer Restrictions</h3>
+      <p>Developers often try to prevent directory traversal by simply blocking or filtering the exact ` + "`" + `../` + "`" + ` string. However, attackers have developed numerous creative evasion techniques to bypass these naive filters. By using URL encoding, nested sequences, or alternative path separators, attackers can trick the application into accepting the payload, allowing the underlying operating system to ultimately resolve the path back to the intended malicious directory jump.</p>
+      <p>Imagine a security guard who is told to confiscate any note containing the exact words "Secret Room." A clever spy wouldn't use those words. Instead, they might write the note in a foreign language, or use invisible ink, or chop the word "Secret" in half across two lines. When the guard looks at the note, they don't see the banned words, so they let it pass. But when the note reaches the inside agent, they translate the foreign language or decode the invisible ink, and instantly know to go to the Secret Room! In web hacking, attackers use URL encoding or nested symbols (like ` + "`" + `....//` + "`" + `) as their "foreign language" to slip right past the website's security filters.</p>
+      <h3>Common Evasion Techniques</h3>
+      <div class="step-block">
+        <div class="step-num">Bypass 1</div>
+        <div class="step-body"><strong>URL Encoding</strong><br>Encode characters: <code>.</code> → <code>%2e</code>, <code>/</code> → <code>%2f</code>.<br>Example: <code>%2e%2e%2f%2e%2e%2fetc%2fpasswd</code></div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Bypass 2</div>
+        <div class="step-body"><strong>Nested Traversal</strong><br>If the filter removes <code>../</code> non-recursively, use <code>....//</code> or <code>..././</code>. When the inner <code>../</code> is removed, the outer characters collapse to form a new <code>../</code> sequence.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Bypass 3</div>
+        <div class="step-body"><strong>Null Byte Injection</strong><br>Old PHP applications can be tricked by adding a null byte terminator: <code>../../../etc/passwd%00.jpg</code>. The application sees a valid <code>.jpg</code> extension, but the OS stops reading the string at the null byte.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Bypass 4</div>
+        <div class="step-body"><strong>Absolute Paths</strong><br>Skip traversal entirely. If the application blindly concatenates strings, simply providing <code>/etc/passwd</code> might bypass relative path checks.</div>
+      </div>`,
     questions: [
-      { q: "What encoding replaces '.' with '%2e' and '/' with '%2f'?", a: "URL encoding" },
-      { q: "What character acts as a string terminator in old PHP applications (null byte injection)?", a: "Null byte (%00)" },
-      { q: "What is better for preventing path traversal: a whitelist or a blacklist of filenames?", a: "Whitelist" },
-      { q: "What nested traversal payload bypasses a filter that only removes ../ once?", a: "....// (becomes ../ after one removal)" },
-      { q: "What approach resolves the full file path and checks if it starts within an allowed directory?", a: "Canonical path validation" }
+      { q: "What encoding replaces '.' with '%2e' and '/' with '%2f'?", a: "URL encoding", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What character acts as a string terminator in old PHP applications (null byte injection)?", a: "Null byte (%00)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is better for preventing path traversal: a whitelist or a blacklist of filenames?", a: "Whitelist", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What nested traversal payload bypasses a filter that only removes ../ once?", a: "....// (becomes ../ after one removal)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What approach resolves the full file path and checks if it starts within an allowed directory?", a: "Canonical path validation", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
     title: "Directory Traversal Tools & Testing",
     points: 10,
-    content: `Professional security testers use specialized tools to discover and exploit directory traversal vulnerabilities.
-
-TESTING TOOLS:
-
-Burp Suite (Manual Testing):
-  - Intercept file requests in the proxy
-  - Use Repeater to test ../ payloads manually
-  - Use Intruder with a traversal wordlist to automate payload testing
-  - Scanner can automatically detect some traversal flaws
-
-dotdotpwn (Automated Fuzzer):
-  - Specialized tool for directory traversal testing
-  - Can test HTTP, FTP, TFTP, and other protocols
-  - Uses extensive payloads including encoded variants
-  Example: dotdotpwn -m http -h target.com -U "/view?file=TRAVERSAL"
-
-ffuf / gobuster (Directory Fuzzing):
-  - Fuzz file parameter values with traversal payloads
-  Example: ffuf -u "http://site.com/file?path=FUZZ" -w traversal-payloads.txt
-
-DETECTION SIGNS:
-  - URL parameters containing filenames: ?file=, ?path=, ?doc=, ?page=, ?template=
-  - Applications serving static files dynamically
-  - PDF viewers, log viewers, configuration editors
-
-COMPLETE PREVENTION:
-
-Method 1 — Canonical Path Check (Python example):
-  import os
-  base = "/var/www/files"
-  user_input = request.args.get("file")
-  requested = os.path.realpath(os.path.join(base, user_input))
-  if not requested.startswith(base):
-      abort(403)  # Block the request
-
-Method 2 — Filename-Only Allowlist:
-  ALLOWED = {"report.pdf", "manual.pdf", "terms.txt"}
-  if user_input not in ALLOWED:
-      abort(403)
-
-Method 3 — Indirect File Reference:
-  ?file=1 → maps to report.pdf (server-side mapping)
-  ?file=2 → maps to manual.pdf
-  The actual filename never comes from user input.`,
     html: `<div class="htb-diagram-container"><img src="../../../assets/dir_tools_diagram.png" alt="Directory Traversal Testing & Tools"></div>
-
-Professional security testers use specialized tools to discover and exploit directory traversal vulnerabilities.
-
-TESTING TOOLS:
-
-Burp Suite (Manual Testing):
-  - Intercept file requests in the proxy
-  - Use Repeater to test ../ payloads manually
-  - Use Intruder with a traversal wordlist to automate payload testing
-  - Scanner can automatically detect some traversal flaws
-
-dotdotpwn (Automated Fuzzer):
-  - Specialized tool for directory traversal testing
-  - Can test HTTP, FTP, TFTP, and other protocols
-  - Uses extensive payloads including encoded variants
-  Example: dotdotpwn -m http -h target.com -U "/view?file=TRAVERSAL"
-
-ffuf / gobuster (Directory Fuzzing):
-  - Fuzz file parameter values with traversal payloads
-  Example: ffuf -u "http://site.com/file?path=FUZZ" -w traversal-payloads.txt
-
-DETECTION SIGNS:
-  - URL parameters containing filenames: ?file=, ?path=, ?doc=, ?page=, ?template=
-  - Applications serving static files dynamically
-  - PDF viewers, log viewers, configuration editors
-
-COMPLETE PREVENTION:
-
-Method 1 — Canonical Path Check (Python example):
-  import os
-  base = "/var/www/files"
-  user_input = request.args.get("file")
-  requested = os.path.realpath(os.path.join(base, user_input))
-  if not requested.startswith(base):
-      abort(403)  # Block the request
-
-Method 2 — Filename-Only Allowlist:
-  ALLOWED = {"report.pdf", "manual.pdf", "terms.txt"}
-  if user_input not in ALLOWED:
-      abort(403)
-
-Method 3 — Indirect File Reference:
-  ?file=1 → maps to report.pdf (server-side mapping)
-  ?file=2 → maps to manual.pdf
-  The actual filename never comes from user input.`,
+      <h3>Testing Methodology</h3>
+      <p>Professional security testers use specialized methodologies and automated tools to discover directory traversal vulnerabilities at scale. Testing involves fuzzing suspected file-serving parameters with extensive wordlists containing thousands of traversal variants, encodings, and common sensitive file paths across various operating systems.</p>
+      <p>Imagine a master locksmith trying to crack a safe. They don't just try one key; they have a massive keychain with thousands of slightly different skeleton keys, and they use a fast robotic arm to try every single one in seconds! Hackers do the same thing using tools like Burp Suite Intruder or ffuf. They feed these tools a massive list of different ` + "`" + `../` + "`" + ` combinations, and the tool rapidly fires them at the website until it finds the exact "skeleton key" that breaks through the server's defenses.</p>
+      <h3>Professional Tools</h3>
+      <div class="step-block">
+        <div class="step-num">Tool 1</div>
+        <div class="step-body"><strong>Burp Suite Intruder</strong><br>Intercept the file request in the Burp Proxy, send it to Intruder, and automate payload testing using a dedicated traversal wordlist.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Tool 2</div>
+        <div class="step-body"><strong>dotdotpwn</strong><br>A specialized automated fuzzer explicitly designed for directory traversal testing across HTTP, FTP, TFTP, and other protocols.<br><code>dotdotpwn -m http -h target.com -U "/view?file=TRAVERSAL"</code></div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Tool 3</div>
+        <div class="step-body"><strong>ffuf / gobuster</strong><br>Fuzz file parameter values with traversal payloads.<br><code>ffuf -u "http://site.com/file?path=FUZZ" -w payloads.txt</code></div>
+      </div>
+      <h3>Detection Signs</h3>
+      <ul>
+        <li>Look for URL parameters containing filename references: <code>?file=</code>, <code>?path=</code>, <code>?doc=</code>, <code>?page=</code></li>
+        <li>Identify applications serving static files dynamically (e.g., PDF viewers, image loaders, configuration editors).</li>
+      </ul>`,
     questions: [
-      { q: "What Burp Suite module is used to automate directory traversal payload testing?", a: "Intruder" },
-      { q: "What Python function resolves the absolute canonical path, eliminating all ../ segments?", a: "os.path.realpath()" },
-      { q: "What common URL parameter name suggests potential path traversal vulnerability?", a: "file (or path, doc, page, template)" },
-      { q: "What prevention method uses numeric IDs instead of filenames, so user input never includes a real path?", a: "Indirect file reference (mapping IDs to files server-side)" },
-      { q: "What HTTP status code should be returned when a traversal attempt is blocked?", a: "403 (Forbidden)" }
+      { q: "What Burp Suite module is used to automate directory traversal payload testing?", a: "Intruder", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What Python function resolves the absolute canonical path, eliminating all ../ segments?", a: "os.path.realpath()", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What common URL parameter name suggests potential path traversal vulnerability?", a: "file (or path, doc, page, template)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What prevention method uses numeric IDs instead of filenames, so user input never includes a real path?", a: "Indirect file reference (mapping IDs to files server-side)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What HTTP status code should be returned when a traversal attempt is blocked?", a: "403 (Forbidden)", hint: "Refer to the HTTP protocol details." }
     ]
   },
   {
     title: "Log Poisoning via Path Traversal",
     points: 10,
-    content: `Log Poisoning is an advanced attack that combines path traversal with Remote Code Execution (RCE). By reading log files through traversal, an attacker can escalate to full code execution.
-
-HOW LOG POISONING WORKS:
-  1. Attacker identifies path traversal vulnerability
-  2. Uses traversal to read Apache/Nginx access logs
-  3. Discovers the log stores the User-Agent header verbatim
-  4. Sends a request with a PHP payload in the User-Agent:
-        User-Agent: <?php system($_GET['cmd']); ?>
-  5. The PHP code is now saved inside the access log
-  6. Uses path traversal to include the log file:
-        ?file=../../../var/log/apache2/access.log&cmd=whoami
-  7. The server executes the PHP from the log — full RCE achieved!
-
-COMMON LOG FILE LOCATIONS:
-  Apache (Linux):
-    /var/log/apache2/access.log
-    /var/log/apache2/error.log
-  Nginx:
-    /var/log/nginx/access.log
-    /var/log/nginx/error.log
-  SSH:
-    /var/log/auth.log  (poisoned via SSH login attempts)
-    /var/log/secure    (CentOS/RHEL)
-  Mail:
-    /var/log/mail
-  PHP session files (also exploitable):
-    /var/lib/php/sessions/sess_SESSIONID
-
-SSH LOG POISONING:
-  ssh '<?php system($_GET["cmd"]); ?>'@target.com
-  (The invalid username is logged to /var/log/auth.log)
-  Then traverse to auth.log to trigger execution.
-
-PHPINFO() RACE CONDITION:
-  If phpinfo() is accessible, it reveals the temporary file location
-  of uploaded files. Attack: upload a PHP shell, race to include the
-  temp file before it is deleted. Requires fast scripting.
-
-WHY THIS MATTERS:
-  Path traversal + LFI (Local File Inclusion) = code execution
-  Always assume traversal can escalate to RCE if logs are readable.`,
     html: `<div class="htb-diagram-container"><img src="../../../assets/dir_poisoning_diagram.png" alt="Log Poisoning via LFI / Path Traversal"></div>
-
-Log Poisoning is an advanced attack that combines path traversal with Remote Code Execution (RCE). By reading log files through traversal, an attacker can escalate to full code execution.
-
-HOW LOG POISONING WORKS:
-  1. Attacker identifies path traversal vulnerability
-  2. Uses traversal to read Apache/Nginx access logs
-  3. Discovers the log stores the User-Agent header verbatim
-  4. Sends a request with a PHP payload in the User-Agent:
-        User-Agent: <?php system($_GET['cmd']); ?>
-  5. The PHP code is now saved inside the access log
-  6. Uses path traversal to include the log file:
-        ?file=../../../var/log/apache2/access.log&cmd=whoami
-  7. The server executes the PHP from the log — full RCE achieved!
-
-COMMON LOG FILE LOCATIONS:
-  Apache (Linux):
-    /var/log/apache2/access.log
-    /var/log/apache2/error.log
-  Nginx:
-    /var/log/nginx/access.log
-    /var/log/nginx/error.log
-  SSH:
-    /var/log/auth.log  (poisoned via SSH login attempts)
-    /var/log/secure    (CentOS/RHEL)
-  Mail:
-    /var/log/mail
-  PHP session files (also exploitable):
-    /var/lib/php/sessions/sess_SESSIONID
-
-SSH LOG POISONING:
-  ssh '<?php system($_GET["cmd"]); ?>'@target.com
-  (The invalid username is logged to /var/log/auth.log)
-  Then traverse to auth.log to trigger execution.
-
-PHPINFO() RACE CONDITION:
-  If phpinfo() is accessible, it reveals the temporary file location
-  of uploaded files. Attack: upload a PHP shell, race to include the
-  temp file before it is deleted. Requires fast scripting.
-
-WHY THIS MATTERS:
-  Path traversal + LFI (Local File Inclusion) = code execution
-  Always assume traversal can escalate to RCE if logs are readable.`,
+      <h3>Elevating Traversal to Code Execution</h3>
+      <p>Log Poisoning is an advanced exploitation technique that escalates a simple path traversal (or Local File Inclusion - LFI) vulnerability into full Remote Code Execution (RCE). An attacker intentionally triggers error messages or crafts specific web requests containing malicious code (like PHP snippets) that are written into the server's log files. The attacker then uses the path traversal vulnerability to force the application to read and execute the poisoned log file.</p>
+      <p>Imagine a hotel where the manager forces the receptionist to read the guestbook out loud every night. A hacker realizes this, so they write a dangerous magic spell inside the guestbook under a fake name. Later that night, when the manager tells the receptionist to read the guestbook out loud, the receptionist accidentally reads the magic spell, causing the entire hotel to explode! In web hacking, an attacker sneaks their computer code into the website's daily "log book." Then, they use Directory Traversal to force the website to read its own log book out loud. When the website reads the hacker's hidden code, it accidentally executes it, giving the hacker total control!</p>
+      <h3>The Attack Chain</h3>
+      <div class="step-block">
+        <div class="step-num">Phase 1</div>
+        <div class="step-body"><strong>Poison the Log</strong><br>Send a web request with a PHP payload injected into the <code>User-Agent</code> header: <code>User-Agent: &lt;?php system($_GET['cmd']); ?&gt;</code>. The web server blindly writes this verbatim into <code>/var/log/apache2/access.log</code>.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Phase 2</div>
+        <div class="step-body"><strong>Trigger Execution</strong><br>Use path traversal to include the poisoned log file: <code>?file=../../../var/log/apache2/access.log&cmd=whoami</code>.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Phase 3</div>
+        <div class="step-body"><strong>Alternative Poisoning</strong><br>Attempt SSH logins with a payload as the username: <code>ssh '&lt;?php system($_GET["cmd"]); ?&gt;'@target.com</code>. Traverse to <code>/var/log/auth.log</code> to execute the payload.</div>
+      </div>`,
     questions: [
-      { q: "What is the technique of injecting PHP code into a server log file called?", a: "Log poisoning" },
-      { q: "What HTTP header is commonly poisoned with PHP code in log poisoning attacks?", a: "User-Agent" },
-      { q: "What is the default Apache access log path on Linux systems?", a: "/var/log/apache2/access.log" },
-      { q: "What happens when a path traversal vulnerability reads a poisoned log file containing PHP code?", a: "The PHP code executes on the server (Remote Code Execution)" },
-      { q: "What Linux log file can be poisoned by making an SSH login attempt with PHP code as the username?", a: "/var/log/auth.log" }
+      { q: "What is the technique of injecting PHP code into a server log file called?", a: "Log poisoning", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What HTTP header is commonly poisoned with PHP code in log poisoning attacks?", a: "User-Agent", hint: "Refer to the HTTP protocol details." },
+      { q: "What is the default Apache access log path on Linux systems?", a: "/var/log/apache2/access.log", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What happens when a path traversal vulnerability reads a poisoned log file containing PHP code?", a: "The PHP code executes on the server (Remote Code Execution)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What Linux log file can be poisoned by making an SSH login attempt with PHP code as the username?", a: "/var/log/auth.log", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
     title: "Path Traversal in APIs & Cloud",
     points: 10,
-    content: `Path traversal isn't limited to classic web servers — it appears in modern REST APIs, mobile backends, and cloud-native applications.
-
-PATH TRAVERSAL IN REST APIs:
-  APIs that return files based on path parameters:
-    GET /api/v1/files/{filename}
-    GET /api/reports?name=Q1.pdf
-
-  Exploitation:
-    GET /api/v1/files/../../../../etc/passwd
-    GET /api/reports?name=../../../app/config/database.yml
-
-  Often harder to detect because:
-  - No browser address bar to inspect
-  - Encoded in JSON request bodies
-  - Parameters nested in complex objects
-
-ZIP SLIP (Archive Extraction Traversal):
-  A path traversal variant where malicious archives contain
-  files with ../ in their names. When extracted, these overwrite
-  files outside the target directory.
-
-  Malicious zip entry: ../../../../etc/cron.d/backdoor
-  If extracted as root: attacker installs a cron job!
-
-  Affected libraries: older Java ZipInputStream, Python zipfile,
-  Ruby zip gem, npm adm-zip.
-  Fix: Always validate entry paths before extraction.
-
-CLOUD STORAGE TRAVERSAL (S3/Azure/GCP):
-  Misconfigured cloud object storage can expose files:
-  - Open S3 buckets: http://bucket.s3.amazonaws.com/
-  - Path traversal in presigned URLs
-  - SSRF to access cloud metadata:
-      http://169.254.169.254/latest/meta-data/
-      (Leaks cloud credentials!)
-
-CONTAINER / DOCKER TRAVERSAL:
-  Docker volume mounts: if a container mounts /host as /data,
-  traversal to /data/../../etc/passwd reads the HOST's /etc/passwd.
-
-CVE EXAMPLES:
-  - CVE-2021-41773: Apache HTTP Server 2.4.49 path traversal
-    Allowed traversal outside the document root.
-    CVSS Score: 7.5 (High). Patched in 2.4.50.
-  - CVE-2019-18935: Telerik UI path traversal → RCE
-  - CVE-2018-1002105: Kubernetes path traversal in API server`,
     html: `<div class="htb-diagram-container"><img src="../../../assets/dir_cloud_diagram.png" alt="Path Traversal in APIs & Cloud"></div>
-
-Path traversal isn't limited to classic web servers — it appears in modern REST APIs, mobile backends, and cloud-native applications.
-
-PATH TRAVERSAL IN REST APIs:
-  APIs that return files based on path parameters:
-    GET /api/v1/files/{filename}
-    GET /api/reports?name=Q1.pdf
-
-  Exploitation:
-    GET /api/v1/files/../../../../etc/passwd
-    GET /api/reports?name=../../../app/config/database.yml
-
-  Often harder to detect because:
-  - No browser address bar to inspect
-  - Encoded in JSON request bodies
-  - Parameters nested in complex objects
-
-ZIP SLIP (Archive Extraction Traversal):
-  A path traversal variant where malicious archives contain
-  files with ../ in their names. When extracted, these overwrite
-  files outside the target directory.
-
-  Malicious zip entry: ../../../../etc/cron.d/backdoor
-  If extracted as root: attacker installs a cron job!
-
-  Affected libraries: older Java ZipInputStream, Python zipfile,
-  Ruby zip gem, npm adm-zip.
-  Fix: Always validate entry paths before extraction.
-
-CLOUD STORAGE TRAVERSAL (S3/Azure/GCP):
-  Misconfigured cloud object storage can expose files:
-  - Open S3 buckets: http://bucket.s3.amazonaws.com/
-  - Path traversal in presigned URLs
-  - SSRF to access cloud metadata:
-      http://169.254.169.254/latest/meta-data/
-      (Leaks cloud credentials!)
-
-CONTAINER / DOCKER TRAVERSAL:
-  Docker volume mounts: if a container mounts /host as /data,
-  traversal to /data/../../etc/passwd reads the HOST's /etc/passwd.
-
-CVE EXAMPLES:
-  - CVE-2021-41773: Apache HTTP Server 2.4.49 path traversal
-    Allowed traversal outside the document root.
-    CVSS Score: 7.5 (High). Patched in 2.4.50.
-  - CVE-2019-18935: Telerik UI path traversal → RCE
-  - CVE-2018-1002105: Kubernetes path traversal in API server`,
+      <h3>Modern Traversal Variants</h3>
+      <p>Path traversal is not limited to classic monolithic web servers. Modern cloud-native architectures, REST APIs, and microservices introduce new attack vectors. These include JSON-based traversal parameters, Zip Slip (archive extraction traversal), SSRF-based metadata exfiltration, and Docker container volume escapes.</p>
+      <p>Imagine a modern, high-tech delivery drone. You hand the drone a package and type in the delivery address. But instead of a normal address, you type "Fly up to the cloud, go into the company's private control satellite, and bring me the master remote!" If the drone doesn't validate the address, it will literally fly out of its normal delivery route and steal the company's secrets from the cloud! Today, hackers don't just use path traversal on normal websites; they use it against modern APIs, cloud storage buckets, and Docker containers to break out of isolated environments and steal high-level cloud credentials.</p>
+      <h3>Modern Attack Vectors</h3>
+      <div class="step-block">
+        <div class="step-num">Vector 1</div>
+        <div class="step-body"><strong>Zip Slip</strong><br>An attacker uploads a malicious archive containing files with <code>../</code> in their names. When extracted by a vulnerable library, the files overwrite critical system files outside the target extraction directory (e.g., overwriting a cron job).</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Vector 2</div>
+        <div class="step-body"><strong>REST APIs</strong><br>Exploiting path parameters: <code>GET /api/v1/files/../../../../etc/passwd</code>. These are often harder to detect as they are hidden within JSON payloads rather than URL query strings.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Vector 3</div>
+        <div class="step-body"><strong>Cloud Storage SSRF</strong><br>Using traversal to escape intended object paths and forcing the cloud server to query its own metadata IP: <code>http://169.254.169.254/latest/meta-data/</code>, leaking cloud API credentials.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Vector 4</div>
+        <div class="step-body"><strong>Container Escapes</strong><br>If a Docker container poorly mounts a host volume (e.g., <code>/host</code> mapped to <code>/data</code>), a traversal payload to <code>/data/../../etc/passwd</code> reads the underlying HOST machine's file, escaping the container sandbox!</div>
+      </div>`,
     questions: [
-      { q: "What is Zip Slip?", a: "A path traversal attack via malicious archive entry names containing ../ that overwrite files outside the target directory" },
-      { q: "What cloud metadata IP address can be accessed via SSRF or path traversal to steal cloud credentials?", a: "169.254.169.254" },
-      { q: "What CVE number identified the critical Apache HTTP Server 2.4.49 path traversal vulnerability?", a: "CVE-2021-41773" },
-      { q: "In a Docker container, why can path traversal reach the host filesystem?", a: "Because volume mounts expose host directories inside the container" },
-      { q: "In a REST API endpoint like /api/files/{filename}, what input would a tester use to test for path traversal?", a: "../../../../etc/passwd" }
+      { q: "What is Zip Slip?", a: "A path traversal attack via malicious archive entry names containing ../ that overwrite files outside the target directory", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What cloud metadata IP address can be accessed via SSRF or path traversal to steal cloud credentials?", a: "169.254.169.254", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What CVE number identified the critical Apache HTTP Server 2.4.49 path traversal vulnerability?", a: "CVE-2021-41773", hint: "Refer to the HTTP protocol details." },
+      { q: "In a Docker container, why can path traversal reach the host filesystem?", a: "Because volume mounts expose host directories inside the container", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "In a REST API endpoint like /api/files/{filename}, what input would a tester use to test for path traversal?", a: "../../../../etc/passwd", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
     title: "Real-World Cases & Secure Coding",
     points: 10,
-    content: `Understanding real breaches caused by path traversal helps reinforce why this class of vulnerability is so dangerous.
-
-NOTABLE REAL-WORLD INCIDENTS:
-
-1. APACHE HTTP SERVER (CVE-2021-41773 & 41772):
-   October 2021: Apache 2.4.49 introduced a path traversal bug.
-   URL: /cgi-bin/.%2e/.%2e/.%2e/.%2e/etc/passwd
-   This allowed reading any file on the system, and combined with
-   CGI enabled, led to Remote Code Execution. Patch: upgrade to 2.4.51.
-   Lesson: Always apply security patches immediately.
-
-2. SAMSUNG GALAXY APP STORE (2023):
-   Allowed path traversal in app downloads, enabling installation of
-   arbitrary apps outside the app store. CVE-2023-21433/21434.
-
-3. KUBERNETES (CVE-2018-1002105):
-   Path traversal in the Kubernetes API server allowed privilege
-   escalation to cluster admin on all versions before 1.10.11.
-
-SECURE CODING PATTERNS:
-
-Python (Flask):
-  import os
-  from flask import abort, send_file
-
-  BASE_DIR = "/var/www/files"
-
-  @app.route("/file")
-  def serve_file():
-      filename = request.args.get("name", "")
-      # Sanitize: strip ../ and leading /
-      safe_name = os.path.basename(filename)
-      full_path = os.path.realpath(os.path.join(BASE_DIR, safe_name))
-      # Verify stays within base
-      if not full_path.startswith(BASE_DIR + os.sep):
-          abort(403)
-      return send_file(full_path)
-
-Node.js (Express):
-  const path = require("path");
-  const BASE = path.resolve("/var/www/files");
-
-  app.get("/file", (req, res) => {
-    const requested = path.resolve(BASE, req.query.name || "");
-    if (!requested.startsWith(BASE)) {
-      return res.status(403).send("Forbidden");
-    }
-    res.sendFile(requested);
-  });
-
-PHP:
-  $base = realpath("/var/www/files");
-  $requested = realpath($base . "/" . $_GET["file"]);
-  if ($requested === false || strpos($requested, $base) !== 0) {
-      http_response_code(403); exit;
-  }
-  readfile($requested);
-
-KEY PRINCIPLES:
-   Never trust user-supplied paths
-   Always resolve to canonical/real path before comparison
-   Serve files through code that validates the path
-   Store sensitive files outside the web root entirely
-   Apply least-privilege: web process should not read /etc/shadow`,
     html: `<div class="htb-diagram-container"><img src="../../../assets/dir_defense_diagram.png" alt="Path Traversal Secure Coding"></div>
-
-Understanding real breaches caused by path traversal helps reinforce why this class of vulnerability is so dangerous.
-
-NOTABLE REAL-WORLD INCIDENTS:
-
-1. APACHE HTTP SERVER (CVE-2021-41773 & 41772):
-   October 2021: Apache 2.4.49 introduced a path traversal bug.
-   URL: /cgi-bin/.%2e/.%2e/.%2e/.%2e/etc/passwd
-   This allowed reading any file on the system, and combined with
-   CGI enabled, led to Remote Code Execution. Patch: upgrade to 2.4.51.
-   Lesson: Always apply security patches immediately.
-
-2. SAMSUNG GALAXY APP STORE (2023):
-   Allowed path traversal in app downloads, enabling installation of
-   arbitrary apps outside the app store. CVE-2023-21433/21434.
-
-3. KUBERNETES (CVE-2018-1002105):
-   Path traversal in the Kubernetes API server allowed privilege
-   escalation to cluster admin on all versions before 1.10.11.
-
-SECURE CODING PATTERNS:
-
-Python (Flask):
-  import os
-  from flask import abort, send_file
-
-  BASE_DIR = "/var/www/files"
-
-  @app.route("/file")
-  def serve_file():
-      filename = request.args.get("name", "")
-      # Sanitize: strip ../ and leading /
-      safe_name = os.path.basename(filename)
-      full_path = os.path.realpath(os.path.join(BASE_DIR, safe_name))
-      # Verify stays within base
-      if not full_path.startswith(BASE_DIR + os.sep):
-          abort(403)
-      return send_file(full_path)
-
-Node.js (Express):
-  const path = require("path");
-  const BASE = path.resolve("/var/www/files");
-
-  app.get("/file", (req, res) => {
-    const requested = path.resolve(BASE, req.query.name || "");
-    if (!requested.startsWith(BASE)) {
-      return res.status(403).send("Forbidden");
-    }
-    res.sendFile(requested);
-  });
-
-PHP:
-  $base = realpath("/var/www/files");
-  $requested = realpath($base . "/" . $_GET["file"]);
-  if ($requested === false || strpos($requested, $base) !== 0) {
-      http_response_code(403); exit;
-  }
-  readfile($requested);
-
-KEY PRINCIPLES:
-   Never trust user-supplied paths
-   Always resolve to canonical/real path before comparison
-   Serve files through code that validates the path
-   Store sensitive files outside the web root entirely
-   Apply least-privilege: web process should not read /etc/shadow`,
+      <h3>Defending Against Traversal</h3>
+      <p>Preventing directory traversal requires strict, defense-in-depth secure coding practices. Applications must never trust user-supplied input to directly form filesystem paths. Developers should resolve all paths to their canonical form (resolving all symbolic links and ` + "`" + `../` + "`" + ` sequences) and strictly verify that the resolved path originates within an intended, isolated base directory.</p>
+      <p>Imagine designing an unhackable bank vault. Instead of letting customers walk into the vault to grab their safe deposit box, you force them to wait in the lobby. The customer writes down their box number. The bank teller takes the paper, completely ignores any weird instructions written on it, walks to the vault themselves, verifies the box number exists, grabs the box, and brings it back to the lobby. The customer never touches the vault door! Secure coding works exactly like this. The server takes the user's requested file name, sanitizes it, double-checks the exact mathematical path, and serves the file securely without ever letting the user's input directly touch the operating system's file commands.</p>
+      <h3>Secure Coding Principles</h3>
+      <div class="step-block">
+        <div class="step-num">Principle 1</div>
+        <div class="step-body"><strong>Canonical Path Validation</strong><br>Use built-in framework functions to resolve the absolute path, then check the prefix.<br><code>safe_path = os.path.realpath(os.path.join(BASE_DIR, filename))</code><br><code>if not safe_path.startswith(BASE_DIR): abort(403)</code></div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Principle 2</div>
+        <div class="step-body"><strong>Indirect Object References</strong><br>Never pass filenames. Use database IDs mapped to files server-side. For example, request <code>?file_id=5</code>, and the server queries the database to find the safe filename associated with ID 5.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Principle 3</div>
+        <div class="step-body"><strong>Extract Only Filenames</strong><br>Strip all directory components entirely from user input using <code>os.path.basename(filename)</code>.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Principle 4</div>
+        <div class="step-body"><strong>Least Privilege</strong><br>Ensure the web server process runs with minimal operating system privileges, guaranteeing it physically cannot read files like <code>/etc/shadow</code> even if a traversal vulnerability exists.</div>
+      </div>`,
     questions: [
-      { q: "What Apache version introduced the critical CVE-2021-41773 path traversal vulnerability?", a: "Apache HTTP Server 2.4.49" },
-      { q: "In secure Python code, what function strips directory components, returning only the filename?", a: "os.path.basename()" },
-      { q: "In Node.js, what function resolves a path to its absolute form, resolving all ../ segments?", a: "path.resolve()" },
-      { q: "What key secure coding principle ensures sensitive files (like /etc/shadow) can't be reached even if traversal succeeds?", a: "Storing sensitive files outside the web root" },
-      { q: "What check in PHP confirms the resolved path starts within the allowed base directory?", a: "strpos($requested, $base) !== 0 (or using str_starts_with)" }
+      { q: "What Apache version introduced the critical CVE-2021-41773 path traversal vulnerability?", a: "Apache HTTP Server 2.4.49", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "In secure Python code, what function strips directory components, returning only the filename?", a: "os.path.basename()", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "In Node.js, what function resolves a path to its absolute form, resolving all ../ segments?", a: "path.resolve()", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What key secure coding principle ensures sensitive files (like /etc/shadow) can't be reached even if traversal succeeds?", a: "Storing sensitive files outside the web root", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What check in PHP confirms the resolved path starts within the allowed base directory?", a: "strpos($requested, $base) !== 0 (or using str_starts_with)", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   }
 ];

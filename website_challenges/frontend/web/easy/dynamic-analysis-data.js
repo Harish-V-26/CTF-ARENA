@@ -6,11 +6,9 @@ const LESSONS = [
       <div class="htb-diagram-container">
         <img src="../../../assets/images/dynamic_analysis.png" alt="Dynamic Analysis Diagram" class="htb-diagram">
       </div>
-      <h3>The Greenhouse Experiment</h3>
-      <p>Imagine you have an unknown seed. Static analysis would be examining its shape and sequencing its DNA in a lab. Dynamic analysis is planting the seed in a heavily secured greenhouse, watering it, and safely watching exactly what kind of toxic plant grows. You learn everything about its behavior by letting it come alive.</p>
-
       <h3>What is Dynamic Analysis?</h3>
       <p>Dynamic Analysis is the process of examining malware by <strong>executing it</strong> in a safe, controlled environment. Instead of looking at the dead code, you observe its live behavior: what files it drops, what registry keys it modifies, and what network connections it makes.</p>
+      <p>Imagine you have an unknown seed. Static analysis would be examining its shape and sequencing its DNA in a lab. Dynamic analysis is planting the seed in a heavily secured greenhouse, watering it, and safely watching exactly what kind of toxic plant grows. You learn everything about its behavior by letting it come alive.</p>
 
       <h3>Why Perform Dynamic Analysis?</h3>
       <p>Some malware capabilities are hidden through packing or obfuscation, making static analysis difficult.</p>
@@ -35,11 +33,9 @@ const LESSONS = [
       <div class="htb-diagram-container">
         <img src="../../../assets/images/sandbox.png" alt="Sandboxing Diagram" class="htb-diagram">
       </div>
-      <h3>The Observation Room</h3>
-      <p>Imagine placing a suspect in a room with one-way glass and hidden microphones. The suspect thinks they are alone and acting normally, but they are actually in a completely isolated, observed environment where they can't escape or harm anyone. This is the concept of a <strong>Sandbox</strong>.</p>
-
       <h3>What is a Sandbox?</h3>
       <p>A sandbox is a tightly controlled environment—usually a Virtual Machine (VM)—isolated from your host network and the internet. It provides a safe arena to detonate malware without risking the rest of the organization.</p>
+      <p>Imagine placing a suspect in a room with one-way glass and hidden microphones. The suspect thinks they are alone and acting normally, but they are actually in a completely isolated, observed environment where they can't escape or harm anyone. This is the concept of a <strong>Sandbox</strong>.</p>
       
       <h3>Automated Sandboxes</h3>
       <p>Security teams use automated platforms like <strong>Cuckoo Sandbox</strong>, <strong>ANY.RUN</strong>, or <strong>Joe Sandbox</strong>. You upload a file, the platform detonates it in a VM, records everything for a few minutes, and generates a report of indicators (IPs, dropped files).</p>
@@ -64,11 +60,9 @@ const LESSONS = [
       <div class="htb-diagram-container">
         <img src="../../../assets/images/host_network.png" alt="Host and Network Monitoring Diagram" class="htb-diagram">
       </div>
-      <h3>The Stakeout and The Wiretap</h3>
-      <p>Monitoring the host is like a police stakeout: you watch the suspect's house, noting every time they open a door or change a lock. Monitoring the network is like a wiretap: you record every single phone call they make to their boss. Together, they provide a complete picture of the suspect's activities.</p>
-
       <h3>Monitoring the Host</h3>
       <p>When executing malware, you need tools to record what it does to the operating system.</p>
+      <p>Monitoring the host is like a police stakeout: you watch the suspect's house, noting every time they open a door or change a lock.</p>
       <ul>
         <li><strong>Process Hacker / Process Explorer:</strong> Advanced task managers that show running processes, injected threads, and memory usage.</li>
         <li><strong>Procmon (Process Monitor):</strong> A Sysinternals tool that captures every file system, Registry, and process activity in real-time. You see exactly which files the malware creates or deletes.</li>
@@ -77,6 +71,7 @@ const LESSONS = [
 
       <h3>Monitoring the Network</h3>
       <p>Malware needs to communicate to download payloads or exfiltrate data.</p>
+      <p>Monitoring the network is like a wiretap: you record every single phone call they make to their boss. Together, host and network monitoring provide a complete picture of the suspect's activities.</p>
       <ul>
         <li><strong>Wireshark:</strong> A network protocol analyzer that captures every packet leaving the sandbox, revealing C2 server IPs.</li>
         <li><strong>INetSim:</strong> Simulates common internet services (HTTP, DNS). If malware requests a file, INetSim serves a fake one, tricking the malware into revealing its network behavior without a real internet connection.</li>
@@ -95,14 +90,13 @@ const LESSONS = [
       <div class="htb-diagram-container">
         <img src="../../../assets/images/api_hooking.png" alt="API Hooking and Debugging Diagram" class="htb-diagram">
       </div>
-      <h3>Intercepting Mail and Freezing Time</h3>
-      <p>API Hooking is like intercepting outgoing mail before it reaches the post office—you can read exactly what the malware is trying to send to the operating system. Debugging is like having a superpower to freeze time; you can stop the malware right as it's about to pull the trigger, inspect its weapon, and safely unload the bullets.</p>
-
       <h3>API Hooking</h3>
       <p>API Hooking involves intercepting calls the malware makes to the Windows OS. By placing a "hook" on functions like <code>InternetConnect</code> or <code>WriteFile</code>, an analyst sees exactly what data is being sent or written, right before it executes.</p>
+      <p>API Hooking is like intercepting outgoing mail before it reaches the post office—you can read exactly what the malware is trying to send to the operating system.</p>
       
       <h3>Debugging</h3>
       <p>While static analysis uses Disassemblers, dynamic analysis uses <strong>Debuggers</strong> (like x64dbg) to control code execution step-by-step.</p>
+      <p>Debugging is like having a superpower to freeze time; you can stop the malware right as it's about to pull the trigger, inspect its weapon, and safely unload the bullets.</p>
       <ul>
         <li><strong>Set Breakpoints:</strong> Pause execution right before a critical function (like a decryption routine).</li>
         <li><strong>Step Over/Into:</strong> Execute the malware one assembly instruction at a time.</li>

@@ -49,10 +49,10 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "What OWASP Top 10 category describes flaws in the software's architectural blueprint?", a: "Insecure Design" },
-      { q: "What is the coupon code that gives 100% discount?", a: "MEGA100" },
-      { q: "What is the flag revealed when the MEGA100 coupon is applied?", a: "CTF{1ns3cur3_d3s1gn_n0_r4t3_l1m1t}" },
-      { q: "What security control is missing that allows unlimited coupon guesses?", a: "rate limiting" }
+      { q: "What OWASP Top 10 category describes flaws in the software's architectural blueprint?", a: "Insecure Design", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the coupon code that gives 100% discount?", a: "MEGA100", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag revealed when the MEGA100 coupon is applied?", a: "CTF{1ns3cur3_d3s1gn_n0_r4t3_l1m1t}", hint: "Check the command reference blocks." },
+      { q: "What security control is missing that allows unlimited coupon guesses?", a: "rate limiting", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -88,9 +88,9 @@ const LESSONS = [
       <p>The developers coded the coupon validation correctly (it checks if the code is valid), but the <strong>design</strong> never included a rule to track and prevent re-use. This is the essence of insecure design — the code works exactly as designed, but the design itself is insecure.</p>
     `,
     questions: [
-      { q: "What type of flaw allows applying the same coupon code multiple times?", a: "business logic flaw" },
-      { q: "What is the flag for the duplicate coupon exploit?", a: "CTF{bus1n3ss_l0g1c_fl4w_d0ubl3_c0up0n}" },
-      { q: "In secure design, what should the system check before accepting a coupon?", a: "if it was already used" }
+      { q: "What type of flaw allows applying the same coupon code multiple times?", a: "business logic flaw", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag for the duplicate coupon exploit?", a: "CTF{bus1n3ss_l0g1c_fl4w_d0ubl3_c0up0n}", hint: "Check the command reference blocks." },
+      { q: "In secure design, what should the system check before accepting a coupon?", a: "if it was already used", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -122,10 +122,10 @@ const LESSONS = [
       <p><strong>4. Principle of Least Privilege:</strong> Admin endpoints must always require authentication and authorization checks — never rely on URL obscurity.</p>
     `,
     questions: [
-      { q: "What is the predictable URL path where the admin panel is located?", a: "/admin-panel" },
-      { q: "What is the flag found on the unprotected admin panel?", a: "CTF{pr3d1ct4bl3_s3cr3t_p4th}" },
-      { q: "What process should developers perform before coding to identify security risks?", a: "Threat Modeling" },
-      { q: "What principle states that relying on hidden URLs for security is not valid?", a: "security through obscurity" }
+      { q: "What is the predictable URL path where the admin panel is located?", a: "/admin-panel", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag found on the unprotected admin panel?", a: "CTF{pr3d1ct4bl3_s3cr3t_p4th}", hint: "Check the command reference blocks." },
+      { q: "What process should developers perform before coding to identify security risks?", a: "Threat Modeling", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What principle states that relying on hidden URLs for security is not valid?", a: "security through obscurity", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
 {
@@ -161,9 +161,9 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "What attack does different error messages for valid vs invalid usernames enable?", a: "user enumeration" },
-      { q: "What is the flag revealed when you discover user enumeration?", a: "CTF{us3r_3num3r4t10n_l34k}" },
-      { q: "What username is confirmed as existing in the system?", a: "admin" }
+      { q: "What attack does different error messages for valid vs invalid usernames enable?", a: "user enumeration", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag revealed when you discover user enumeration?", a: "CTF{us3r_3num3r4t10n_l34k}", hint: "Check the command reference blocks." },
+      { q: "What username is confirmed as existing in the system?", a: "admin", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -187,10 +187,10 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "How many failed attempts trigger the brute force detection flag?", a: "5" },
-      { q: "What is the flag for no rate limiting?", a: "CTF{n0_r4t3_l1m1t_br00t}" },
-      { q: "What is the admin's password?", a: "admin123" },
-      { q: "What security control should block repeated login attempts?", a: "account lockout" }
+      { q: "How many failed attempts trigger the brute force detection flag?", a: "5", hint: "Check the command reference blocks." },
+      { q: "What is the flag for no rate limiting?", a: "CTF{n0_r4t3_l1m1t_br00t}", hint: "Check the command reference blocks." },
+      { q: "What is the admin's password?", a: "admin123", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What security control should block repeated login attempts?", a: "account lockout", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -220,10 +220,10 @@ const LESSONS = [
       <p><strong>4.</strong> Enforce account lockout after 3-5 failed attempts with exponential backoff.</p>
     `,
     questions: [
-      { q: "What hashing algorithm is used to generate the predictable session tokens?", a: "MD5" },
-      { q: "What is the flag for discovering predictable session tokens?", a: "CTF{pr3d1ct4bl3_s3ss10n_t0k3n}" },
-      { q: "What is the flag for gaining admin access?", a: "CTF{4uth_f41lur3_4dm1n_4cc3ss}" },
-      { q: "What does MFA stand for?", a: "Multi-Factor Authentication" }
+      { q: "What hashing algorithm is used to generate the predictable session tokens?", a: "MD5", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag for discovering predictable session tokens?", a: "CTF{pr3d1ct4bl3_s3ss10n_t0k3n}", hint: "Check the command reference blocks." },
+      { q: "What is the flag for gaining admin access?", a: "CTF{4uth_f41lur3_4dm1n_4cc3ss}", hint: "Check the command reference blocks." },
+      { q: "What does MFA stand for?", a: "Multi-Factor Authentication", hint: "Review the definitions and acronyms section." }
     ]
   },
 {
@@ -263,10 +263,10 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "What is the name of the unsigned, unverified package in the registry?", a: "log-service" },
-      { q: "What is the flag for the unsigned package vulnerability?", a: "CTF{uns1gn3d_p4ck4g3_4cc3pt3d}" },
-      { q: "What is the flag for the insecure CI/CD pipeline?", a: "CTF{c1cd_p1p3l1n3_t4mp3r3d}" },
-      { q: "What type of seal/proof should software packages have to prove they haven't been tampered with?", a: "digital signatures" }
+      { q: "What is the name of the unsigned, unverified package in the registry?", a: "log-service", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag for the unsigned package vulnerability?", a: "CTF{uns1gn3d_p4ck4g3_4cc3pt3d}", hint: "Check the command reference blocks." },
+      { q: "What is the flag for the insecure CI/CD pipeline?", a: "CTF{c1cd_p1p3l1n3_t4mp3r3d}", hint: "Check the command reference blocks." },
+      { q: "What type of seal/proof should software packages have to prove they haven't been tampered with?", a: "digital signatures", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -290,9 +290,9 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "What encoding format does the plugin loader accept?", a: "Base64" },
-      { q: "What is the flag for the deserialization attack?", a: "CTF{d3s3r14l1z4t10n_4tt4ck}" },
-      { q: "What JavaScript function encodes text to Base64 in the browser console?", a: "btoa" }
+      { q: "What encoding format does the plugin loader accept?", a: "Base64", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag for the deserialization attack?", a: "CTF{d3s3r14l1z4t10n_4tt4ck}", hint: "Check the command reference blocks." },
+      { q: "What JavaScript function encodes text to Base64 in the browser console?", a: "btoa", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -322,10 +322,10 @@ const LESSONS = [
       <p><strong>4. Input Validation:</strong> Never trust deserialized data — always validate structure and content after decoding.</p>
     `,
     questions: [
-      { q: "What is the flag for cookie tampering?", a: "CTF{d4t4_1nt3gr1ty_f41lur3}" },
-      { q: "What cryptographic mechanism should be used to verify cookie integrity?", a: "HMAC" },
-      { q: "What HTML attribute verifies the integrity of external scripts loaded from CDNs?", a: "Subresource Integrity" },
-      { q: "What role did you change in the cookie to trigger the flag?", a: "admin" }
+      { q: "What is the flag for cookie tampering?", a: "CTF{d4t4_1nt3gr1ty_f41lur3}", hint: "Check the command reference blocks." },
+      { q: "What cryptographic mechanism should be used to verify cookie integrity?", a: "HMAC", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What HTML attribute verifies the integrity of external scripts loaded from CDNs?", a: "Subresource Integrity", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What role did you change in the cookie to trigger the flag?", a: "admin", hint: "Check the command reference blocks." }
     ]
   },
 {
@@ -365,10 +365,10 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "How many failed login attempts should trigger a security alert in a well-designed system?", a: "3 to 5" },
-      { q: "What is the flag for undetected brute force attacks?", a: "CTF{n0_l0gg1ng_brut3_f0rc3}" },
-      { q: "What does SOC stand for?", a: "Security Operations Center" },
-      { q: "What is the analyst's password?", a: "monitor2026" }
+      { q: "How many failed login attempts should trigger a security alert in a well-designed system?", a: "3 to 5", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag for undetected brute force attacks?", a: "CTF{n0_l0gg1ng_brut3_f0rc3}", hint: "Check the command reference blocks." },
+      { q: "What does SOC stand for?", a: "Security Operations Center", hint: "Review the definitions and acronyms section." },
+      { q: "What is the analyst's password?", a: "monitor2026", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -396,9 +396,9 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "What is the flag for discovering that alerts were disabled?", a: "CTF{s1l3nt_4l4rm_f41lur3}" },
-      { q: "What is the flag for successful log injection?", a: "CTF{l0g_1nj3ct10n_4tt4ck}" },
-      { q: "What should be done to user input before writing it to log files?", a: "sanitization" }
+      { q: "What is the flag for discovering that alerts were disabled?", a: "CTF{s1l3nt_4l4rm_f41lur3}", hint: "Check the command reference blocks." },
+      { q: "What is the flag for successful log injection?", a: "CTF{l0g_1nj3ct10n_4tt4ck}", hint: "Check the command reference blocks." },
+      { q: "What should be done to user input before writing it to log files?", a: "sanitization", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -426,10 +426,10 @@ const LESSONS = [
       <p><strong>4. Incident Response Plan:</strong> Have a documented procedure for what to do when an alert fires.</p>
     `,
     questions: [
-      { q: "What is the flag for missing monitoring configuration?", a: "CTF{m1ss1ng_m0n1t0r1ng}" },
-      { q: "What does SIEM stand for?", a: "Security Information and Event Management" },
-      { q: "How many days does the average data breach take to detect?", a: "277" },
-      { q: "What type of log storage prevents attackers from modifying old entries?", a: "append-only" }
+      { q: "What is the flag for missing monitoring configuration?", a: "CTF{m1ss1ng_m0n1t0r1ng}", hint: "Check the command reference blocks." },
+      { q: "What does SIEM stand for?", a: "Security Information and Event Management", hint: "Review the definitions and acronyms section." },
+      { q: "How many days does the average data breach take to detect?", a: "277", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What type of log storage prevents attackers from modifying old entries?", a: "append-only", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
 {
@@ -465,9 +465,9 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "What application setting should NEVER be True in production?", a: "DEBUG" },
-      { q: "What is the flag for debug mode being enabled in production?", a: "CTF{d3bug_m0d3_1n_pr0d}" },
-      { q: "What type of information do verbose errors leak to attackers?", a: "stack traces" }
+      { q: "What application setting should NEVER be True in production?", a: "DEBUG", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag for debug mode being enabled in production?", a: "CTF{d3bug_m0d3_1n_pr0d}", hint: "Check the command reference blocks." },
+      { q: "What type of information do verbose errors leak to attackers?", a: "stack traces", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -491,10 +491,10 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "What is the flag for verbose error information leakage?", a: "CTF{v3rb0s3_3rr0r_l34k}" },
-      { q: "What is the database password leaked in the error messages?", a: "P@ssw0rd123!" },
-      { q: "What is the flag for database credential leakage?", a: "CTF{db_cr3d3nt14ls_l34k3d}" },
-      { q: "What is the internal database host IP address leaked?", a: "10.0.1.5" }
+      { q: "What is the flag for verbose error information leakage?", a: "CTF{v3rb0s3_3rr0r_l34k}", hint: "Check the command reference blocks." },
+      { q: "What is the database password leaked in the error messages?", a: "P@ssw0rd123!", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the flag for database credential leakage?", a: "CTF{db_cr3d3nt14ls_l34k3d}", hint: "Check the command reference blocks." },
+      { q: "What is the internal database host IP address leaked?", a: "10.0.1.5", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -521,10 +521,10 @@ const LESSONS = [
       <p><strong>5. Security Headers:</strong> Use headers like <code>X-Content-Type-Options</code> and remove <code>Server</code> version headers to minimize information leakage.</p>
     `,
     questions: [
-      { q: "What is the flag for stack trace exposure?", a: "CTF{st4ck_tr4c3_3xp0s3d}" },
-      { q: "What is the application's root directory path leaked in the error?", a: "/app" },
-      { q: "What should replace verbose error messages shown to end users?", a: "generic error pages" },
-      { q: "Where should detailed error information be written instead of HTTP responses?", a: "server logs" }
+      { q: "What is the flag for stack trace exposure?", a: "CTF{st4ck_tr4c3_3xp0s3d}", hint: "Check the command reference blocks." },
+      { q: "What is the application's root directory path leaked in the error?", a: "/app", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What should replace verbose error messages shown to end users?", a: "generic error pages", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Where should detailed error information be written instead of HTTP responses?", a: "server logs", hint: "Refer to the HTTP protocol details." }
     ]
   }
 ];

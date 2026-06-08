@@ -278,14 +278,7 @@
     },
 
     loginWithGoogle: function (callback) {
-      // On local/dev domains, skip Firebase popup entirely to avoid flash
-      // Catches localhost, 127.0.0.1, LAN hostnames (e.g. mypc.local), and any non-HTTPS origin
-      const h = window.location.hostname;
-      const isLocalDev = ['localhost', '127.0.0.1'].includes(h)
-                      || window.location.protocol !== 'https:'
-                      || /^[\w-]+$/.test(h);
-
-      if (this.isMock || isLocalDev) {
+      if (this.isMock) {
         // Mock Google login (no popup needed)
         const email = "google_hacker@gmail.com";
         const name = "Google Hacker";
@@ -346,9 +339,9 @@
     logout: function (callback) {
       localStorage.removeItem("ctf_active_user_session");
       this._eraseCookie("ctf_active_user_session");
+      localStorage.removeItem("mock_auth_session");
+      this.currentUser = null;
       if (this.isMock) {
-        this.currentUser = null;
-        localStorage.removeItem("mock_auth_session");
         this._notify();
         if (callback) callback(null);
       } else {

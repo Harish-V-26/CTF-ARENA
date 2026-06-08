@@ -6,11 +6,9 @@ const LESSONS = [
       <div class="htb-diagram-container">
         <img src="../../../assets/images/static_analysis.png" alt="Static Analysis Diagram" class="htb-diagram">
       </div>
-      <h3>The Bomb Squad Approach</h3>
-      <p>Imagine you are a bomb squad technician who has just found a suspicious device. If you press the buttons or plug it in, it might detonate and destroy the evidence. Instead, you carefully X-ray the device, read the manufacturer labels on the wires, and examine the circuit blueprints without ever turning it on. This allows you to understand exactly how the device is built and what it is designed to do just by looking at its components. This is <strong>Static Analysis</strong>.</p>
-
       <h3>What is Static Analysis?</h3>
       <p>Static Analysis is the process of examining a malicious file <strong>without executing it</strong>. It involves extracting information directly from the file's structure, metadata, embedded strings, and assembly code to safely understand its capabilities, intent, and indicators of compromise (IoCs).</p>
+      <p>Imagine you are a bomb squad technician who has just found a suspicious device. If you press the buttons or plug it in, it might detonate and destroy the evidence. Instead, you carefully X-ray the device, read the manufacturer labels on the wires, and examine the circuit blueprints without ever turning it on. This allows you to understand exactly how the device is built and what it is designed to do just by looking at its components. This is <strong>Static Analysis</strong>.</p>
 
       <h3>Why Perform Static Analysis First?</h3>
       <p>Static analysis is the foundational first step because it is safe and fast. It allows analysts to:</p>
@@ -26,8 +24,8 @@ const LESSONS = [
       <p>In this room, we'll start from the basics of extracting hidden strings and hashes, move to analyzing Windows Portable Executable (PE) headers, and finally put it into practice in a secure Kali Linux environment against a target binary.</p>
     `,
     questions: [
-      { q: "What type of malware analysis involves examining a file without executing it?", a: "static analysis" },
-      { q: "What is the acronym for Indicators of Compromise?", a: "IoC" }
+      { q: "What type of malware analysis involves examining a file without executing it?", a: "static analysis", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the acronym for Indicators of Compromise?", a: "IoC", hint: "Review the definitions and acronyms section." }
     ]
   },
   {
@@ -37,11 +35,9 @@ const LESSONS = [
       <div class="htb-diagram-container">
         <img src="../../../assets/images/basic_static.png" alt="Hashes and Strings Diagram" class="htb-diagram">
       </div>
-      <h3>Fingerprints and Crime Scenes</h3>
-      <p>Imagine arriving at a crime scene. Finding a cryptographic hash is like taking a suspect's unique fingerprint—it definitively identifies them. Extracting strings is like finding a torn, discarded shopping list on the floor that has the suspect's address written on it. These clues give you massive leads without ever seeing the suspect in action.</p>
-
       <h3>File Identification via Hashing</h3>
       <p>The absolute first step in analyzing any suspicious file is to generate its cryptographic hash (commonly MD5, SHA-1, or SHA-256). A hash acts as a unique digital fingerprint for the file. Even changing a single byte inside the malware will completely change the resulting hash.</p>
+      <p>Imagine arriving at a crime scene. Finding a cryptographic hash is like taking a suspect's unique fingerprint—it definitively identifies them. Extracting strings is like finding a torn, discarded shopping list on the floor that has the suspect's address written on it. These clues give you massive leads without ever seeing the suspect in action.</p>
       <ul>
         <li><strong>Open-Source Intelligence (OSINT):</strong> Once you have the hash, you can search for it on platforms like <a href="https://www.virustotal.com" target="_blank" style="color:var(--accent)">VirusTotal</a>, Hybrid Analysis, or AlienVault OTX. If the file is a known threat, these platforms will immediately provide comprehensive reports from dozens of antivirus engines, saving you hours of manual analysis.</li>
         <li><strong>Fuzzy Hashing (ssdeep):</strong> Because attackers frequently alter minor details to change the MD5 hash (a technique called polymorphic malware), analysts use "fuzzy hashing" to determine if a file is <em>similar</em> to known malware, rather than an exact match.</li>
@@ -64,9 +60,9 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "What creates a unique digital fingerprint of a file? (e.g. MD5, SHA-256)", a: "hash" },
-      { q: "What Linux tool extracts human-readable text from a binary?", a: "strings" },
-      { q: "If a file has very few strings, what technique might the malware author have used?", a: "packing" }
+      { q: "What creates a unique digital fingerprint of a file? (e.g. MD5, SHA-256)", a: "hash", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What Linux tool extracts human-readable text from a binary?", a: "strings", hint: "Look for the specific tools mentioned in the lesson." },
+      { q: "If a file has very few strings, what technique might the malware author have used?", a: "packing", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -76,11 +72,9 @@ const LESSONS = [
       <div class="htb-diagram-container">
         <img src="../../../assets/images/pe_headers.png" alt="PE Headers Diagram" class="htb-diagram">
       </div>
-      <h3>The Cargo Ship Manifest</h3>
-      <p>Think of an executable file like a massive cargo ship. The Portable Executable (PE) Headers are the shipping manifest, declaring what should be in each cargo container (sections like .text and .data). If the manifest says a container is carrying 10 lbs of feathers (Raw Size on disk) but requests a warehouse the size of a stadium to unpack (Virtual Size in memory), you instantly know something is suspicious—the container is packed or compressed.</p>
-
       <h3>The Portable Executable (PE) Format</h3>
       <p>On Windows, executable files (like .exe, .dll, and .sys) use the Portable Executable (PE) format. The PE format contains structured metadata (headers) and segmented data (sections) that tell the Windows OS how to load and run the program. Analyzing this structure can reveal malicious intent without ever looking at the code.</p>
+      <p>Think of an executable file like a massive cargo ship. The Portable Executable (PE) Headers are the shipping manifest, declaring what should be in each cargo container (sections like .text and .data). If the manifest says a container is carrying 10 lbs of feathers (Raw Size on disk) but requests a warehouse the size of a stadium to unpack (Virtual Size in memory), you instantly know something is suspicious—the container is packed or compressed.</p>
 
       <h3>Key PE Sections</h3>
       <p>A standard executable is broken down into distinct sections:</p>
@@ -103,9 +97,9 @@ const LESSONS = [
       <p><strong>Tools:</strong> <code>peframe</code>, <code>file</code>, <code>Detect It Easy (DiE)</code>, <code>PEstudio</code></p>
     `,
     questions: [
-      { q: "What does PE stand for in Windows executables?", a: "Portable Executable" },
-      { q: "Which PE section typically contains the executable CPU instructions?", a: ".text" },
-      { q: "What mathematical metric measures the randomness of data to detect encryption?", a: "entropy" }
+      { q: "What does PE stand for in Windows executables?", a: "Portable Executable", hint: "Review the definitions and acronyms section." },
+      { q: "Which PE section typically contains the executable CPU instructions?", a: ".text", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What mathematical metric measures the randomness of data to detect encryption?", a: "entropy", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -115,11 +109,9 @@ const LESSONS = [
       <div class="htb-diagram-container">
         <img src="../../../assets/images/advanced_static.png" alt="Imports and Disassembly Diagram" class="htb-diagram">
       </div>
-      <h3>The Suspect's Phone Contacts</h3>
-      <p>Imagine investigating a suspect and looking at their recent phone contacts. If they repeatedly call a lock-picking service and an underground getaway driver, you know their intent without catching them in the act. The Import Address Table (IAT) works exactly the same way—it reveals what external system functions the malware relies on.</p>
-
       <h3>Import Address Table (IAT)</h3>
       <p>No program acts in isolation; malware must interact with the operating system to achieve its goals. It does this by importing functions from Windows Dynamic Link Libraries (DLLs) via the <strong>Import Address Table (IAT)</strong>. By auditing the IAT, an analyst can accurately profile the malware's capabilities.</p>
+      <p>Imagine investigating a suspect and looking at their recent phone contacts. If they repeatedly call a lock-picking service and an underground getaway driver, you know their intent without catching them in the act. The Import Address Table (IAT) works exactly the same way—it reveals what external system functions the malware relies on.</p>
       <p><strong>Common Malicious Import Profiles:</strong></p>
       <ul>
         <li><strong>Network/Downloader:</strong> <code>InternetOpen</code>, <code>URLDownloadToFile</code>, <code>socket</code>, <code>connect</code> (Indicates the malware fetches secondary payloads or contacts a C2 server).</li>
@@ -137,9 +129,9 @@ const LESSONS = [
       <p>Through disassembly, a reverse engineer can map out logic branches, discover bypasses for anti-analysis checks, and fully reconstruct the malware's behavior.</p>
     `,
     questions: [
-      { q: "What table lists the external library functions a program uses? (Acronym)", a: "IAT" },
-      { q: "Which API function is a strong indicator of persistence via the Windows Registry?", a: "RegSetValueEx" },
-      { q: "What advanced tool attempts to convert assembly back into C-like pseudo-code?", a: "Decompiler" }
+      { q: "What table lists the external library functions a program uses? (Acronym)", a: "IAT", hint: "Review the definitions and acronyms section." },
+      { q: "Which API function is a strong indicator of persistence via the Windows Registry?", a: "RegSetValueEx", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What advanced tool attempts to convert assembly back into C-like pseudo-code?", a: "Decompiler", hint: "Look for the specific tools mentioned in the lesson." }
     ]
   },
   {
@@ -186,9 +178,9 @@ const LESSONS = [
       <p>Use your Kali Linux attack box to inspect the binary and answer the lab challenge questions below to complete the room!</p>
     `,
     questions: [
-      { q: "What command would you use to get the SHA-256 hash of a file?", a: "sha256sum" },
-      { q: "What command extracts readable text sequences from a binary file?", a: "strings" },
-      { q: "What is the hidden CTF flag found inside the suspicious_bin file?", a: "CTF{st4t1c_4n4lys1s_m4st3r}" }
+      { q: "What command would you use to get the SHA-256 hash of a file?", a: "sha256sum", hint: "Check the command reference blocks." },
+      { q: "What command extracts readable text sequences from a binary file?", a: "strings", hint: "Check the command reference blocks." },
+      { q: "What is the hidden CTF flag found inside the suspicious_bin file?", a: "CTF{st4t1c_4n4lys1s_m4st3r}", hint: "Check the command reference blocks." }
     ]
   }
 ];

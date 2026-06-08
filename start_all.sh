@@ -1,4 +1,8 @@
 #!/bin/bash
+# Clean up any lingering processes on the ports we use
+echo "Cleaning up any existing processes on ports 5000, 8000, 5002, 8002..."
+fuser -k 5000/tcp 8000/tcp 5002/tcp 8002/tcp 2>/dev/null || true
+sleep 1
 
 echo "Starting Website Learn Backend API (Port 5000)..."
 cd website_learn/backend

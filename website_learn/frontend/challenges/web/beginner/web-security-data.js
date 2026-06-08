@@ -17,11 +17,11 @@ DNS reconnaissance is the process of using publicly available domain records to 
 
 Hackers are like digital detectives, and they use the DNS phonebook to find secret backdoors. Sometimes companies build special websites just for their workers to test new things, and they name them things like "test.google.com" or "secret.google.com". These are called subdomains. Because these secret sites are only for testing, they might not be as safe as the main website. A hacker can ask the DNS phonebook to give them a list of every single name a company uses. By finding these forgotten or hidden subdomains, the hacker might find an easy way to sneak into the company's network. They use special tools like 'nslookup' or 'dig' to ask the DNS phonebook these questions.`,
     questions: [
-      { q: "What system acts like a giant phonebook to translate names into number addresses?", a: "DNS" },
-      { q: "What is the special number address every computer uses to find other computers?", a: "IP Address" },
-      { q: "What do hackers look for to find hidden test websites?", a: "subdomains" },
-      { q: "Which type of IP address has enough numbers for every grain of sand?", a: "IPv6" },
-      { q: "What tool can be used to ask the DNS phonebook questions?", a: "nslookup (or dig)" }
+      { q: "What system acts like a giant phonebook to translate names into number addresses?", a: "DNS", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the special number address every computer uses to find other computers?", a: "IP Address", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What do hackers look for to find hidden test websites?", a: "subdomains", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Which type of IP address has enough numbers for every grain of sand?", a: "IPv6", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What tool can be used to ask the DNS phonebook questions?", a: "nslookup (or dig)", hint: "Look for the specific tools mentioned in the lesson." }
     ]
   },
   {
@@ -42,11 +42,11 @@ A database is an organized collection of structured information, or data, typica
 
 Deep inside the kitchen, there is a giant, locked filing cabinet where the restaurant keeps all its secret recipes, a list of every customer who ever visited, and all the money. This is the "Database." It is the most important and sensitive part of any website because it stores absolutely everything permanently. It holds all the usernames, all the passwords, and all the private messages. The Server is the only one allowed to open the filing cabinet and read the files. Hackers dream of breaking into the Database because if they can pick the lock, they can steal everything at once. That is why websites put their strongest security guards around the Database to protect it.`,
     questions: [
-      { q: "What do we call the part of the website that you can see and interact with?", a: "The Client (or Frontend)" },
-      { q: "What is the 'busy kitchen' that does all the real work and checks the rules called?", a: "The Server (or Backend)" },
-      { q: "What part of the website is like a giant locked filing cabinet storing passwords?", a: "The Database" },
-      { q: "What ingredient acts like the waiters taking orders in the Client layer?", a: "JavaScript" },
-      { q: "If a hacker breaks into the Server, does it affect one person or everyone?", a: "everyone" }
+      { q: "What do we call the part of the website that you can see and interact with?", a: "The Client (or Frontend)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the 'busy kitchen' that does all the real work and checks the rules called?", a: "The Server (or Backend)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What part of the website is like a giant locked filing cabinet storing passwords?", a: "The Database", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What ingredient acts like the waiters taking orders in the Client layer?", a: "JavaScript", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "If a hacker breaks into the Server, does it affect one person or everyone?", a: "everyone", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -67,11 +67,11 @@ HTTP status codes are standardized three-digit server responses indicating the o
 
 Sometimes the server gets a note but can't do what it asks. Instead of sending the picture, it sends back a special number code to tell your browser what went wrong. These are called Status Codes. If everything is perfect, it sends "200 OK." If the server looks everywhere but simply cannot find the picture you asked for, it sends back a famous code: "404 Not Found." If the server completely crashes because it is confused, it sends a "500 Internal Server Error." Hackers love finding 500 errors because sometimes the server gets so confused that it accidentally prints out secret computer code on the screen, giving the hacker hints about how to break in!`,
     questions: [
-      { q: "What is the language that browsers and servers use to pass notes to each other?", a: "HTTP" },
-      { q: "What does the 'S' stand for in HTTPS?", a: "Secure" },
-      { q: "What kind of attack happens when a spy reads your notes while they travel through the air?", a: "Man-in-the-Middle (MitM)" },
-      { q: "What famous number code means the server cannot find what you asked for?", a: "404" },
-      { q: "What symbol in your browser tells you that the website is using the super-secret HTTPS code?", a: "a padlock" }
+      { q: "What is the language that browsers and servers use to pass notes to each other?", a: "HTTP", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What does the 'S' stand for in HTTPS?", a: "Secure", hint: "Review the definitions and acronyms section." },
+      { q: "What kind of attack happens when a spy reads your notes while they travel through the air?", a: "Man-in-the-Middle (MitM)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What famous number code means the server cannot find what you asked for?", a: "404", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What symbol in your browser tells you that the website is using the super-secret HTTPS code?", a: "a padlock", hint: "Refer to the HTTP protocol details." }
     ]
   },
   {
@@ -92,11 +92,11 @@ Session Hijacking is the exploitation of a valid computer session to gain unauth
 
 Here is the scary part: the server doesn't actually know if YOU are wearing the wristband. It just trusts the wristband! If a hacker sneaks into your computer and makes a perfect copy of your secret Cookie number, they can show it to the server. The server will see the number, think the hacker is YOU, and let them straight into your account without ever asking for a password! This is called "Session Hijacking." To stop this, websites can put special locks on Cookies, like a rule called "HttpOnly," which makes the Cookie invisible to sneaky hacker scripts trying to steal it from your browser.`,
     questions: [
-      { q: "Why do websites forget who you are every time you click a new page?", a: "Because HTTP is stateless (has goldfish memory)" },
-      { q: "What is the special digital wristband the server gives you so it remembers you?", a: "a Cookie" },
-      { q: "What is the long, random secret number inside the Cookie called?", a: "Session ID" },
-      { q: "What happens if a hacker steals your Cookie and uses it to log into your account?", a: "Session Hijacking" },
-      { q: "What special rule makes Cookies invisible to sneaky hacker scripts?", a: "HttpOnly" }
+      { q: "Why do websites forget who you are every time you click a new page?", a: "Because HTTP is stateless (has goldfish memory)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the special digital wristband the server gives you so it remembers you?", a: "a Cookie", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the long, random secret number inside the Cookie called?", a: "Session ID", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What happens if a hacker steals your Cookie and uses it to log into your account?", a: "Session Hijacking", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What special rule makes Cookies invisible to sneaky hacker scripts?", a: "HttpOnly", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -117,11 +117,11 @@ Cross-Origin Resource Sharing (CORS) is an HTTP-header based mechanism that allo
 
 Sometimes, websites actually NEED to share things through the wall. Maybe a weather website needs to grab the temperature from a different radar website. To do this safely, they use a special permission slip called CORS. CORS lets the radar website say, "Hey Browser, it is okay to open a tiny window in the wall just for the weather website, I trust them." But if a programmer is lazy and writes the permission slip as "I trust EVERYONE," then the wall comes tumbling down! This is a massive security mistake. It means any hacker anywhere in the world can reach through the broken wall and steal the website's secrets.`,
     questions: [
-      { q: "What is the name of the invisible wall that stops websites from stealing from each other?", a: "Same-Origin Policy (or SOP)" },
-      { q: "What three things must match exactly for websites to be from the same Origin?", a: "Protocol, Domain name, and Port number" },
-      { q: "What special permission slip allows trusted websites to share things through the wall?", a: "CORS (Cross-Origin Resource Sharing)" },
-      { q: "What happens if a programmer writes the CORS permission slip to trust 'EVERYONE'?", a: "Hackers can steal secrets (the wall breaks)" },
-      { q: "If you have your bank open in one tab and a hacker site in another, what stops the hacker site from reading the bank tab?", a: "The SOP invisible wall" }
+      { q: "What is the name of the invisible wall that stops websites from stealing from each other?", a: "Same-Origin Policy (or SOP)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What three things must match exactly for websites to be from the same Origin?", a: "Protocol, Domain name, and Port number", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What special permission slip allows trusted websites to share things through the wall?", a: "CORS (Cross-Origin Resource Sharing)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What happens if a programmer writes the CORS permission slip to trust 'EVERYONE'?", a: "Hackers can steal secrets (the wall breaks)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "If you have your bank open in one tab and a hacker site in another, what stops the hacker site from reading the bank tab?", a: "The SOP invisible wall", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -147,11 +147,11 @@ Availability guarantees that systems, applications, and data are accessible to a
 
 The "A" stands for Availability. What good is a top-secret treehouse if the door is glued shut and nobody can get inside? Availability means that when you need to use a website or your data, it is actually there and working perfectly. Hackers love to attack availability by sending millions of fake messages to a website all at once until the website's computers get completely overwhelmed, catch on fire (metaphorically!), and crash. This is called a DDoS attack. When a website crashes and you can't load your favorite video game or movie, the hackers have successfully broken the rule of availability.`,
     questions: [
-      { q: "What do the letters in the CIA Triad stand for?", a: "Confidentiality, Integrity, Availability" },
-      { q: "Which rule means keeping secrets away from people who shouldn't see them?", a: "Confidentiality" },
-      { q: "Which rule means making sure nobody sneaks in and changes your data?", a: "Integrity" },
-      { q: "Which rule means making sure the website is always working when you need it?", a: "Availability" },
-      { q: "What is it called when hackers overwhelm a website with fake messages until it crashes?", a: "a DDoS attack" }
+      { q: "What do the letters in the CIA Triad stand for?", a: "Confidentiality, Integrity, Availability", hint: "Review the definitions and acronyms section." },
+      { q: "Which rule means keeping secrets away from people who shouldn't see them?", a: "Confidentiality", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Which rule means making sure nobody sneaks in and changes your data?", a: "Integrity", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Which rule means making sure the website is always working when you need it?", a: "Availability", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is it called when hackers overwhelm a website with fake messages until it crashes?", a: "a DDoS attack", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -172,11 +172,11 @@ The primary defense against SQL Injection is the implementation of Parameterized
 
 To stop this terrible trick, programmers have to treat the database robot like a small child. They use a special defense called "Parameterized Queries." This is a fancy way of saying they put the hacker's input into a locked box before handing it to the robot. They tell the robot: "Go find the user whose name perfectly matches whatever is inside this locked box. Do NOT read the words in the box out loud, just match the letters." When the hacker types "' OR 1=1", the robot just searches the library for a person literally named "Quote OR 1 equals 1." Since nobody has that silly name, the robot finds nothing, and the hacker's trick is completely defeated!`,
     questions: [
-      { q: "What is the attack where hackers type sneaky commands into search boxes to trick the database?", a: "SQL Injection" },
-      { q: "What language do websites use to talk to their databases?", a: "SQL" },
-      { q: "What tricky math equation do hackers use to make the database think everything is true?", a: "1=1" },
-      { q: "What is the fancy name for putting the user's input into a 'locked box' to protect the database?", a: "Parameterized Queries" },
-      { q: "If a hacker uses the 1=1 trick successfully, what does the database do?", a: "It dumps every single user and password" }
+      { q: "What is the attack where hackers type sneaky commands into search boxes to trick the database?", a: "SQL Injection", hint: "Check the command reference blocks." },
+      { q: "What language do websites use to talk to their databases?", a: "SQL", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What tricky math equation do hackers use to make the database think everything is true?", a: "1=1", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the fancy name for putting the user's input into a 'locked box' to protect the database?", a: "Parameterized Queries", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "If a hacker uses the 1=1 trick successfully, what does the database do?", a: "It dumps every single user and password", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -197,11 +197,11 @@ The primary mitigation for XSS is Context-Aware Output Encoding. This process sa
 
 To stop XSS attacks, programmers have to be very suspicious of everything people type. They use a defense called "Output Encoding." This means before the website takes a user's comment and sticks it on the bulletin board, it scrubs it clean. If someone typed the magical characters "<script>" to start an attack, the website translates those characters into harmless, funny-looking symbols like "&lt;script&gt;". When your browser sees those symbols, it just prints the word on the screen instead of running it as dangerous code. It completely disarms the trap!`,
     questions: [
-      { q: "What attack involves hiding malicious JavaScript in places like comment sections?", a: "Cross-Site Scripting (or XSS)" },
-      { q: "When the evil code runs, what is the most common secret thing it tries to steal from your browser?", a: "your Session Cookie (or wristband)" },
-      { q: "Where does the malicious XSS code actually run? (On the server or in your browser?)", a: "in your browser" },
-      { q: "What defense scrubs the text clean and turns dangerous characters into harmless symbols?", a: "Output Encoding" },
-      { q: "Can XSS code draw fake login boxes on your screen to steal passwords? (yes/no)", a: "yes" }
+      { q: "What attack involves hiding malicious JavaScript in places like comment sections?", a: "Cross-Site Scripting (or XSS)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "When the evil code runs, what is the most common secret thing it tries to steal from your browser?", a: "your Session Cookie (or wristband)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Where does the malicious XSS code actually run? (On the server or in your browser?)", a: "in your browser", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What defense scrubs the text clean and turns dangerous characters into harmless symbols?", a: "Output Encoding", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Can XSS code draw fake login boxes on your screen to steal passwords? (yes/no)", a: "yes", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -222,11 +222,11 @@ Defenses against brute force attacks involve implementing Account Lockout mechan
 
 If a hacker can guess a thousand times a second, how do we stop them? Websites use a few clever tricks. The best trick is called "Rate Limiting." It is like a grumpy security guard who says, "You typed the wrong password five times. Now you have to wait 15 minutes before you can guess again!" By forcing the computer to wait, the hacker's super-fast guessing machine is completely broken. Another trick is the squiggly letters you sometimes have to type to prove you are human, called a CAPTCHA. Robots are terrible at reading those squiggly letters, so the guessing machine gets stuck at the front door!`,
     questions: [
-      { q: "What attack involves using a program to rapidly guess thousands of passwords?", a: "Brute Force" },
-      { q: "What is the name of the giant text files hackers use that contain millions of leaked passwords?", a: "Wordlists (or dictionaries)" },
-      { q: "What is the name of the famous file containing over 14 million real passwords?", a: "RockYou.txt" },
-      { q: "What defense locks you out for 15 minutes after you type the wrong password too many times?", a: "Rate Limiting" },
-      { q: "What defense makes you read squiggly letters to prove you are a human and not a robot?", a: "CAPTCHA" }
+      { q: "What attack involves using a program to rapidly guess thousands of passwords?", a: "Brute Force", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the name of the giant text files hackers use that contain millions of leaked passwords?", a: "Wordlists (or dictionaries)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the name of the famous file containing over 14 million real passwords?", a: "RockYou.txt", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What defense locks you out for 15 minutes after you type the wrong password too many times?", a: "Rate Limiting", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What defense makes you read squiggly letters to prove you are a human and not a robot?", a: "CAPTCHA", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
@@ -247,11 +247,11 @@ Browser Developer Tools are a suite of web authoring and debugging utilities bui
 
 You don't always need fancy downloaded tools to hack! Every single web browser in the world (like Chrome, Firefox, or Edge) has a secret panel built right into it called "Developer Tools." If you press the F12 key on your keyboard, a crazy-looking panel full of code slides onto your screen. This panel lets you peek behind the curtain. You can see the HTML code building the walls of the website, you can read the secret Cookies the website gave you, and you can watch the HTTP notes flying back and forth. Cybersecurity experts use this built-in secret menu every single day to understand how a website works before they even try to attack it.`,
     questions: [
-      { q: "What tool acts like a magical toll booth catching messages between your browser and the internet?", a: "a Web Proxy (or Burp Suite)" },
-      { q: "What is the name of the most famous Web Proxy used by security experts?", a: "Burp Suite" },
-      { q: "What robot tool automatically fires thousands of math equations to find database vulnerabilities?", a: "SQLMap" },
-      { q: "What fast guessing tool tries millions of names to find secret hidden folders?", a: "Gobuster" },
-      { q: "What secret panel built into every browser can you open by pressing F12?", a: "Developer Tools" }
+      { q: "What tool acts like a magical toll booth catching messages between your browser and the internet?", a: "a Web Proxy (or Burp Suite)", hint: "Look for the specific tools mentioned in the lesson." },
+      { q: "What is the name of the most famous Web Proxy used by security experts?", a: "Burp Suite", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What robot tool automatically fires thousands of math equations to find database vulnerabilities?", a: "SQLMap", hint: "Look for the specific tools mentioned in the lesson." },
+      { q: "What fast guessing tool tries millions of names to find secret hidden folders?", a: "Gobuster", hint: "Look for the specific tools mentioned in the lesson." },
+      { q: "What secret panel built into every browser can you open by pressing F12?", a: "Developer Tools", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   }
 ];
