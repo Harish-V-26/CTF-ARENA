@@ -176,6 +176,7 @@ int main() {
     const char *flag = "CTF{st4t1c_4n4lys1s_m4st3r}";
     
     printf("Starting system scan...\n");
+    printf("[!] Payload executed: CTF{dyn4m1c_b3h4v10r_c4ught}\n");
     return 0;
 }
 PROG_EOF

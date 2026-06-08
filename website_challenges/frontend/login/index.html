@@ -195,15 +195,22 @@
         clearErrors();
       });
 
-      // Redirect if logged in
-      function checkAlreadyLoggedIn() {
-        if (window.authService && window.authService.currentUser) {
-          window.location.href = "../dashboard.html";
-        } else {
-          setTimeout(checkAlreadyLoggedIn, 100);
+      // Flag to prevent onAuthStateChanged from redirecting during active login
+      let loginInProgress = false;
+
+      // Redirect if already logged in when page loads
+      // (login/signup handlers set loginInProgress=true to prevent race)
+      if (window.authService) {
+        if (window.authService.currentUser) {
+          window.location.href = "../index.html";
+          return;
         }
+        window.authService.onAuthStateChanged(function (user) {
+          if (user && !loginInProgress) {
+            window.location.href = "../index.html";
+          }
+        });
       }
-      checkAlreadyLoggedIn();
 
       /* ── Toast helper ── */
       function toast(msg, type) {
@@ -254,6 +261,7 @@
 
         if (!ok) return;
 
+        loginInProgress = true;
         window.authService.login(em, pw, function (err, user) {
           if (err) { toast(err.message, "error"); }
           else {
@@ -299,6 +307,7 @@
 
         if (!ok) return;
 
+        loginInProgress = true;
         window.authService.signUp(n, em, pw, function (err, user) {
           if (err) { toast(err.message, "error"); }
           else {
@@ -316,6 +325,7 @@
       /* ── Google Auth Handlers ── */
       function handleGoogleAuth(e) {
         if (e) e.preventDefault();
+        loginInProgress = true;
         window.authService.loginWithGoogle(function (err, user) {
           if (err) { toast(err.message, "error"); }
           else {

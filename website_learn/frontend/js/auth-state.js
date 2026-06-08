@@ -114,9 +114,25 @@
             localStorage.setItem("ctf_active_user_session", JSON.stringify(this.currentUser));
             this._setCookie("ctf_active_user_session", JSON.stringify(this.currentUser), 7);
           } else {
-            this.currentUser = null;
-            localStorage.removeItem("ctf_active_user_session");
-            this._eraseCookie("ctf_active_user_session");
+            // Preserve mock sessions (e.g. mock Google login on local dev)
+            const mockSession = localStorage.getItem("mock_auth_session");
+            if (mockSession) {
+              try {
+                const session = JSON.parse(mockSession);
+                const meta = this._loadMeta(session.uid);
+                const fallbackAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(session.email || "mock")}`;
+                const photoURL = (meta.photoURL === "none") ? null : (meta.photoURL || session.photoURL || fallbackAvatar);
+                this.currentUser = { ...session, photoURL };
+              } catch (_) {
+                this.currentUser = null;
+                localStorage.removeItem("ctf_active_user_session");
+                this._eraseCookie("ctf_active_user_session");
+              }
+            } else {
+              this.currentUser = null;
+              localStorage.removeItem("ctf_active_user_session");
+              this._eraseCookie("ctf_active_user_session");
+            }
           }
           this.authInitialized = true;
           this._notify();
@@ -260,13 +276,22 @@
     },
 
     loginWithGoogle: function (callback) {
-      if (this.isMock) {
-        // Mock Google login
+      // On local/dev domains, skip Firebase popup entirely to avoid flash
+      // Catches localhost, 127.0.0.1, LAN hostnames (e.g. mypc.local), and any non-HTTPS origin
+      const h = window.location.hostname;
+      const isLocalDev = ['localhost', '127.0.0.1'].includes(h)
+                      || window.location.protocol !== 'https:'
+                      || /^[\w-]+$/.test(h);
+
+      if (this.isMock || isLocalDev) {
+        // Mock Google login (no popup needed)
         const email = "google_hacker@gmail.com";
         const name = "Google Hacker";
         const fallbackAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`;
         this.currentUser = { uid: "mock_google_123", email, displayName: name, photoURL: fallbackAvatar };
         localStorage.setItem("mock_auth_session", JSON.stringify(this.currentUser));
+        localStorage.setItem("ctf_active_user_session", JSON.stringify(this.currentUser));
+        this._setCookie("ctf_active_user_session", JSON.stringify(this.currentUser), 7);
         this._notify();
         callback(null, this.currentUser);
       } else {
@@ -294,13 +319,15 @@
             const fallbackAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`;
             this.currentUser = { uid: "mock_google_123", email, displayName: name, photoURL: fallbackAvatar };
             localStorage.setItem("mock_auth_session", JSON.stringify(this.currentUser));
+            localStorage.setItem("ctf_active_user_session", JSON.stringify(this.currentUser));
+            this._setCookie("ctf_active_user_session", JSON.stringify(this.currentUser), 7);
             this._notify();
             
             // Display a warning toast to notify the user of the fallback
             const toastCont = document.getElementById("toast-container");
             if (toastCont) {
               const el = document.createElement("div");
-              el.className = "toast error"; // Use toast error class for visibility
+              el.className = "toast error";
               el.innerHTML = "<strong>Notice:</strong> Google login fell back to offline mock mode (domain unauthorized or Firebase provider disabled).";
               toastCont.appendChild(el);
               setTimeout(() => {
