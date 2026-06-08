@@ -154,24 +154,45 @@
           </div>
         </div>
 
-        <!-- Malware Analysis Hub -->
-        <div class="challenge-card" data-category="web" id="card-malware-analysis-hub"
-          onclick="window.location.href='web/easy/malware-analysis-hub.html'" style="cursor: pointer;">
+        <!-- Malware Analysis Challenge -->
+        <div class="challenge-card" data-category="web" id="card-malware-analysis-challenge"
+          onclick="window.location.href='web/easy/malware-analysis-challenge-lab.html'" style="cursor: pointer;">
           <div class="card-top" style="background: linear-gradient(135deg, #1abc9c, #16a085, #2c3e50);"></div>
           <div class="card-body">
             <div class="card-meta">
               <span class="category-tag">Malware</span>
               <span class="difficulty-tag diff-easy" style="background: rgba(26,188,156,0.15); color: #16a085;">Easy</span>
             </div>
-            <div class="challenge-title">Malware Analysis Hub</div>
+            <div class="challenge-title">Malware Analysis Challenge</div>
             <div class="challenge-desc">
-              Learn the fundamentals of malware analysis. Master both Static and Dynamic analysis techniques to safely dissect malicious binaries and uncover their secrets.
+              Infiltrate a target system containing a suspicious binary. Analyze the payload statically and trace its live execution dynamically to extract the master flags.
             </div>
           </div>
           <div class="card-footer">
-            <span class="points">820 pts</span>
-            <span class="solve-count"> Practical Labs</span>
-            <a href="web/easy/malware-analysis-hub.html" class="start-btn" id="start-malware-analysis-hub">Start →</a>
+            <span class="points">500 pts</span>
+            <span class="solve-count"> Practical Docker Lab</span>
+            <a href="web/easy/malware-analysis-challenge-lab.html" class="start-btn" id="start-malware-analysis-challenge">Start →</a>
+          </div>
+        </div>
+
+        <!-- Binary & Reverse Engineering Challenge -->
+        <div class="challenge-card" data-category="web" id="card-binary-reverse-engineering-challenge"
+          onclick="window.location.href='web/easy/binary-reverse-engineering-challenge-lab.html'" style="cursor: pointer;">
+          <div class="card-top" style="background: linear-gradient(135deg, #e74c3c, #c0392b, #8e44ad);"></div>
+          <div class="card-body">
+            <div class="card-meta">
+              <span class="category-tag">Reverse Engineering</span>
+              <span class="difficulty-tag diff-medium" style="background: rgba(155,89,182,0.15); color: #9b59b6;">Medium</span>
+            </div>
+            <div class="challenge-title">Binary &amp; Reverse Engineering</div>
+            <div class="challenge-desc">
+              Download the target binary, reverse-engineer its assembly logic, exploit a stack buffer overflow, and leverage LOLBins to secure the final flags.
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="points">500 pts</span>
+            <span class="solve-count"> Practical Docker Lab</span>
+            <a href="web/easy/binary-reverse-engineering-challenge-lab.html" class="start-btn" id="start-binary-reverse-engineering-challenge">Start →</a>
           </div>
         </div>
 
@@ -327,6 +348,15 @@
               "Software & Data Integrity Failures (Insecure Deserialization)",
               "Security Logging & Monitoring Failures (Log Injection & Alert Disabling)"
           ];
+      } else if (title.includes("Binary & Reverse Engineering")) {
+          learnList = [
+              "Reverse Engineering C Compilation Pipelines",
+              "Extracting hardcoded secrets with strings",
+              "Triggering stack Buffer Overflow (BoF)",
+              "Exploiting Living off the Land Binaries (LOLBins)"
+          ];
+          envTitle = "Live Docker & Binary Target";
+          envDesc = "You will launch a live vulnerable binary web application target to exploit memory leaks, download raw executables for offline reversing, and chain command execution.";
       } else if (title.includes("Reverse Engineering")) {
           learnList = ["How Binaries Are Compiled", "Extracting Secrets with strings", "Disassembly with objdump & Ghidra", "Library Call Tracing with ltrace", "CTF Crackme Methodology"];
           envTitle = "Theory & Simulated Lab";

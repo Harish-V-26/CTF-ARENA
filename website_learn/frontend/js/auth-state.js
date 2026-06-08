@@ -49,6 +49,7 @@
     isMock: !isConfigured,
     currentUser: null,
     authInitialized: false,
+    _redirecting: false,
     _callbacks: [],
 
     /* ── Bootstrap ── */
@@ -186,18 +187,25 @@
     /* ── Subscriber management ── */
     onAuthStateChanged: function (cb) {
       this._callbacks.push(cb);
-      if (this.isMock || this.currentUser !== null) cb(this.currentUser);
+      // Only fire immediately if Firebase has fully confirmed the session.
+      // Do NOT fire from the unvalidated localStorage cache (currentUser set in init())
+      // — that causes a redirect loop when the cached token is stale.
+      if (this.authInitialized) {
+        try { cb(this.currentUser); } catch (_) { }
+      }
     },
     _notify: function () {
       this._callbacks.forEach(cb => { try { cb(this.currentUser); } catch (_) { } });
       this._fixAllLinks();
       this._updateNavbar();
 
-      // Enforce global authentication redirect
+      // Enforce global authentication redirect — guarded to fire only once per page
+      if (this._redirecting) return;
       const path = window.location.pathname.replace(/\\/g, "/");
-      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login");
+      const isLoginPage = /\/login(\/?|(\/index\.html))$/.test(path);
       const isRoomPage = path.startsWith("/room/");
       if (this.authInitialized && !this.currentUser && !isLoginPage && !isRoomPage) {
+        this._redirecting = true;
         window.location.href = `${protocol}//${host}:8000/login/index.html`;
       }
     },

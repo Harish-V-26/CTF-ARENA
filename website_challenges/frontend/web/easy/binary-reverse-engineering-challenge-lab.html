@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+    (function() {
+      const path = window.location.pathname.replace(/\\/g, "/");
+      const isLoginPage = path.endsWith("/login/index.html") || path.endsWith("/login") || path.includes("/login/");
+      const isRoomPage = path.startsWith("/room/");
+      if (!isLoginPage && !isRoomPage) {
+        let cached = localStorage.getItem("ctf_active_user_session");
+        if (!cached) {
+          let ca = document.cookie.split(';');
+          for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf("ctf_active_user_session=") == 0) {
+              cached = c;
+              break;
+            }
+          }
+        }
+        if (!cached) {
+          document.documentElement.style.display = 'none';
+          window.location.href = "/login/index.html";
+        }
+      }
+    })();
+  </script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CTF ARENA — Binary &amp; Reverse Engineering Challenge</title>
+  <link rel="stylesheet" href="../../../css/global.css"/>
+  <link rel="stylesheet" href="../../../css/web-room.css"/>
+</head>
+<body>
+
+<nav class="navbar" aria-label="Main navigation">
+    <a href="http://localhost:8002/index.html" class="logo">CTF<span>ARENA</span></a>
+    <div class="nav-links">
+      <a href="http://localhost:8002/index.html">Home</a>
+      <a href="http://localhost:8002/challenges.html" class="active">Challenges</a>
+      <a href="http://localhost:8002/rules.html">Rules</a>
+      <div class="dropdown" role="navigation" aria-label="Profile menu">
+        <a href="#" aria-haspopup="true">Profile </a>
+        <div class="dropdown-content" role="menu">
+          <a href="http://localhost:8002/dashboard.html" role="menuitem">Dashboard</a>
+          <a href="http://localhost:8002/settings.html" role="menuitem">Settings</a>
+          <a href="#" role="menuitem">Logout</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+<div class="room-wrapper">
+  <!-- SIDEBAR (Required for Grid Layout) -->
+  <aside class="room-sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">Challenge Status</div>
+      <div class="overall-progress-wrap" style="margin-top: 10px;">
+        <div class="overall-progress-bar">
+          <div class="overall-progress-fill" id="overall-fill" style="width:0%"></div>
+        </div>
+        <div class="overall-progress-pct" id="overall-pct">0%</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <div class="module-group">
+        <div class="module-label" id="mod-0">
+          <span class="mod-num">01</span> Binary &amp; RE
+        </div>
+        <div class="nav-item active" id="nav-0">
+          <div class="nav-dot"></div>
+          <span class="nav-label">Chained Exploitation Room</span>
+          <span class="nav-pts">500 pts</span>
+        </div>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="room-main">
+    
+    <div class="challenge-header">
+      <div class="ch-breadcrumb">Web Challenges › Easy Level › Challenge</div>
+      <div class="ch-meta">
+        <span class="ch-title" id="ch-title">Binary &amp; Reverse Engineering</span>
+        <span class="ch-pts" id="ch-pts">500 pts</span>
+      </div>
+    </div>
+
+    <div class="room-body" id="room-body" style="padding: 20px 0;">
+
+      <!-- Briefing -->
+      <div class="challenge-briefing">
+        <h2>Mission Briefing</h2>
+        <p>AGENT, we have located an exposed staging application running a compiled ELF binary. We need you to perform a series of static and dynamic exploits against the target to extract the three hidden keys.</p>
+        <p>To capture all three secret flags, execute the following steps:</p>
+        <ul>
+          <li><strong>Binary Disclosure:</strong> Download the ELF binary from the server's <code>/download</code> route. Use static reversing tools (e.g. <code>strings</code>, <code>objdump</code>, <code>Ghidra</code>) to uncover the first flag.</li>
+          <li><strong>Buffer Overflow:</strong> Audit the binary to find the buffer overflow threshold. Send a query parameter to the <code>/bof</code> route to trigger a crash and disclose the second flag.</li>
+          <li><strong>LOLBins Command Execution:</strong> Bypass input restrictions on the <code>/lolbin</code> route using Living off the Land commands (like <code>find</code> or <code>tar</code>) to read the final flag file stored on the server.</li>
+        </ul>
+        <p><strong>Goal:</strong> Submit the final combined master flag, constructed in the format: <code>FLAG{secret1_secret2_secret3}</code> by concatenating the contents inside the braces of the three discovered flags.</p>
+      </div>
+
+      <!-- Environment Launchers -->
+      <div class="docker-panels" id="target-panel">
+        <!-- Target Web Server -->
+        <div class="docker-launch">
+          <h3>⚙ Target Web Application</h3>
+          <p>Launch the vulnerable web application containing the binary downloads, overflow routes, and LOLBin hooks.</p>
+          <button id="target-launch-btn" class="btn-launch" onclick="launchTarget()">Launch Target Portal ⇗</button>
+          <p id="target-msg" style="display:none;color:#e67e22;font-weight:bold;margin-top:12px"></p>
+          <div id="target-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid var(--border)">
+            <p style="color:var(--text-muted);margin-top:0;font-size:.85rem">Target is running. Open in your browser:</p>
+            <code id="target-url" style="display:block;background:#000;color:#0f0;padding:10px;margin-top:8px;border-radius:4px;user-select:all;font-family:var(--font-mono);font-size:.85rem"></code>
+          </div>
+        </div>
+
+        <!-- Kali Linux Attack Box -->
+        <div class="docker-launch">
+          <h3>⚙ Kali Linux — Attack Box</h3>
+          <p>Launch a helper Kali shell container to analyze the downloaded binary (contains <code>strings</code>, <code>objdump</code>, and <code>curl</code>).</p>
+          <button id="kali-launch-btn" class="btn-launch" onclick="launchKali()">Launch Kali Machine ⇗</button>
+          <p id="kali-msg" style="display:none;color:var(--accent);font-weight:bold;margin-top:12px"></p>
+          <div id="kali-terminal-info" style="display:none;margin-top:14px;background:#0d1117;padding:14px;border-radius:6px;text-align:left;border:1px solid var(--border)">
+            <p style="color:var(--text-muted);margin-top:0;font-size:.85rem">Connect to Kali Linux via your host terminal:</p>
+            <code id="kali-command" style="display:block;background:#000;color:#0f0;padding:10px;margin-top:8px;border-radius:4px;user-select:all;font-family:var(--font-mono);font-size:.85rem"></code>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hints -->
+      <div class="hints-section" id="hints-container">
+        <h3 style="margin-top: 0; color: #fff; margin-bottom: 15px;">Need a Hint?</h3>
+        <p style="color: #bdc3c7; font-size: 0.9em; margin-bottom: 20px;">Unlock clues to assist you with reverse engineering, buffer overflow payloads, and LOLBins parameters.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+          <!-- Hint Card 1 -->
+          <div style="background: #1a252f; border: 1px solid #3498db; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.05);">
+            <div style="font-weight: bold; color: #3498db; margin-bottom: 10px; font-family: monospace; font-size: 0.95em;">Clue 1 (Reversing)</div>
+            <div id="hint-text-0" style="font-style: italic; color: #bdc3c7; font-size: 0.9em; display: none; margin-bottom: 10px; line-height: 1.4;"></div>
+            <button id="hint-btn-0" class="hint-btn" onclick="unlockHintBox(0)" style="margin: 0; width: 100%; border-color: #3498db; color: #3498db;">Unlock Clue</button>
+          </div>
+          
+          <!-- Hint Card 2 -->
+          <div style="background: #1a252f; border: 1px solid #3498db; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.05);">
+            <div style="font-weight: bold; color: #3498db; margin-bottom: 10px; font-family: monospace; font-size: 0.95em;">Clue 2 (BoF)</div>
+            <div id="hint-text-1" style="font-style: italic; color: #bdc3c7; font-size: 0.9em; display: none; margin-bottom: 10px; line-height: 1.4;"></div>
+            <button id="hint-btn-1" class="hint-btn" onclick="unlockHintBox(1)" style="margin: 0; width: 100%; border-color: #3498db; color: #3498db;">Unlock Clue</button>
+          </div>
+          
+          <!-- Hint Card 3 -->
+          <div style="background: #1a252f; border: 1px solid #3498db; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.05);">
+            <div style="font-weight: bold; color: #3498db; margin-bottom: 10px; font-family: monospace; font-size: 0.95em;">Clue 3 (LOLBins)</div>
+            <div id="hint-text-2" style="font-style: italic; color: #bdc3c7; font-size: 0.9em; display: none; margin-bottom: 10px; line-height: 1.4;"></div>
+            <button id="hint-btn-2" class="hint-btn" onclick="unlockHintBox(2)" style="margin: 0; width: 100%; border-color: #3498db; color: #3498db;">Unlock Clue</button>
+          </div>
+
+          <!-- Hint Card 4 -->
+          <div style="background: #1a252f; border: 1px solid #3498db; border-radius: 6px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.05);">
+            <div style="font-weight: bold; color: #3498db; margin-bottom: 10px; font-family: monospace; font-size: 0.95em;">Clue 4 (Concatenation)</div>
+            <div id="hint-text-3" style="font-style: italic; color: #bdc3c7; font-size: 0.9em; display: none; margin-bottom: 10px; line-height: 1.4;"></div>
+            <button id="hint-btn-3" class="hint-btn" onclick="unlockHintBox(3)" style="margin: 0; width: 100%; border-color: #3498db; color: #3498db;">Unlock Clue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flag Submission -->
+      <div class="flag-submission">
+        <h3 style="margin-top: 0; color: #fff; margin-bottom: 20px;">Submit Master Flag</h3>
+        <div style="display: flex; justify-content: center;">
+          <input type="text" id="flag-input" class="flag-input" placeholder="FLAG{...}" onkeydown="if(event.key==='Enter') submitFlag()">
+          <button class="flag-btn" onclick="submitFlag()">Submit</button>
+        </div>
+        <div id="flag-result" class="flag-result"></div>
+      </div>
+
+      <!-- Completion -->
+      <div class="completion-card" id="completion-card" style="display: none; text-align: center; background: #1a252f; padding: 40px; border-radius: 8px; border: 2px solid #2ecc71;">
+        <h2 style="color:#2ecc71; font-size: 2em; margin-top: 0;">Binary Conquered!</h2>
+        <p style="color: #bdc3c7; font-size: 1.1em;">Excellent job! You successfully combined static reversing, dynamic overflow crafting, and LOLBins hijacking.</p>
+        <div class="score-pill" style="font-size: 1.5em; padding: 10px 20px; background: #000; color: #f1c40f; display: inline-block; margin: 20px 0; border-radius: 30px;">500 / 500 pts</div>
+        <br>
+        <a href="http://localhost:8002/challenges.html" class="btn-launch" style="background: #3498db; color: #000 !important; display: inline-block; text-decoration: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; margin-top: 15px;">Return to Challenges</a>
+        <button class="btn btn-primary" style="background:transparent;color:var(--text-primary);border:1px solid var(--border);margin-left:10px; padding: 10px 20px;" onclick="reattemptRoom()">↻ Reattempt</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPTS -->
+<script src="binary-reverse-engineering-challenge-data.js?v=2"></script>
+<script>
+let currentContainerId = null;
+let currentKaliId = null;
+
+function initChallenge() {
+  const storageKey = 'ctf_progress_' + window.location.pathname.split('/').pop().replace('.html', '');
+  const isCompleted = localStorage.getItem(storageKey) === 'true';
+
+  if (isCompleted) {
+    document.getElementById('overall-fill').style.width = '100%';
+    document.getElementById('overall-pct').textContent = '100%';
+    document.getElementById('nav-0').className = 'nav-item completed';
+    document.getElementById('mod-0').className = 'module-label completed';
+    showCompletion();
+  } else {
+    document.getElementById('overall-fill').style.width = '0%';
+    document.getElementById('overall-pct').textContent = '0%';
+  }
+}
+
+function unlockHintBox(idx) {
+  const textDiv = document.getElementById(`hint-text-${idx}`);
+  const btn = document.getElementById(`hint-btn-${idx}`);
+  
+  if (textDiv && btn) {
+    textDiv.innerHTML = CHALLENGE.hints[idx];
+    textDiv.style.display = 'block';
+    btn.style.display = 'none';
+  }
+}
+
+function submitFlag() {
+  const input = document.getElementById('flag-input');
+  const result = document.getElementById('flag-result');
+  const userFlag = input.value.trim();
+  
+  if (userFlag === CHALLENGE.flag) {
+    result.className = 'flag-result success';
+    if(window.ctfTrackCorrect) window.ctfTrackCorrect();
+    result.textContent = 'Success! Correct flag submitted. Challenge conquered!';
+    
+    // Save completion
+    const storageKey = 'ctf_progress_' + window.location.pathname.split('/').pop().replace('.html', '');
+    localStorage.setItem(storageKey, 'true');
+
+    // Fill progress bar to 100%
+    document.getElementById('overall-fill').style.width = '100%';
+    document.getElementById('overall-pct').textContent = '100%';
+    document.getElementById('nav-0').className = 'nav-item completed';
+    document.getElementById('mod-0').className = 'module-label completed';
+    
+    setTimeout(() => {
+      showCompletion();
+    }, 1500);
+  } else {
+    result.className = 'flag-result error';
+    if(window.ctfTrackFailed) window.ctfTrackFailed();
+    result.textContent = 'Incorrect flag. Please verify all three flag fragments and match the formatting.';
+    setTimeout(() => {
+      result.className = 'flag-result';
+    }, 3000);
+  }
+}
+
+function showCompletion() {
+  if(window.ctfTrackRoomComplete) window.ctfTrackRoomComplete(document.title);
+  document.querySelector('.flag-submission').style.display = 'none';
+  document.getElementById('hints-container').style.display = 'none';
+  document.getElementById('target-panel').style.display = 'none';
+  document.querySelector('.challenge-briefing').style.display = 'none';
+  document.getElementById('completion-card').style.display = 'block';
+}
+
+async function launchTarget() {
+  const btn = document.getElementById('target-launch-btn');
+  const msg = document.getElementById('target-msg');
+  const info = document.getElementById('target-info');
+  btn.style.display = 'none';
+  info.style.display = 'none';
+  msg.style.display = 'block';
+  msg.style.color = '#e67e22';
+  msg.textContent = 'Spinning up the vulnerable binary target server...';
+
+  try {
+    const host = window.location.hostname || 'localhost';
+    const res = await fetch(`http://${host}:5002/api/start-binary`, { method: 'POST' });
+    const data = await res.json();
+    if (data.status === 'success') {
+      btn.style.display = 'inline-block';
+      btn.textContent = 'Stop Target';
+      btn.style.background = '#c0392b';
+      btn.onclick = stopTarget;
+      if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+      currentContainerId = data.container_id;
+      sessionStorage.setItem('bin_challenge_target_container', currentContainerId);
+      sessionStorage.setItem('bin_challenge_target_port', data.port);
+      msg.style.color = '#2ecc71';
+      msg.textContent = 'Target application is ready!';
+      info.style.display = 'block';
+      document.getElementById('target-url').textContent = `http://${host}:${data.port}`;
+    } else {
+      btn.style.display = 'inline-block';
+      btn.textContent = 'Launch Target Portal ⇗';
+      btn.style.background = '';
+      btn.onclick = launchTarget;
+      if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Error: ' + data.message;
+    }
+  } catch (e) {
+    btn.style.display = 'inline-block';
+    btn.textContent = 'Launch Target Portal ⇗';
+    btn.style.background = '';
+    btn.onclick = launchTarget;
+    if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+    msg.style.color = '#e74c3c';
+    msg.textContent = 'Failed to reach backend docker agent.';
+  }
+}
+
+async function stopTarget() {
+  if (!currentContainerId) return;
+  const host = window.location.hostname || 'localhost';
+  const msg = document.getElementById('target-msg');
+  msg.style.color = '#e67e22';
+  msg.textContent = 'Stopping target...';
+  try {
+    await fetch(`http://${host}:5002/api/stop-binary/${currentContainerId}`, { method: 'POST' });
+    msg.style.color = '#e74c3c';
+    msg.textContent = 'Target stopped safely.';
+    document.getElementById('target-info').style.display = 'none';
+    const b = document.getElementById('target-launch-btn');
+    currentContainerId = null;
+    sessionStorage.removeItem('bin_challenge_target_container');
+    sessionStorage.removeItem('bin_challenge_target_port');
+    
+    b.style.display = 'inline-block';
+    b.textContent = 'Restart Target ⇗';
+    b.style.background = '';
+    b.onclick = launchTarget;
+    if (typeof b.disabled !== 'undefined') b.disabled = false;
+  } catch (e) {
+    const b = document.getElementById('target-launch-btn');
+    b.style.display = 'inline-block';
+    b.textContent = 'Stop Target';
+    b.style.background = '#c0392b';
+    b.onclick = stopTarget;
+    if (typeof b.disabled !== 'undefined') b.disabled = false;
+    msg.textContent = 'Error stopping target.';
+  }
+}
+
+async function launchKali() {
+  const btn = document.getElementById('kali-launch-btn');
+  const msg = document.getElementById('kali-msg');
+  const info = document.getElementById('kali-terminal-info');
+  btn.style.display = 'none';
+  info.style.display = 'none';
+  msg.style.display = 'block';
+  msg.style.color = '#e67e22';
+  msg.textContent = 'Spinning up your private Kali container...';
+
+  try {
+    const host = window.location.hostname || 'localhost';
+    const res = await fetch(`http://${host}:5002/api/start-kali`, { method: 'POST' });
+    const data = await res.json();
+    if (data.status === 'success') {
+      btn.style.display = 'inline-block';
+      btn.textContent = 'Stop Kali';
+      btn.style.background = '#c0392b';
+      btn.onclick = stopKali;
+      if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+      currentKaliId = data.container_id;
+      sessionStorage.setItem('bin_challenge_kali_container', currentKaliId);
+      msg.style.color = 'var(--accent)';
+      msg.textContent = 'Kali Linux is ready!';
+      info.style.display = 'block';
+      document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
+    } else {
+      btn.style.display = 'inline-block';
+      btn.textContent = 'Launch Kali Machine ⇗';
+      btn.style.background = '';
+      btn.onclick = launchKali;
+      if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+      msg.style.color = '#e74c3c';
+      msg.textContent = 'Error: ' + data.message;
+    }
+  } catch (e) {
+    btn.style.display = 'inline-block';
+    btn.textContent = 'Launch Kali Machine ⇗';
+    btn.style.background = '';
+    btn.onclick = launchKali;
+    if (typeof btn.disabled !== 'undefined') btn.disabled = false;
+    msg.style.color = '#e74c3c';
+    msg.textContent = 'Failed to reach backend docker agent.';
+  }
+}
+
+async function stopKali() {
+  if (!currentKaliId) return;
+  const host = window.location.hostname || 'localhost';
+  const msg = document.getElementById('kali-msg');
+  msg.style.color = '#e67e22';
+  msg.textContent = 'Stopping Kali...';
+  try {
+    await fetch(`http://${host}:5002/api/stop-kali/${currentKaliId}`, { method: 'POST' });
+    msg.style.color = '#e74c3c';
+    msg.textContent = 'Kali stopped.';
+    document.getElementById('kali-terminal-info').style.display = 'none';
+    const b = document.getElementById('kali-launch-btn');
+    currentKaliId = null;
+    sessionStorage.removeItem('bin_challenge_kali_container');
+    
+    b.style.display = 'inline-block';
+    b.textContent = 'Restart Kali ⇗';
+    b.style.background = '';
+    b.onclick = launchKali;
+    if (typeof b.disabled !== 'undefined') b.disabled = false;
+  } catch (e) {
+    const b = document.getElementById('kali-launch-btn');
+    b.style.display = 'inline-block';
+    b.textContent = 'Stop Kali';
+    b.style.background = '#c0392b';
+    b.onclick = stopKali;
+    if (typeof b.disabled !== 'undefined') b.disabled = false;
+    msg.textContent = 'Error stopping Kali.';
+  }
+}
+
+window.addEventListener('load', function() {
+  initChallenge();
+  const host = window.location.hostname || "localhost";
+  
+  const savedTarget = sessionStorage.getItem('bin_challenge_target_container');
+  const savedPort = sessionStorage.getItem('bin_challenge_target_port');
+  if (savedTarget && savedPort) {
+    currentContainerId = savedTarget;
+    fetch(`http://${host}:5002/api/cancel-stop-binary/${savedTarget}`, { method: 'POST' }).catch(()=>{});
+    
+    const targetBtn = document.getElementById('target-launch-btn');
+    if (targetBtn) {
+      targetBtn.style.display = 'inline-block';
+      targetBtn.textContent = 'Stop Target';
+      targetBtn.style.background = '#c0392b';
+      targetBtn.onclick = stopTarget;
+    }
+    document.getElementById('target-info').style.display = 'block';
+    document.getElementById('target-url').textContent = `http://${host}:${savedPort}`;
+  }
+
+  const savedKali = sessionStorage.getItem('bin_challenge_kali_container');
+  if (savedKali) {
+    currentKaliId = savedKali;
+    fetch(`http://${host}:5002/api/cancel-stop-kali/${savedKali}`, { method: 'POST' }).catch(()=>{});
+    
+    const kaliBtn = document.getElementById('kali-launch-btn');
+    if (kaliBtn) {
+      kaliBtn.style.display = 'inline-block';
+      kaliBtn.textContent = 'Stop Kali';
+      kaliBtn.style.background = '#c0392b';
+      kaliBtn.onclick = stopKali;
+    }
+    document.getElementById('kali-terminal-info').style.display = 'block';
+    document.getElementById('kali-command').textContent = `docker exec -it ${currentKaliId.substring(0, 12)} bash`;
+  }
+});
+
+window.addEventListener('beforeunload', () => {
+  const host = window.location.hostname || 'localhost';
+  if (currentContainerId) navigator.sendBeacon(`http://${host}:5002/api/stop-binary-delayed/${currentContainerId}`);
+  if (currentKaliId) navigator.sendBeacon(`http://${host}:5002/api/stop-kali-delayed/${currentKaliId}`);
+});
+
+function reattemptRoom() {
+  if (confirm("Are you sure you want to reset your progress for this room?")) {
+    const storageKey = "ctf_progress_" + window.location.pathname.split("/").pop().replace(".html", "");
+    localStorage.removeItem(storageKey);
+    window.location.reload();
+  }
+}
+</script>
+
+<script src="../../../js/firebase-config.js"></script>
+<script src="../../../js/auth-state.js?v=2"></script>
+<script src="../../../js/analytics-tracker.js"></script>
+</body>
+</html>
