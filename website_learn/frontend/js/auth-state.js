@@ -30,12 +30,12 @@
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
       }
-      document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+      document.cookie = name + "=" + (value || "") + expires + "; path=/";
     },
     _getCookie: function (name) {
       let nameEQ = name + "=";
       let ca = document.cookie.split(';');
-      for(let i=0; i < ca.length; i++) {
+      for (let i = 0; i < ca.length; i++) {
         let c = ca[i];
         while (c.charAt(0) == ' ') c = c.substring(1, c.length);
         if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
@@ -46,10 +46,10 @@
       document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     },
 
-    isMock:          !isConfigured,
-    currentUser:     null,
+    isMock: !isConfigured,
+    currentUser: null,
     authInitialized: false,
-    _callbacks:      [],
+    _callbacks: [],
 
     /* ── Bootstrap ── */
     init: function () {
@@ -68,8 +68,8 @@
           const photoURL = (meta.photoURL === "none") ? null : (meta.photoURL || user.photoURL || fallbackAvatar);
           this.currentUser = { ...user, photoURL };
           this._fixAllLinks();
-      this._updateNavbar();
-        } catch (_) {}
+          this._updateNavbar();
+        } catch (_) { }
       }
 
       if (isConfigured) {
@@ -85,20 +85,20 @@
       try {
         const { initializeApp, getApps } = await import(`${BASE_CDN}/firebase-app.js`);
         const { getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
-                signInWithEmailAndPassword, signOut, updateProfile,
-                GoogleAuthProvider, signInWithPopup } =
-              await import(`${BASE_CDN}/firebase-auth.js`);
+          signInWithEmailAndPassword, signOut, updateProfile,
+          GoogleAuthProvider, signInWithPopup } =
+          await import(`${BASE_CDN}/firebase-auth.js`);
 
         // Avoid re-initialising on pages that already ran the script
-        const app  = getApps().length === 0
-                       ? initializeApp(cfg)
-                       : getApps()[0];
+        const app = getApps().length === 0
+          ? initializeApp(cfg)
+          : getApps()[0];
         const auth = getAuth(app);
 
         // Optional analytics (non-blocking)
         import(`${BASE_CDN}/firebase-analytics.js`)
-          .then(({ getAnalytics }) => { try { getAnalytics(app); } catch (_) {} })
-          .catch(() => {});
+          .then(({ getAnalytics }) => { try { getAnalytics(app); } catch (_) { } })
+          .catch(() => { });
 
         onAuthStateChanged(auth, (fbUser) => {
           if (fbUser) {
@@ -106,8 +106,8 @@
             const fallbackAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(fbUser.email)}`;
             const photoURL = (meta.photoURL === "none") ? null : (meta.photoURL || fbUser.photoURL || fallbackAvatar);
             this.currentUser = {
-              uid:         fbUser.uid,
-              email:       fbUser.email,
+              uid: fbUser.uid,
+              email: fbUser.email,
               displayName: meta.name || fbUser.displayName || fbUser.email.split("@")[0],
               photoURL
             };
@@ -123,8 +123,10 @@
         });
 
         // Store Firebase helpers for sign-up / login / logout calls
-        this._fb = { auth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
-                     signOut, updateProfile, GoogleAuthProvider, signInWithPopup };
+        this._fb = {
+          auth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+          signOut, updateProfile, GoogleAuthProvider, signInWithPopup
+        };
 
       } catch (err) {
         console.error("CTF-Auth: Firebase init failed, falling back to mock.", err);
@@ -146,11 +148,11 @@
             photoURL
           };
           localStorage.setItem("ctf_active_user_session", JSON.stringify(this.currentUser));
-            this._setCookie("ctf_active_user_session", JSON.stringify(this.currentUser), 7);
-        } catch (_) {}
+          this._setCookie("ctf_active_user_session", JSON.stringify(this.currentUser), 7);
+        } catch (_) { }
       } else {
         localStorage.removeItem("ctf_active_user_session");
-            this._eraseCookie("ctf_active_user_session");
+        this._eraseCookie("ctf_active_user_session");
       }
       this.authInitialized = true;
       setTimeout(() => this._notify(), 60);
@@ -171,7 +173,7 @@
       if (this.isMock || this.currentUser !== null) cb(this.currentUser);
     },
     _notify: function () {
-      this._callbacks.forEach(cb => { try { cb(this.currentUser); } catch (_) {} });
+      this._callbacks.forEach(cb => { try { cb(this.currentUser); } catch (_) { } });
       this._fixAllLinks();
       this._updateNavbar();
 
@@ -249,8 +251,8 @@
             const fallbackAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(user.email)}`;
             const photoURL = (meta.photoURL === "none") ? null : (meta.photoURL || user.photoURL || fallbackAvatar);
             callback(null, {
-              uid:         user.uid,
-              email:       user.email,
+              uid: user.uid,
+              email: user.email,
               displayName: meta.name || user.displayName || user.email.split("@")[0],
               photoURL
             });
@@ -278,8 +280,8 @@
             const fallbackAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(user.email)}`;
             const photoURL = (meta.photoURL === "none") ? null : (meta.photoURL || user.photoURL || fallbackAvatar);
             const payload = {
-              uid:         user.uid,
-              email:       user.email,
+              uid: user.uid,
+              email: user.email,
               displayName: meta.name || user.displayName || user.email.split("@")[0],
               photoURL
             };
@@ -295,7 +297,7 @@
             this.currentUser = { uid: "mock_google_123", email, displayName: name, photoURL: fallbackAvatar };
             localStorage.setItem("mock_auth_session", JSON.stringify(this.currentUser));
             this._notify();
-            
+
             // Display a warning toast to notify the user of the fallback
             const toastCont = document.getElementById("toast-container");
             if (toastCont) {
@@ -316,7 +318,7 @@
 
     logout: function (callback) {
       localStorage.removeItem("ctf_active_user_session");
-            this._eraseCookie("ctf_active_user_session");
+      this._eraseCookie("ctf_active_user_session");
       if (this.isMock) {
         this.currentUser = null;
         localStorage.removeItem("mock_auth_session");
@@ -337,23 +339,23 @@
 
     _friendlyError: function (err) {
       const map = {
-        "auth/email-already-in-use":      "An account with this Gmail already exists.",
-        "auth/invalid-email":             "Please enter a valid Gmail address.",
-        "auth/weak-password":             "Password must be at least 6 characters.",
-        "auth/user-not-found":            "No account found for this Gmail address.",
-        "auth/wrong-password":            "Incorrect password.",
-        "auth/invalid-credential":        "Invalid Gmail address or password.",
-        "auth/too-many-requests":         "Too many attempts. Please wait and try again.",
-        "auth/network-request-failed":    "Network error. Check your connection.",
-        "auth/configuration-not-found":   "Firebase Email/Password sign-in is not enabled. Go to Firebase Console → Authentication → Sign-in method → Email/Password → Enable.",
-        "auth/unauthorized-domain":       "This domain is not authorised in Firebase. Go to Firebase Console → Authentication → Settings → Authorized domains and add '127.0.0.1'.",
-        "auth/operation-not-allowed":     "Email/Password sign-in is disabled. Enable it in Firebase Console → Authentication → Sign-in method.",
+        "auth/email-already-in-use": "An account with this Gmail already exists.",
+        "auth/invalid-email": "Please enter a valid Gmail address.",
+        "auth/weak-password": "Password must be at least 6 characters.",
+        "auth/user-not-found": "No account found for this Gmail address.",
+        "auth/wrong-password": "Incorrect password.",
+        "auth/invalid-credential": "Invalid Gmail address or password.",
+        "auth/too-many-requests": "Too many attempts. Please wait and try again.",
+        "auth/network-request-failed": "Network error. Check your connection.",
+        "auth/configuration-not-found": "Firebase Email/Password sign-in is not enabled. Go to Firebase Console → Authentication → Sign-in method → Email/Password → Enable.",
+        "auth/unauthorized-domain": "This domain is not authorised in Firebase. Go to Firebase Console → Authentication → Settings → Authorized domains and add '127.0.0.1'.",
+        "auth/operation-not-allowed": "Email/Password sign-in is disabled. Enable it in Firebase Console → Authentication → Sign-in method.",
       };
       return map[err.code] || err.message;
     },
 
     /* ── Dynamic navbar update ── */
-        _fixAllLinks: function () {
+    _fixAllLinks: function () {
       const h = window.location.hostname;
       const p = window.location.protocol;
       if (!h || h === "localhost" || h === "127.0.0.1") return;
@@ -440,15 +442,15 @@
             const label = link.textContent.trim().toLowerCase();
 
             if (label === "dashboard") {
-              link.href    = `${protocol}//${host}:8000/dashboard.html`;
+              link.href = `${protocol}//${host}:8000/dashboard.html`;
               link.onclick = null;
 
             } else if (label === "settings") {
-              link.href    = `${protocol}//${host}:8000/settings.html`;
+              link.href = `${protocol}//${host}:8000/settings.html`;
               link.onclick = null;
 
             } else if (label === "logout") {
-              link.href    = "javascript:void(0)";
+              link.href = "javascript:void(0)";
               link.onclick = (e) => {
                 e.preventDefault();
                 this.logout(() => {
@@ -465,13 +467,13 @@
 
         const href = `${protocol}//${host}:8000/login/index.html`;
         const btn = document.createElement("a");
-        btn.id          = "nav-auth-login-btn";
-        btn.href        = href;
-        btn.className   = "auth-btn";
+        btn.id = "nav-auth-login-btn";
+        btn.href = href;
+        btn.className = "auth-btn";
         btn.textContent = "Login";
 
         if (dropdown) navLinks.insertBefore(btn, dropdown);
-        else          navLinks.appendChild(btn);
+        else navLinks.appendChild(btn);
       }
     },
 
@@ -479,9 +481,137 @@
 
   window.authService = authService;
 
-  // Bootstrap
-  if (document.readyState === "loading")
-    document.addEventListener("DOMContentLoaded", () => authService.init());
-  else
+  // Dynamic room content highlighting for headings, key terms, and CLI commands/syntax
+  function highlightRoomContent(container) {
+    let html = container.innerHTML;
+    if (!html) return;
+
+    // 1. Convert uppercase header lines to <h3> elements
+    let parts = html.split(/(<br\s*\/?>|\n)/gi);
+    for (let i = 0; i < parts.length; i++) {
+      let text = parts[i].trim();
+      if (text && /^[A-Z0-9\s\(\)\?\:\-\&\’]{6,100}$/.test(text) && !text.includes('<') && !text.includes('>')) {
+        parts[i] = `<h3>${text}</h3>`;
+      }
+    }
+    html = parts.join('');
+
+    if (html !== container.innerHTML) {
+      container.innerHTML = html;
+    }
+
+    // 2. Highlight key terms and command/code words inside text nodes
+    const keywords = [
+      "Same-Origin Policy", "Same Origin Policy", "Cross-Origin Resource Sharing",
+      "Web Application Firewall", "Domain Name System", "Man-in-the-Middle", "Man in the Middle",
+      "Session Hijacking", "parameterized query", "parameterized queries", "prepared statement",
+      "prepared statements", "Developer Tools", "RockYou\\.txt", "Burp Suite", "IP Address",
+      "IP Addresses", "subdomain", "subdomains", "Integrity", "Availability", "Confidentiality",
+      "SQL Injection", "Cross-Site Scripting", "rate limiting", "HttpOnly", "SameSite", "CAPTCHA",
+      "SQLMap", "Gobuster", "Cookie", "Cookies", "Session ID", "Session IDs", "database",
+      "databases", "frontend", "backend", "client", "server", "HTML", "CSS", "JavaScript",
+      "SOP", "CORS", "DNS", "SQLi", "XSS", "WAF", "MitM", "IP"
+    ];
+
+    const codeWords = [
+      "nslookup", "dig", "hydra", "nmap", "sqlmap", "gobuster", "dirb", "netcat", "nc",
+      "ping", "curl", "wget", "docker", "exec", "SELECT", "UNION", "ORDER BY", "DROP TABLE",
+      "SLEEP\\(5\\)", "pg_sleep\\(5\\)", "SLEEP", "pg_sleep", "SUBSTRING\\(\\)", "SUBSTRING",
+      "BENCHMARK\\(\\)", "BENCHMARK", "EXTRACTVALUE\\(\\)", "ASCII\\(\\)", "ASCII", "1=1"
+    ];
+
+    const keyRegex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'gi');
+    const codeRegex = new RegExp(`\\b(${codeWords.join('|')})\\b`, 'gi');
+
+    function walk(node) {
+      if (node.nodeType === 3) { // Text node
+        let text = node.nodeValue;
+        if (!text.trim()) return;
+
+        let parent = node.parentNode;
+        while (parent && parent !== container) {
+          const tag = parent.tagName.toLowerCase();
+          if (tag === 'pre' || tag === 'code' || tag === 'h3' || tag === 'h4' || tag === 'a' || tag === 'strong' || tag === 'script' || tag === 'style') {
+            return;
+          }
+          parent = parent.parentNode;
+        }
+
+        let escapedText = text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+
+        let newHtml = escapedText;
+        newHtml = newHtml.replace(codeRegex, (match) => `<code>${match}</code>`);
+        newHtml = newHtml.replace(keyRegex, (match) => `<strong>${match}</strong>`);
+
+        if (newHtml !== escapedText) {
+          const temp = document.createElement('span');
+          temp.innerHTML = newHtml;
+          const parentNode = node.parentNode;
+          while (temp.firstChild) {
+            parentNode.insertBefore(temp.firstChild, node);
+          }
+          parentNode.removeChild(node);
+        }
+      } else {
+        const children = Array.from(node.childNodes);
+        for (const child of children) {
+          walk(child);
+        }
+      }
+    }
+
+    walk(container);
+  }
+
+  function setupRoomHighlighter() {
+    const target = document.getElementById("reading-text");
+    if (target) {
+      let isHighlighting = false;
+      const observer = new MutationObserver(() => {
+        if (isHighlighting) return;
+        isHighlighting = true;
+        observer.disconnect();
+
+        try {
+          highlightRoomContent(target);
+        } catch (e) {
+          console.error("Highlighting error: ", e);
+        }
+
+        isHighlighting = false;
+        observer.observe(target, { childList: true, subtree: true, characterData: true });
+      });
+
+      try {
+        highlightRoomContent(target);
+      } catch (e) {
+        console.error("Initial highlighting error: ", e);
+      }
+
+      observer.observe(target, { childList: true, subtree: true, characterData: true });
+    }
+
+    const guideTarget = document.getElementById("rules-content");
+    if (guideTarget) {
+      try {
+        highlightRoomContent(guideTarget);
+      } catch (e) {
+        console.error("Guide highlighting error: ", e);
+      }
+    }
+  }
+
+  // Bootstrap authService
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      authService.init();
+      setupRoomHighlighter();
+    });
+  } else {
     authService.init();
+    setupRoomHighlighter();
+  }
 })();

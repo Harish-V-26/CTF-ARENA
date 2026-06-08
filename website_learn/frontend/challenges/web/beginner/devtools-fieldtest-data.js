@@ -2,7 +2,8 @@ const LESSONS = [
   {
     title: "Mission Briefing",
     points: 30,
-    content: `Welcome to the DevTools Field Test — Phase 2: The Independent Challenge!
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_fieldtest_welcome.png" alt="Mission Briefing"></div>
+Welcome to the DevTools Field Test — Phase 2: The Independent Challenge!
 
 Imagine you are a master spy taking your final exam. You have been dropped into a secret facility with no map, no guide, and no instructions. The only tools you have are your magic X-ray glasses (the Inspector), your hidden microphone (the Network panel), and your code-breaking notebook (the Sources panel). Your mission is to find three pieces of a torn-up secret message hidden somewhere in this digital building. You must rely entirely on the spy skills you've practiced to hunt down each piece and put them back together. Are you ready to prove you are a true DevTools Master?
 
@@ -39,7 +40,8 @@ This is a test of everything you've learned. Good luck!`,
   {
     title: "Part 1 — The Inspector Hunt",
     points: 50,
-    content: `OBJECTIVE: Find Part 1 of the flag using the Inspector.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_fieldtest_inspector.png" alt="Inspector Hunt"></div>
+OBJECTIVE: Find Part 1 of the flag using the Inspector.
 
 WHAT TO LOOK FOR:
 Part 1 is hidden somewhere in the HTML source of the SecureCorp™ page. It could be in:
@@ -68,7 +70,8 @@ Once you find Part 1, write it down and move to the next lesson.`,
   {
     title: "Part 2 — The Network Detective",
     points: 50,
-    content: `OBJECTIVE: Find Part 2 of the flag using the Network panel.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_fieldtest_network.png" alt="Network Detective"></div>
+OBJECTIVE: Find Part 2 of the flag using the Network panel.
 
 WHAT TO LOOK FOR:
 Part 2 is hidden in the HTTP response headers of one of the network requests. It could be in:
@@ -99,7 +102,8 @@ Once you find Part 2, write it down and move to the next lesson.`,
   {
     title: "Part 3 — The Source Code Spy",
     points: 50,
-    content: `OBJECTIVE: Find Part 3 of the flag using the Debugger/Sources panel.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_fieldtest_sources.png" alt="Source Code Spy"></div>
+OBJECTIVE: Find Part 3 of the flag using the Debugger/Sources panel.
 
 WHAT TO LOOK FOR:
 Part 3 is hidden inside a JavaScript file loaded by the page. It could be:
@@ -128,7 +132,8 @@ Once you find Part 3, you have all the pieces!`,
   {
     title: "Mission Complete — Submit the Flag",
     points: 70,
-    content: `OBJECTIVE: Combine all three parts and submit the complete flag.
+    content: `<div class="htb-diagram-container"><img src="../../../assets/devtools_fieldtest_debrief.png" alt="Mission Complete"></div>
+OBJECTIVE: Combine all three parts and submit the complete flag.
 
 THE THREE PARTS YOU FOUND:
   Part 1 (Inspector):      flag_part1{...}

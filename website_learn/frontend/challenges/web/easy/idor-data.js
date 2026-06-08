@@ -3,6 +3,8 @@ const LESSONS = [
     title: "1. What is IDOR?",
     points: 30,
     html: `
+      <div class="htb-diagram-container"><img src="../../../assets/idor_lesson1.png" alt="1. What is IDOR?"></div>
+
       <h3>What is IDOR?</h3>
       <p>Imagine you go to a giant, fancy hotel and the person at the front desk gives you a magical room key. They tell you, "This key is for Room 101." When you go upstairs, you use the key and it opens your room perfectly. But then, you get a little curious. You walk over to Room 102, put your key in the lock, and amazingly, the door swings wide open! You try Room 103, and it opens too! The hotel made a terrible, silly mistake. They gave you a key, but they forgot to check if your key is ACTUALLY allowed to open other people's rooms. On the internet, websites do this exact same thing. This is called Insecure Direct Object Reference (IDOR). A website gives you a link to see your own private invoice, like <code>/invoice/1001</code>. But if you are a sneaky hacker, you can just change the number in the web address to <code>/invoice/1002</code>. If the website's security guards are lazy and forget to check if you actually own that second invoice, they will just blindly hand over someone else's private secrets to you!</p>
 
@@ -40,6 +42,8 @@ const LESSONS = [
     title: "2. The Leaked Invoice",
     points: 40,
     html: `
+      <div class="htb-diagram-container"><img src="../../../assets/idor_lesson2.png" alt="2. The Leaked Invoice"></div>
+
       <h3>Exploiting IDOR by Changing the URL</h3>
 
       <p>You are now logged in as <code>employee_john</code>. The dashboard shows your own invoices. In this lesson, you will discover another user's private invoice by simply changing a number in the website's URL.</p>
@@ -86,6 +90,8 @@ const LESSONS = [
     title: "3. Privilege Escalation via Mass Assignment",
     points: 50,
     html: `
+      <div class="htb-diagram-container"><img src="../../../assets/idor_lesson3.png" alt="3. Privilege Escalation via Mass Assignment"></div>
+
       <h3>From Regular Employee to Administrator</h3>
 
       <p>IDOR is not only about <em>reading</em> other users' data. It can also be used to <em>write</em> data you should not be able to control. This advanced form of IDOR is called <strong>Mass Assignment</strong>.</p>
