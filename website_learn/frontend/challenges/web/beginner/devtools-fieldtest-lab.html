@@ -30,8 +30,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="DevTools Field Test — Phase 2. Find a 3-part flag hidden across Inspector, Network, and Sources with no hand-holding."/>
   <title>CTF ARENA — DevTools Field Test: Phase 2</title>
-  <link rel="stylesheet" href="../../../css/global.css"/>
-  <link rel="stylesheet" href="../../../css/web-room.css"/>
+  <link rel="stylesheet" href="../../../css/global.css?v=2"/>
+  <link rel="stylesheet" href="../../../css/web-room.css?v=2"/>
 </head>
 <body>
 
@@ -226,7 +226,7 @@ async function stopLab() {
 // Auto-cleanup if the user closes the tab
 // Auto-cleanup removed: user must manually close the lab.
 </script>
-<script src="devtools-fieldtest-data.js"></script>
+<script src="devtools-fieldtest-data.js?v=2"></script>
 <script>
   let cur = 0;
   const TOTAL = LESSONS.length;
@@ -259,7 +259,24 @@ async function stopLab() {
     document.getElementById('ch-pts').textContent = l.points + ' pts';
     document.getElementById('ch-crumb').textContent = `Lesson ${idx+1}`;
     document.getElementById('cur-num').textContent = idx+1;
-    document.getElementById('reading-text').innerText = l.content;
+    // Separate diagram from text to avoid executing HTML payloads
+    let contentHtml = '';
+    const diagramMatch = l.content.match(/^<div class="htb-diagram-container">.*?<\/div>/);
+    if (diagramMatch) {
+      const diagram = diagramMatch[0];
+      const rest = l.content.slice(diagram.length);
+      const escapedRest = rest
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      contentHtml = diagram + escapedRest;
+    } else {
+      contentHtml = l.content
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+    document.getElementById('reading-text').innerHTML = contentHtml;
 
     const qc = document.getElementById('questions-container');
     qc.innerHTML = l.questions.map((q, qi) => `
@@ -385,7 +402,7 @@ async function stopLab() {
 
 
   <script src="../../../js/firebase-config.js"></script>
-  <script src="../../../js/auth-state.js"></script>
+  <script src="../../../js/auth-state.js?v=2"></script>
   <script src="../../../js/analytics-tracker.js"></script>
 </body>
 </html>

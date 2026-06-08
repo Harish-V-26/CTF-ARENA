@@ -2,7 +2,8 @@ const LESSONS = [
   {
     title: "Advanced Scan Types — Null, FIN, and Xmas",
     points: 30,
-    content: `ADVANCED NMAP SCAN TYPES
+    content: `<div class="htb-diagram-container"><img src="../../../assets/nmap_deepdive_advanced.png" alt="Advanced Scan Types"></div>
+ADVANCED NMAP SCAN TYPES
 
 WHAT ARE THESE ADVANCED SCANS?
 Imagine you are trying to sneak into a castle, but the front gate has a very strict guard. Normally, people walk up to the guard and say, "Hello, can I come in?" (This is like a normal SYN scan). The guard immediately says, "No! Go away!" and writes your name in his notebook. So, instead of saying hello, what if you walk up to the guard and say absolutely nothing at all? Or what if you walk up and say, "Goodbye, I am leaving now," even though you just got there? Or what if you wear a crazy, glowing Christmas tree costume? These are exactly what Advanced Nmap Scans do! Because the guard is only trained to block people who say "Hello", doing something completely weird confuses the guard. Sometimes, the guard gets so confused that they accidentally leave the gate open or give away secrets about the castle. In this deep dive, you will learn how to use these sneaky, weird techniques to slip right past basic computer firewalls!
@@ -71,7 +72,8 @@ TASK: Answer the questions below.`,
   {
     title: "Evasion — Fragmentation and MTU",
     points: 30,
-    content: `EVADING DETECTION WITH PACKET FRAGMENTATION
+    content: `<div class="htb-diagram-container"><img src="../../../assets/nmap_deepdive_evasion_frag.png" alt="Packet Fragmentation"></div>
+EVADING DETECTION WITH PACKET FRAGMENTATION
 
 WHAT IS PACKET FRAGMENTATION?
 Imagine you want to send a large secret message through the mail, but you know that mail inspectors read every letter that arrives. Your solution: cut the message into dozens of tiny pieces, put each piece in a separate envelope, and mail them all separately. Each tiny piece makes no sense on its own, so the inspector cannot figure out what the message says.
@@ -118,7 +120,8 @@ TASK: Answer the questions below.`,
   {
     title: "Evasion — Decoys and IP Spoofing",
     points: 30,
-    content: `HIDING YOUR IDENTITY — DECOYS AND IP SPOOFING
+    content: `<div class="htb-diagram-container"><img src="../../../assets/nmap_deepdive_evasion_decoys.png" alt="Decoys and IP Spoofing"></div>
+HIDING YOUR IDENTITY — DECOYS AND IP SPOOFING
 
 THE PROBLEM: THE TRAIL OF BREADCRUMBS
 Imagine you are playing a game of hide-and-seek, but your shoes are covered in bright red paint. Every time you walk around the house looking for people, you leave a trail of bright red footprints pointing exactly back to where you are hiding! In the computer world, your computer's "IP Address" is exactly like that red paint. Every time you scan a target network, the target's security cameras take a picture of your IP Address. If a security guard reviews the tapes, they can easily follow the trail of digital footprints right back to your exact computer and report you! Nmap gives hackers two amazing tricks to hide their footprints so they don't get caught: Decoys and IP Spoofing.
@@ -172,7 +175,8 @@ TASK: Answer the questions below.`,
   {
     title: "NSE Scripts — Automating Nmap with Scripting",
     points: 40,
-    content: `THE NMAP SCRIPTING ENGINE (NSE)
+    content: `<div class="htb-diagram-container"><img src="../../../assets/nmap_deepdive_nse.png" alt="Nmap Scripting Engine"></div>
+THE NMAP SCRIPTING ENGINE (NSE)
 
 WHAT IS THE NSE?
 Imagine Nmap is a really smart robot dog. Normally, you tell the robot dog to run through a house and bark every time it finds an open door. That is super helpful, but that is all the dog knows how to do. What if you could give the robot dog special, magical chips that teach it new tricks? You could plug in a chip that says, "When you find an open door, go inside and try to guess the password to the safe!" or "When you find an open door, read the poster on the wall and tell me what it says!" The Nmap Scripting Engine (NSE) is exactly like a collection of these magical chips. It turns Nmap from a simple door-checker into a massive, incredibly powerful multi-tool. It lets Nmap run special mini-programs (called scripts) that automatically perform complicated tasks the instant Nmap finds an open door.
@@ -231,7 +235,8 @@ TASK: Answer the questions below.`,
   {
     title: "Capture the Flag — Deep Dive Challenge",
     points: 50,
-    content: `FINAL CHALLENGE — APPLY YOUR ADVANCED NMAP KNOWLEDGE
+    content: `<div class="htb-diagram-container"><img src="../../../assets/nmap_deepdive_challenge.png" alt="Deep Dive Challenge"></div>
+FINAL CHALLENGE — APPLY YOUR ADVANCED NMAP KNOWLEDGE
 
 It is time to put your advanced Nmap skills to the test against a real target environment. In this challenge, you will perform a full port discovery scan and then use NSE scripts to extract flags hidden in service banners.
 

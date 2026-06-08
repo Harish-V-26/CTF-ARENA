@@ -3,6 +3,8 @@ const LESSONS = [
     title: "1. What is Reverse Engineering?",
     points: 50,
     html: `
+      <div class="htb-diagram-container"><img src="../../../assets/rev_eng_lesson1.png" alt="1. What is Reverse Engineering?"></div>
+
       <h3>What is Reverse Engineering?</h3>
       <div class="analogy-box">
         <p><strong>Real-World Analogy:</strong> Imagine you find a locked mystery box with no instruction manual. Reverse engineering is the art of examining that box — its shape, weight, sounds it makes — to figure out <em>exactly</em> how it was built and what it does, without ever seeing the original blueprints.</p>
@@ -55,6 +57,8 @@ const LESSONS = [
     title: "2. The 'strings' Command — Finding Hidden Text",
     points: 60,
     html: `
+      <div class="htb-diagram-container"><img src="../../../assets/rev_eng_lesson2.png" alt="2. The 'strings' Command — Finding Hidden Text"></div>
+
       <h3>Why Strings Are Goldmines</h3>
       <p>Developers often leave human-readable text embedded directly inside binaries — passwords, flags, error messages, URLs, and debug output. The <code>strings</code> command extracts every sequence of printable characters from a file. It is always the <strong>first command</strong> you should run on an unknown binary.</p>
 
@@ -114,6 +118,8 @@ GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
     title: "3. Disassembly with 'objdump' & 'radare2'",
     points: 70,
     html: `
+      <div class="htb-diagram-container"><img src="../../../assets/rev_eng_lesson3.png" alt="3. Disassembly with 'objdump' & 'radare2'"></div>
+
       <h3>Going Deeper — Reading Assembly</h3>
       <p>When <code>strings</code> doesn't find the flag (because it's computed at runtime or obfuscated), you need to read the actual <strong>assembly instructions</strong> — the disassembly of the binary.</p>
 
@@ -185,6 +191,8 @@ GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0
     title: "4. Dynamic Analysis with 'ltrace' & 'strace'",
     points: 70,
     html: `
+      <div class="htb-diagram-container"><img src="../../../assets/rev_eng_lesson4.png" alt="4. Dynamic Analysis with 'ltrace' & 'strace'"></div>
+
       <h3>Watching a Binary Execute Live</h3>
       <p>Static analysis reads the code without running it. <strong>Dynamic analysis</strong> runs the binary in a controlled way and intercepts what it actually does — which library functions it calls, which syscalls it makes, and what data it passes around.</p>
 
@@ -249,6 +257,8 @@ puts("Wrong password!")            = 17</pre>
     title: "5. Practical CTF Crackme Walkthrough",
     points: 50,
     html: `
+      <div class="htb-diagram-container"><img src="../../../assets/rev_eng_lesson5.png" alt="5. Practical CTF Crackme Walkthrough"></div>
+
       <h3>Putting It All Together</h3>
       <p>In a CTF Reverse Engineering challenge, you are typically given a binary (called a <strong>crackme</strong>) that asks for a password or key. Your goal is to find the correct input that unlocks the flag. Here is the complete methodology:</p>
 
