@@ -24,8 +24,8 @@ const LESSONS = [
       <p>In this room, we'll start from the basics of extracting hidden strings and hashes, move to analyzing Windows Portable Executable (PE) headers, and finally put it into practice in a secure Kali Linux environment against a target binary.</p>
     `,
     questions: [
-      { q: "What type of malware analysis involves examining a file without executing it?", a: "static analysis", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
-      { q: "What is the acronym for Indicators of Compromise?", a: "IoC", hint: "Review the definitions and acronyms section." }
+      { q: "What type of malware analysis involves examining a file without executing it?", a: "static analysis" },
+      { q: "What is the acronym for Indicators of Compromise?", a: "IoC" }
     ]
   },
   {
@@ -60,9 +60,9 @@ const LESSONS = [
       </div>
     `,
     questions: [
-      { q: "What creates a unique digital fingerprint of a file? (e.g. MD5, SHA-256)", a: "hash", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
-      { q: "What Linux tool extracts human-readable text from a binary?", a: "strings", hint: "Look for the specific tools mentioned in the lesson." },
-      { q: "If a file has very few strings, what technique might the malware author have used?", a: "packing", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
+      { q: "What creates a unique digital fingerprint of a file? (e.g. MD5, SHA-256)", a: "hash" },
+      { q: "What Linux tool extracts human-readable text from a binary?", a: "strings" },
+      { q: "If a file has very few strings, what technique might the malware author have used?", a: "packing" }
     ]
   },
   {
@@ -97,9 +97,9 @@ const LESSONS = [
       <p><strong>Tools:</strong> <code>peframe</code>, <code>file</code>, <code>Detect It Easy (DiE)</code>, <code>PEstudio</code></p>
     `,
     questions: [
-      { q: "What does PE stand for in Windows executables?", a: "Portable Executable", hint: "Review the definitions and acronyms section." },
-      { q: "Which PE section typically contains the executable CPU instructions?", a: ".text", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
-      { q: "What mathematical metric measures the randomness of data to detect encryption?", a: "entropy", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
+      { q: "What does PE stand for in Windows executables?", a: "Portable Executable" },
+      { q: "Which PE section typically contains the executable CPU instructions?", a: ".text" },
+      { q: "What mathematical metric measures the randomness of data to detect encryption?", a: "entropy" }
     ]
   },
   {
@@ -129,9 +129,9 @@ const LESSONS = [
       <p>Through disassembly, a reverse engineer can map out logic branches, discover bypasses for anti-analysis checks, and fully reconstruct the malware's behavior.</p>
     `,
     questions: [
-      { q: "What table lists the external library functions a program uses? (Acronym)", a: "IAT", hint: "Review the definitions and acronyms section." },
-      { q: "Which API function is a strong indicator of persistence via the Windows Registry?", a: "RegSetValueEx", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
-      { q: "What advanced tool attempts to convert assembly back into C-like pseudo-code?", a: "Decompiler", hint: "Look for the specific tools mentioned in the lesson." }
+      { q: "What table lists the external library functions a program uses? (Acronym)", a: "IAT" },
+      { q: "Which API function is a strong indicator of persistence via the Windows Registry?", a: "RegSetValueEx" },
+      { q: "What advanced tool attempts to convert assembly back into C-like pseudo-code?", a: "Decompiler" }
     ]
   },
   {
@@ -178,9 +178,9 @@ const LESSONS = [
       <p>Use your Kali Linux attack box to inspect the binary and answer the lab challenge questions below to complete the room!</p>
     `,
     questions: [
-      { q: "What command would you use to get the SHA-256 hash of a file?", a: "sha256sum", hint: "Check the command reference blocks." },
-      { q: "What command extracts readable text sequences from a binary file?", a: "strings", hint: "Check the command reference blocks." },
-      { q: "What is the hidden CTF flag found inside the suspicious_bin file?", a: "CTF{st4t1c_4n4lys1s_m4st3r}", hint: "Check the command reference blocks." }
+      { q: "What command would you use to get the SHA-256 hash of a file?", a: "sha256sum" },
+      { q: "What command extracts readable text sequences from a binary file?", a: "strings" },
+      { q: "What is the hidden CTF flag found inside the suspicious_bin file?", a: "CTF{st4t1c_4n4lys1s_m4st3r}" }
     ]
   }
 ];

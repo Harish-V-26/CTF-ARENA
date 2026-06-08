@@ -22,8 +22,8 @@ const LESSONS = [
       <p>Because you are executing live malware, there is a risk of infection. Dynamic analysis must <strong>always</strong> be performed in a secure, isolated environment called a Sandbox.</p>
     `,
     questions: [
-      { q: "What type of malware analysis involves executing a file to observe its behavior?", a: "dynamic analysis", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
-      { q: "What secure, isolated environment is required to safely run malware?", a: "sandbox", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
+      { q: "What type of malware analysis involves executing a file to observe its behavior?", a: "dynamic analysis" },
+      { q: "What secure, isolated environment is required to safely run malware?", a: "sandbox" }
     ]
   },
   {
@@ -49,8 +49,8 @@ const LESSONS = [
       </ul>
     `,
     questions: [
-      { q: "What technique do attackers use to detect if they are running in a VM and hide their behavior?", a: "sandbox evasion", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
-      { q: "Name a popular automated sandbox platform mentioned above.", a: "Cuckoo Sandbox", hint: "Re-read the lesson paragraphs and step-blocks carefully." }
+      { q: "What technique do attackers use to detect if they are running in a VM and hide their behavior?", a: "sandbox evasion" },
+      { q: "Name a popular automated sandbox platform mentioned above.", a: "Cuckoo Sandbox" }
     ]
   },
   {
@@ -78,9 +78,9 @@ const LESSONS = [
       </ul>
     `,
     questions: [
-      { q: "What Sysinternals tool captures real-time file system, Registry, and process activity?", a: "Procmon", hint: "Look for the specific tools mentioned in the lesson." },
-      { q: "What network tool captures every packet leaving the sandbox?", a: "Wireshark", hint: "Look for the specific tools mentioned in the lesson." },
-      { q: "What tool simulates internet services within an isolated sandbox network?", a: "INetSim", hint: "Look for the specific tools mentioned in the lesson." }
+      { q: "What Sysinternals tool captures real-time file system, Registry, and process activity?", a: "Procmon" },
+      { q: "What network tool captures every packet leaving the sandbox?", a: "Wireshark" },
+      { q: "What tool simulates internet services within an isolated sandbox network?", a: "INetSim" }
     ]
   },
   {
@@ -104,8 +104,8 @@ const LESSONS = [
       </ul>
     `,
     questions: [
-      { q: "What technique involves intercepting calls made to the operating system?", a: "API Hooking", hint: "Re-read the lesson paragraphs and step-blocks carefully." },
-      { q: "What tool is used to execute malware step-by-step and inspect memory in real-time?", a: "Debugger", hint: "Look for the specific tools mentioned in the lesson." }
+      { q: "What technique involves intercepting calls made to the operating system?", a: "API Hooking" },
+      { q: "What tool is used to execute malware step-by-step and inspect memory in real-time?", a: "Debugger" }
     ]
   },
   {
@@ -150,9 +150,9 @@ const LESSONS = [
       <p>Use your Kali Linux attack box to inspect the binary and answer the lab challenge questions below to complete the room!</p>
     `,
     questions: [
-      { q: "What Linux command traces system calls made by a process?", a: "strace", hint: "Check the command reference blocks." },
-      { q: "What Linux command intercepts and records dynamic library calls?", a: "ltrace", hint: "Check the command reference blocks." },
-      { q: "What is the dynamic analysis CTF flag printed when the payload executes?", a: "CTF{dyn4m1c_b3h4v10r_c4ught}", hint: "Check the command reference blocks." }
+      { q: "What Linux command traces system calls made by a process?", a: "strace" },
+      { q: "What Linux command intercepts and records dynamic library calls?", a: "ltrace" },
+      { q: "What is the dynamic analysis CTF flag printed when the payload executes?", a: "CTF{dyn4m1c_b3h4v10r_c4ught}" }
     ]
   }
 ];
